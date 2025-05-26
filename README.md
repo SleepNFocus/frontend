@@ -117,30 +117,32 @@ npx expo start --android
 
 ### 📁 프로젝트 구조
 
-focuz-app/<br/>
-├── app/ # Expo Router 페이지<br/>
-│ ├── (auth)/ # 인증 관련 페이지<br/>
-│ ├── (tabs)/ # 메인 탭 페이지<br/>
-│ ├── admin/ # 관리자 페이지<br/>
-│ └── \_layout.tsx # 루트 레이아웃<br/>
-│<br/>
-├── components/ # 재사용 컴포넌트<br/>
-│ ├── auth/ # 인증 관련 컴포넌트<br/>
-│ ├── sleep/ # 수면 기록 관련 컴포넌트<br/>
-│ ├── test/ # 테스트 용도 컴포넌트<br/>
-│ └── common/ # 공통 UI 컴포넌트 (예: 버튼, 카드 등)<br/>
-│<br/>
-├── lib/ # 라이브러리 및 유틸리티<br/>
-│ ├── api.ts # API 클라이언트 설정<br/>
-│ └── utils.ts # 일반 유틸 함수<br/>
-│<br/>
-├── hooks/ # 커스텀 훅<br/>
-│<br/>
-├── store/ # Zustand 전역 상태 관리<br/>
-│<br/>
-├── types/ # 공통 타입 정의<br/>
-│<br/>
-└── assets/ # 이미지, 폰트 등의 정적 자원<br/>
+```
+focuz-app/
+├── app/ # Expo Router 페이지
+│ ├── (auth)/ # 인증 관련 페이지
+│ ├── (tabs)/ # 메인 탭 페이지
+│ ├── admin/ # 관리자 페이지
+│ └── \_layout.tsx # 루트 레이아웃
+│
+├── components/ # 재사용 컴포넌트
+│ ├── auth/ # 인증 관련 컴포넌트
+│ ├── sleep/ # 수면 기록 관련 컴포넌트
+│ ├── test/ # 테스트 용도 컴포넌트
+│ └── common/ # 공통 UI 컴포넌트 (예: 버튼, 카드 등)
+│
+├── lib/ # 라이브러리 및 유틸리티
+│ ├── api.ts # API 클라이언트 설정
+│ └── utils.ts # 일반 유틸 함수
+│
+├── hooks/ # 커스텀 훅
+│
+├── store/ # Zustand 전역 상태 관리
+│
+├── types/ # 공통 타입 정의
+│
+└── assets/ # 이미지, 폰트 등의 정적 자원
+```
 
 ## 👥 개발 가이드
 
