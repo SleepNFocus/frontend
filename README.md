@@ -12,6 +12,7 @@
 > 수면과 인지 기능의 상관관계를 일상에서 쉽게 추적하고 체험할 수 있는 모바일 애플리케이션
 
 ## 📋 목차
+
 - [프로젝트 소개](#-프로젝트-소개)
 - [주요 기능](#-주요-기능)
 - [기술 스택](#-기술-스택)
@@ -23,9 +24,10 @@
 
 ## 🎯 프로젝트 소개
 
-Focuz는 사용자의 수면 패턴과 인지 기능 간의 상관관계를 직관적으로 체험하고 기록할 수 있는 서비스입니다. 
+Focuz는 사용자의 수면 패턴과 인지 기능 간의 상관관계를 직관적으로 체험하고 기록할 수 있는 서비스입니다.
 
 ### 핵심 가치
+
 - **직관적 체험**: "아, 내 기능이 이렇게 떨어져 있구나"를 수치로 확인
 - **일상 속 추적**: 매일 1분, 간단한 테스트로 컨디션 체크
 - **데이터 기반 인사이트**: 수면과 퍼포먼스의 상관관계 시각화
@@ -33,11 +35,13 @@ Focuz는 사용자의 수면 패턴과 인지 기능 간의 상관관계를 직�
 ## ✨ 주요 기능
 
 ### 🛌 수면 기록
+
 - 간편한 수면 시간 입력 (드롭다운 방식)
 - 수면의 질 평가 (기상 시 컨디션, 밤중에 깬 횟수)
 - 수면 패턴 추적 및 분석
 
 ### 🧪 인지 기능 테스트 (6종)
+
 1. **단순 반응 시간 (SRT)**: 반응 속도 측정
 2. **Go/No-Go**: 주의력과 반응 억제 능력
 3. **스트룹 과제**: 인지적 억제 능력
@@ -46,12 +50,14 @@ Focuz는 사용자의 수면 패턴과 인지 기능 간의 상관관계를 직�
 6. **연속 계산**: 수리력과 처리 속도
 
 ### 📊 결과 분석
+
 - 육각형 차트로 보는 인지 능력 프로파일
 - 수면-인지 기능 상관관계 그래프
 - 7일/30일 추세 분석
 - 개인 맞춤형 인사이트
 
 ### 🔐 사용자 관리
+
 - 소셜 로그인 (구글, 카카오)
 - 개인 기록 관리
 - 프라이버시 보호
@@ -59,6 +65,7 @@ Focuz는 사용자의 수면 패턴과 인지 기능 간의 상관관계를 직�
 ## 🛠 기술 스택
 
 ### Frontend
+
 - **Framework**: React Native + Expo (SDK 50)
 - **Language**: TypeScript
 - **State Management**: Zustand
@@ -69,11 +76,13 @@ Focuz는 사용자의 수면 패턴과 인지 기능 간의 상관관계를 직�
 - **Forms**: React Hook Form + Yup
 
 ### Backend Integration
+
 - **Authentication**: OAuth 2.0 (Google, Kakao)
 - **API Communication**: Axios
 - **Storage**: AsyncStorage
 
 ### Development Tools
+
 - **Code Quality**: ESLint, Prettier
 - **Testing**: Jest, React Native Testing Library
 - **CI/CD**: EAS Build
@@ -81,6 +90,7 @@ Focuz는 사용자의 수면 패턴과 인지 기능 간의 상관관계를 직�
 ## 🚀 시작하기
 
 ### 필수 요구사항
+
 - Node.js 18.0.0 이상
 - npm 9.0.0 이상
 - Expo Go 앱 (개발 테스트용)
@@ -104,85 +114,81 @@ npx expo start --ios
 # Android 에뮬레이터 실행
 npx expo start --android
 ```
-📁 프로젝트 구조
-focuz-app/
-<br>
-├── app/                    # Expo Router 페이지
-<br>
-│   ├── (auth)/            # 인증 관련 페이지
-<br>
-│   ├── (tabs)/            # 메인 탭 페이지
-<br>
-│   ├── admin/             # 관리자 페이지
-<br>
-│   └── _layout.tsx        # 루트 레이아웃
-<br>
-├── components/            # 재사용 컴포넌트
-<br>
-│   ├── auth/             # 인증 컴포넌트
-<br>
-│   ├── sleep/            # 수면 기록 컴포넌트
-<br>
-│   ├── test/             # 테스트 컴포넌트
-<br>
-│   └── common/           # 공통 컴포넌트
-<br>
-├── lib/                   # 유틸리티
-<br>
-│   ├── api.ts            # API 클라이언트
-<br>
-│   └── utils.ts          # 헬퍼 함수
-<br>
-├── hooks/                 # 커스텀 훅
-<br>
-├── store/                 # Zustand 스토어
-<br>
-├── types/                 # TypeScript 타입
-<br>
-└── assets/               # 정적 자원
-<br>
 
-👥 개발 가이드
-브랜치 전략
+### 📁 프로젝트 구조
 
-main: 프로덕션 배포
-develop: 개발 통합
-feature/*: 기능 개발
-fix/*: 버그 수정
+focuz-app/<br/>
+├── app/ # Expo Router 페이지<br/>
+│ ├── (auth)/ # 인증 관련 페이지<br/>
+│ ├── (tabs)/ # 메인 탭 페이지<br/>
+│ ├── admin/ # 관리자 페이지<br/>
+│ └── \_layout.tsx # 루트 레이아웃<br/>
+│<br/>
+├── components/ # 재사용 컴포넌트<br/>
+│ ├── auth/ # 인증 관련 컴포넌트<br/>
+│ ├── sleep/ # 수면 기록 관련 컴포넌트<br/>
+│ ├── test/ # 테스트 용도 컴포넌트<br/>
+│ └── common/ # 공통 UI 컴포넌트 (예: 버튼, 카드 등)<br/>
+│<br/>
+├── lib/ # 라이브러리 및 유틸리티<br/>
+│ ├── api.ts # API 클라이언트 설정<br/>
+│ └── utils.ts # 일반 유틸 함수<br/>
+│<br/>
+├── hooks/ # 커스텀 훅<br/>
+│<br/>
+├── store/ # Zustand 전역 상태 관리<br/>
+│<br/>
+├── types/ # 공통 타입 정의<br/>
+│<br/>
+└── assets/ # 이미지, 폰트 등의 정적 자원<br/>
 
-커밋 컨벤션
-feat: 새로운 기능 추가
-fix: 버그 수정
-docs: 문서 수정
-style: 코드 포맷팅
-refactor: 코드 리팩토링
-test: 테스트 코드
-chore: 빌드 업무 수정
-코드 스타일
+## 👥 개발 가이드
 
-ESLint + Prettier 설정 준수
-TypeScript strict mode 사용
+### 브랜치 전략
+
+- **main** : 프로덕션 배포
+- **develop** : 개발 통합
+- **feature/@** : 기능 개발
+- **fix/@**: 버그 수정
+
+### 커밋 컨벤션
+
+- **feat**: 새로운 기능 추가
+- **fix**: 버그 수정
+- **docs**: 문서 수정
+- **style**: 코드 포맷팅
+- **refactor**: 코드 리팩토링
+- **test**: 테스트 코드
+- **chore**: 빌드 업무 수정
+
+### 코드 스타일
+
+ESLint + Prettier 설정 준수<br>
+TypeScript strict mode 사용<br>
 함수형 컴포넌트 + Hooks 사용
 
-👨‍👩‍👧‍👦 팀 구성
-Frontend Team
+## 👨‍👩‍👧‍👦 팀 구성
 
-개발자 A: 인증/사용자 관리
-개발자 B: 수면 기록 + AI 기능
-개발자 C: 인지 테스트 및 결과
+### Frontend Team
+
+개발자 A: 인증/사용자 관리<br>
+개발자 B: 수면 기록 + AI 기능<br>
+개발자 C: 인지 테스트 및 결과<br>
 개발자 D: 관리자 페이지 + 공통 컴포넌트
 
-Backend Team
+### Backend Team
 
 5명의 백엔드 개발자와 긴밀히 협업
 
-📱 빌드 및 배포
+## 📱 빌드 및 배포
+
 개발 빌드
 bash# iOS 개발 빌드
 <br>
 eas build --platform ios --profile development
 
 # Android 개발 빌드
+
 eas build --platform android --profile development
 <br>
 프로덕션 빌드
@@ -191,12 +197,14 @@ bash# iOS 앱스토어 빌드
 <br>
 eas build --platform ios --profile production
 <br>
+
 # Android 플레이스토어 빌드
+
 eas build --platform android --profile production
 <br>
 
+## 📄 라이선스
 
-📄 라이선스
 이 프로젝트는 MIT 라이선스를 따릅니다. 자세한 내용은 LICENSE 파일을 참조하세요.
 
 <div align="center">
