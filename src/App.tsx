@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { SocialLogin } from './src/app/auth/SocialLogin';
-import { AdminNavigator } from './src/app/admin/navigation/AdminNavigator';
-import { IntroCard } from './src/components/common/IntroCard';
-import { OnboardingSteps } from './src/components/common/OnboardingSteps';
-import { PrivacyNotice } from './src/components/common/PrivacyNotice';
+import { SocialLogin } from './app/auth/SocialLogin';
+import { AdminNavigator } from './app/admin/navigation/AdminNavigator';
+import { IntroCard } from './components/sleep/IntroCard';
+import { OnboardingSteps } from './components/sleep/OnboardingSteps';
+import { PrivacyNotice } from './app/auth/PrivacyNotice';
+import { DashboardMain } from './app/tabs/DashboardMain';
 
 // App: IntroCard, OnboardingSteps, PrivacyNotice, SocialLogin, AdminNavigator를 전환해서 볼 수 있는 메인 컴포넌트
 export default function App() {
-  const [tab, setTab] = useState<'intro' | 'onboarding' | 'privacy' | 'login' | 'admin'>('intro');
+  const [tab, setTab] = useState<'intro' | 'onboarding' | 'privacy' | 'login' | 'main' | 'admin'>('intro');
 
   return (
     <View style={styles.root}>
@@ -40,6 +41,12 @@ export default function App() {
           <Text style={[styles.tabText, tab === 'login' && styles.activeTabText]}>소셜 로그인</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          style={[styles.tabButton, tab === 'main' && styles.activeTab]}
+          onPress={() => setTab('main')}
+        >
+          <Text style={[styles.tabText, tab === 'main' && styles.activeTabText]}>메인 대시보드</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           style={[styles.tabButton, tab === 'admin' && styles.activeTab]}
           onPress={() => setTab('admin')}
         >
@@ -52,6 +59,7 @@ export default function App() {
         {tab === 'onboarding' && <OnboardingSteps onNext={() => setTab('privacy')} />}
         {tab === 'privacy' && <PrivacyNotice onAgree={() => setTab('login')} />}
         {tab === 'login' && <SocialLogin />}
+        {tab === 'main' && <DashboardMain />}
         {tab === 'admin' && <AdminNavigator />}
       </View>
       <StatusBar style="auto" />
