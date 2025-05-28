@@ -7,10 +7,11 @@ import { IntroCard } from './components/sleep/IntroCard';
 import { OnboardingSteps } from './components/sleep/OnboardingSteps';
 import { PrivacyNotice } from './app/tabs/PrivacyNotice';
 import { DashboardMain } from './app/tabs/DashboardMain';
+import TestSurveyNavigator from './components/testMain/Navigation';
 
 // App: IntroCard, OnboardingSteps, PrivacyNotice, SocialLogin, AdminNavigator를 전환해서 볼 수 있는 메인 컴포넌트
 export default function App() {
-  const [tab, setTab] = useState<'intro' | 'onboarding' | 'privacy' | 'login' | 'main' | 'admin'>('intro');
+  const [tab, setTab] = useState<'intro' | 'onboarding' | 'privacy' | 'login' | 'main' | 'admin' | 'test'>('intro');
 
   return (
     <View style={styles.root}>
@@ -52,6 +53,12 @@ export default function App() {
         >
           <Text style={[styles.tabText, tab === 'admin' && styles.activeTabText]}>관리자 페이지</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tabButton, tab === 'test' && styles.activeTab]}
+          onPress={() => setTab('test')}
+        >
+        <Text style={[styles.tabText, tab === 'test' && styles.activeTabText]}>테스트 페이지</Text>
+      </TouchableOpacity>
       </View>
       {/* 선택된 화면 렌더링 */}
       <View style={styles.content}>
@@ -61,6 +68,7 @@ export default function App() {
         {tab === 'login' && <SocialLogin />}
         {tab === 'main' && <DashboardMain />}
         {tab === 'admin' && <AdminNavigator />}
+        {tab === 'test' && <TestSurveyNavigator />}
       </View>
       <StatusBar style="auto" />
     </View>
