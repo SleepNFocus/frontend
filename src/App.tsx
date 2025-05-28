@@ -5,7 +5,7 @@ import { SocialLogin } from './app/auth/SocialLogin';
 import { AdminNavigator } from './app/admin/navigation/AdminNavigator';
 import { IntroCard } from './components/sleep/IntroCard';
 import { OnboardingSteps } from './components/sleep/OnboardingSteps';
-import { PrivacyNotice } from './app/auth/PrivacyNotice';
+import { PrivacyNotice } from './app/tabs/PrivacyNotice';
 import { DashboardMain } from './app/tabs/DashboardMain';
 
 // App: IntroCard, OnboardingSteps, PrivacyNotice, SocialLogin, AdminNavigator를 전환해서 볼 수 있는 메인 컴포넌트

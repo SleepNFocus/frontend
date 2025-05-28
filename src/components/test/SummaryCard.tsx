@@ -14,7 +14,17 @@ export const SummaryCard: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    alignItems: 'stretch',
+    shadowColor: '#8B5CF6',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.13,
+    shadowRadius: 24,
+    elevation: 6,
+    borderWidth: 0,
+    borderColor: 'transparent',
   },
   title: {
     fontSize: 18,

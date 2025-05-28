@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions, Text } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { GreetingCard } from 'src/components/sleep/GreetingCard';
+import { Card } from 'src/components/common/Card';
 import { HexagonRadarChart } from 'src/components/test/HexagonRadarChart';
 import { SummaryCard } from 'src/components/test/SummaryCard';
 import { CheckinCard } from 'src/components/sleep/CheckinCard';
-import { Card } from 'src/components/common/Card';
+import { Text } from 'src/components/common/Text';
 
-// 목업 데이터
 const cognitionData = [77, 54, 91, 60, 80, 70];
 const cognitionLabels = ['반응 속도', '정보 처리', '패턴 기억', '시각 집중', '지속 집중', '유지력'];
 const scoreDetails = [
@@ -17,146 +18,137 @@ const scoreDetails = [
 
 export const DashboardMain: React.FC = () => {
   const width = Dimensions.get('window').width;
-  const isWide = width > 700;
+  const isWide = width > 900;
 
   return (
-    <View style={styles.root}>
-      {/* 상단 인사/안내 */}
-      <View style={styles.greetingBox}>
-        <GreetingCard userName="닉네임" sleepScore={null} />
-      </View>
-      {/* 메인 카드: 레이더차트+상세결과 */}
-      <View style={[styles.mainRow, !isWide && styles.mainRowColumn]}>
-        {/* 좌측: 큰 카드 */}
-        <Card style={styles.leftMainCard}>
-          <View style={[styles.leftMainContent, !isWide && styles.leftMainContentColumn]}>
-            {/* 좌: 수면점수/프로필/레이더 */}
-            <View style={styles.leftBox}>
-              <Text style={styles.sleepScoreLabel}>오늘의 수면 점수: -점</Text>
-              <Text style={styles.profileTitle}>나의 인지 능력 프로필</Text>
-              <HexagonRadarChart data={cognitionData} labels={cognitionLabels} />
-            </View>
-            {/* 우: 상세 결과+점수카드 */}
-            <View style={styles.rightBox}>
-              <Text style={styles.detailTitle}>상세 결과</Text>
-              <Text style={styles.avgScore}>전체 평균 점수: <Text style={styles.avgScorePoint}>74점</Text></Text>
-              <View style={styles.scoreCardList}>
-                {scoreDetails.map((item, idx) => (
-                  <Card key={item.label} style={styles.scoreCard}>
-                    <View style={styles.scoreCardRow}>
-                      <View style={styles.scoreCardLabelBox}>
-                        <Text style={styles.scoreCardLabel}>{item.label}</Text>
-                        <Text style={styles.scoreCardValue}>{item.value}</Text>
+    <LinearGradient
+      colors={['#edeaff', '#fff']}
+      style={styles.bg}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+    >
+      <View style={styles.centerWrap}>
+        <View style={styles.greetingWrap}>
+          <GreetingCard userName="닉네임" />
+        </View>
+        <View style={styles.row}>
+          <Card style={styles.outerCard}>
+            <View style={styles.innerRow}>
+              <View style={styles.abilityCol}>
+                <Text style={styles.sectionLabel}>오늘의 수면 점수: -점</Text>
+                <Text style={styles.sectionTitle}>나의 인지 능력 프로필</Text>
+                <View style={{ alignItems: 'center', marginTop: 12 }}>
+                  <HexagonRadarChart data={cognitionData} labels={cognitionLabels} />
+                </View>
+              </View>
+              <View style={styles.detailCol}>
+                <View style={styles.detailCard}>
+                  <Text style={styles.sectionTitle}>상세 결과</Text>
+                  <Text style={styles.avgScore}>전체 평균 점수: <Text style={styles.avgScorePoint}>74점</Text></Text>
+                  <View style={styles.scoreCardList}>
+                    {scoreDetails.map((item, idx) => (
+                      <View key={item.label} style={styles.scoreCard}>
+                        <View style={styles.scoreCardRow}>
+                          <View style={styles.scoreCardLabelBox}>
+                            <Text style={styles.scoreCardLabel}>{item.label}</Text>
+                            <Text style={styles.scoreCardValue}>{item.value}</Text>
+                          </View>
+                          <Text style={styles.scoreCardPoint}>{item.score}점</Text>
+                        </View>
                       </View>
-                      <Text style={styles.scoreCardPoint}>{item.score}점</Text>
-                    </View>
-                  </Card>
-                ))}
+                    ))}
+                  </View>
+                </View>
               </View>
             </View>
-          </View>
-        </Card>
-        {/* 우측: 요약/체크인 */}
-        <View style={styles.rightCol}>
-          <Card style={styles.sideCard}><SummaryCard /></Card>
-          <View style={styles.checkinCardBox}>
-            <CheckinCard onCheckin={() => alert('컨디션 체크 시작!')} />
+          </Card>
+          <View style={styles.rightCol}>
+            <View>
+              <SummaryCard />
+            </View>
+            <View style={styles.checkinCardBox}>
+              <CheckinCard onCheckin={() => alert('컨디션 체크 시작!')} />
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
-  root: {
+  bg: {
     flex: 1,
     width: '100%',
-    minHeight: '100%',
-    backgroundColor: '#f5f6ff',
-    paddingVertical: 40,
-    paddingHorizontal: 0,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    minHeight: Dimensions.get('window').height,
   },
-  greetingBox: {
+  centerWrap: {
     width: '100%',
-    maxWidth: 1100,
-    marginBottom: 16,
-    paddingHorizontal: 16,
+    alignItems: 'center',
+    marginTop: 0,
+    marginBottom: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
   },
-  mainRow: {
+  greetingWrap: {
+    width: 1100,
+    maxWidth: '95%',
+    marginTop: 32,
+    alignSelf: 'center',
+  },
+  row: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderRadius: 24,
-    boxShadow: '0 4px 24px 0 #e0e0ff33',
-    shadowColor: '#e0e0ff',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    elevation: 2,
-    padding: 40,
-    marginBottom: 32,
-    width: '100%',
-    maxWidth: 1100,
+    gap: 32,
+    width: 1100,
+    maxWidth: '95%',
+    justifyContent: 'center',
     alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: 48,
+    marginTop: 0,
+    marginBottom: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
   },
-  mainRowColumn: {
+  rowMobile: {
     flexDirection: 'column',
-    gap: 0,
-    alignItems: 'center',
-    padding: 18,
+    gap: 24,
+    width: '100%',
   },
-  leftMainCard: {
-    flex: 1.2,
-    minWidth: 260,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginRight: 32,
+  leftCol: {
+    flex: 2,
+    gap: 24,
   },
-  leftMainContent: {
+  leftColMobile: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    gap: 24,
   },
-  leftMainContentColumn: {
-    flexDirection: 'column',
-    gap: 0,
-    alignItems: 'center',
-    padding: 18,
-  },
-  leftBox: {
+  rightCol: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    gap: 24,
   },
-  sleepScoreLabel: {
+  rightColMobile: {
+    flex: 1,
+    gap: 24,
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    padding: 8,
+    shadowColor: '#e0e0ff',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 1,
+  },
+  sectionLabel: {
     fontSize: 15,
     color: '#b0b0d0',
-    marginBottom: 2,
     fontWeight: 'bold',
     alignSelf: 'flex-start',
   },
-  profileTitle: {
-    fontSize: 19,
+  sectionTitle: {
+    fontSize: 21,
     fontWeight: 'bold',
     color: '#222',
-    marginBottom: 10,
-    alignSelf: 'flex-start',
-  },
-  rightBox: {
-    flex: 1,
-    minWidth: 320,
-    alignItems: 'stretch',
-    justifyContent: 'flex-start',
-  },
-  detailTitle: {
-    fontSize: 19,
-    fontWeight: 'bold',
-    color: '#222',
-    marginBottom: 8,
     alignSelf: 'flex-start',
   },
   avgScore: {
@@ -170,16 +162,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   scoreCardList: {
-    gap: 14,
+    gap: 12,
   },
   scoreCard: {
     backgroundColor: '#f8f9ff',
-    borderRadius: 14,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 18,
     marginBottom: 0,
     shadowColor: 'transparent',
     elevation: 0,
+    marginTop: 0,
   },
   scoreCardRow: {
     flexDirection: 'row',
@@ -193,7 +186,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#222',
     fontWeight: 'bold',
-    marginBottom: 2,
   },
   scoreCardValue: {
     fontSize: 13,
@@ -203,30 +195,38 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#6C7BFF',
     fontWeight: 'bold',
-    marginLeft: 16,
-  },
-  rightCol: {
-    width: '100%',
-    maxWidth: 340,
-    marginHorizontal: 8,
-  },
-  sideCard: {
-    backgroundColor: '#fff',
-    borderRadius: 18,
-    padding: 24,
-    marginBottom: 24,
-    width: '100%',
-    shadowColor: '#e0e0ff',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    elevation: 2,
-    minWidth: 0,
   },
   checkinCardBox: {
-    padding: 0,
-    backgroundColor: 'transparent',
-    boxShadow: 'none',
-    elevation: 0,
+    width: '100%',
+    minWidth: 0,
   },
-}); 
+  outerCard: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: '#e0e0ff',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 24,
+    width: '60%',
+    maxWidth: '95%',
+    alignSelf: 'center',
+  },
+  detailCard: {
+    marginTop: 24,
+  },
+  innerRow: {
+    flexDirection: 'row',
+    gap: 32,
+    width: '100%',
+    alignItems: 'flex-start',
+  },
+  abilityCol: {
+    flex: 1,
+    minWidth: 0,
+  },
+  detailCol: {
+    flex: 1,
+    minWidth: 0,
+  },
+});
