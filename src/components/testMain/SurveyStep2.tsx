@@ -41,7 +41,7 @@ export default function SurveyStep2 () {
                 !selected && styles.buttonDisabled
               ]}
               disabled={!selected}
-            //   onPress={() => navigation.navigate('SurveyStep3')}
+              onPress={() => navigation.navigate('SurveyStep3')}
             >
               <Text style={styles.buttonText}>다음</Text>
             </Pressable>

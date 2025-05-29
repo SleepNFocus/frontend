@@ -28,6 +28,7 @@ export type SleepOption = {
       { id: 17, label: '12시간 이상', value: '12:00+', score: 0 },
     ],
   };
+
   export const sleepQuestion2 = {
     id: 'q2',
     text: '아침에 기상했을 때 느낀 주관적인 수면의 질은 어떠셨나요?',
@@ -38,5 +39,31 @@ export type SleepOption = {
       { id: 3, label: '보통', value: '보통', score: 20 },
       { id: 4, label: '약간 피곤함', value: '약간 피곤함', score: 10 },
       { id: 5, label: '매우 피곤함', value: '매우 피곤함', score: 0 },
-    ],
+      ],
   };
+
+  export const sleepQuestion3 = {
+    id: 'q3',
+    text: '잠드는 데 걸린 시간과 밤새 깬 횟수는 어떻게 되시나요?',
+    maxScore: 25,
+    subQuestions: [
+        {
+          id: 'fallAsleep',
+          label: 'A. 잠드는 데 걸린 시간',
+          options: [
+            { label: '15분 이하', value: 'under_15', score: 15 },
+            { label: '15분 ~ 30분', value: '15_30', score: 10 },
+            { label: '30분 초과', value: 'over_30', score: 0 },
+          ],
+        },
+        {
+          id: 'wakeCount',
+          label: 'B. 밤새 깬 횟수',
+          options: [
+            { label: '0번', value: '0', score: 10 },
+            { label: '1~2번', value: '1_2', score: 5 },
+            { label: '3번 이상', value: '3_more', score: 0 },
+          ],
+        },
+    ]
+}
