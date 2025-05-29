@@ -1,6 +1,7 @@
+import { sleepQuestion4 } from '@/mockup/surveyMockup';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { sleepQuestion4 } from 'src/mockup/surveyMockup';
+
 
 export default function SurveyStep4 (){
 

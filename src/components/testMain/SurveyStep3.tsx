@@ -3,7 +3,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, TouchableWithoutFeedback } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { sleepQuestion3 } from 'src/mockup/surveyMockup';
+import { sleepQuestion3 } from '@/mockup/surveyMockup';
 import { TestSurveyStackParamList } from './Navigation';
 
 export default function SurveyStep3 (){

@@ -1,9 +1,10 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { View, Text, StyleSheet } from "react-native";
-import { Button } from "src/components/common/Button";
 import { useNavigation } from '@react-navigation/native';
 import { TestSurveyStackParamList } from './Navigation';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Button } from "../common/Button";
+
 
 export default function TestScreen () {
 

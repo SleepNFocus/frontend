@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { sleepQuestion1 } from 'src/mockup/surveyMockup';
+import { sleepQuestion1 } from '@/mockup/surveyMockup';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TestSurveyStackParamList } from './Navigation';
