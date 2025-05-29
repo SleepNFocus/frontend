@@ -1,4 +1,3 @@
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SurveyStep1 from './SurveyStep1';
 import TestScreen from './TestScreen';
@@ -19,8 +18,6 @@ export type TestSurveyStackParamList = {
 
 export default function TestSurveyNavigator() {
   return (
-    <NavigationContainer>
-      {/* headerShown: false = 상단 네비게이션 바 숨김 */}
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="TestScreen" component={TestScreen} />
         <Stack.Screen name="SurveyStep1" component={SurveyStep1} />
@@ -28,6 +25,5 @@ export default function TestSurveyNavigator() {
         <Stack.Screen name="SurveyStep3" component={SurveyStep3} />
         <Stack.Screen name="SurveyStep4" component={SurveyStep4} /> */}
       </Stack.Navigator>
-    </NavigationContainer>
   );
 }
