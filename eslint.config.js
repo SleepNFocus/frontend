@@ -6,6 +6,9 @@ import reactNative from 'eslint-plugin-react-native';
 import prettier from 'eslint-config-prettier';
 
 export default defineConfig([
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  prettier,
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -24,14 +27,18 @@ export default defineConfig([
       'react-native': reactNative,
     },
     rules: {
-      ...react.configs.recommended.rules,
-      ...reactNative.configs.all.rules,
+      'react-native/no-inline-styles': 'off',
+      'react-native/no-color-literals': 'off',
+      'react-native/no-raw-text': 'off',
+      'react-native/sort-styles': 'off',
       'no-unused-vars': 'error',
       'no-var': 'error',
       'react/react-in-jsx-scope': 'off',
-      'react/jsx-props-no-spreading': 'off',
       'react/prop-types': 'off',
       'react/require-default-props': 'off',
+      'react/jsx-props-no-spreading': 'off',
+      'prettier/prettier': ['warn', { endOfLine: 'auto' }],    
+      ...react.configs.recommended.rules,
     },
   },
   {
@@ -45,7 +52,16 @@ export default defineConfig([
       semi: 'error',
     },
   },
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  prettier,
 ]);
+
+
+
+
+
+
+
+
+
+
+
+
