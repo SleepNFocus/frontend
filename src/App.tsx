@@ -10,6 +10,8 @@ import SurveyStep1 from './components/testMain/SurveyStep1';
 import { AdminNavigator } from './app/admin/navigation/AdminNavigator';
 import TestSurveyNavigator from './components/testMain/Navigation';
 import { SocialLogin } from './app/auth/SocialLogin';
+import Mypage from '@/app/mypage/Mypage';
+
 
 export type RootStackParamList = {
   Dashboard: undefined;
@@ -21,6 +23,7 @@ export type RootStackParamList = {
   Admin: undefined;
   TestSurvey: undefined;
   SocialLogin: undefined;
+  MyPage: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -43,6 +46,7 @@ export default function App() {
         <Stack.Screen name="Admin" component={AdminNavigator} />
         <Stack.Screen name="TestSurvey" component={TestSurveyNavigator} />
         <Stack.Screen name="SocialLogin" component={SocialLogin} />
+        <Stack.Screen name="MyPage" component={Mypage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

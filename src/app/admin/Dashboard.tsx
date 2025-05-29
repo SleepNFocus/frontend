@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Card, Title, Paragraph } from 'react-native-paper';
-import { Layout } from 'src/components/common/Layout';
+import { Layout } from '@/components/common/Layout';
 
 // AdminDashboard: 관리자 대시보드 페이지
 export const AdminDashboard: React.FC = () => {

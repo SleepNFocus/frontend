@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { label: '데일리체크', icon: 'play-circle-outline', route: 'TestSurvey' },
   { label: '히스토리', icon: 'chart-bar', route: 'History' },
   { label: '인사이트', icon: 'lightbulb-outline', route: 'Insight' },
+  { label: '내 정보', icon: 'account-outline', route: 'MyPage' },
   { label: '더보기', icon: 'dots-horizontal', route: 'More' },
   { label: '테스트', icon: 'clipboard-text-outline', route: 'Navigation' },
   { label: '관리자', icon: 'account-cog-outline', route: 'Admin' },
@@ -75,7 +76,7 @@ export const Navbar: React.FC = () => {
       <Text style={styles.logo}>FOCUZ</Text>
       {/* 중앙 메뉴 */}
       <View style={styles.menuWrap}>
-        {NAV_ITEMS.slice(0, 4).map((item, idx) => (
+        {NAV_ITEMS.slice(0, 5).map((item, idx) => (
           <TouchableOpacity 
             key={item.label}
             onPress={() => handleNavigation(item.route)}
