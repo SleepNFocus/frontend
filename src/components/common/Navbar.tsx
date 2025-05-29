@@ -7,10 +7,12 @@ import { useNavigation } from '@react-navigation/native';
 
 const NAV_ITEMS = [
   { label: '대시보드', icon: 'home-outline', route: 'Dashboard' },
-  { label: '데일리체크', icon: 'play-circle-outline', route: 'DailyCheck' },
+  { label: '데일리체크', icon: 'play-circle-outline', route: 'TestSurvey' },
   { label: '히스토리', icon: 'chart-bar', route: 'History' },
   { label: '인사이트', icon: 'lightbulb-outline', route: 'Insight' },
   { label: '더보기', icon: 'dots-horizontal', route: 'More' },
+  { label: '테스트', icon: 'clipboard-text-outline', route: 'Navigation' },
+  { label: '관리자', icon: 'account-cog-outline', route: 'Admin' },
 ];
 
 export const Navbar: React.FC = () => {
@@ -20,6 +22,14 @@ export const Navbar: React.FC = () => {
 
   const handleNavigation = (route: string) => {
     navigation.navigate(route as never);
+  };
+
+  const handleAdminClick = () => {
+    navigation.navigate('Admin' as never);
+  };
+
+  const handleLogout = () => {
+    navigation.navigate('SocialLogin' as never);
   };
 
   if (isMobile) {
@@ -79,10 +89,12 @@ export const Navbar: React.FC = () => {
       {/* 오른쪽: 아이콘, 설정, 로그아웃 */}
       <View style={styles.rightWrap}>
         <Text style={styles.icon}>🌱</Text>
-        <TouchableOpacity style={styles.settingBtn}>
-          <Text style={styles.settingText}>설정</Text>
+        <TouchableOpacity style={styles.settingBtn} onPress={handleAdminClick}>
+          <Text style={styles.settingText}>관리자</Text>
         </TouchableOpacity>
-        <Text style={styles.logout}>로그아웃</Text>
+        <TouchableOpacity onPress={handleLogout}>
+          <Text style={styles.logout}>로그아웃</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
