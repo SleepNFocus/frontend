@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { GreetingCard } from 'src/components/sleep/GreetingCard';
-import { Card } from 'src/components/common/Card';
-import { HexagonRadarChart } from 'src/components/test/HexagonRadarChart';
-import { SummaryCard } from 'src/components/test/SummaryCard';
-import { CheckinCard } from 'src/components/sleep/CheckinCard';
-import { Text } from 'src/components/common/Text';
+import { GreetingCard } from '@/components/sleep/GreetingCard';
+import { Card } from '@/components/common/Card';
+import { HexagonRadarChart } from '@/components/test/HexagonRadarChart';
+import { SummaryCard } from '@/components/test/SummaryCard';
+import { CheckinCard } from '@/components/sleep/CheckinCard';
+import { Text } from '@/components/common/Text';
 
 const cognitionData = [77, 54, 91, 60, 80, 70];
 const cognitionLabels = ['반응 속도', '정보 처리', '패턴 기억', '시각 집중', '지속 집중', '유지력'];
@@ -77,40 +77,64 @@ export const DashboardMain: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  abilityCol: {
+    flex: 1,
+    minWidth: 0,
+  },
+  avgScore: {
+    alignSelf: 'flex-start',
+    color: '#888',
+    fontSize: 15,
+    marginBottom: 16,
+  },
+  avgScorePoint: {
+    color: '#6C7BFF',
+    fontWeight: 'bold',
+  },
   bg: {
     flex: 1,
-    width: '100%',
     minHeight: Dimensions.get('window').height,
+    width: '100%',
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    elevation: 1,
+    padding: 8,
+    shadowColor: '#e0e0ff',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
   },
   centerWrap: {
-    width: '100%',
     alignItems: 'center',
-    marginTop: 0,
     marginBottom: 0,
-    paddingTop: 0,
+    marginTop: 0,
     paddingBottom: 0,
+    paddingTop: 0,
+    width: '100%',
+  },
+  checkinCardBox: {
+    minWidth: 0,
+    width: '100%',
+  },
+  detailCard: {
+    marginTop: 24,
+  },
+  detailCol: {
+    flex: 1,
+    minWidth: 0,
   },
   greetingWrap: {
-    width: 1100,
-    maxWidth: '95%',
-    marginTop: 32,
     alignSelf: 'center',
+    marginTop: 32,
+    maxWidth: '95%',
+    width: 1100,
   },
-  row: {
+  innerRow: {
+    alignItems: 'flex-start',
     flexDirection: 'row',
     gap: 32,
-    width: 1100,
-    maxWidth: '95%',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    marginTop: 0,
-    marginBottom: 0,
-    paddingTop: 0,
-    paddingBottom: 0,
-  },
-  rowMobile: {
-    flexDirection: 'column',
-    gap: 24,
     width: '100%',
   },
   leftCol: {
@@ -121,6 +145,18 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 24,
   },
+  outerCard: {
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    maxWidth: '95%',
+    padding: 20,
+    shadowColor: '#e0e0ff',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 24,
+    width: '60%',
+  },
   rightCol: {
     flex: 1,
     gap: 24,
@@ -129,104 +165,68 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 24,
   },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 18,
-    padding: 8,
-    shadowColor: '#e0e0ff',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 1,
+  row: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: 32,
+    justifyContent: 'center',
+    marginBottom: 0,
+    marginTop: 0,
+    maxWidth: '95%',
+    paddingBottom: 0,
+    paddingTop: 0,
+    width: 1100,
   },
-  sectionLabel: {
-    fontSize: 15,
-    color: '#b0b0d0',
-    fontWeight: 'bold',
-    alignSelf: 'flex-start',
-  },
-  sectionTitle: {
-    fontSize: 21,
-    fontWeight: 'bold',
-    color: '#222',
-    alignSelf: 'flex-start',
-  },
-  avgScore: {
-    fontSize: 15,
-    color: '#888',
-    marginBottom: 16,
-    alignSelf: 'flex-start',
-  },
-  avgScorePoint: {
-    color: '#6C7BFF',
-    fontWeight: 'bold',
-  },
-  scoreCardList: {
-    gap: 12,
+  rowMobile: {
+    flexDirection: 'column',
+    gap: 24,
+    width: '100%',
   },
   scoreCard: {
     backgroundColor: '#f8f9ff',
     borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 18,
-    marginBottom: 0,
-    shadowColor: 'transparent',
     elevation: 0,
+    marginBottom: 0,
     marginTop: 0,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    shadowColor: 'transparent',
   },
-  scoreCardRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  scoreCardLabel: {
+    color: '#222',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   scoreCardLabelBox: {
     flex: 1,
   },
-  scoreCardLabel: {
-    fontSize: 16,
-    color: '#222',
-    fontWeight: 'bold',
-  },
-  scoreCardValue: {
-    fontSize: 13,
-    color: '#888',
+  scoreCardList: {
+    gap: 12,
   },
   scoreCardPoint: {
-    fontSize: 20,
     color: '#6C7BFF',
+    fontSize: 20,
     fontWeight: 'bold',
   },
-  checkinCardBox: {
-    width: '100%',
-    minWidth: 0,
-  },
-  outerCard: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: '#e0e0ff',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 24,
-    width: '60%',
-    maxWidth: '95%',
-    alignSelf: 'center',
-  },
-  detailCard: {
-    marginTop: 24,
-  },
-  innerRow: {
+  scoreCardRow: {
+    alignItems: 'center',
     flexDirection: 'row',
-    gap: 32,
-    width: '100%',
-    alignItems: 'flex-start',
+    justifyContent: 'space-between',
   },
-  abilityCol: {
-    flex: 1,
-    minWidth: 0,
+  scoreCardValue: {
+    color: '#888',
+    fontSize: 13,
   },
-  detailCol: {
-    flex: 1,
-    minWidth: 0,
+  sectionLabel: {
+    alignSelf: 'flex-start',
+    color: '#b0b0d0',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  sectionTitle: {
+    alignSelf: 'flex-start',
+    color: '#222',
+    fontSize: 21,
+    fontWeight: 'bold',
   },
 });
