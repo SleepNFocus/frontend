@@ -67,3 +67,17 @@ export type SleepOption = {
         },
     ]
 }
+
+export const sleepQuestion4 = {
+    id: 'q4',
+    text: '어젯밤, 다음 중 수면에 방해가 될 만한 요인이 있었나요?',
+    baseScore: 20,
+    penalty: 4,
+    options: [
+        { id: 'device', label: '늦은 시간 전자기기 사용 (스마트폰, TV 등)' },
+        { id: 'caffeine', label: '오후 4시 이후 카페인 음료 섭취' },
+        { id: 'environment', label: '불편한 잠자리 환경 (소음, 온도 등)' },
+        { id: 'alcohol', label: '잠들기 2시간 이내 음주' },
+        { id: 'exercise', label: '잠들기 2시간 이내 격렬한 운동' },
+    ]
+}
