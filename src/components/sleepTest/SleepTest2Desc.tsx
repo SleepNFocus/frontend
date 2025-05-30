@@ -4,20 +4,25 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TestSurveyStackParamList } from "../testMain/Navigation";
 
-export default function SleepTestDesc () {
+export default function SleepTest2Desc () {
 
     const navigation = useNavigation<NativeStackNavigationProp<TestSurveyStackParamList>>();
 
     return(
         <View style={styles.root}>
             <View style={styles.container}>
-                <Text style={styles.title}> 현재 인지 능력 측정하기 </Text>
-                <Text style={styles.description}> 
-                    이제 당신의 현재 인지 능력을 파악하기 위한 3가지 게임을 진행합니다.
-                    평소 플레이하는 것과 동일한 버전이며, 완료까지 약 10~15분 이상 소요될 수 있습니다.
-                </Text>
-                <Text style={styles.subTitle}> 집중할 수 있는 조용한 환경에서 시작해 주시기 바랍니다. </Text>
-                <Button title="측정 시작하기" variant="outline" onPress={()=>{navigation.navigate('SleepTest1Desc')}}></Button>
+                <View>
+                    <Text style={styles.title}> 기회 - 숫자 변환 </Text>
+                    <View style={styles.line}/>
+                </View>
+                <View style={styles.textContainer}>
+                    <Text style={styles.description}> 
+                        화면 상단의 기호 - 숫자 짝을 기억하고, 아래에 나타나는 기호에 해당하는 숫자를 빠르게 입력하세요.
+                    </Text><Text style={styles.descriptionBold}> 
+                        [ 제한 시간은 1분 입니다. ]
+                    </Text>
+                </View>
+                <Button title="시작" variant="outline" onPress={()=>{navigation.navigate('SleepTest2')}}></Button>
             </View>
         </View>
     )
@@ -35,7 +40,7 @@ const styles = StyleSheet.create({
         width: 300,
         height: 400,
         padding: 30,
-        gap: 20,
+        gap: 35,
         borderColor: '#222',
         borderRadius: 20,
         shadowColor: '#a5a5a5',
@@ -45,6 +50,17 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 2,
         shadowRadius: 20
+    },
+    textContainer: {
+        flex: 1,
+        gap: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    line: {
+        backgroundColor: '#bfbfbf',
+        height: 1,
+        width: 280
     },
     title: {
         fontWeight: 'bold',
@@ -58,6 +74,10 @@ const styles = StyleSheet.create({
         marginBottom: 24,
         color: '#222',
         textAlign: 'center',
+    },
+    descriptionBold: {
+        fontSize: 15,
+        fontWeight: 'bold',
     },
     subTitle:{
         fontWeight: 'bold',
