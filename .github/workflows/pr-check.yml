@@ -1,0 +1,51 @@
+name: PR Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-check:
+    name: Pull Request Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: 의존성 설치
+        run: npm ci
+        
+      - name: 코드 포맷 체크
+        run: npx prettier --check .
+        
+      - name: TypeScript 타입 체크
+        run: npx tsc --noEmit
+        
+      - name: ESLint 검사
+        run: npm run lint
+        
+      - name: 테스트 실행 (있다면)
+        run: |
+          if npm run | grep -q "test"; then
+            npm test -- --coverage --watchAll=false
+          else
+            echo "테스트 스크립트가 없습니다. 건너뜁니다."
+          fi
+        
+      - name: 웹 빌드 테스트
+        run: npm run web:build
+        
+      - name: 번들 크기 분석
+        uses: preactjs/compressed-size-action@v2
+        with:
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'
+          pattern: './dist/**/*.{js,css}'
