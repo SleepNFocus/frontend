@@ -6,11 +6,12 @@ import { DailyCheckPage } from './app/tabs/DailyCheckPage';
 import { HistoryPage } from './app/tabs/HistoryPage';
 import { InsightPage } from './app/tabs/InsightPage';
 import { MorePage } from './app/tabs/MorePage';
-import SurveyStep1 from './components/testMain/SurveyStep1';
 import { AdminNavigator } from './app/admin/navigation/AdminNavigator';
-import TestSurveyNavigator from './components/testMain/Navigation';
 import { SocialLogin } from './app/auth/SocialLogin';
 import Mypage from '@/app/mypage/Mypage';
+import { SleepRecordPage } from './app/sleep/SleepRecordPage';
+import { SleepInsightsPage } from './app/sleep/SleepInsightPage';
+import { NotificationSettingsPage } from './app/notifications/NotificationSettingsPage';
 
 
 export type RootStackParamList = {
@@ -24,6 +25,9 @@ export type RootStackParamList = {
   TestSurvey: undefined;
   SocialLogin: undefined;
   MyPage: undefined;
+  SleepRecord: undefined;
+  SleepInsights: { recordData?: any } | undefined;
+  NotificationSettings: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -42,11 +46,12 @@ export default function App() {
         <Stack.Screen name="History" component={HistoryPage} />
         <Stack.Screen name="Insight" component={InsightPage} />
         <Stack.Screen name="More" component={MorePage} />
-        <Stack.Screen name="SurveyStep1" component={SurveyStep1} />
         <Stack.Screen name="Admin" component={AdminNavigator} />
-        <Stack.Screen name="TestSurvey" component={TestSurveyNavigator} />
         <Stack.Screen name="SocialLogin" component={SocialLogin} />
         <Stack.Screen name="MyPage" component={Mypage} />
+        <Stack.Screen name="SleepRecord" component={SleepRecordPage} />
+        <Stack.Screen name="SleepInsights" component={SleepInsightsPage} />
+        <Stack.Screen name="NotificationSettings" component={NotificationSettingsPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
