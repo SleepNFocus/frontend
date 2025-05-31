@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { DashboardPage } from './app/tabs/DashboardPage';
 import { DailyCheckPage } from './app/tabs/DailyCheckPage';
@@ -13,6 +13,7 @@ import { Layout } from '@/components/common/Layout';
 import { SleepRecordPage } from './app/sleep/SleepRecordPage';
 import { SleepInsightsPage } from './app/sleep/SleepInsightPage';
 import { NotificationSettingsPage } from './app/notifications/NotificationSettingsPage';
+import { TestNavigator, TestStackParamList } from './app/test/navigation/TestNavigator';
 
 export type RootStackParamList = {
   Dashboard: undefined;
@@ -28,6 +29,7 @@ export type RootStackParamList = {
   SleepRecord: undefined;
   SleepInsights: { recordData?: any } | undefined;
   NotificationSettings: undefined;
+  TestNavigator: NavigatorScreenParams<TestStackParamList>;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -61,6 +63,7 @@ export default function App() {
           name="NotificationSettings"
           component={NotificationSettingsPage}
         />
+        <Stack.Screen name="TestNavigator" component={TestNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );

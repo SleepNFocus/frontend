@@ -1,13 +1,13 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { View, Text, StyleSheet } from "react-native";
-import { Button } from "../common/Button";
+import { Button } from "@/components/common/Button";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TestSurveyStackParamList } from "../testMain/Navigation";
+import { TestStackParamList } from "@/app/test/navigation/TestNavigator";
 
 export default function SleepTestMain() {
 
-    const navigation = useNavigation<NativeStackNavigationProp<TestSurveyStackParamList>>();
+    const navigation = useNavigation<NativeStackNavigationProp<TestStackParamList>>();
 
     return (
         <LinearGradient

@@ -3,13 +3,13 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Button } from '../common/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { TestSurveyStackParamList } from '../testMain/Navigation';
+import { TestStackParamList } from '@/app/test/navigation/TestNavigator';
 
 const MAX_STEP = 5;
 
 export default function SleepTest1() {
 
-    const navigation = useNavigation<NativeStackNavigationProp<TestSurveyStackParamList>>();
+    const navigation = useNavigation<NativeStackNavigationProp<TestStackParamList>>();
 
     const [step, setStep] = useState(0);
     const [isWaiting, setIsWaiting] = useState(true);
