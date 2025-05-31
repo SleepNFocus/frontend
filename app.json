@@ -11,7 +11,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*",
+      "assets/_redirects"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -24,9 +27,21 @@
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro",
-      "output": "static"
+      "output": "static",
+      "build": {
+        "babel": {
+          "include": [
+            "node_modules/expo"
+          ]
+        }
+      }
     },
-    "plugins": ["expo-router"],
-    "scheme": "focuz-app"
+    "plugins": [
+      "expo-router"
+    ],
+    "scheme": "focuz-app",
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }
