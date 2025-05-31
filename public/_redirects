@@ -1,0 +1,6 @@
+
+# SPA 리다이렉트 설정
+/*    /index.html   200
+
+# API 라우트 (필요시)
+/api/*  /.netlify/functions/:splat  200
