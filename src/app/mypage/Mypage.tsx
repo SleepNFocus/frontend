@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Navbar from '@/components/common/Navbar';
 
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState('프로필 관리');
@@ -21,28 +22,34 @@ const MyPage = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.menu}>
-        {['프로필 관리', '설정', '기록 보기', '과거 비교'].map((item) => (
-          <TouchableOpacity key={item} onPress={() => setSelectedMenu(item)}>
-            <Text style={styles.menuItem}>{item}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <Navbar /> 
+      <View style={styles.mainContent}>
+        <View style={styles.menu}>
+          {['프로필 관리', '설정', '기록 보기', '과거 비교'].map((item) => (
+            <TouchableOpacity key={item} onPress={() => setSelectedMenu(item)}>
+              <Text style={styles.menuItem}>{item}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      <View style={styles.content}>
-        {renderContent()}
+        <View style={styles.content}>
+          {renderContent()}
+        </View>
       </View>
     </View>
   );
 };
-
 export default MyPage;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',  // ← 세로 배치로 변경
     backgroundColor: '#f4f1fd',
+  },
+  mainContent: {
+    flex: 1,
+    flexDirection: 'row',     // ← 메뉴와 콘텐츠만 가로 배치
     paddingHorizontal: 48,
     paddingVertical: 32,
   },
