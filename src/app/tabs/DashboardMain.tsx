@@ -7,6 +7,7 @@ import { HexagonRadarChart } from '@/components/test/HexagonRadarChart';
 import { SummaryCard } from '@/components/test/SummaryCard';
 import { CheckinCard } from '@/components/sleep/CheckinCard';
 import { Text } from '@/components/common/Text';
+import { colors } from '@/constants/colors';
 
 const cognitionData = [77, 54, 91, 60, 80, 70];
 const cognitionLabels = ['반응 속도', '정보 처리', '패턴 기억', '시각 집중', '지속 집중', '유지력'];
@@ -21,12 +22,7 @@ export const DashboardMain: React.FC = () => {
   const isWide = width > 900;
 
   return (
-    <LinearGradient
-      colors={['#edeaff', '#fff']}
-      style={styles.bg}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
-    >
+    <View style={styles.bg}>
       <View style={styles.centerWrap}>
         <View style={styles.greetingWrap}>
           <GreetingCard userName="닉네임" />
@@ -72,7 +68,7 @@ export const DashboardMain: React.FC = () => {
           </View>
         </View>
       </View>
-    </LinearGradient>
+    </View>
   );
 };
 
@@ -83,12 +79,12 @@ const styles = StyleSheet.create({
   },
   avgScore: {
     alignSelf: 'flex-start',
-    color: '#888',
+    color: colors.mediumGray,
     fontSize: 15,
     marginBottom: 16,
   },
   avgScorePoint: {
-    color: '#6C7BFF',
+    color: colors.softBlue,
     fontWeight: 'bold',
   },
   bg: {
@@ -97,11 +93,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 18,
     elevation: 1,
     padding: 8,
-    shadowColor: '#e0e0ff',
+    shadowColor: colors.lightGray,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
     shadowRadius: 8,
@@ -147,11 +143,11 @@ const styles = StyleSheet.create({
   },
   outerCard: {
     alignSelf: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 20,
     maxWidth: '95%',
     padding: 20,
-    shadowColor: '#e0e0ff',
+    shadowColor: colors.lightGray,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 24,
@@ -183,7 +179,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   scoreCard: {
-    backgroundColor: '#f8f9ff',
+    backgroundColor: colors.lightGray,
     borderRadius: 12,
     elevation: 0,
     marginBottom: 0,
@@ -193,7 +189,7 @@ const styles = StyleSheet.create({
     shadowColor: 'transparent',
   },
   scoreCardLabel: {
-    color: '#222',
+    color: colors.textColor,
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -204,7 +200,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   scoreCardPoint: {
-    color: '#6C7BFF',
+    color: colors.softBlue,
     fontSize: 20,
     fontWeight: 'bold',
   },
@@ -214,18 +210,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   scoreCardValue: {
-    color: '#888',
+    color: colors.mediumGray,
     fontSize: 13,
   },
   sectionLabel: {
     alignSelf: 'flex-start',
-    color: '#b0b0d0',
+    color: colors.mediumLightGray,
     fontSize: 15,
     fontWeight: 'bold',
   },
   sectionTitle: {
     alignSelf: 'flex-start',
-    color: '#222',
+    color: colors.textColor,
     fontSize: 21,
     fontWeight: 'bold',
   },

@@ -9,6 +9,7 @@ import { MorePage } from './app/tabs/MorePage';
 import { AdminNavigator } from './app/admin/navigation/AdminNavigator';
 import { SocialLogin } from './app/auth/SocialLogin';
 import Mypage from '@/app/mypage/Mypage';
+import { Layout } from '@/components/common/Layout';
 import { SleepRecordPage } from './app/sleep/SleepRecordPage';
 import { SleepInsightsPage } from './app/sleep/SleepInsightPage';
 import { NotificationSettingsPage } from './app/notifications/NotificationSettingsPage';
@@ -42,7 +43,7 @@ export default function App() {
         }}
       >
         <Stack.Screen name="Dashboard" component={DashboardPage} />
-        <Stack.Screen name="DailyCheck" component={DailyCheckPage} />
+        <Stack.Screen name="DailyCheck">{() => <Layout><DailyCheckPage /></Layout>}</Stack.Screen>
         <Stack.Screen name="History" component={HistoryPage} />
         <Stack.Screen name="Insight" component={InsightPage} />
         <Stack.Screen name="More" component={MorePage} />

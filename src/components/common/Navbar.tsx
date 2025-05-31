@@ -3,13 +3,14 @@ import { View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { Text } from './Text';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useResponsive } from '../../hooks/useResponsive';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { colors } from '@/constants/colors';
 
 const NAV_ITEMS = [
   { label: '대시보드', icon: 'home-outline', route: 'Dashboard' },
-  { label: '데일리체크', icon: 'play-circle-outline', route: 'TestSurvey' },
+  { label: '데일리체크', icon: 'play-circle-outline', route: 'SleepRecord' },
   { label: '히스토리', icon: 'chart-bar', route: 'History' },
-  { label: '인사이트', icon: 'lightbulb-outline', route: 'Insight' },
+  { label: '인사이트', icon: 'lightbulb-outline', route: 'SleepInsights' },
   { label: '내 정보', icon: 'account-outline', route: 'MyPage' },
   { label: '더보기', icon: 'dots-horizontal', route: 'More' },
   { label: '테스트', icon: 'clipboard-text-outline', route: 'Navigation' },
@@ -20,6 +21,8 @@ export const Navbar: React.FC = () => {
   const { isMobile } = useResponsive();
   const isWeb = Platform.OS === 'web';
   const navigation = useNavigation();
+  const route = useRoute();
+  const currentRoute = route.name;
 
   const handleNavigation = (route: string) => {
     navigation.navigate(route as never);
@@ -48,7 +51,7 @@ export const Navbar: React.FC = () => {
           },
         ]}
       >
-        {NAV_ITEMS.map((item, idx) => (
+        {NAV_ITEMS.filter(item => item.route !== 'Navigation').map((item) => (
           <TouchableOpacity 
             key={item.label} 
             style={styles.mobileMenuBtn}
@@ -58,9 +61,15 @@ export const Navbar: React.FC = () => {
               name={item.icon} 
               size={22} 
               style={styles.mobileIcon} 
-              color={idx === 0 ? '#6C7BFF' : '#8B95A1'} 
+              color={currentRoute === item.route ? colors.deepNavy : colors.mediumGray} 
             />
-            <Text style={idx === 0 ? { ...styles.mobileMenu, ...styles.mobileMenuActive } : styles.mobileMenu}>
+            <Text
+              style={{
+                ...styles.mobileMenu,
+                color: currentRoute === item.route ? colors.deepNavy : colors.mediumGray,
+                fontWeight: currentRoute === item.route ? 'bold' : '500',
+              }}
+            >
               {item.label}
             </Text>
           </TouchableOpacity>
@@ -69,25 +78,31 @@ export const Navbar: React.FC = () => {
     );
   }
 
-  // PC: 기존 상단 네비게이션 바
+  // PC: 기존 상단 네비게이션 바 (아이콘 추가)
   return (
     <View style={styles.navbar}>
-      {/* 왼쪽 로고 */}
       <Text style={styles.logo}>FOCUZ</Text>
-      {/* 중앙 메뉴 */}
       <View style={styles.menuWrap}>
-        {NAV_ITEMS.slice(0, 5).map((item, idx) => (
+        {NAV_ITEMS.slice(0, 5).map((item) => (
           <TouchableOpacity 
             key={item.label}
             onPress={() => handleNavigation(item.route)}
+            style={styles.menuItem}
           >
-            <Text style={idx === 0 ? { ...styles.menu, ...styles.menuActive } : styles.menu}>
+            <MaterialCommunityIcons
+              name={item.icon}
+              size={20}
+              style={styles.menuIcon}
+              color={currentRoute === item.route ? colors.deepNavy : colors.mediumGray}
+            />
+            <Text style={currentRoute === item.route
+              ? { ...styles.menu, color: colors.deepNavy, fontWeight: 'bold' }
+              : { ...styles.menu, color: colors.mediumGray }}>
               {item.label}
             </Text>
           </TouchableOpacity>
         ))}
       </View>
-      {/* 오른쪽: 아이콘, 설정, 로그아웃 */}
       <View style={styles.rightWrap}>
         <Text style={styles.icon}>🌱</Text>
         <TouchableOpacity style={styles.settingBtn} onPress={handleAdminClick}>
@@ -105,14 +120,14 @@ const styles = StyleSheet.create({
   navbar: {
     width: '100%',
     height: 56,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 32,
     borderBottomWidth: 1,
-    borderBottomColor: '#ececec',
-    shadowColor: '#e0e0ff',
+    borderBottomColor: colors.mediumLightGray,
+    shadowColor: colors.lightGray,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
     shadowRadius: 8,
@@ -122,7 +137,7 @@ const styles = StyleSheet.create({
   logo: {
     fontWeight: 'bold',
     fontSize: 24,
-    color: '#6C7BFF',
+    color: colors.softBlue,
     letterSpacing: 1,
   },
   menuWrap: {
@@ -132,7 +147,7 @@ const styles = StyleSheet.create({
   },
   menu: {
     fontSize: 16,
-    color: '#222',
+    color: colors.textColor,
     fontWeight: '500',
   },
   rightWrap: {
@@ -146,21 +161,21 @@ const styles = StyleSheet.create({
   },
   settingBtn: {
     borderWidth: 1,
-    borderColor: '#ececec',
+    borderColor: colors.mediumLightGray,
     borderRadius: 20,
     paddingHorizontal: 18,
     paddingVertical: 6,
     marginRight: 8,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
   },
   settingText: {
     fontSize: 15,
-    color: '#222',
+    color: colors.textColor,
     fontWeight: '500',
   },
   logout: {
     fontSize: 15,
-    color: '#222',
+    color: colors.textColor,
     fontWeight: '500',
   },
   // 모바일/태블릿 하단 네비게이션 바
@@ -170,13 +185,13 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: 64,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
     borderTopWidth: 1,
-    borderTopColor: '#ececec',
-    shadowColor: '#e0e0ff',
+    borderTopColor: colors.mediumLightGray,
+    shadowColor: colors.lightGray,
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.06,
     shadowRadius: 8,
@@ -192,20 +207,23 @@ const styles = StyleSheet.create({
   mobileIcon: {
     fontSize: 22,
     marginBottom: 2,
-    color: '#8B95A1',
+    color: colors.mediumGray,
   },
   mobileMenu: {
     fontSize: 13,
-    color: '#8B95A1',
     fontWeight: '500',
   },
-  mobileMenuActive: {
-    color: '#6C7BFF',
+  menuActive: {
+    color: colors.softBlue,
     fontWeight: 'bold',
   },
-  menuActive: {
-    color: '#6C7BFF',
-    fontWeight: 'bold',
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  menuIcon: {
+    marginRight: 2,
   },
 });
 
