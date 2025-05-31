@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Navbar from '@/components/common/Navbar';
+import ProfileEdit from './Profile';
+
 
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState('프로필 관리');
@@ -8,7 +10,8 @@ const MyPage = () => {
   const renderContent = () => {
     switch (selectedMenu) {
       case '프로필 관리':
-        return <Text style={styles.contentText}>닉네임: Test</Text>;
+        return <ProfileEdit />;
+      
       case '설정':
         return <Text style={styles.contentText}>알림 설정이나 그런 기능들...</Text>;
       case '기록 보기':
@@ -44,12 +47,12 @@ export default MyPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',  // ← 세로 배치로 변경
+    flexDirection: 'column',  
     backgroundColor: '#f4f1fd',
   },
   mainContent: {
     flex: 1,
-    flexDirection: 'row',     // ← 메뉴와 콘텐츠만 가로 배치
+    flexDirection: 'row',     
     paddingHorizontal: 48,
     paddingVertical: 32,
   },
