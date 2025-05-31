@@ -64,7 +64,7 @@ export default function SleepTest1() {
   const recent = clickTimes[clickTimes.length - 1];
 
   return (
-    <Pressable style={styles.container} onPress={handlePress}>
+    <View style={styles.container}>
       <View style={styles.secContainer}>
         {isFinished ? (
           <View style={styles.resultBox}>
@@ -73,9 +73,7 @@ export default function SleepTest1() {
             <View style={styles.resultTextBox}>
               <Text style={styles.text}> 평균 반응속도 : </Text>
               <Text style={styles.boldText}>
-                {' '}
-                {Math.round(clickTimes.reduce((a, b) => a + b, 0) / MAX_STEP)}
-                ms{' '}
+                {Math.round(clickTimes.reduce((a, b) => a + b, 0) / MAX_STEP)}ms
               </Text>
             </View>
             <Button
@@ -89,8 +87,7 @@ export default function SleepTest1() {
         ) : (
           <View style={styles.testBox}>
             <Text style={styles.progress}>
-              {' '}
-              진행 : {step + 1}/{MAX_STEP}{' '}
+              진행 : {step + 1}/{MAX_STEP}
             </Text>
             <Text style={styles.title}> 초록 불을 잡아라! </Text>
             <View style={styles.circleWrapper}>
@@ -98,31 +95,31 @@ export default function SleepTest1() {
                 <View style={styles.waitBox}>
                   <Text style={styles.plus}> + </Text>
                   <Text style={styles.text}>
-                    {' '}
-                    자극이 나타날 때까지 기다려주세요{' '}
+                    자극이 나타날 때까지 기다려주세요
                   </Text>
                 </View>
               ) : (
-                <View style={styles.circle} />
+                <Pressable onPress={handlePress}>
+                  <View style={styles.circle} />
+                </Pressable>
               )}
             </View>
             {clickTimes.length > 0 && (
               <View style={styles.resultText}>
                 <Text> 최근 반응속도: {recent}ms </Text>
                 <Text>
-                  {' '}
-                  평균 반응속도:{' '}
+                  평균 반응속도:
                   {Math.round(
                     clickTimes.reduce((a, b) => a + b, 0) / clickTimes.length,
                   )}
-                  ms{' '}
+                  ms
                 </Text>
               </View>
             )}
           </View>
         )}
       </View>
-    </Pressable>
+    </View>
   );
 }
 
