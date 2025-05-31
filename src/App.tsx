@@ -1,5 +1,8 @@
 import React from 'react';
-import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  NavigatorScreenParams,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { DashboardPage } from './app/tabs/DashboardPage';
 import { DailyCheckPage } from './app/tabs/DailyCheckPage';
@@ -13,7 +16,10 @@ import { Layout } from '@/components/common/Layout';
 import { SleepRecordPage } from './app/sleep/SleepRecordPage';
 import { SleepInsightsPage } from './app/sleep/SleepInsightPage';
 import { NotificationSettingsPage } from './app/notifications/NotificationSettingsPage';
-import { TestNavigator, TestStackParamList } from './app/test/navigation/TestNavigator';
+import {
+  TestNavigator,
+  TestStackParamList,
+} from './app/test/navigation/TestNavigator';
 
 export type RootStackParamList = {
   Dashboard: undefined;

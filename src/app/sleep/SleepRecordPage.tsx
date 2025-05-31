@@ -9,10 +9,10 @@ import { SleepRecordData } from '@/app/types/sleep';
 import { RootStackParamList } from '@/App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-
 export const SleepRecordPage: React.FC = () => {
   const navigation = useNavigation();
-  const navigation2 = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation2 =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isRecordSaved, setIsRecordSaved] = useState(false);
   const [savedRecordData, setSavedRecordData] =
     useState<SleepRecordData | null>(null);
@@ -36,7 +36,7 @@ export const SleepRecordPage: React.FC = () => {
     navigation2.navigate('TestNavigator', {
       screen: 'SleepTestMain',
     });
-  }
+  };
 
   const startNewRecord = () => {
     setIsRecordSaved(false);
