@@ -15,10 +15,10 @@ interface AuthState {
   resetAuth: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>(set => ({
   isLogin: false,
   user: null,
-  setLogin: (value) => set(() => ({ isLogin: value })),
-  setUser: (user) => set(() => ({ user })),
+  setLogin: value => set(() => ({ isLogin: value })),
+  setUser: user => set(() => ({ user })),
   resetAuth: () => set(() => ({ isLogin: false, user: null })),
 }));

@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, TextInput, ViewStyle } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  ViewStyle,
+} from 'react-native';
 import { Card, Text } from '../..';
 import { useTheme } from 'react-native-paper';
 import { getResponsiveStyle } from '../../utils/responsive';
 
 // User 타입 정의: 사용자 정보 구조
 interface User {
-  id: string;         // 사용자 고유 ID
-  name: string;       // 이름
-  email: string;      // 이메일
+  id: string; // 사용자 고유 ID
+  name: string; // 이름
+  email: string; // 이메일
   role: 'admin' | 'user'; // 역할(관리자/일반)
-  lastLogin: string;  // 마지막 로그인 시간
+  lastLogin: string; // 마지막 로그인 시간
 }
 
 // 임시 사용자 데이터(목업)
@@ -38,9 +44,10 @@ export const UserManagement: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null); // 선택된 사용자
 
   // 검색어에 따라 사용자 필터링
-  const filteredUsers = mockUsers.filter(user =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredUsers = mockUsers.filter(
+    user =>
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   // 사용자 카드 스타일
@@ -63,7 +70,9 @@ export const UserManagement: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
       <Card style={styles.card}>
-        <Text variant="headlineMedium" style={styles.title}>사용자 관리</Text>
+        <Text variant="headlineMedium" style={styles.title}>
+          사용자 관리
+        </Text>
         {/* 사용자 검색 입력창 */}
         <TextInput
           style={[styles.searchInput, { borderColor: theme.colors.outline }]}
@@ -81,7 +90,9 @@ export const UserManagement: React.FC = () => {
             >
               <Text variant="titleMedium">{user.name}</Text>
               <Text variant="bodyMedium">{user.email}</Text>
-              <Text variant="bodySmall">역할: {user.role === 'admin' ? '관리자' : '일반 사용자'}</Text>
+              <Text variant="bodySmall">
+                역할: {user.role === 'admin' ? '관리자' : '일반 사용자'}
+              </Text>
               <Text variant="bodySmall">마지막 로그인: {user.lastLogin}</Text>
             </Card>
           ))}
@@ -92,8 +103,12 @@ export const UserManagement: React.FC = () => {
             <Text variant="titleLarge">사용자 상세 정보</Text>
             <Text variant="bodyLarge">이름: {selectedUser.name}</Text>
             <Text variant="bodyLarge">이메일: {selectedUser.email}</Text>
-            <Text variant="bodyLarge">역할: {selectedUser.role === 'admin' ? '관리자' : '일반 사용자'}</Text>
-            <Text variant="bodyLarge">마지막 로그인: {selectedUser.lastLogin}</Text>
+            <Text variant="bodyLarge">
+              역할: {selectedUser.role === 'admin' ? '관리자' : '일반 사용자'}
+            </Text>
+            <Text variant="bodyLarge">
+              마지막 로그인: {selectedUser.lastLogin}
+            </Text>
           </Card>
         )}
       </Card>
@@ -123,4 +138,4 @@ const styles = StyleSheet.create({
   userList: {
     gap: 8,
   },
-}); 
+});

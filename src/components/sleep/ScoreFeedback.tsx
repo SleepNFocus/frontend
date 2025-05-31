@@ -8,13 +8,17 @@ interface ScoreFeedbackProps {
   scoreBreakdown: ScoreBreakdown;
 }
 
-export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ score, scoreBreakdown }) => {
+export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({
+  score,
+  scoreBreakdown,
+}) => {
   const getFeedback = (score: number) => {
     if (score >= 90) {
       return {
         emoji: '🌟',
         title: '최고의 수면!',
-        message: '완벽한 수면 습관을 가지고 계시는군요! 오늘 하루도 활기차게 시작하세요!',
+        message:
+          '완벽한 수면 습관을 가지고 계시는군요! 오늘 하루도 활기차게 시작하세요!',
         color: '#4CAF50',
       };
     }
@@ -22,7 +26,8 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ score, scoreBreakd
       return {
         emoji: '😊',
         title: '좋은 수면!',
-        message: '건강한 수면 패턴을 잘 유지하고 계세요. 작은 개선으로 더 완벽해질 수 있어요.',
+        message:
+          '건강한 수면 패턴을 잘 유지하고 계세요. 작은 개선으로 더 완벽해질 수 있어요.',
         color: '#8BC34A',
       };
     }
@@ -37,14 +42,15 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ score, scoreBreakd
     return {
       emoji: '🛌',
       title: '개선이 필요한 수면.',
-      message: '수면 습관을 점검하고 개선해 보세요. 가장 점수가 낮은 부분부터 시작해보세요.',
+      message:
+        '수면 습관을 점검하고 개선해 보세요. 가장 점수가 낮은 부분부터 시작해보세요.',
       color: '#F44336',
     };
   };
 
   const getImprovementSuggestions = (scoreBreakdown: ScoreBreakdown) => {
     const suggestions = [];
-    
+
     if (scoreBreakdown.durationScore < 20) {
       suggestions.push('🕐 수면 시간을 7-9시간 사이로 조절해보세요');
     }
@@ -57,7 +63,7 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ score, scoreBreakd
     if (scoreBreakdown.environmentScore < 15) {
       suggestions.push('📱 잠들기 전 전자기기 사용을 줄여보세요');
     }
-    
+
     return suggestions;
   };
 
@@ -70,7 +76,10 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ score, scoreBreakd
         <View style={styles.header}>
           <Text style={styles.emoji}>{feedback.emoji}</Text>
           <View style={styles.headerText}>
-            <Text variant="titleLarge" style={[styles.title, { color: feedback.color }]}>
+            <Text
+              variant="titleLarge"
+              style={[styles.title, { color: feedback.color }]}
+            >
               {feedback.title}
             </Text>
             <Text variant="headlineSmall" style={styles.score}>
@@ -78,7 +87,7 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ score, scoreBreakd
             </Text>
           </View>
         </View>
-        
+
         <Text variant="bodyLarge" style={styles.message}>
           {feedback.message}
         </Text>
@@ -97,7 +106,9 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ score, scoreBreakd
         )}
 
         <View style={styles.scoreDetails}>
-          <Text variant="titleSmall" style={styles.detailsTitle}>세부 점수:</Text>
+          <Text variant="titleSmall" style={styles.detailsTitle}>
+            세부 점수:
+          </Text>
           <View style={styles.scoreGrid}>
             <View style={styles.scoreItem}>
               <Text variant="bodySmall">수면시간</Text>

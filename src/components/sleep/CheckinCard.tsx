@@ -11,13 +11,15 @@ interface CheckinCardProps {
 export const CheckinCard: React.FC<CheckinCardProps> = ({ onCheckin }) => {
   return (
     <LinearGradient
-      colors={["#5B6CFF", "#6C7BFF", "#8B5CF6"]}
+      colors={['#5B6CFF', '#6C7BFF', '#8B5CF6']}
       style={styles.root}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
       <Text style={styles.title}>오늘의 체크인</Text>
-      <Text style={styles.desc}>지금 2분만 투자하여 오늘의 컨디션을 체크해보세요.</Text>
+      <Text style={styles.desc}>
+        지금 2분만 투자하여 오늘의 컨디션을 체크해보세요.
+      </Text>
       <Pressable
         onPress={onCheckin}
         style={({ pressed }) => [
@@ -79,4 +81,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '100%',
   },
-}); 
+});

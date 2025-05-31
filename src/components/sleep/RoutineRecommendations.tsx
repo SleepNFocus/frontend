@@ -6,7 +6,9 @@ interface RoutineRecommendationsProps {
   routines: string[];
 }
 
-export const RoutineRecommendations: React.FC<RoutineRecommendationsProps> = ({ routines }) => {
+export const RoutineRecommendations: React.FC<RoutineRecommendationsProps> = ({
+  routines,
+}) => {
   return (
     <Card style={styles.card}>
       <Card.Content>

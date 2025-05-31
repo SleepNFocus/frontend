@@ -1,5 +1,12 @@
 import React, { useRef } from 'react';
-import { View, Text, Modal as RNModal, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  Modal as RNModal,
+  TouchableOpacity,
+  StyleSheet,
+  Pressable,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useUiStore from '@/store/uiStore';
 import { colors } from '@/constants/colors';
@@ -103,31 +110,45 @@ const ICON_MAP = {
     icon: <Ionicons name="close-circle" size={24} color={colors.goldOrange} />,
     confirmStyle: styles.errorConfirmButton,
     cancelStyle: styles.errorCancelButton,
-    role: "alertdialog",
+    role: 'alertdialog',
   },
   success: {
-    icon: <Ionicons name="checkmark-circle" size={24} color={colors.softBlue} />,
+    icon: (
+      <Ionicons name="checkmark-circle" size={24} color={colors.softBlue} />
+    ),
     confirmStyle: styles.successConfirmButton,
     cancelStyle: styles.successCancelButton,
-    role: "alertdialog",
+    role: 'alertdialog',
   },
   warning: {
     icon: <Ionicons name="warning" size={24} color={colors.softOrange} />,
     confirmStyle: styles.warningConfirmButton,
     cancelStyle: styles.warningCancelButton,
-    role: "alertdialog",
+    role: 'alertdialog',
   },
   info: {
-    icon: <Ionicons name="information-circle" size={24} color={colors.midnightBlue} />,
+    icon: (
+      <Ionicons
+        name="information-circle"
+        size={24}
+        color={colors.midnightBlue}
+      />
+    ),
     confirmStyle: styles.infoConfirmButton,
     cancelStyle: styles.infoCancelButton,
-    role: "dialog",
+    role: 'dialog',
   },
   confirm: {
-    icon: <Ionicons name="information-circle" size={24} color={colors.midnightBlue} />,
+    icon: (
+      <Ionicons
+        name="information-circle"
+        size={24}
+        color={colors.midnightBlue}
+      />
+    ),
     confirmStyle: styles.infoConfirmButton,
     cancelStyle: styles.infoCancelButton,
-    role: "dialog",
+    role: 'dialog',
   },
 };
 
@@ -144,15 +165,15 @@ interface ModalProps {
  * @param {string} props.type - 모달 타입 ('error' | 'success' | 'warning' | 'info' | 'confirm')
  * @param {boolean} props.closeOnOutsideClick - 외부 클릭 시 닫기 여부 (기본값: true)
  */
-const Modal: React.FC<ModalProps> = ({ type = 'info', closeOnOutsideClick = true }) => {
+const Modal: React.FC<ModalProps> = ({
+  type = 'info',
+  closeOnOutsideClick = true,
+}) => {
   const modalRef = useRef<View>(null);
-  
+
   // Zustand 스토어 사용
-  const { 
-    modals, 
-    closeModal 
-  } = useUiStore();
-  
+  const { modals, closeModal } = useUiStore();
+
   const modal = modals[type];
   const isOpen = modal?.isOpen || false;
   const title = modal?.title || '';
@@ -166,7 +187,7 @@ const Modal: React.FC<ModalProps> = ({ type = 'info', closeOnOutsideClick = true
     if (onConfirm) onConfirm();
     closeModal(type);
   };
-  
+
   const handleCancel = () => {
     if (onCancel) onCancel();
     closeModal(type);
@@ -187,10 +208,7 @@ const Modal: React.FC<ModalProps> = ({ type = 'info', closeOnOutsideClick = true
       animationType="fade"
       onRequestClose={() => closeModal(type)}
     >
-      <Pressable 
-        style={styles.overlay}
-        onPress={handleOutsideClick}
-      >
+      <Pressable style={styles.overlay} onPress={handleOutsideClick}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             {/* 내용 */}
@@ -204,14 +222,15 @@ const Modal: React.FC<ModalProps> = ({ type = 'info', closeOnOutsideClick = true
 
             {/* 버튼 */}
             <View style={styles.buttonContainer}>
-              {(type === 'confirm' || type === 'warning' || type === 'error') && cancelText && (
-                <TouchableOpacity
-                  onPress={handleCancel}
-                  style={[styles.button, cancelStyle]}
-                >
-                  <Text style={styles.cancelButtonText}>{cancelText}</Text>
-                </TouchableOpacity>
-              )}
+              {(type === 'confirm' || type === 'warning' || type === 'error') &&
+                cancelText && (
+                  <TouchableOpacity
+                    onPress={handleCancel}
+                    style={[styles.button, cancelStyle]}
+                  >
+                    <Text style={styles.cancelButtonText}>{cancelText}</Text>
+                  </TouchableOpacity>
+                )}
               <TouchableOpacity
                 onPress={handleConfirm}
                 style={[styles.button, confirmStyle]}
@@ -226,4 +245,4 @@ const Modal: React.FC<ModalProps> = ({ type = 'info', closeOnOutsideClick = true
   );
 };
 
-export default Modal; 
+export default Modal;

@@ -18,17 +18,17 @@ interface ModalStore {
   closeModal: (type: string) => void;
 }
 
-const useUiStore = create<ModalStore>((set) => ({
+const useUiStore = create<ModalStore>(set => ({
   modals: {},
   openModal: (type, modalState) =>
-    set((state) => ({
+    set(state => ({
       modals: {
         ...state.modals,
         [type]: { ...modalState, isOpen: true },
       },
     })),
-  closeModal: (type) =>
-    set((state) => ({
+  closeModal: type =>
+    set(state => ({
       modals: {
         ...state.modals,
         [type]: { ...state.modals[type], isOpen: false },
@@ -36,4 +36,4 @@ const useUiStore = create<ModalStore>((set) => ({
     })),
 }));
 
-export default useUiStore; 
+export default useUiStore;

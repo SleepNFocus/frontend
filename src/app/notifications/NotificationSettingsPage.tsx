@@ -23,7 +23,7 @@ export const NotificationSettingsPage: React.FC = () => {
         <Text variant="headlineMedium" style={styles.title}>
           알림 설정
         </Text>
-        
+
         <Card style={styles.card}>
           <Card.Content>
             <View style={styles.settingItem}>
@@ -33,7 +33,7 @@ export const NotificationSettingsPage: React.FC = () => {
                 onValueChange={() => toggleNotification('sleepReminder')}
               />
             </View>
-            
+
             <View style={styles.settingItem}>
               <Text variant="titleMedium">테스트 알림</Text>
               <Switch
@@ -41,7 +41,7 @@ export const NotificationSettingsPage: React.FC = () => {
                 onValueChange={() => toggleNotification('testReminder')}
               />
             </View>
-            
+
             <View style={styles.settingItem}>
               <Text variant="titleMedium">인사이트 알림</Text>
               <Switch

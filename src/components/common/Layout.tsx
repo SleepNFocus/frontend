@@ -14,11 +14,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     // SafeAreaView: 노치/엣지 등 안전 영역 보장
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}> 
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <Navbar />
-      <View style={styles.content}>
-        {children}
-      </View>
+      <View style={styles.content}>{children}</View>
     </SafeAreaView>
   );
 };
@@ -32,4 +32,4 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-}); 
+});

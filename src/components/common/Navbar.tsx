@@ -51,22 +51,29 @@ export const Navbar: React.FC = () => {
           },
         ]}
       >
-        {NAV_ITEMS.filter(item => item.route !== 'Navigation').map((item) => (
-          <TouchableOpacity 
-            key={item.label} 
+        {NAV_ITEMS.filter(item => item.route !== 'Navigation').map(item => (
+          <TouchableOpacity
+            key={item.label}
             style={styles.mobileMenuBtn}
             onPress={() => handleNavigation(item.route)}
           >
-            <MaterialCommunityIcons 
-              name={item.icon} 
-              size={22} 
-              style={styles.mobileIcon} 
-              color={currentRoute === item.route ? colors.deepNavy : colors.mediumGray} 
+            <MaterialCommunityIcons
+              name={item.icon}
+              size={22}
+              style={styles.mobileIcon}
+              color={
+                currentRoute === item.route
+                  ? colors.deepNavy
+                  : colors.mediumGray
+              }
             />
             <Text
               style={{
                 ...styles.mobileMenu,
-                color: currentRoute === item.route ? colors.deepNavy : colors.mediumGray,
+                color:
+                  currentRoute === item.route
+                    ? colors.deepNavy
+                    : colors.mediumGray,
                 fontWeight: currentRoute === item.route ? 'bold' : '500',
               }}
             >
@@ -83,8 +90,8 @@ export const Navbar: React.FC = () => {
     <View style={styles.navbar}>
       <Text style={styles.logo}>FOCUZ</Text>
       <View style={styles.menuWrap}>
-        {NAV_ITEMS.slice(0, 5).map((item) => (
-          <TouchableOpacity 
+        {NAV_ITEMS.slice(0, 5).map(item => (
+          <TouchableOpacity
             key={item.label}
             onPress={() => handleNavigation(item.route)}
             style={styles.menuItem}
@@ -93,11 +100,23 @@ export const Navbar: React.FC = () => {
               name={item.icon}
               size={20}
               style={styles.menuIcon}
-              color={currentRoute === item.route ? colors.deepNavy : colors.mediumGray}
+              color={
+                currentRoute === item.route
+                  ? colors.deepNavy
+                  : colors.mediumGray
+              }
             />
-            <Text style={currentRoute === item.route
-              ? { ...styles.menu, color: colors.deepNavy, fontWeight: 'bold' }
-              : { ...styles.menu, color: colors.mediumGray }}>
+            <Text
+              style={
+                currentRoute === item.route
+                  ? {
+                      ...styles.menu,
+                      color: colors.deepNavy,
+                      fontWeight: 'bold',
+                    }
+                  : { ...styles.menu, color: colors.mediumGray }
+              }
+            >
               {item.label}
             </Text>
           </TouchableOpacity>
@@ -227,4 +246,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Navbar; 
+export default Navbar;

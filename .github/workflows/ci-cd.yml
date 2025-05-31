@@ -1,0 +1,152 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  test:
+    name: Code Quality & Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: TypeScript 타입 체크
+        run: npx tsc --noEmit
+
+      - name: ESLint 검사
+        run: npm run lint
+
+      - name: 테스트 실행 (있다면)
+        run: |
+          if npm run | grep -q "test"; then
+            npm test -- --coverage --watchAll=false
+          else
+            echo "테스트 스크립트가 없습니다. 건너뜁니다."
+          fi
+
+  build-and-deploy:
+    name: Build and Deploy to Netlify
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 환경 변수 설정
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "NODE_ENV=production" >> $GITHUB_ENV
+            if [ -n "${{ secrets.PROD_API_URL }}" ]; then
+              echo "EXPO_PUBLIC_API_URL=${{ secrets.PROD_API_URL }}" >> $GITHUB_ENV
+            fi
+          else
+            echo "NODE_ENV=development" >> $GITHUB_ENV
+            if [ -n "${{ secrets.DEV_API_URL }}" ]; then
+              echo "EXPO_PUBLIC_API_URL=${{ secrets.DEV_API_URL }}" >> $GITHUB_ENV
+            fi
+          fi
+
+      - name: 웹 빌드
+        run: npm run web:build
+
+      - name: 빌드 결과물 확인
+        run: |
+          ls -la dist/
+          echo "Build completed successfully"
+
+      - name: Deploy to Netlify (Development)
+        if: github.ref == 'refs/heads/develop'
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './dist'
+          production-branch: develop
+          deploy-message: 'Deploy from develop branch - ${{ github.sha }}'
+          enable-pull-request-comment: true
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_DEV_SITE_ID }}
+
+      - name: Deploy to Netlify (Production)
+        if: github.ref == 'refs/heads/main'
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './dist'
+          production-branch: main
+          deploy-message: 'Deploy from main branch - ${{ github.sha }}'
+          enable-pull-request-comment: true
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_PROD_SITE_ID }}
+
+  preview-deploy:
+    name: Preview Deploy
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 환경 변수 설정 (Preview)
+        run: |
+          echo "NODE_ENV=development" >> $GITHUB_ENV
+          if [ -n "${{ secrets.DEV_API_URL }}" ]; then
+            echo "EXPO_PUBLIC_API_URL=${{ secrets.DEV_API_URL }}" >> $GITHUB_ENV
+          fi
+
+      - name: 웹 빌드
+        run: npm run web:build
+
+      - name: Deploy Preview to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './dist'
+          deploy-message: 'Preview deploy - PR #${{ github.event.number }}'
+          alias: 'pr-${{ github.event.number }}'
+          enable-pull-request-comment: true
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_DEV_SITE_ID }}

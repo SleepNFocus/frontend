@@ -8,11 +8,16 @@ interface GreetingCardProps {
 }
 
 // 대시보드 상단 인사 및 안내 컴포넌트
-export const GreetingCard: React.FC<GreetingCardProps> = ({ userName = '사용자', sleepScore = null }) => {
+export const GreetingCard: React.FC<GreetingCardProps> = ({
+  userName = '사용자',
+  sleepScore = null,
+}) => {
   return (
     <View style={styles.root}>
-        <Text style={styles.hello}>안녕하세요, {userName}님!</Text>
-      <Text style={styles.desc}>오늘의 컨디션을 체크하고 퍼포먼스를 기록해보세요.</Text>
+      <Text style={styles.hello}>안녕하세요, {userName}님!</Text>
+      <Text style={styles.desc}>
+        오늘의 컨디션을 체크하고 퍼포먼스를 기록해보세요.
+      </Text>
     </View>
   );
 };
@@ -43,4 +48,4 @@ const styles = StyleSheet.create({
     color: '#6C7BFF',
     fontWeight: 'bold',
   },
-}); 
+});

@@ -47,7 +47,7 @@ export const SleepInsightsPage: React.FC = () => {
         <Text variant="headlineMedium" style={styles.title}>
           AI 인사이트
         </Text>
-        
+
         <AISleepTips tips={insights?.sleepTips || []} />
         <RoutineRecommendations routines={insights?.routines || []} />
       </ScrollView>

@@ -12,10 +12,10 @@ module.exports = function (api) {
             '@components': './src/components',
             '@screens': './src/app',
             '@utils': './src/utils',
-            'src': './src'
+            src: './src',
           },
         },
       ],
     ],
   };
-}; 
+};

@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { useNavigation, useRoute, RouteProp, NavigationProp  } from '@react-navigation/native';
+import {
+  useNavigation,
+  useRoute,
+  RouteProp,
+  NavigationProp,
+} from '@react-navigation/native';
 import { useAuthStore } from '@/store/authStore';
 
 type LocalParamList = {
@@ -22,8 +27,8 @@ const OAuthCallback = () => {
   const navigation = useNavigation<NavigationProp<LocalParamList>>();
   const route = useRoute<RouteProp<OAuthRouteParams, 'OAuthCallback'>>();
 
-  const setLogin = useAuthStore((state) => state.setLogin);
-  const setUser = useAuthStore((state) => state.setUser);
+  const setLogin = useAuthStore(state => state.setLogin);
+  const setUser = useAuthStore(state => state.setUser);
 
   useEffect(() => {
     const { code } = route.params ?? {};
@@ -34,7 +39,7 @@ const OAuthCallback = () => {
     }
 
     const mockAuthenticate = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+      await new Promise(resolve => setTimeout(resolve, 1200));
 
       setLogin(true);
       setUser({
@@ -62,7 +67,6 @@ const OAuthCallback = () => {
 };
 
 export default OAuthCallback;
-
 
 const styles = StyleSheet.create({
   container: {

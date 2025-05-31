@@ -9,8 +9,8 @@ interface Props {
 
 // ErrorBoundary의 상태 타입 정의
 interface State {
-  hasError: boolean;      // 에러 발생 여부
-  error: Error | null;    // 에러 객체
+  hasError: boolean; // 에러 발생 여부
+  error: Error | null; // 에러 객체
 }
 
 // ErrorBoundary: 자식 컴포넌트에서 에러 발생 시 UI를 대체하여 보여주는 컴포넌트
@@ -55,18 +55,27 @@ export class ErrorBoundary extends Component<Props, State> {
 // 에러 UI 스타일 정의
 const styles = StyleSheet.create({
   container: {
-    flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
   title: {
-    fontSize: 20, fontWeight: 'bold', marginBottom: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   message: {
-    textAlign: 'center', marginBottom: 20,
+    textAlign: 'center',
+    marginBottom: 20,
   },
   button: {
-    backgroundColor: '#007AFF', padding: 10, borderRadius: 5,
+    backgroundColor: '#007AFF',
+    padding: 10,
+    borderRadius: 5,
   },
   buttonText: {
-    color: 'white', fontSize: 16,
+    color: 'white',
+    fontSize: 16,
   },
-}); 
+});

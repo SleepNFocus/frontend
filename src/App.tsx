@@ -14,7 +14,6 @@ import { SleepRecordPage } from './app/sleep/SleepRecordPage';
 import { SleepInsightsPage } from './app/sleep/SleepInsightPage';
 import { NotificationSettingsPage } from './app/notifications/NotificationSettingsPage';
 
-
 export type RootStackParamList = {
   Dashboard: undefined;
   DailyCheck: undefined;
@@ -43,7 +42,13 @@ export default function App() {
         }}
       >
         <Stack.Screen name="Dashboard" component={DashboardPage} />
-        <Stack.Screen name="DailyCheck">{() => <Layout><DailyCheckPage /></Layout>}</Stack.Screen>
+        <Stack.Screen name="DailyCheck">
+          {() => (
+            <Layout>
+              <DailyCheckPage />
+            </Layout>
+          )}
+        </Stack.Screen>
         <Stack.Screen name="History" component={HistoryPage} />
         <Stack.Screen name="Insight" component={InsightPage} />
         <Stack.Screen name="More" component={MorePage} />
@@ -52,7 +57,10 @@ export default function App() {
         <Stack.Screen name="MyPage" component={Mypage} />
         <Stack.Screen name="SleepRecord" component={SleepRecordPage} />
         <Stack.Screen name="SleepInsights" component={SleepInsightsPage} />
-        <Stack.Screen name="NotificationSettings" component={NotificationSettingsPage} />
+        <Stack.Screen
+          name="NotificationSettings"
+          component={NotificationSettingsPage}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

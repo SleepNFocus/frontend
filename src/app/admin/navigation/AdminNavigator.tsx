@@ -70,4 +70,4 @@ export const AdminNavigator = () => {
       />
     </Stack.Navigator>
   );
-}; 
+};
