@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { LineChart, BarChart } from 'react-native-chart-kit';
-import { Layout, Card, Text } from 'src';
+import { Layout } from '@/components/common/Layout';
+import { Card } from '@/components/common/Card';
+import { Text } from '@/components/common/Text';
 import { useTheme } from 'react-native-paper';
 
 // 화면 너비 계산

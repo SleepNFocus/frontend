@@ -56,4 +56,19 @@ const styles = StyleSheet.create({
     inputWrap: {
         marginTop: 24,
       },
+          label: {
+        fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 8,
+        color: '#333',
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#E5E5E5',
+        borderRadius: 8,
+        padding: 12,
+        fontSize: 16,
+        backgroundColor: '#FFF',
+        color: '#333',
+    },
   });

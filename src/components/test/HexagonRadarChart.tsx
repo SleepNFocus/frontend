@@ -2,9 +2,10 @@ import React from 'react';
 import { View } from 'react-native';
 import Svg, { Polygon, Line, Text as SvgText } from 'react-native-svg';
 
+type Point = [number, number];
 interface HexagonRadarChartProps {
-  data?: any;
-  labels?: any;
+  data?: number[]; 
+  labels?: string[]; 
 }
 
 export const HexagonRadarChart: React.FC<HexagonRadarChartProps> = ({ data = [77, 54, 91, 60, 80, 70], labels = [] }) => {
