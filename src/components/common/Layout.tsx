@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, SafeAreaView } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import { Navbar } from './Navbar';
 
 // Layout 컴포넌트의 props 타입 정의
 interface LayoutProps {
@@ -14,6 +15,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     // SafeAreaView: 노치/엣지 등 안전 영역 보장
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}> 
+      <Navbar />
       <View style={styles.content}>
         {children}
       </View>
