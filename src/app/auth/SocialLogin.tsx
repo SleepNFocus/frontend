@@ -86,8 +86,6 @@ export const SocialLogin: React.FC = () => {
     </View>
   );
 };
-/* eslint-disable react-native/no-color-literals */
-// 재사용 예정 없는 스타일 코드라 주석 처리
 
 const styles = StyleSheet.create({
   button: {
