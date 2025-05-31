@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Navbar from '@/components/common/Navbar';
 import ProfileEdit from './Profile';
+
 
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState('프로필 관리');
@@ -23,28 +25,34 @@ const MyPage = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.menu}>
-        {['프로필 관리', '설정', '기록 보기', '과거 비교'].map((item) => (
-          <TouchableOpacity key={item} onPress={() => setSelectedMenu(item)}>
-            <Text style={styles.menuItem}>{item}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <Navbar /> 
+      <View style={styles.mainContent}>
+        <View style={styles.menu}>
+          {['프로필 관리', '설정', '기록 보기', '과거 비교'].map((item) => (
+            <TouchableOpacity key={item} onPress={() => setSelectedMenu(item)}>
+              <Text style={styles.menuItem}>{item}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      <View style={styles.content}>
-        {renderContent()}
+        <View style={styles.content}>
+          {renderContent()}
+        </View>
       </View>
     </View>
   );
 };
-
 export default MyPage;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',  
     backgroundColor: '#f4f1fd',
+  },
+  mainContent: {
+    flex: 1,
+    flexDirection: 'row',     
     paddingHorizontal: 48,
     paddingVertical: 32,
   },
