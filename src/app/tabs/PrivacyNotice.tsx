@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Linking, TouchableOpacity, Pressable } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Linking,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
 import { Text, Button, Checkbox, Divider } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 
 // PrivacyNotice: 개인정보 안내 및 동의 페이지
-export const PrivacyNotice: React.FC<{ onAgree?: () => void }> = ({ onAgree }) => {
+export const PrivacyNotice: React.FC<{ onAgree?: () => void }> = ({
+  onAgree,
+}) => {
   const [checked, setChecked] = useState(false);
 
   return (
@@ -18,17 +26,22 @@ export const PrivacyNotice: React.FC<{ onAgree?: () => void }> = ({ onAgree }) =
         <View style={styles.card}>
           <Text style={styles.title}>소중한 정보, 안전하게 활용됩니다.</Text>
           <Text style={styles.desc}>
-            FOCUZ는 사용자가 입력한 수면 데이터와 게임 결과를 수집하여 분석에 활용합니다. 이는 개인화된 수면-인지 기능 관계 분석과 서비스 개선을 위해서만 사용됩니다. {'\n'}
+            FOCUZ는 사용자가 입력한 수면 데이터와 게임 결과를 수집하여 분석에
+            활용합니다. 이는 개인화된 수면-인지 기능 관계 분석과 서비스 개선을
+            위해서만 사용됩니다. {'\n'}
             {'\n'}
             수집하는 정보:
           </Text>
           <View style={styles.listBox}>
-            <Text style={styles.listItem}>• 사용자가 입력한 수면 관련 데이터</Text>
+            <Text style={styles.listItem}>
+              • 사용자가 입력한 수면 관련 데이터
+            </Text>
             <Text style={styles.listItem}>• 인지 능력 게임의 결과 데이터</Text>
             <Text style={styles.listItem}>• 서비스 사용 패턴</Text>
           </View>
           <Text style={styles.desc}>
-            모든 데이터는 암호화되어 안전하게 분리 보관되며, 제3자에게 제공되지 않습니다.
+            모든 데이터는 암호화되어 안전하게 분리 보관되며, 제3자에게 제공되지
+            않습니다.
           </Text>
           <View style={styles.linkBox}>
             <TouchableOpacity onPress={() => Linking.openURL('#')}>
@@ -43,7 +56,9 @@ export const PrivacyNotice: React.FC<{ onAgree?: () => void }> = ({ onAgree }) =
               color={'#6C7BFF'}
               uncheckedColor={'#bbb'}
             />
-            <Text style={styles.agreeText}>개인정보 수집 및 이용에 동의합니다.</Text>
+            <Text style={styles.agreeText}>
+              개인정보 수집 및 이용에 동의합니다.
+            </Text>
           </View>
           <Pressable
             onPress={checked ? onAgree : undefined}
@@ -159,4 +174,4 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-}); 
+});

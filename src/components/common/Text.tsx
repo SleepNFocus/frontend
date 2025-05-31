@@ -5,13 +5,24 @@ import { useTheme } from 'react-native-paper';
 // Text 컴포넌트의 props 타입 정의
 interface TextProps {
   children: React.ReactNode; // 텍스트 내용
-  variant?: 'displayLarge' | 'displayMedium' | 'displaySmall' |
-           'headlineLarge' | 'headlineMedium' | 'headlineSmall' |
-           'titleLarge' | 'titleMedium' | 'titleSmall' |
-           'bodyLarge' | 'bodyMedium' | 'bodySmall' |
-           'labelLarge' | 'labelMedium' | 'labelSmall'; // 텍스트 스타일 종류
+  variant?:
+    | 'displayLarge'
+    | 'displayMedium'
+    | 'displaySmall'
+    | 'headlineLarge'
+    | 'headlineMedium'
+    | 'headlineSmall'
+    | 'titleLarge'
+    | 'titleMedium'
+    | 'titleSmall'
+    | 'bodyLarge'
+    | 'bodyMedium'
+    | 'bodySmall'
+    | 'labelLarge'
+    | 'labelMedium'
+    | 'labelSmall'; // 텍스트 스타일 종류
   style?: TextStyle; // 커스텀 스타일
-  color?: string;    // 텍스트 색상
+  color?: string; // 텍스트 색상
 }
 
 // Text: 공통 텍스트 UI 컴포넌트
@@ -77,48 +88,93 @@ export const Text: React.FC<TextProps> = ({
 // Material Design 3 기준 텍스트 스타일 정의
 const styles = StyleSheet.create({
   displayLarge: {
-    fontSize: 57, fontWeight: '400', letterSpacing: 0, lineHeight: 64,
+    fontSize: 57,
+    fontWeight: '400',
+    letterSpacing: 0,
+    lineHeight: 64,
   },
   displayMedium: {
-    fontSize: 45, fontWeight: '400', letterSpacing: 0, lineHeight: 52,
+    fontSize: 45,
+    fontWeight: '400',
+    letterSpacing: 0,
+    lineHeight: 52,
   },
   displaySmall: {
-    fontSize: 36, fontWeight: '400', letterSpacing: 0, lineHeight: 44,
+    fontSize: 36,
+    fontWeight: '400',
+    letterSpacing: 0,
+    lineHeight: 44,
   },
   headlineLarge: {
-    fontSize: 32, fontWeight: '400', letterSpacing: 0, lineHeight: 40,
+    fontSize: 32,
+    fontWeight: '400',
+    letterSpacing: 0,
+    lineHeight: 40,
   },
   headlineMedium: {
-    fontSize: 28, fontWeight: '400', letterSpacing: 0, lineHeight: 36,
+    fontSize: 28,
+    fontWeight: '400',
+    letterSpacing: 0,
+    lineHeight: 36,
   },
   headlineSmall: {
-    fontSize: 24, fontWeight: '400', letterSpacing: 0, lineHeight: 32,
+    fontSize: 24,
+    fontWeight: '400',
+    letterSpacing: 0,
+    lineHeight: 32,
   },
   titleLarge: {
-    fontSize: 22, fontWeight: '400', letterSpacing: 0, lineHeight: 28,
+    fontSize: 22,
+    fontWeight: '400',
+    letterSpacing: 0,
+    lineHeight: 28,
   },
   titleMedium: {
-    fontSize: 16, fontWeight: '500', letterSpacing: 0.15, lineHeight: 24,
+    fontSize: 16,
+    fontWeight: '500',
+    letterSpacing: 0.15,
+    lineHeight: 24,
   },
   titleSmall: {
-    fontSize: 14, fontWeight: '500', letterSpacing: 0.1, lineHeight: 20,
+    fontSize: 14,
+    fontWeight: '500',
+    letterSpacing: 0.1,
+    lineHeight: 20,
   },
   bodyLarge: {
-    fontSize: 16, fontWeight: '400', letterSpacing: 0.5, lineHeight: 24,
+    fontSize: 16,
+    fontWeight: '400',
+    letterSpacing: 0.5,
+    lineHeight: 24,
   },
   bodyMedium: {
-    fontSize: 14, fontWeight: '400', letterSpacing: 0.25, lineHeight: 20,
+    fontSize: 14,
+    fontWeight: '400',
+    letterSpacing: 0.25,
+    lineHeight: 20,
   },
   bodySmall: {
-    fontSize: 12, fontWeight: '400', letterSpacing: 0.4, lineHeight: 16,
+    fontSize: 12,
+    fontWeight: '400',
+    letterSpacing: 0.4,
+    lineHeight: 16,
   },
   labelLarge: {
-    fontSize: 14, fontWeight: '500', letterSpacing: 0.1, lineHeight: 20,
+    fontSize: 14,
+    fontWeight: '500',
+    letterSpacing: 0.1,
+    lineHeight: 20,
   },
   labelMedium: {
-    fontSize: 12, fontWeight: '500', letterSpacing: 0.5, lineHeight: 16,
+    fontSize: 12,
+    fontWeight: '500',
+    letterSpacing: 0.5,
+    lineHeight: 16,
   },
   labelSmall: {
-    fontSize: 11, fontWeight: '500', letterSpacing: 0.5, lineHeight: 16,
+    fontSize: 11,
+    fontWeight: '500',
+    letterSpacing: 0.5,
+    lineHeight: 16,
   },
-}); 
+});

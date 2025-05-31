@@ -6,4 +6,4 @@ export function useResponsive() {
   const isTablet = width > 900 && width <= 1200;
   const isDesktop = width > 1200;
   return { width, isMobile, isTablet, isDesktop };
-} 
+}

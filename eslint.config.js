@@ -34,11 +34,11 @@ module.exports = [
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/ban-ts-comment': 'off',
-      
+
       'no-console': 'off',
       'prefer-const': 'warn',
       'no-unused-vars': 'off',
-      'no-undef': 'off', 
+      'no-undef': 'off',
       'no-redeclare': 'off',
     },
   },

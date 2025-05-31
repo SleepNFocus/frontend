@@ -103,4 +103,4 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderRadius: 16,
   },
-}); 
+});

@@ -24,20 +24,24 @@ interface SleepRecordFormProps {
 }
 
 export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split('T')[0],
+  );
+
   const [sleepDuration, setSleepDuration] = useState<string | null>(null);
   const [openSleepDuration, setOpenSleepDuration] = useState(false);
-  
+
   const [sleepQuality, setSleepQuality] = useState<string | null>(null);
   const [openSleepQuality, setOpenSleepQuality] = useState(false);
-  
+
   const [fallAsleepTime, setFallAsleepTime] = useState<string | null>(null);
   const [nightWakeCount, setNightWakeCount] = useState<string | null>(null);
   const [openFallAsleep, setOpenFallAsleep] = useState(false);
   const [openWakeCount, setOpenWakeCount] = useState(false);
-  
-  const [sleepDisruptors, setSleepDisruptors] = useState<{ [key: string]: boolean }>({
+
+  const [sleepDisruptors, setSleepDisruptors] = useState<{
+    [key: string]: boolean;
+  }>({
     electronics: false,
     caffeine: false,
     environment: false,
@@ -116,7 +120,8 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
     },
     {
       key: 'exercise',
-      label: '잠들기 2시간 이내 격렬한 운동 (숨이 많이 차거나 땀이 많이 나는 운동)',
+      label:
+        '잠들기 2시간 이내 격렬한 운동 (숨이 많이 차거나 땀이 많이 나는 운동)',
       penalty: 4,
     },
   ];
@@ -125,24 +130,32 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
     let durationScore = 0;
     let qualityScore = 0;
     let sleepEfficiencyScore = 0;
-    let environmentScore = 20; 
+    let environmentScore = 20;
 
     if (sleepDuration) {
-      const durationItem = sleepDurationItems.find(item => item.value === sleepDuration);
+      const durationItem = sleepDurationItems.find(
+        item => item.value === sleepDuration,
+      );
       durationScore = durationItem?.score || 0;
     }
 
     if (sleepQuality) {
-      const qualityItem = sleepQualityItems.find(item => item.value === sleepQuality);
+      const qualityItem = sleepQualityItems.find(
+        item => item.value === sleepQuality,
+      );
       qualityScore = qualityItem?.score || 0;
     }
 
     if (fallAsleepTime) {
-      const fallAsleepItem = fallAsleepItems.find(item => item.value === fallAsleepTime);
+      const fallAsleepItem = fallAsleepItems.find(
+        item => item.value === fallAsleepTime,
+      );
       sleepEfficiencyScore += fallAsleepItem?.score || 0;
     }
     if (nightWakeCount) {
-      const wakeCountItem = wakeCountItems.find(item => item.value === nightWakeCount);
+      const wakeCountItem = wakeCountItems.find(
+        item => item.value === nightWakeCount,
+      );
       sleepEfficiencyScore += wakeCountItem?.score || 0;
     }
 
@@ -152,9 +165,15 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
         environmentScore -= disruptor?.penalty || 0;
       }
     });
-    environmentScore = Math.max(0, environmentScore); 
+    environmentScore = Math.max(0, environmentScore);
 
-    const total = Math.min(100, Math.max(0, durationScore + qualityScore + sleepEfficiencyScore + environmentScore));
+    const total = Math.min(
+      100,
+      Math.max(
+        0,
+        durationScore + qualityScore + sleepEfficiencyScore + environmentScore,
+      ),
+    );
 
     setScoreBreakdown({
       durationScore,
@@ -167,7 +186,13 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
 
   useEffect(() => {
     calculateScore();
-  }, [sleepDuration, sleepQuality, fallAsleepTime, nightWakeCount, sleepDisruptors]);
+  }, [
+    sleepDuration,
+    sleepQuality,
+    fallAsleepTime,
+    nightWakeCount,
+    sleepDisruptors,
+  ]);
 
   const handleDisruptorToggle = (key: string) => {
     setSleepDisruptors(prev => ({
@@ -192,7 +217,8 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
     onSave(recordData);
   };
 
-  const isFormValid = sleepDuration && sleepQuality && fallAsleepTime && nightWakeCount;
+  const isFormValid =
+    sleepDuration && sleepQuality && fallAsleepTime && nightWakeCount;
 
   const closeAllDropdowns = () => {
     setOpenSleepDuration(false);
@@ -212,10 +238,18 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
             {totalScore}점
           </Text>
           <View style={styles.scoreBreakdown}>
-            <Text variant="bodySmall">수면시간: {scoreBreakdown.durationScore}/25</Text>
-            <Text variant="bodySmall">수면질: {scoreBreakdown.qualityScore}/30</Text>
-            <Text variant="bodySmall">수면효율: {scoreBreakdown.sleepEfficiencyScore}/25</Text>
-            <Text variant="bodySmall">수면환경: {scoreBreakdown.environmentScore}/20</Text>
+            <Text variant="bodySmall">
+              수면시간: {scoreBreakdown.durationScore}/25
+            </Text>
+            <Text variant="bodySmall">
+              수면질: {scoreBreakdown.qualityScore}/30
+            </Text>
+            <Text variant="bodySmall">
+              수면효율: {scoreBreakdown.sleepEfficiencyScore}/25
+            </Text>
+            <Text variant="bodySmall">
+              수면환경: {scoreBreakdown.environmentScore}/20
+            </Text>
           </View>
         </View>
 
@@ -257,7 +291,7 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
           <Text variant="titleMedium" style={styles.sectionTitle}>
             3. 잠드는 데 걸린 시간과 밤새 깬 횟수는 어떻게 되시나요? (25점)
           </Text>
-          
+
           <View style={[styles.subQuestion, { zIndex: 2000 }]}>
             <Text variant="bodyMedium" style={styles.subQuestionTitle}>
               A. 잠드는 데 걸린 시간
@@ -273,7 +307,7 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
               dropDownContainerStyle={styles.dropdownContainer}
             />
           </View>
-          
+
           <View style={[styles.subQuestion, { zIndex: 1000 }]}>
             <Text variant="bodyMedium" style={styles.subQuestionTitle}>
               B. 수면시간 내 깬 횟수
@@ -298,8 +332,8 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
           <Text variant="bodySmall" style={styles.subtitle}>
             해당하는 항목을 모두 선택해주세요. (각 항목당 -4점)
           </Text>
-          
-          {disruptorOptions.map((option) => (
+
+          {disruptorOptions.map(option => (
             <TouchableWithoutFeedback
               key={option.key}
               onPress={() => handleDisruptorToggle(option.key)}

@@ -1,10 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  Image,
-  Animated,
-} from 'react-native';
+import { View, StyleSheet, Image, Animated } from 'react-native';
 import { Button, Text, useTheme } from 'react-native-paper';
 
 export const SocialLogin: React.FC = () => {
@@ -75,7 +70,10 @@ export const SocialLogin: React.FC = () => {
               />
             )}
             onPress={() => handleSocialLogin('구글')}
-            style={[styles.button, { backgroundColor: '#fff', borderColor: '#ddd', borderWidth: 1 }]}
+            style={[
+              styles.button,
+              { backgroundColor: '#fff', borderColor: '#ddd', borderWidth: 1 },
+            ]}
             labelStyle={{ color: '#222' }}
             contentStyle={{ paddingVertical: 8 }}
           >

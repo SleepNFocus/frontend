@@ -16,7 +16,8 @@ export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
         <Text style={styles.logo}>FOCUZ</Text>
         <Text style={styles.title}>당신의 잠, 퍼포먼스가 되다.</Text>
         <Text style={styles.desc}>
-          어젯밤 수면이 오늘의 당신에게 어떤 영향을 미치는지,{'\n'}간단한 게임으로 확인하고 관리해보세요.
+          어젯밤 수면이 오늘의 당신에게 어떤 영향을 미치는지,{'\n'}간단한
+          게임으로 확인하고 관리해보세요.
         </Text>
         <Pressable
           onPress={onStart}
@@ -86,4 +87,4 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-}); 
+});

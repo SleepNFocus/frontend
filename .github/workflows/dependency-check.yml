@@ -2,30 +2,30 @@ name: Dependency Check
 
 on:
   schedule:
-    - cron: '0 9 * * 1' 
+    - cron: '0 9 * * 1'
   workflow_dispatch:
 
 jobs:
   security-audit:
     name: Security Audit
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 체크아웃
         uses: actions/checkout@v4
-        
+
       - name: Node.js 설정
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
-          
+
       - name: 보안 취약점 검사
         run: npm audit --audit-level=moderate
-        
+
       - name: 의존성 업데이트 확인
         run: npx npm-check-updates --doctor
-        
+
       - name: 이슈 생성 (취약점 발견 시)
         if: failure()
         uses: actions/github-script@v6

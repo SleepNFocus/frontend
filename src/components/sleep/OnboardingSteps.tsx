@@ -4,7 +4,9 @@ import { Text } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 
 // OnboardingSteps: 잠과 퍼포먼스의 연결고리 찾기 안내 페이지
-export const OnboardingSteps: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
+export const OnboardingSteps: React.FC<{ onNext?: () => void }> = ({
+  onNext,
+}) => {
   return (
     <LinearGradient
       colors={['#e8eafe', '#fff']}
@@ -40,9 +42,7 @@ export const OnboardingSteps: React.FC<{ onNext?: () => void }> = ({ onNext }) =
           <Text style={styles.stepTitle}>
             수면과 게임 결과의 관계를 확인하고 맞춤 조언을 받으세요.
           </Text>
-          <Text style={styles.stepDesc}>
-            당신만의 패턴을 발견하고 개선해요
-          </Text>
+          <Text style={styles.stepDesc}>당신만의 패턴을 발견하고 개선해요</Text>
         </View>
         <Pressable
           onPress={onNext}
@@ -134,4 +134,4 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-}); 
+});

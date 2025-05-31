@@ -10,22 +10,23 @@ import { SleepRecordData } from '@/app/types/sleep';
 export const SleepRecordPage: React.FC = () => {
   const navigation = useNavigation();
   const [isRecordSaved, setIsRecordSaved] = useState(false);
-  const [savedRecordData, setSavedRecordData] = useState<SleepRecordData | null>(null);
+  const [savedRecordData, setSavedRecordData] =
+    useState<SleepRecordData | null>(null);
 
   const handleSaveRecord = (recordData: SleepRecordData) => {
     console.log('수면 기록 저장:', recordData);
-    
+
     // TODO: 실제 API 호출로 데이터 저장
-    
+
     setSavedRecordData(recordData);
     setIsRecordSaved(true);
   };
 
-const navigateToInsights = () => {
-  (navigation as any).navigate('SleepInsights', { 
-    recordData: savedRecordData 
-  });
-};
+  const navigateToInsights = () => {
+    (navigation as any).navigate('SleepInsights', {
+      recordData: savedRecordData,
+    });
+  };
 
   const startNewRecord = () => {
     setIsRecordSaved(false);
@@ -38,37 +39,37 @@ const navigateToInsights = () => {
         <Text variant="headlineMedium" style={styles.title}>
           수면 기록
         </Text>
-        
+
         {!isRecordSaved ? (
           <SleepRecordForm onSave={handleSaveRecord} />
         ) : (
           <View style={styles.resultSection}>
             {savedRecordData && (
-              <ScoreFeedback 
-                score={savedRecordData.totalScore} 
-                scoreBreakdown={savedRecordData.scoreBreakdown} 
+              <ScoreFeedback
+                score={savedRecordData.totalScore}
+                scoreBreakdown={savedRecordData.scoreBreakdown}
               />
             )}
-            
+
             <View style={styles.actionButtons}>
-              <Button 
-                mode="contained" 
+              <Button
+                mode="contained"
                 onPress={navigateToInsights}
                 style={styles.primaryButton}
                 icon="lightbulb-outline"
               >
                 AI 인사이트 보기
               </Button>
-              
-              <Button 
-                mode="outlined" 
+
+              <Button
+                mode="outlined"
                 onPress={startNewRecord}
                 style={styles.secondaryButton}
               >
                 새로운 기록 입력
               </Button>
             </View>
-            
+
             <View style={styles.savedInfo}>
               <Text variant="bodyMedium" style={styles.savedInfoText}>
                 ✅ 수면 기록이 성공적으로 저장되었습니다.

@@ -10,7 +10,14 @@ import { Text } from '@/components/common/Text';
 import { colors } from '@/constants/colors';
 
 const cognitionData = [77, 54, 91, 60, 80, 70];
-const cognitionLabels = ['반응 속도', '정보 처리', '패턴 기억', '시각 집중', '지속 집중', '유지력'];
+const cognitionLabels = [
+  '반응 속도',
+  '정보 처리',
+  '패턴 기억',
+  '시각 집중',
+  '지속 집중',
+  '유지력',
+];
 const scoreDetails = [
   { label: '반응 속도', value: '344ms', score: 77 },
   { label: '정보 처리', value: '12개 정답 (92.3%)', score: 54 },
@@ -34,22 +41,34 @@ export const DashboardMain: React.FC = () => {
                 <Text style={styles.sectionLabel}>오늘의 수면 점수: -점</Text>
                 <Text style={styles.sectionTitle}>나의 인지 능력 프로필</Text>
                 <View style={{ alignItems: 'center', marginTop: 12 }}>
-                  <HexagonRadarChart data={cognitionData} labels={cognitionLabels} />
+                  <HexagonRadarChart
+                    data={cognitionData}
+                    labels={cognitionLabels}
+                  />
                 </View>
               </View>
               <View style={styles.detailCol}>
                 <View style={styles.detailCard}>
                   <Text style={styles.sectionTitle}>상세 결과</Text>
-                  <Text style={styles.avgScore}>전체 평균 점수: <Text style={styles.avgScorePoint}>74점</Text></Text>
+                  <Text style={styles.avgScore}>
+                    전체 평균 점수:{' '}
+                    <Text style={styles.avgScorePoint}>74점</Text>
+                  </Text>
                   <View style={styles.scoreCardList}>
                     {scoreDetails.map((item, idx) => (
                       <View key={item.label} style={styles.scoreCard}>
                         <View style={styles.scoreCardRow}>
                           <View style={styles.scoreCardLabelBox}>
-                            <Text style={styles.scoreCardLabel}>{item.label}</Text>
-                            <Text style={styles.scoreCardValue}>{item.value}</Text>
+                            <Text style={styles.scoreCardLabel}>
+                              {item.label}
+                            </Text>
+                            <Text style={styles.scoreCardValue}>
+                              {item.value}
+                            </Text>
                           </View>
-                          <Text style={styles.scoreCardPoint}>{item.score}점</Text>
+                          <Text style={styles.scoreCardPoint}>
+                            {item.score}점
+                          </Text>
                         </View>
                       </View>
                     ))}

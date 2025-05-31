@@ -12,7 +12,9 @@ export const TestManagement: React.FC = () => {
       <ScrollView style={styles.container}>
         {/* 테스트 관리 타이틀 */}
         <Card style={styles.card}>
-          <Text variant="headlineMedium" style={styles.title}>테스트 관리</Text>
+          <Text variant="headlineMedium" style={styles.title}>
+            테스트 관리
+          </Text>
           <View style={styles.content}>
             {/* 테스트 목록 및 관리 기능 구현 예정 */}
             <Text style={styles.placeholderText}>
@@ -47,4 +49,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 24,
   },
-}); 
+});

@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Navbar from '@/components/common/Navbar';
 import ProfileEdit from './Profile';
 
-
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState('프로필 관리');
 
@@ -11,9 +10,11 @@ const MyPage = () => {
     switch (selectedMenu) {
       case '프로필 관리':
         return <ProfileEdit />;
-      
+
       case '설정':
-        return <Text style={styles.contentText}>알림 설정이나 그런 기능들...</Text>;
+        return (
+          <Text style={styles.contentText}>알림 설정이나 그런 기능들...</Text>
+        );
       case '기록 보기':
         return <Text style={styles.contentText}>기록 리스트 연동</Text>;
       case '과거 비교':
@@ -25,19 +26,17 @@ const MyPage = () => {
 
   return (
     <View style={styles.container}>
-      <Navbar /> 
+      <Navbar />
       <View style={styles.mainContent}>
         <View style={styles.menu}>
-          {['프로필 관리', '설정', '기록 보기', '과거 비교'].map((item) => (
+          {['프로필 관리', '설정', '기록 보기', '과거 비교'].map(item => (
             <TouchableOpacity key={item} onPress={() => setSelectedMenu(item)}>
               <Text style={styles.menuItem}>{item}</Text>
             </TouchableOpacity>
           ))}
         </View>
 
-        <View style={styles.content}>
-          {renderContent()}
-        </View>
+        <View style={styles.content}>{renderContent()}</View>
       </View>
     </View>
   );
@@ -47,12 +46,12 @@ export default MyPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',  
+    flexDirection: 'column',
     backgroundColor: '#f4f1fd',
   },
   mainContent: {
     flex: 1,
-    flexDirection: 'row',     
+    flexDirection: 'row',
     paddingHorizontal: 48,
     paddingVertical: 32,
   },
