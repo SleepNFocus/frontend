@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import ProfileEdit from './Profile';
 
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState('프로필 관리');
@@ -7,7 +8,8 @@ const MyPage = () => {
   const renderContent = () => {
     switch (selectedMenu) {
       case '프로필 관리':
-        return <Text style={styles.contentText}>닉네임: Test</Text>;
+        return <ProfileEdit />;
+      
       case '설정':
         return <Text style={styles.contentText}>알림 설정이나 그런 기능들...</Text>;
       case '기록 보기':

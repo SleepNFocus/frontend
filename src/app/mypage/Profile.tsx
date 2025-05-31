@@ -33,7 +33,7 @@ style={styles.profileImage} />
 
 
 
-export defalut ProfileEdit;
+export default ProfileEdit;
 
 const styles = StyleSheet.create({
     container: {
