@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Navbar from '@/components/common/Navbar';
 import ProfileEdit from './Profile';
 import Settings from './Settings';
+import Records from './Records';
 
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState('프로필 관리');
@@ -15,7 +16,7 @@ const MyPage = () => {
       case '설정':
         return <Settings />;
       case '기록 보기':
-        return <Text style={styles.contentText}>기록 리스트 연동</Text>;
+        return <Records />;
       case '과거 비교':
         return <Text style={styles.contentText}>과거랑 현재 비교등등 </Text>;
       default:
