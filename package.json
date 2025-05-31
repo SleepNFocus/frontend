@@ -6,7 +6,7 @@
     "start": "expo start",
     "start:clear": "expo start --clear-cache",
     "android": "expo start --android",
-    "ios": "expo start --ios", 
+    "ios": "expo start --ios",
     "web": "expo start --web",
     "web:build": "expo export --platform web && cp assets/_redirects dist/_redirects",
     "web:serve": "npx serve dist",

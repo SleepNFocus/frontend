@@ -11,10 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*",
-      "assets/_redirects"
-    ],
+    "assetBundlePatterns": ["**/*", "assets/_redirects"],
     "ios": {
       "supportsTablet": true
     },
@@ -30,15 +27,11 @@
       "output": "static",
       "build": {
         "babel": {
-          "include": [
-            "node_modules/expo"
-          ]
+          "include": ["node_modules/expo"]
         }
       }
     },
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": ["expo-router"],
     "scheme": "focuz-app",
     "experiments": {
       "typedRoutes": true
