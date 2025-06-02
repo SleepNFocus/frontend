@@ -10,7 +10,6 @@ const Settings = () => {
       <Text>비밀번호 변경</Text>
 
       <Text>알림 설정</Text>
-
       <Text>계정 탈퇴</Text>
     </View>
   );

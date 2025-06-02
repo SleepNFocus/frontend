@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { SocialLogin } from './src/app/auth/SocialLogin';
+import { SocialLogin } from '@/app/auth/SocialLogin';
 import { AdminNavigator } from './src/app/admin/navigation/AdminNavigator';
 import { IntroCard } from './src/components/common/IntroCard';
 import { OnboardingSteps } from './src/components/sleep/OnboardingSteps';
