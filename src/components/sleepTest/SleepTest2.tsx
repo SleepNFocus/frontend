@@ -112,15 +112,15 @@ export default function SleepTest2() {
           <Text style={styles.scoreText}>{totalScore}점</Text>
           <View style={styles.resultTextBox}>
             <View style={styles.resultTextBox2}>
-              <Text style={styles.text}> 맞춘 개수: </Text>
-              <Text style={styles.boldText}> {correctCount} </Text>
+              <Text style={styles.text}> 총 정답 수 : </Text>
+              <Text style={styles.boldText}> {correctCount} 개 </Text>
             </View>
             <View style={styles.resultTextBox2}>
-              <Text style={styles.text}>평균 반응속도: </Text>
+              <Text style={styles.text}>평균 반응속도 : </Text>
               <Text style={styles.boldText}>{commaNum} ms</Text>
             </View>
             <View style={styles.resultTextBox2}>
-              <Text style={styles.text}> 정확도: </Text>
+              <Text style={styles.text}> 정확도 : </Text>
               <Text style={styles.boldText}>
                 {' '}
                 {Math.round(

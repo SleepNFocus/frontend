@@ -8,6 +8,7 @@ import SleepTestMain from '@/app/test/SleepTestMain';
 import SleepTestDesc from '@/app/test/SleepTest';
 import SleepTest3Desc from '@/components/sleepTest/SleepTest3Desc';
 import SleepTest3 from '@/components/sleepTest/SleepTest3';
+import SleepTestResult from '../SleepTestResult';
 
 export type TestStackParamList = {
   SleepTestMain: undefined;
@@ -18,6 +19,7 @@ export type TestStackParamList = {
   SleepTest2: undefined;
   SleepTest3Desc: undefined;
   SleepTest3: undefined;
+  SleepTestResult: undefined;
 };
 
 const Stack = createNativeStackNavigator<TestStackParamList>();
@@ -33,6 +35,7 @@ export const TestNavigator = () => {
       <Stack.Screen name="SleepTest2" component={SleepTest2} />
       <Stack.Screen name="SleepTest3Desc" component={SleepTest3Desc} />
       <Stack.Screen name="SleepTest3" component={SleepTest3} />
+      <Stack.Screen name="SleepTestResult" component={SleepTestResult} />
     </Stack.Navigator>
   );
 };

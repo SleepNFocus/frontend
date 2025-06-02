@@ -19,9 +19,10 @@ export default function SleepTest3Desc() {
           <Text style={styles.description}>
             화면에 잠시 표시되는 격자 패턴을 기억한 후, 같은 위치를 클릭하세요.
           </Text>
-          <Text style={styles.descriptionBold}>
-            [ 총 3라운드로 진행 <br /> 라운드마다 기억해야 할 패턴이 더
-            복잡해집니다. ]
+          <Text style={styles.descriptionBold}> [ 총 3라운드로 진행 ] </Text>
+          <Text style={styles.description}>
+            {' '}
+            라운드마다 기억해야 할 패턴이 더 복잡해집니다.{' '}
           </Text>
         </View>
         <Button
@@ -86,6 +87,7 @@ const styles = StyleSheet.create({
   descriptionBold: {
     fontSize: 15,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   subTitle: {
     fontWeight: 'bold',
