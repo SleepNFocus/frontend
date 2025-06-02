@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, Image, Animated } from 'react-native';
 import { Button, Text, useTheme } from 'react-native-paper';
+import IntroScreen from './IntroScreen';
 
 export const SocialLogin: React.FC = () => {
   const theme = useTheme();
@@ -21,76 +22,65 @@ export const SocialLogin: React.FC = () => {
     alert(`${provider} 로그인은 아직 구현되지 않았습니다.`);
   };
 
+  if (!isStarted) {
+    return (
+      <View style={{ flex: 1 }}>
+        <IntroScreen onNext={() => setIsStarted(true)} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text variant="headlineMedium" style={styles.title}>
         소셜 로그인
       </Text>
 
-      {!isStarted && (
+      <Animated.View style={[styles.fadeContainer, { opacity: fadeAnim }]}>
         <Button
           mode="contained"
-          onPress={() => setIsStarted(true)}
-          style={[styles.button, { backgroundColor: theme.colors.primary }]}
-          labelStyle={{ color: '#fff' }}
-          contentStyle={{ paddingVertical: 8 }}
+          icon={() => (
+            <Image
+              source={{
+                uri: 'https://developers.kakao.com/tool/resource/static/img/button/kakaoAccount/kakao_account_login_btn_medium_narrow.png',
+              }}
+              style={styles.icon}
+            />
+          )}
+          onPress={() => handleSocialLogin('카카오')}
+          style={[styles.button, { backgroundColor: '#FEE500' }]}
+          labelStyle={{ color: '#3C1E1E', fontWeight: 'bold' }}
+          contentStyle={{ paddingVertical: 10 }}
         >
-          시작하기
+          카카오로 로그인
         </Button>
-      )}
 
-      {isStarted && (
-        <Animated.View style={[styles.fadeContainer, { opacity: fadeAnim }]}>
-          <Button
-            mode="contained"
-            icon={() => (
-              <Image
-                source={{
-                  uri: 'https://developers.kakao.com/tool/resource/static/img/button/kakaoAccount/kakao_account_login_btn_medium_narrow.png',
-                }}
-                style={styles.icon}
-              />
-            )}
-            onPress={() => handleSocialLogin('카카오')}
-            style={[styles.button, { backgroundColor: '#FEE500' }]}
-            labelStyle={{ color: '#3C1E1E' }}
-            contentStyle={{ paddingVertical: 8 }}
-          >
-            카카오로 로그인
-          </Button>
-
-          <Button
-            mode="contained"
-            icon={() => (
-              <Image
-                source={{
-                  uri: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
-                }}
-                style={styles.icon}
-              />
-            )}
-            onPress={() => handleSocialLogin('구글')}
-            style={[
-              styles.button,
-              { backgroundColor: '#fff', borderColor: '#ddd', borderWidth: 1 },
-            ]}
-            labelStyle={{ color: '#222' }}
-            contentStyle={{ paddingVertical: 8 }}
-          >
-            구글로 로그인
-          </Button>
-        </Animated.View>
-      )}
+        <Button
+          mode="contained"
+          icon={() => (
+            <Image
+              source={{
+                uri: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
+              }}
+              style={styles.icon}
+            />
+          )}
+          onPress={() => handleSocialLogin('구글')}
+          style={[
+            styles.button,
+            { backgroundColor: '#fff', borderColor: '#ddd', borderWidth: 1 },
+          ]}
+          labelStyle={{ color: '#222', fontWeight: 'bold' }}
+          contentStyle={{ paddingVertical: 10 }}
+        >
+          구글로 로그인
+        </Button>
+      </Animated.View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    borderRadius: 8,
-    marginBottom: 16,
-    width: 260,
-  },
   container: {
     alignItems: 'center',
     backgroundColor: '#fff',
@@ -102,14 +92,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  title: {
+    marginBottom: 32,
+    textAlign: 'center',
+  },
+  button: {
+    borderRadius: 12,
+    marginBottom: 16,
+    width: 260,
+    elevation: 2,
+  },
   icon: {
     height: 24,
     marginRight: 8,
     resizeMode: 'contain',
     width: 24,
-  },
-  title: {
-    marginBottom: 32,
-    textAlign: 'center',
   },
 });
