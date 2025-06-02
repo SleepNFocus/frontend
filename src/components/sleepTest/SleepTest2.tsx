@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Button } from '@/components/common/Button'; // Button 컴포넌트 맞춰서 수정
+import { Button } from '@/components/common/Button';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TestStackParamList } from '@/app/test/navigation/TestNavigator';
 
 const MAX_NUM = 9;
 const RANDOM_SYMBOL = ['♥︎', '✦', '⚡', '▲', '⚫', '★', '▼', '⬜', '◆'];
 
-function shuffleArray(array: string[]) {
+function randomArray(array: string[]) {
   const copy = [...array];
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -21,7 +21,7 @@ export default function SleepTest2() {
   const navigation =
     useNavigation<NativeStackNavigationProp<TestStackParamList>>();
 
-  const shuffledSymbols = useMemo(() => shuffleArray(RANDOM_SYMBOL), []);
+  const shuffledSymbols = useMemo(() => randomArray(RANDOM_SYMBOL), []);
   const [currentSymbol, setCurrentSymbol] = useState<string>('');
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
@@ -102,39 +102,48 @@ export default function SleepTest2() {
 
   const { totalScore } = calculateScore();
 
+  const commaNum = avgReactionTime.toLocaleString();
+
   return (
     <View style={styles.container}>
-      {start && !gameOver && (
-        <Text style={styles.timerText}>남은 시간: {timeLeft}s</Text>
-      )}
-      <View style={styles.secContainer}>
-        <Text style={styles.title}>기호 - 숫자 변환</Text>
-        <View style={styles.line} />
-
-        {gameOver ? (
-          <>
-            <Text style={styles.title}>반응 속도 결과</Text>
-            <Text style={styles.scoreText}>{totalScore}점</Text>
-            <View style={styles.resultTextBox}>
-              <Text style={styles.text}>맞춘 개수: {correctCount}</Text>
-              <Text style={styles.text}>평균 반응속도: </Text>
-              <Text style={styles.boldText}>{avgReactionTime}ms</Text>
-              <Text style={styles.text}>
-                정확도:{' '}
+      {gameOver ? (
+        <View style={styles.resultBox}>
+          <Text style={styles.title}>반응 속도 결과</Text>
+          <Text style={styles.scoreText}>{totalScore}점</Text>
+          <View style={styles.resultTextBox}>
+            <View style={styles.resultTextBox2}>
+              <Text style={styles.text}> 총 정답 수 : </Text>
+              <Text style={styles.boldText}> {correctCount} 개 </Text>
+            </View>
+            <View style={styles.resultTextBox2}>
+              <Text style={styles.text}>평균 반응속도 : </Text>
+              <Text style={styles.boldText}>{commaNum} ms</Text>
+            </View>
+            <View style={styles.resultTextBox2}>
+              <Text style={styles.text}> 정확도 : </Text>
+              <Text style={styles.boldText}>
+                {' '}
                 {Math.round(
                   (correctCount / (correctCount + wrongCount || 1)) * 100,
                 )}
                 %
               </Text>
             </View>
-            <Button
-              title="다음"
-              variant="outline"
-              onPress={() => navigation.navigate('SleepTest3Desc')}
-            />
-          </>
-        ) : (
-          <>
+          </View>
+          <Button
+            title="다음"
+            variant="outline"
+            onPress={() => navigation.navigate('SleepTest3Desc')}
+          />
+        </View>
+      ) : (
+        <>
+          {start && !gameOver && (
+            <Text style={styles.timerText}>남은 시간: {timeLeft}s</Text>
+          )}
+          <View style={styles.secContainer}>
+            <Text style={styles.title}>기호 - 숫자 변환</Text>
+            <View style={styles.line} />
             <View style={styles.symbolNumberRow}>
               {shuffledSymbols.map((symbol, idx) => (
                 <View key={idx} style={styles.symbolNumberPair}>
@@ -143,7 +152,9 @@ export default function SleepTest2() {
                 </View>
               ))}
             </View>
-            <Text style={styles.randomNum}>{currentSymbol}</Text>
+            <View style={styles.symbolBox}>
+              <Text style={styles.randomNum}>{currentSymbol}</Text>
+            </View>
             <View style={styles.numContainer}>
               {Array.from({ length: MAX_NUM }).map((_, idx) => (
                 <TouchableOpacity
@@ -155,9 +166,9 @@ export default function SleepTest2() {
                 </TouchableOpacity>
               ))}
             </View>
-          </>
-        )}
-      </View>
+          </View>
+        </>
+      )}
     </View>
   );
 }
@@ -173,11 +184,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#555',
+    marginBottom: 20,
   },
   secContainer: {
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    width: 350,
+    width: 400,
     height: 580,
     padding: 30,
     paddingHorizontal: 20,
@@ -188,6 +200,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 4, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 10,
+  },
+  resultBox: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 50,
   },
   title: {
     fontSize: 20,
@@ -222,6 +240,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 4,
     textAlign: 'center',
+  },
+  symbolBox: {
+    width: 90,
+    height: 90,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   randomNum: {
     fontSize: 60,
@@ -259,13 +283,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   scoreText: {
-    fontSize: 32,
+    fontSize: 35,
     fontWeight: 'bold',
-    color: '#222',
+    color: '#5f78ef',
   },
   resultTextBox: {
     alignItems: 'center',
-    gap: 6,
+    gap: 10,
+  },
+  resultTextBox2: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   text: {
     fontSize: 16,

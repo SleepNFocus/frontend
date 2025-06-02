@@ -63,28 +63,37 @@ export default function SleepTest1() {
   const avgScore = calcScore(clickTimes);
   const recent = clickTimes[clickTimes.length - 1];
 
+  const allAvg = Math.round(clickTimes.reduce((a, b) => a + b, 0) / MAX_STEP);
+  const commaAvg = allAvg.toLocaleString();
+
+  const commaRecent = recent !== undefined ? recent.toLocaleString() : '';
+
+  const recentAvg =
+    clickTimes.length > 0
+      ? Math.round(clickTimes.reduce((a, b) => a + b, 0) / clickTimes.length)
+      : 0;
+  const commaRecentAvg = recentAvg.toLocaleString();
+
   return (
     <View style={styles.container}>
-      <View style={styles.secContainer}>
-        {isFinished ? (
-          <View style={styles.resultBox}>
-            <Text style={styles.title}> 반응 속도 결과 </Text>
-            <Text style={styles.scoreText}> {avgScore}점 </Text>
-            <View style={styles.resultTextBox}>
-              <Text style={styles.text}> 평균 반응속도 : </Text>
-              <Text style={styles.boldText}>
-                {Math.round(clickTimes.reduce((a, b) => a + b, 0) / MAX_STEP)}ms
-              </Text>
-            </View>
-            <Button
-              title="다음"
-              variant="outline"
-              onPress={() => {
-                navigation.navigate('SleepTest2Desc');
-              }}
-            />
+      {isFinished ? (
+        <View style={styles.resultBox}>
+          <Text style={styles.title}> 반응 속도 결과 </Text>
+          <Text style={styles.scoreText}> {avgScore}점 </Text>
+          <View style={styles.resultTextBox}>
+            <Text style={styles.text}> 평균 반응속도 : </Text>
+            <Text style={styles.boldText}>{commaAvg} ms</Text>
           </View>
-        ) : (
+          <Button
+            title="다음"
+            variant="outline"
+            onPress={() => {
+              navigation.navigate('SleepTest2Desc');
+            }}
+          />
+        </View>
+      ) : (
+        <View style={styles.secContainer}>
           <View style={styles.testBox}>
             <Text style={styles.progress}>
               진행 : {step + 1}/{MAX_STEP}
@@ -106,19 +115,13 @@ export default function SleepTest1() {
             </View>
             {clickTimes.length > 0 && (
               <View style={styles.resultText}>
-                <Text> 최근 반응속도: {recent}ms </Text>
-                <Text>
-                  평균 반응속도:
-                  {Math.round(
-                    clickTimes.reduce((a, b) => a + b, 0) / clickTimes.length,
-                  )}
-                  ms
-                </Text>
+                <Text> 최근 반응속도: {commaRecent} ms </Text>
+                <Text>평균 반응속도: {commaRecentAvg} ms</Text>
               </View>
             )}
           </View>
-        )}
-      </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -131,21 +134,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   secContainer: {
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     width: 300,
     height: 400,
     padding: 30,
+    paddingHorizontal: 20,
     gap: 35,
     borderColor: '#222',
+    backgroundColor: '#fff',
     borderRadius: 20,
-    shadowColor: '#a5a5a5',
+    shadowColor: '#aaa',
     shadowOffset: {
-      width: 10,
-      height: 10,
+      width: 4,
+      height: 4,
     },
-    shadowOpacity: 2,
-    shadowRadius: 20,
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
   },
   testBox: {
     alignItems: 'center',
@@ -179,7 +184,7 @@ const styles = StyleSheet.create({
   },
   resultBox: {
     alignItems: 'center',
-    gap: 20,
+    gap: 50,
   },
   scoreText: {
     fontSize: 35,
