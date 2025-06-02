@@ -6,7 +6,6 @@ import { AdminNavigator } from './src/app/admin/navigation/AdminNavigator';
 import { IntroCard } from './src/components/common/IntroCard';
 import { OnboardingSteps } from './src/components/sleep/OnboardingSteps';
 import { PrivacyNotice } from './src/app/tabs/PrivacyNotice';
-// import IntroScreen from '@/app/auth/IntroScreen';
 
 // App: IntroCard, OnboardingSteps, PrivacyNotice, SocialLogin, AdminNavigator를 전환해서 볼 수 있는 메인 컴포넌트
 export default function App() {

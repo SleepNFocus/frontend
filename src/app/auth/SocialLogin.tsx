@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, Image, Animated } from 'react-native';
-import { Button, Text, useTheme } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import IntroScreen from './IntroScreen';
 
 export const SocialLogin: React.FC = () => {
-  const theme = useTheme();
-  const [isStarted, setIsStarted] = useState(false);
+  const [isStarted] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -25,7 +24,8 @@ export const SocialLogin: React.FC = () => {
   if (!isStarted) {
     return (
       <View style={{ flex: 1 }}>
-        <IntroScreen onNext={() => setIsStarted(true)} />
+        {/* <IntroScreen onNext={() => setIsStarted(true)} /> 나중에 onNext사용시 이렇게 변경 */}
+        <IntroScreen />
       </View>
     );
   }

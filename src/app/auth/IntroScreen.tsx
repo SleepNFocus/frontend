@@ -14,29 +14,12 @@ import {
   Alert,
 } from 'react-native';
 
-const slides = [
-  {
-    key: '1',
-    title: '당신의 잠, 퍼포먼스가 되다.',
-    subtitle:
-      '어젯밤 수면이 오늘의 당신에게 어떤 영향을 미치는지,\n간단한 게임으로 확인하고 관리해보세요.',
-    background: require('../../assets/onboarding1.jpg'),
-  },
-  {
-    key: '2',
-    title: '수면 기록을 시각화하세요.',
-    subtitle: '패턴을 파악하고 건강한 루틴을 만들어보세요.',
-    background: require('../../assets/onboarding2.jpg'),
-  },
-  {
-    key: '3',
-    title: '지금 바로 시작해보세요.',
-    subtitle: '',
-    background: require('../../assets/onboarding3.jpg'),
-  },
-];
+// type IntroScreenProps = {
+//   onNext: () => void;
+// };
 
-export default function OnboardingWithSocial() {
+// (const IntroScreen: React.FC<IntroScreenProps> = ({ onNext }) => {  아래부분 나중에 소셜 연동할때 이렇게 변경 및 소셜로그인에서 추가해줘야댐댐
+const IntroScreen: React.FC = () => {
   const { width, height } = useWindowDimensions();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isStarted, setIsStarted] = useState(false);
@@ -111,7 +94,10 @@ export default function OnboardingWithSocial() {
                     {index === slides.length - 1 && (
                       <TouchableOpacity
                         style={styles.startButton}
-                        onPress={handleStart}
+                        onPress={() => {
+                          handleStart();
+                          // onNext(); 주석 지우면 소셜 페이지로 넘어가게 만듬
+                        }}
                       >
                         <Text style={styles.startButtonText}>시작하기</Text>
                       </TouchableOpacity>
@@ -136,7 +122,31 @@ export default function OnboardingWithSocial() {
       )}
     </View>
   );
-}
+};
+
+export default IntroScreen;
+
+const slides = [
+  {
+    key: '1',
+    title: '당신의 잠, 퍼포먼스가 되다.',
+    subtitle:
+      '어젯밤 수면이 오늘의 당신에게 어떤 영향을 미치는지,\n간단한 게임으로 확인하고 관리해보세요.',
+    background: require('../../assets/onboarding1.jpg'),
+  },
+  {
+    key: '2',
+    title: '수면 기록을 시각화하세요.',
+    subtitle: '패턴을 파악하고 건강한 루틴을 만들어보세요.',
+    background: require('../../assets/onboarding2.jpg'),
+  },
+  {
+    key: '3',
+    title: '지금 바로 시작해보세요.',
+    subtitle: '',
+    background: require('../../assets/onboarding3.jpg'),
+  },
+];
 
 const styles = StyleSheet.create({
   overlay: {
