@@ -187,9 +187,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   secContainer: {
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    width: 350,
+    width: 400,
     height: 580,
     padding: 30,
     paddingHorizontal: 20,
@@ -283,9 +283,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   scoreText: {
-    fontSize: 32,
+    fontSize: 35,
     fontWeight: 'bold',
-    color: '#6478e9',
+    color: '#5f78ef',
   },
   resultTextBox: {
     alignItems: 'center',

@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     width: 500,
     height: 680,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   line: {
     backgroundColor: '#bfbfbf',
     height: 1,
-    width: 320,
+    width: 420,
   },
   resultContainer: {
     alignItems: 'center',
@@ -272,8 +272,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   scoreText: {
-    fontSize: 32,
+    fontSize: 35,
     fontWeight: 'bold',
-    color: '#6478e9',
+    color: '#5f78ef',
   },
 });
