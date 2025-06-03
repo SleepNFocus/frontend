@@ -1,78 +1,117 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Navbar from '@/components/common/Navbar';
-import ProfileEdit from './Profile';
-import Settings from './Settings';
-import Records from './Records';
+import ProfileCard from './ProfileCard';
+// import ProfileEdit from './Profile';
+// import Settings from './Settings';
+// import Records from './Records';
 
 const MyPage = () => {
-  const [selectedMenu, setSelectedMenu] = useState('프로필 관리');
-
-  const renderContent = () => {
-    switch (selectedMenu) {
-      case '프로필 관리':
-        return <ProfileEdit />;
-
-      case '설정':
-        return <Settings />;
-      case '기록 보기':
-        return <Records />;
-      case '과거 비교':
-        return <Text style={styles.contentText}>과거랑 현재 비교등등 </Text>;
-      default:
-        return null;
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      <Navbar />
-      <View style={styles.mainContent}>
-        <View style={styles.menu}>
-          {['프로필 관리', '설정', '기록 보기', '과거 비교'].map(item => (
-            <TouchableOpacity key={item} onPress={() => setSelectedMenu(item)}>
-              <Text style={styles.menuItem}>{item}</Text>
-            </TouchableOpacity>
-          ))}
+    <LinearGradient
+      colors={['#0D0D2B', '#1C1C40', '#34346A']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      style={styles.gradient}
+    >
+      <ScrollView
+        contentContainerStyle={{
+          padding: 20,
+          paddingBottom: 80,
+          gap: 24,
+          flexGrow: 1,
+        }}
+      >
+        <Navbar />
+
+        <ProfileCard />
+
+        <View style={styles.card}>
+          <Text style={styles.title}>데이터 관리</Text>
+          <Text style={styles.subText}>기록 보기 / 테스트 결과 등 요약</Text>
         </View>
 
-        <View style={styles.content}>{renderContent()}</View>
-      </View>
-    </View>
+        <View style={styles.card}>
+          <Text style={styles.title}>정보</Text>
+
+          <View style={styles.linkGroup}>
+            <Text style={styles.subText}>개인정보처리방침</Text>
+            <Text style={styles.subText}>서비스 이용약관</Text>
+            <Text style={styles.subText}>문의 하기</Text>
+          </View>
+        </View>
+
+        <TouchableOpacity style={styles.footer}>
+          <Text style={styles.logout}>로그아웃</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </LinearGradient>
   );
 };
+
 export default MyPage;
 
 const styles = StyleSheet.create({
-  container: {
+  gradient: {
     flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#f4f1fd',
   },
-  mainContent: {
-    flex: 1,
-    flexDirection: 'row',
-    paddingHorizontal: 48,
-    paddingVertical: 32,
+  scrollContainer: {
+    flexGrow: 1,
+    paddingHorizontal: 20,
+    paddingTop: 32,
+    paddingBottom: 60,
   },
-  menu: {
-    width: 200,
-    justifyContent: 'flex-start',
-    gap: 20,
+  card: {
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 20,
+    padding: 24,
+    marginBottom: 20,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
   },
-  menuItem: {
-    fontSize: 16,
-    color: '#222',
-    fontWeight: '500',
-  },
-  content: {
-    flex: 1,
-    paddingLeft: 48,
-    justifyContent: 'flex-start',
-  },
-  contentText: {
+  title: {
     fontSize: 18,
-    color: '#333',
-    fontWeight: '400',
+    fontWeight: '600',
+    color: '#EAE9F3',
+    marginBottom: 6,
+  },
+  subText: {
+    color: '#C7C5D9',
+    fontSize: 14,
+  },
+  logoutWrapper: {
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  logout: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: 'bold',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  },
+  linkGroup: {
+    marginTop: 10,
+    gap: 6,
+  },
+
+  footer: {
+    alignItems: 'center',
+    marginTop: 40,
   },
 });
