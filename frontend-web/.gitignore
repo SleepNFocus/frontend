@@ -1,0 +1,22 @@
+# dependencies
+node_modules/
+
+# debug logs
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+# SSL 인증서 (필요시)
+*.pem
+
+# 충돌 임시파일 (선택)
+*.orig.*
