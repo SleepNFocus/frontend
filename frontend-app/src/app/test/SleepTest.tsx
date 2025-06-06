@@ -18,8 +18,7 @@ export default function SleepTestDesc() {
           수 있습니다.
         </Text>
         <Text style={styles.subTitle}>
-          {' '}
-          집중할 수 있는 조용한 환경에서 시작해 주시기 바랍니다.{' '}
+          집중할 수 있는 조용한 환경에서 시작해 주시기 바랍니다.
         </Text>
         <Button
           title="측정 시작하기"

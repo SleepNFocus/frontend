@@ -16,7 +16,7 @@ export default function SleepTest1() {
   const [startTime, setStartTime] = useState<number | null>(null);
   const [clickTimes, setClickTimes] = useState<number[]>([]);
   const [isFinished, setIsFinished] = useState(false);
-  const timeout = useRef<NodeJS.Timeout | null>(null);
+  const timeout = useRef<number | null>(null);
 
   useEffect(() => {
     if (step < MAX_STEP && isWaiting) {

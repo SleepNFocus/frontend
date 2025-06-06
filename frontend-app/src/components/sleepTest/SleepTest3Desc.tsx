@@ -21,8 +21,7 @@ export default function SleepTest3Desc() {
           </Text>
           <Text style={styles.descriptionBold}> [ 총 3라운드로 진행 ] </Text>
           <Text style={styles.description}>
-            {' '}
-            라운드마다 기억해야 할 패턴이 더 복잡해집니다.{' '}
+            라운드마다 기억해야 할 패턴이 더 복잡해집니다.
           </Text>
         </View>
         <Button

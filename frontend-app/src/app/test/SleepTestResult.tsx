@@ -60,7 +60,7 @@ export default function SleepTestResult() {
             <Text style={styles.mainScore}> 80점 </Text>
           </View>
           <Text style={styles.description}>
-            초기 인지 능력 측정이 완료되었습니다. <br /> 이제 대시보드에서
+            초기 인지 능력 측정이 완료되었습니다. {'\n'} 이제 대시보드에서
             당신의 프로필을 확인하고, 매일의 컨디션 변화를 기록해보세요.
           </Text>
           <Button
