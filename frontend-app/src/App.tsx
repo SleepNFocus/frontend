@@ -23,6 +23,7 @@ import {
 } from './app/test/navigation/TestNavigator';
 import Settings from '@/app/mypage/Settings';
 import NicknameEdit from './app/mypage/NicknameEdit';
+import MyRecord from './app/mypage/MyRecord';
 
 export type RootStackParamList = {
   Dashboard: undefined;
@@ -41,6 +42,7 @@ export type RootStackParamList = {
   TestNavigator: NavigatorScreenParams<TestStackParamList>;
   Settings: undefined;
   NicknameEdit: undefined;
+  MyRecord: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -76,6 +78,7 @@ export default function App() {
         <Stack.Screen name="TestNavigator" component={TestNavigator} />
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="NicknameEdit" component={NicknameEdit} />
+        <Stack.Screen name="MyRecord" component={MyRecord} />
       </Stack.Navigator>
 
       <Toast />

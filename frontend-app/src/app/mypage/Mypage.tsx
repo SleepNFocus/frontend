@@ -48,8 +48,8 @@ const MyPage = () => {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.footer}>
-          <Text style={styles.logout}>로그아웃</Text>
+        <TouchableOpacity style={styles.logoutBtn}>
+          <Text style={styles.logoutBtnText}>로그아웃</Text>
         </TouchableOpacity>
       </ScrollView>
     </LinearGradient>
@@ -63,55 +63,55 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContainer: {
-    flexGrow: 1,
     paddingHorizontal: 20,
-    paddingTop: 32,
-    paddingBottom: 60,
+    paddingTop: 20,
+    paddingBottom: 80,
+    gap: 24,
   },
   card: {
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 20,
     padding: 24,
-    marginBottom: 20,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 10,
+    width: '100%',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
   },
   title: {
+    color: '#fff',
     fontSize: 18,
-    fontWeight: '600',
-    color: '#EAE9F3',
-    marginBottom: 6,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   subText: {
-    color: '#C7C5D9',
+    color: '#ccc',
     fontSize: 14,
-  },
-  logoutWrapper: {
-    alignItems: 'center',
-    marginTop: 40,
-  },
-  logout: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: 'bold',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 24,
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    marginBottom: 8,
   },
   linkGroup: {
-    marginTop: 10,
-    gap: 6,
+    marginTop: 12,
   },
-
-  footer: {
-    alignItems: 'center',
-    marginTop: 40,
+  logoutBtn: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    marginTop: 12,
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  logoutBtnText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 });

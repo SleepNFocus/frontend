@@ -57,14 +57,18 @@ const ProfileCard = () => {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.recordBtn}>
+      <TouchableOpacity
+        style={styles.recordBtn}
+        onPress={() => navigation.navigate('MyRecord')}
+      >
         <Text style={styles.recordBtnText}>나의 기록 확인하기</Text>
       </TouchableOpacity>
+
       <NicknameChangeModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        onSubmit={() => setModalVisible(false)}
-        initialValue={nickname}
+        // onSubmit={() => setModalVisible(false)}
+        // initialValue={nickname}
       />
     </View>
   );
