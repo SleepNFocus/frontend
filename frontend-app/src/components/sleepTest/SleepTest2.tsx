@@ -6,7 +6,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TestStackParamList } from '@/app/test/navigation/TestNavigator';
 
 const MAX_NUM = 9;
-const RANDOM_SYMBOL = ['♥︎', '✦', '⚡', '▲', '⚫', '★', '▼', '⬜', '◆'];
+const RANDOM_SYMBOL = ['♥︎', '✦', '♠︎', '▲', '◉', '★', '▼', '☗', '◆'];
 
 function randomArray(array: string[]) {
   const copy = [...array];
@@ -122,7 +122,6 @@ export default function SleepTest2() {
             <View style={styles.resultTextBox2}>
               <Text style={styles.text}> 정확도 : </Text>
               <Text style={styles.boldText}>
-                {' '}
                 {Math.round(
                   (correctCount / (correctCount + wrongCount || 1)) * 100,
                 )}
@@ -197,7 +196,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#fff',
     shadowColor: '#aaa',
-    shadowOffset: { width: 4, height: 4 },
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
     shadowOpacity: 0.4,
     shadowRadius: 10,
   },

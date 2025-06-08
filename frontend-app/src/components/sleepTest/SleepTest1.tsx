@@ -115,8 +115,12 @@ export default function SleepTest1() {
             </View>
             {clickTimes.length > 0 && (
               <View style={styles.resultText}>
-                <Text> 최근 반응속도: {commaRecent} ms </Text>
-                <Text>평균 반응속도: {commaRecentAvg} ms</Text>
+                <Text style={styles.opacityText}>
+                  최근 반응속도: {commaRecent} ms
+                </Text>
+                <Text style={styles.opacityText}>
+                  평균 반응속도: {commaRecentAvg} ms
+                </Text>
               </View>
             )}
           </View>
@@ -183,6 +187,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   resultBox: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
     gap: 50,
   },
@@ -194,16 +200,18 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
   },
+  opacityText: {
+    fontSize: 16,
+    color: '#888',
+  },
   boldText: {
     fontWeight: 'bold',
   },
   resultTextBox: {
-    flex: 1,
     flexDirection: 'row',
     fontWeight: 'bold',
   },
   waitBox: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 50,

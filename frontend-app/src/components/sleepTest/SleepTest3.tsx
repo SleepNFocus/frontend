@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    width: 500,
+    width: 400,
     height: 680,
     padding: 30,
     paddingHorizontal: 20,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   line: {
     backgroundColor: '#bfbfbf',
     height: 1,
-    width: 420,
+    width: 350,
   },
   resultContainer: {
     alignItems: 'center',
