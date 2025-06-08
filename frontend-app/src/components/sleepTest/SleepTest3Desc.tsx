@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import { Button } from '@/components/common/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -8,12 +8,24 @@ export default function SleepTest3Desc() {
   const navigation =
     useNavigation<NativeStackNavigationProp<TestStackParamList>>();
 
+  const { width: windowWidth } = useWindowDimensions();
+  const { height: windowHeight } = useWindowDimensions();
+
+  const containerWidth = Math.min(windowWidth * 0.9, 700);
+  const containerHeight = Math.min(windowHeight * 0.6, 600);
+  const lineWidth = Math.min(windowWidth * 0.8, 600);
+
   return (
     <View style={styles.root}>
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          { width: containerWidth, height: containerHeight },
+        ]}
+      >
         <View>
           <Text style={styles.title}> 격자 기억하기 </Text>
-          <View style={styles.line} />
+          <View style={[styles.line, { width: lineWidth }]} />
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.description}>
@@ -45,8 +57,6 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 300,
-    height: 400,
     padding: 30,
     gap: 35,
     borderColor: '#222',
@@ -58,33 +68,33 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 2,
     shadowRadius: 20,
+    backgroundColor: 'white',
   },
   textContainer: {
     flex: 1,
-    gap: 20,
+    gap: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   line: {
     backgroundColor: '#bfbfbf',
     height: 1,
-    width: 280,
   },
   title: {
     fontWeight: 'bold',
-    fontSize: 23,
-    marginBottom: 24,
+    fontSize: 27,
+    marginBottom: 50,
     color: '#222',
     textAlign: 'center',
   },
   description: {
-    fontSize: 15,
+    fontSize: 18,
     marginBottom: 24,
     color: '#222',
     textAlign: 'center',
   },
   descriptionBold: {
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
   },
