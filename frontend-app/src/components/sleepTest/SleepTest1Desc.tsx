@@ -77,7 +77,6 @@ const styles = StyleSheet.create({
   line: {
     backgroundColor: '#bfbfbf',
     height: 1,
-    width: 280,
   },
   title: {
     fontWeight: 'bold',
