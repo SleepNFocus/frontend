@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import { Button } from '../common/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -17,6 +23,13 @@ export default function SleepTest1() {
   const [clickTimes, setClickTimes] = useState<number[]>([]);
   const [isFinished, setIsFinished] = useState(false);
   const timeout = useRef<number | null>(null);
+
+  const { width: windowWidth } = useWindowDimensions();
+  const { height: windowHeight } = useWindowDimensions();
+
+  const containerWidth = Math.min(windowWidth * 0.9, 700);
+  const containerHeight = Math.min(windowHeight * 0.6, 1000);
+  const circlerWidth = Math.min(windowWidth * 0.3, 220);
 
   useEffect(() => {
     if (step < MAX_STEP && isWaiting) {
@@ -93,12 +106,19 @@ export default function SleepTest1() {
           />
         </View>
       ) : (
-        <View style={styles.secContainer}>
+        <View
+          style={[
+            styles.secContainer,
+            { width: containerWidth, height: containerHeight },
+          ]}
+        >
           <View style={styles.testBox}>
-            <Text style={styles.progress}>
-              진행 : {step + 1}/{MAX_STEP}
-            </Text>
-            <Text style={styles.title}> 초록 불을 잡아라! </Text>
+            <View style={styles.headerBox}>
+              <Text style={styles.progress}>
+                진행 : {step + 1}/{MAX_STEP}
+              </Text>
+              <Text style={styles.title}> 초록 불을 잡아라! </Text>
+            </View>
             <View style={styles.circleWrapper}>
               {isWaiting ? (
                 <View style={styles.waitBox}>
@@ -109,17 +129,22 @@ export default function SleepTest1() {
                 </View>
               ) : (
                 <Pressable onPress={handlePress}>
-                  <View style={styles.circle} />
+                  <View
+                    style={[
+                      styles.circle,
+                      { width: circlerWidth, height: circlerWidth },
+                    ]}
+                  />
                 </Pressable>
               )}
             </View>
             {clickTimes.length > 0 && (
               <View style={styles.resultText}>
                 <Text style={styles.opacityText}>
-                  최근 반응속도: {commaRecent} ms
+                  최근 반응속도 : {commaRecent} ms
                 </Text>
                 <Text style={styles.opacityText}>
-                  평균 반응속도: {commaRecentAvg} ms
+                  평균 반응속도 : {commaRecentAvg} ms
                 </Text>
               </View>
             )}
@@ -140,8 +165,6 @@ const styles = StyleSheet.create({
   secContainer: {
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    width: 300,
-    height: 400,
     padding: 30,
     paddingHorizontal: 20,
     gap: 35,
@@ -156,30 +179,35 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 10,
   },
+  headerBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
+  },
   testBox: {
     alignItems: 'center',
-    gap: 16,
+    gap: 60,
   },
   progress: {
-    fontSize: 16,
+    fontSize: 20,
     color: '#888',
     marginBottom: 4,
   },
   title: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold',
   },
   circleWrapper: {
-    marginTop: 24,
+    marginTop: 18,
     alignItems: 'center',
   },
   plus: {
-    fontSize: 40,
+    fontSize: 60,
   },
   circle: {
     width: 100,
     height: 100,
-    borderRadius: 50,
+    borderRadius: 150,
     backgroundColor: 'green',
   },
   resultText: {
@@ -193,18 +221,19 @@ const styles = StyleSheet.create({
     gap: 50,
   },
   scoreText: {
-    fontSize: 35,
+    fontSize: 40,
     color: '#5f78ef',
     fontWeight: 'bold',
   },
   text: {
-    fontSize: 16,
+    fontSize: 20,
   },
   opacityText: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#888',
   },
   boldText: {
+    fontSize: 18,
     fontWeight: 'bold',
   },
   resultTextBox: {
@@ -214,6 +243,6 @@ const styles = StyleSheet.create({
   waitBox: {
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 50,
+    gap: 80,
   },
 });
