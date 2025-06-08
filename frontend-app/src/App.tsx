@@ -1,9 +1,11 @@
 import React from 'react';
+import Toast from 'react-native-toast-message';
 import {
   NavigationContainer,
   NavigatorScreenParams,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import { DashboardPage } from './app/tabs/DashboardPage';
 import { DailyCheckPage } from './app/tabs/DailyCheckPage';
 import { HistoryPage } from './app/tabs/HistoryPage';
@@ -19,6 +21,9 @@ import {
   TestNavigator,
   TestStackParamList,
 } from './app/test/navigation/TestNavigator';
+import Settings from '@/app/mypage/Settings';
+import NicknameEdit from './app/mypage/NicknameEdit';
+import MyRecord from './app/mypage/MyRecord';
 
 export type RootStackParamList = {
   Dashboard: undefined;
@@ -35,6 +40,9 @@ export type RootStackParamList = {
   SleepInsights: { recordData?: any } | undefined;
   NotificationSettings: undefined;
   TestNavigator: NavigatorScreenParams<TestStackParamList>;
+  Settings: undefined;
+  NicknameEdit: undefined;
+  MyRecord: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -68,7 +76,12 @@ export default function App() {
           component={NotificationSettingsPage}
         />
         <Stack.Screen name="TestNavigator" component={TestNavigator} />
+        <Stack.Screen name="Settings" component={Settings} />
+        <Stack.Screen name="NicknameEdit" component={NicknameEdit} />
+        <Stack.Screen name="MyRecord" component={MyRecord} />
       </Stack.Navigator>
+
+      <Toast />
     </NavigationContainer>
   );
 }

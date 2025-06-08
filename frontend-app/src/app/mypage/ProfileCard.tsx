@@ -1,17 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/App';
+import NicknameChangeModal from './NicknameChangeModal';
+import { useAuthStore } from '@/store/authStore';
 
 const ProfileCard = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const user = useAuthStore(state => state.user);
+  const nickname = user?.nickname ?? '-';
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <View style={styles.wrapper}>
+      <View style={styles.headerRow}>
+        <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+          <Ionicons name="settings-outline" size={22} color="#ccc" />
+        </TouchableOpacity>
+      </View>
+
       <Image
         source={{ uri: 'https://via.placeholder.com/100' }}
         style={styles.profileImage}
       />
 
-      <Text style={styles.welcomeText}>
-        <Text style={styles.highlight}>반가워요!</Text> TEST 님
-      </Text>
+      <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <Text style={styles.welcomeText}>
+          <Text style={styles.highlight}>반가워요!</Text> {nickname} 님
+        </Text>
+      </TouchableOpacity>
 
       <Text style={styles.trackingText}>
         수면과 집중력을 추적한지 벌써 <Text style={styles.days}>__일째</Text>
@@ -36,9 +57,19 @@ const ProfileCard = () => {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.recordBtn}>
+      <TouchableOpacity
+        style={styles.recordBtn}
+        onPress={() => navigation.navigate('MyRecord')}
+      >
         <Text style={styles.recordBtnText}>나의 기록 확인하기</Text>
       </TouchableOpacity>
+
+      <NicknameChangeModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        // onSubmit={() => setModalVisible(false)}
+        // initialValue={nickname}
+      />
     </View>
   );
 };
@@ -137,5 +168,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: '600',
+  },
+  headerRow: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 12,
   },
 });
