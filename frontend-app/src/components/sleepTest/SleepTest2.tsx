@@ -1,12 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@/components/common/Button';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TestStackParamList } from '@/app/test/navigation/TestNavigator';
 
 const MAX_NUM = 9;
-const RANDOM_SYMBOL = ['♥︎', '✦', '⚡', '▲', '⚫', '★', '▼', '⬜', '◆'];
+const RANDOM_SYMBOL = ['♥︎', '✦', '♠︎', '▲', '◉', '★', '▼', '☗', '◆'];
 
 function randomArray(array: string[]) {
   const copy = [...array];
@@ -30,6 +36,13 @@ export default function SleepTest2() {
   const [gameOver, setGameOver] = useState(false);
   const [start, setStart] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
+
+  const { width: windowWidth } = useWindowDimensions();
+  const { height: windowHeight } = useWindowDimensions();
+
+  const containerWidth = Math.min(windowWidth * 0.9, 700);
+  const containerHeight = Math.min(windowHeight * 0.7, 1000);
+  const lineWidth = Math.min(windowWidth * 0.8, 600);
 
   useEffect(() => {
     setStart(true);
@@ -122,7 +135,6 @@ export default function SleepTest2() {
             <View style={styles.resultTextBox2}>
               <Text style={styles.text}> 정확도 : </Text>
               <Text style={styles.boldText}>
-                {' '}
                 {Math.round(
                   (correctCount / (correctCount + wrongCount || 1)) * 100,
                 )}
@@ -138,12 +150,17 @@ export default function SleepTest2() {
         </View>
       ) : (
         <>
-          {start && !gameOver && (
-            <Text style={styles.timerText}>남은 시간: {timeLeft}s</Text>
-          )}
-          <View style={styles.secContainer}>
+          <View
+            style={[
+              styles.secContainer,
+              { width: containerWidth, height: containerHeight },
+            ]}
+          >
             <Text style={styles.title}>기호 - 숫자 변환</Text>
-            <View style={styles.line} />
+            {start && !gameOver && (
+              <Text style={styles.timerText}>남은 시간: {timeLeft}s</Text>
+            )}
+            <View style={[styles.line, { width: lineWidth }]} />
             <View style={styles.symbolNumberRow}>
               {shuffledSymbols.map((symbol, idx) => (
                 <View key={idx} style={styles.symbolNumberPair}>
@@ -184,20 +201,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#555',
-    marginBottom: 20,
   },
   secContainer: {
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    width: 400,
-    height: 580,
     padding: 30,
     paddingHorizontal: 20,
     gap: 25,
     borderRadius: 20,
     backgroundColor: '#fff',
     shadowColor: '#aaa',
-    shadowOffset: { width: 4, height: 4 },
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
     shadowOpacity: 0.4,
     shadowRadius: 10,
   },
@@ -208,13 +225,12 @@ const styles = StyleSheet.create({
     gap: 50,
   },
   title: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold',
   },
   line: {
     backgroundColor: '#bfbfbf',
     height: 1,
-    width: 320,
   },
   symbolNumberRow: {
     flexDirection: 'row',
@@ -283,7 +299,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   scoreText: {
-    fontSize: 35,
+    fontSize: 40,
     fontWeight: 'bold',
     color: '#5f78ef',
   },
@@ -296,7 +312,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    fontSize: 16,
+    fontSize: 20,
   },
   boldText: {
     fontSize: 18,

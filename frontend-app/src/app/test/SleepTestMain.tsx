@@ -18,13 +18,15 @@ export default function SleepTestMain() {
     >
       <View style={styles.mainBox}>
         <Text style={styles.title}> Focuz </Text>
-        <Text style={styles.mainText}> 수면 테스트를 진행합니다. </Text>
-        {/* 버튼 공통 컴포넌트 수정 필요 ( variant - 스타일 수정 ) */}
-        <Button
-          title="테스트 시작하기"
-          variant="outline"
-          onPress={() => navigation.navigate('SleepTestDesc')}
-        />
+        <View style={styles.btnBox}>
+          <Text style={styles.mainText}> 수면 테스트를 진행합니다. </Text>
+          <Button
+            title="테스트 시작하기"
+            variant="outline"
+            style={{ width: 170 }}
+            onPress={() => navigation.navigate('SleepTestDesc')}
+          />
+        </View>
       </View>
     </LinearGradient>
   );
@@ -37,6 +39,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mainBox: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 70,
+  },
+  btnBox: {
+    justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
@@ -49,7 +58,7 @@ const styles = StyleSheet.create({
   },
   mainText: {
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: 30,
     marginBottom: 24,
     color: '#222',
     textAlign: 'center',

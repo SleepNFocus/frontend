@@ -1,16 +1,25 @@
 import ResultChart from '@/components/chart/ResultChart';
 import { Button } from '@/components/common/Button';
-import { useRouter } from 'expo-router';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+// import { useRouter } from 'expo-router';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  useWindowDimensions,
+} from 'react-native';
 
 export default function SleepTestResult() {
-  const router = useRouter();
+  // const router = useRouter();
+
+  const { width: windowWidth } = useWindowDimensions();
+  const containerWidth = Math.min(windowWidth * 0.6, 700);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.root}></View>
       <View style={styles.root}>
-        <View style={styles.container}>
+        <View style={[styles.container, { width: containerWidth }]}>
           <Text style={styles.mainTitle}> 수면 테스트 측정 완료 </Text>
           <ResultChart />
           {/* 반응 속도 */}
@@ -23,7 +32,7 @@ export default function SleepTestResult() {
             </View>
             <View style={styles.roundScore}>
               {/* 원형 점수 넣기 */}
-              <Text style={styles.scoreText}> 80 </Text>
+              <Text style={styles.scoreText}>80 </Text>
             </View>
           </View>
           {/* 처리 속도 */}
@@ -38,7 +47,7 @@ export default function SleepTestResult() {
             </View>
             <View style={styles.roundScore}>
               {/* 원형 점수 넣기 */}
-              <Text style={styles.scoreText}> 90 </Text>
+              <Text style={styles.scoreText}>90 </Text>
             </View>
           </View>
           {/* 패턴 기억 */}
@@ -51,7 +60,7 @@ export default function SleepTestResult() {
             </View>
             <View style={styles.roundScore}>
               {/* 원형 점수 넣기 */}
-              <Text style={styles.scoreText}> 100 </Text>
+              <Text style={styles.scoreText}>100 </Text>
             </View>
           </View>
           <View style={styles.rowText}>
@@ -59,15 +68,21 @@ export default function SleepTestResult() {
             {/* 점수 받아오기 */}
             <Text style={styles.mainScore}> 80점 </Text>
           </View>
-          <Text style={styles.description}>
-            초기 인지 능력 측정이 완료되었습니다. {'\n'} 이제 대시보드에서
-            당신의 프로필을 확인하고, 매일의 컨디션 변화를 기록해보세요.
-          </Text>
+          <View style={styles.descriptionBox}>
+            <Text style={styles.description}>
+              초기 인지 능력 측정이 완료되었습니다.
+            </Text>
+            <Text style={styles.pointDescription}>
+              이제 대시보드에서 당신의 프로필을 확인하고, {`\n`} 매일의 컨디션
+              변화를 기록해보세요.
+            </Text>
+          </View>
           <Button
             title="대시보드로 이동"
             variant="outline"
             onPress={() => {
-              router.replace('/(tabs)/DashboardMain' as any);
+              //  이후 추가 수정 [ 대시보드로 이동 네비게기션 ]
+              // router.replace('/(tabs)/DashboardMain' as any);
             }}
           ></Button>
         </View>
@@ -89,8 +104,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    maxWidth: 500,
-    maxHeight: 1000,
     backgroundColor: '#FFF',
     borderRadius: 20,
     justifyContent: 'space-evenly',
@@ -135,7 +148,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 10,
-    width: 370,
+    width: '100%',
     height: 60,
     gap: 40,
   },
@@ -146,7 +159,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 10,
-    width: 370,
+    width: '100%',
     height: 100,
     gap: 40,
   },
@@ -171,5 +184,16 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     textAlign: 'center',
+  },
+  pointDescription: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#8888ff',
+  },
+  descriptionBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 50,
   },
 });

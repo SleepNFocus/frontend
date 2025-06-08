@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
 import { Button } from '../common/Button';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TestStackParamList } from '@/app/test/navigation/TestNavigator';
@@ -30,6 +36,14 @@ const getRandomIdx = (gridSize: number, patternAns: number): number[] => {
 export default function SleepTest3() {
   const navigation =
     useNavigation<NativeStackNavigationProp<TestStackParamList>>();
+
+  const { width: windowWidth } = useWindowDimensions();
+  const { height: windowHeight } = useWindowDimensions();
+
+  const containerWidth = Math.min(windowWidth * 0.9, 700);
+  const containerHeight = Math.min(windowHeight * 0.7, 1200);
+  const lineWidth = Math.min(windowWidth * 0.8, 600);
+  const squareWidth = Math.max(windowWidth * 0.09, 45);
 
   // 상태관리 객체로 수정해보기
   const [round, setRound] = useState(0);
@@ -136,26 +150,32 @@ export default function SleepTest3() {
   }
 
   const { gridSize, patternAns } = rounds[round];
-  const totalCells = gridSize * gridSize;
+  const totalsquares = gridSize * gridSize;
+  const gridWidth = squareWidth * gridSize * 1.3;
 
   return (
     <View style={styles.root}>
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          { width: containerWidth, height: containerHeight },
+        ]}
+      >
         <View style={styles.titleBox}>
           <Text style={styles.title}>격자 기억하기</Text>
-          <Text style={styles.subtitle1}> {round + 1} 라운드 </Text>
+          <Text style={styles.subtitle1}> [ {round + 1} 라운드 ] </Text>
         </View>
-        <View style={styles.line} />
+        <View style={[styles.line, { width: lineWidth }]} />
         {showPattern ? (
           <Text style={styles.subtitle}>패턴을 기억하세요!</Text>
         ) : (
           <Text style={styles.subtitle}>
-            선택: {selected.length}/{patternAns}
+            선택: {selected.length} / {patternAns}
           </Text>
         )}
 
-        <View style={[styles.grid, { width: gridSize * 60 }]}>
-          {Array.from({ length: totalCells }).map((_, index) => {
+        <View style={[styles.grid, { width: gridWidth }]}>
+          {Array.from({ length: totalsquares }).map((_, index) => {
             const isCorrect = pattern.includes(index);
             const isSelected = selected.includes(index);
             const show = showPattern ? isCorrect : isSelected;
@@ -164,9 +184,11 @@ export default function SleepTest3() {
               <TouchableOpacity
                 key={index}
                 style={[
-                  styles.cell,
+                  styles.square,
                   {
                     backgroundColor: show ? '#7b6cf6' : '#eee',
+                    width: squareWidth,
+                    height: squareWidth,
                   },
                 ]}
                 onPress={() => handlePress(index)}
@@ -189,15 +211,16 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    width: 500,
-    height: 680,
     padding: 30,
     paddingHorizontal: 20,
     gap: 25,
     borderRadius: 20,
     backgroundColor: '#fff',
     shadowColor: '#aaa',
-    shadowOffset: { width: 4, height: 4 },
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
     shadowOpacity: 0.4,
     shadowRadius: 10,
   },
@@ -210,11 +233,11 @@ const styles = StyleSheet.create({
   titleBox: {
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 10,
   },
   line: {
     backgroundColor: '#bfbfbf',
     height: 1,
-    width: 420,
   },
   resultContainer: {
     alignItems: 'center',
@@ -227,16 +250,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 22,
+    fontSize: 30,
     fontWeight: 'bold',
-    marginBottom: 10,
+    paddingBottom: 10,
   },
   subtitle1: {
     fontSize: 18,
     fontWeight: 'bold',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#444',
   },
   grid: {
@@ -245,15 +268,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: 20,
   },
-  cell: {
-    width: 50,
-    height: 50,
+  square: {
     margin: 5,
     borderRadius: 6,
   },
   result: {
-    fontSize: 18,
-    marginVertical: 5,
+    fontSize: 20,
   },
   resultBold: {
     fontSize: 18,
@@ -272,7 +292,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   scoreText: {
-    fontSize: 35,
+    fontSize: 40,
     fontWeight: 'bold',
     color: '#5f78ef',
   },
