@@ -1,4 +1,5 @@
 import React from 'react';
+import Toast from 'react-native-toast-message';
 import {
   NavigationContainer,
   NavigatorScreenParams,
@@ -69,6 +70,7 @@ export default function App() {
         />
         <Stack.Screen name="TestNavigator" component={TestNavigator} />
       </Stack.Navigator>
+           <Toast />
     </NavigationContainer>
   );
 }
