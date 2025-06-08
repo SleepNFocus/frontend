@@ -21,6 +21,8 @@ import {
   TestNavigator,
   TestStackParamList,
 } from './app/test/navigation/TestNavigator';
+import Settings from '@/app/mypage/Settings';
+import NicknameEdit from './app/mypage/NicknameEdit';
 
 export type RootStackParamList = {
   Dashboard: undefined;
@@ -37,6 +39,8 @@ export type RootStackParamList = {
   SleepInsights: { recordData?: any } | undefined;
   NotificationSettings: undefined;
   TestNavigator: NavigatorScreenParams<TestStackParamList>;
+  Settings: undefined;
+  NicknameEdit: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -51,16 +55,13 @@ export default function App() {
         }}
       >
         <Stack.Screen name="Dashboard" component={DashboardPage} />
-
-        <Stack.Screen
-          name="DailyCheck"
-          children={() => (
+        <Stack.Screen name="DailyCheck">
+          {() => (
             <Layout>
               <DailyCheckPage />
             </Layout>
           )}
-        />
-
+        </Stack.Screen>
         <Stack.Screen name="History" component={HistoryPage} />
         <Stack.Screen name="Insight" component={InsightPage} />
         <Stack.Screen name="More" component={MorePage} />
@@ -73,6 +74,8 @@ export default function App() {
           component={NotificationSettingsPage}
         />
         <Stack.Screen name="TestNavigator" component={TestNavigator} />
+        <Stack.Screen name="Settings" component={Settings} />
+        <Stack.Screen name="NicknameEdit" component={NicknameEdit} />
       </Stack.Navigator>
 
       <Toast />

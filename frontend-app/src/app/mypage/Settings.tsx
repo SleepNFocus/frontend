@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -55,14 +55,6 @@ const Settings = () => {
           <Text style={styles.label}>아이디</Text>
           <Text style={styles.value}>TES@TEST.COM</Text>
         </View>
-
-        <TouchableOpacity
-          style={styles.itemRow}
-          onPress={() => navigation.navigate('PasswordEdit')}
-        >
-          <Text style={styles.label}>비밀번호 변경</Text>
-          <Ionicons name="chevron-forward" size={16} color="#ccc" />
-        </TouchableOpacity>
 
         <View style={styles.itemRow}>
           <Text style={styles.label}>가입일</Text>
