@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    gap: 20,
+    gap: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
