@@ -5,6 +5,7 @@ import {
   NavigatorScreenParams,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import { DashboardPage } from './app/tabs/DashboardPage';
 import { DailyCheckPage } from './app/tabs/DailyCheckPage';
 import { HistoryPage } from './app/tabs/HistoryPage';
@@ -50,13 +51,16 @@ export default function App() {
         }}
       >
         <Stack.Screen name="Dashboard" component={DashboardPage} />
-        <Stack.Screen name="DailyCheck">
-          {() => (
+
+        <Stack.Screen
+          name="DailyCheck"
+          children={() => (
             <Layout>
               <DailyCheckPage />
             </Layout>
           )}
-        </Stack.Screen>
+        />
+
         <Stack.Screen name="History" component={HistoryPage} />
         <Stack.Screen name="Insight" component={InsightPage} />
         <Stack.Screen name="More" component={MorePage} />
@@ -70,7 +74,8 @@ export default function App() {
         />
         <Stack.Screen name="TestNavigator" component={TestNavigator} />
       </Stack.Navigator>
-           <Toast />
+
+      <Toast />
     </NavigationContainer>
   );
 }
