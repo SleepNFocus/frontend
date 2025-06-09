@@ -1,12 +1,12 @@
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
-import { Button } from '@/components/common/Button';
-import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { TestStackParamList } from '@/app/test/navigation/TestNavigator';
+import { useNavigation } from '@react-navigation/native';
+import { Button } from '@/components/common/Button';
+import { RootStackParamList } from '@/App';
 
 export default function SleepTestDesc() {
   const navigation =
-    useNavigation<NativeStackNavigationProp<TestStackParamList>>();
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const { width: windowWidth } = useWindowDimensions();
   const containerWidth = Math.min(windowWidth * 0.9, 700);

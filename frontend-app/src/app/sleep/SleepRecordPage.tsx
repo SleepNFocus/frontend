@@ -32,12 +32,6 @@ export const SleepRecordPage: React.FC = () => {
     });
   };
 
-  const navigateToTest = () => {
-    navigation2.navigate('TestNavigator', {
-      screen: 'SleepTestMain',
-    });
-  };
-
   const startNewRecord = () => {
     setIsRecordSaved(false);
     setSavedRecordData(null);
@@ -80,7 +74,9 @@ export const SleepRecordPage: React.FC = () => {
               </Button>
               <Button
                 mode="outlined"
-                onPress={navigateToTest}
+                onPress={() => {
+                  navigation2.navigate('SleepTestMain');
+                }}
                 style={styles.secondaryButton}
               >
                 테스트

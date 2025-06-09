@@ -1,9 +1,6 @@
 import React from 'react';
 import Toast from 'react-native-toast-message';
-import {
-  NavigationContainer,
-  NavigatorScreenParams,
-} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { DashboardPage } from './app/tabs/DashboardPage';
@@ -16,13 +13,18 @@ import { Layout } from '@/components/common/Layout';
 import { SleepRecordPage } from './app/sleep/SleepRecordPage';
 import { SleepInsightsPage } from './app/sleep/SleepInsightPage';
 import { NotificationSettingsPage } from './app/notifications/NotificationSettingsPage';
-import {
-  TestNavigator,
-  TestStackParamList,
-} from './app/test/navigation/TestNavigator';
 import Settings from '@/app/tabs/mypage/Settings';
 import NicknameEdit from './app/tabs/mypage/NicknameEdit';
 import MyRecord from './app/tabs/mypage/MyRecord';
+import SleepTestMain from './app/test/SleepTestMain';
+import SleepTestDesc from './app/test/SleepTest';
+import SleepTest1Desc from './components/sleepTest/SleepTest1Desc';
+import SleepTest1 from './components/sleepTest/SleepTest1';
+import SleepTest2Desc from './components/sleepTest/SleepTest2Desc';
+import SleepTest2 from './components/sleepTest/SleepTest2';
+import SleepTest3Desc from './components/sleepTest/SleepTest3Desc';
+import SleepTest3 from './components/sleepTest/SleepTest3';
+import SleepTestResult from './app/test/SleepTestResult';
 
 export type RootStackParamList = {
   Dashboard: undefined;
@@ -36,13 +38,21 @@ export type RootStackParamList = {
   SleepRecord: undefined;
   SleepInsights: { recordData?: any } | undefined;
   NotificationSettings: undefined;
-  TestNavigator: NavigatorScreenParams<TestStackParamList>;
   Settings: undefined;
   NicknameEdit: undefined;
   MyRecord: undefined;
+  SleepTestMain: undefined;
+  SleepTestDesc: undefined;
+  SleepTest1Desc: undefined;
+  SleepTest1: undefined;
+  SleepTest2Desc: undefined;
+  SleepTest2: undefined;
+  SleepTest3Desc: undefined;
+  SleepTest3: undefined;
+  SleepTestResult: undefined;
 };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+export const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
@@ -71,10 +81,18 @@ export default function App() {
           name="NotificationSettings"
           component={NotificationSettingsPage}
         />
-        <Stack.Screen name="TestNavigator" component={TestNavigator} />
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="NicknameEdit" component={NicknameEdit} />
         <Stack.Screen name="MyRecord" component={MyRecord} />
+        <Stack.Screen name="SleepTestMain" component={SleepTestMain} />
+        <Stack.Screen name="SleepTestDesc" component={SleepTestDesc} />
+        <Stack.Screen name="SleepTest1Desc" component={SleepTest1Desc} />
+        <Stack.Screen name="SleepTest1" component={SleepTest1} />
+        <Stack.Screen name="SleepTest2Desc" component={SleepTest2Desc} />
+        <Stack.Screen name="SleepTest2" component={SleepTest2} />
+        <Stack.Screen name="SleepTest3Desc" component={SleepTest3Desc} />
+        <Stack.Screen name="SleepTest3" component={SleepTest3} />
+        <Stack.Screen name="SleepTestResult" component={SleepTestResult} />
       </Stack.Navigator>
 
       <Toast />
