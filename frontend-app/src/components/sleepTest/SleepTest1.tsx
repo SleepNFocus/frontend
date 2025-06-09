@@ -31,6 +31,10 @@ export default function SleepTest1() {
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const circlerWidth = Math.min(windowWidth * 0.3, 220);
 
+  function goToSleepTest2Desc() {
+    navigation.navigate('SleepTest2Desc');
+  }
+
   useEffect(() => {
     if (step < MAX_STEP && isWaiting) {
       const delay = Math.random() * 2000 + 1000;
@@ -98,13 +102,7 @@ export default function SleepTest1() {
             <Text style={styles.text}> 평균 반응속도 : </Text>
             <Text style={styles.boldText}>{commaAvg} ms</Text>
           </View>
-          <Button
-            title="다음"
-            variant="outline"
-            onPress={() => {
-              navigation.navigate('SleepTest2Desc');
-            }}
-          />
+          <Button title="다음" variant="outline" onPress={goToSleepTest2Desc} />
         </View>
       ) : (
         <View

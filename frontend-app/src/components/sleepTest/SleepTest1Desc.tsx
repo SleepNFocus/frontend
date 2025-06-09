@@ -15,6 +15,10 @@ export default function SleepTest1Desc() {
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
+  function goToSleepTest1() {
+    navigation.navigate('SleepTest1');
+  }
+
   return (
     <View style={styles.root}>
       <View
@@ -33,13 +37,7 @@ export default function SleepTest1Desc() {
           </Text>
           <Text style={styles.descriptionBold}>[ 5회 측정 ]</Text>
         </View>
-        <Button
-          title="시작"
-          variant="outline"
-          onPress={() => {
-            navigation.navigate('SleepTest1');
-          }}
-        ></Button>
+        <Button title="시작" variant="outline" onPress={goToSleepTest1} />
       </View>
     </View>
   );

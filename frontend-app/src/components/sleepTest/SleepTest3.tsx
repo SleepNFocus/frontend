@@ -54,6 +54,11 @@ export default function SleepTest3() {
   const [gameEnded, setGameEnded] = useState(false);
   const [round, setRound] = useState(0);
 
+  function goToSleepTestResult() {
+    navigation.navigate('SleepTestResult');
+    resetGame();
+  }
+
   useEffect(() => {
     if (round < rounds.length) {
       const { gridSize, patternAns } = rounds[round];
@@ -139,10 +144,7 @@ export default function SleepTest3() {
           <Button
             title="최종 결과 보기"
             variant="outline"
-            onPress={() => {
-              navigation.navigate('SleepTestResult');
-              resetGame();
-            }}
+            onPress={goToSleepTestResult}
           />
         </View>
       </View>

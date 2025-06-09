@@ -21,6 +21,10 @@ export default function SleepTestResult() {
   // API 연결 후 Zustand 상태로 점수 받아오기
   const baseScore = 80;
 
+  function goToDashboard() {
+    navigation.navigate('Dashboard');
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.root}></View>
@@ -84,10 +88,8 @@ export default function SleepTestResult() {
           <Button
             title="대시보드로 이동"
             variant="outline"
-            onPress={() => {
-              navigation.navigate('Dashboard');
-            }}
-          ></Button>
+            onPress={goToDashboard}
+          />
         </View>
       </View>
     </ScrollView>

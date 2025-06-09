@@ -15,6 +15,10 @@ export default function SleepTest3Desc() {
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
+  function goToSleepTest3() {
+    navigation.navigate('SleepTest3');
+  }
+
   return (
     <View style={styles.root}>
       <View
@@ -36,13 +40,7 @@ export default function SleepTest3Desc() {
             라운드마다 기억해야 할 패턴이 더 복잡해집니다.
           </Text>
         </View>
-        <Button
-          title="시작"
-          variant="outline"
-          onPress={() => {
-            navigation.navigate('SleepTest3');
-          }}
-        ></Button>
+        <Button title="시작" variant="outline" onPress={goToSleepTest3} />
       </View>
     </View>
   );

@@ -44,6 +44,10 @@ export default function SleepTest2() {
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
+  function goToSleepTest3Desc() {
+    navigation.navigate('SleepTest3Desc');
+  }
+
   useEffect(() => {
     setStart(true);
   }, []);
@@ -142,11 +146,7 @@ export default function SleepTest2() {
               </Text>
             </View>
           </View>
-          <Button
-            title="다음"
-            variant="outline"
-            onPress={() => navigation.navigate('SleepTest3Desc')}
-          />
+          <Button title="다음" variant="outline" onPress={goToSleepTest3Desc} />
         </View>
       ) : (
         <>

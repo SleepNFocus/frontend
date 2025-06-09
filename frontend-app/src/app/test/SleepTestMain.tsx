@@ -9,6 +9,10 @@ export default function SleepTestMain() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  function goToSleepTestDesc() {
+    navigation.navigate('SleepTestDesc');
+  }
+
   return (
     <LinearGradient
       colors={['#e8eafe', '#fff']}
@@ -24,7 +28,7 @@ export default function SleepTestMain() {
             title="테스트 시작하기"
             variant="outline"
             style={styles.button}
-            onPress={() => navigation.navigate('SleepTestDesc')}
+            onPress={goToSleepTestDesc}
           />
         </View>
       </View>
