@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import Svg, { Polygon, Line, Text as SvgText } from 'react-native-svg';
+import { colors } from '@/constants/colors';
 
 type Point = [number, number];
 interface HexagonRadarChartProps {
@@ -43,14 +44,14 @@ export const HexagonRadarChart: React.FC<HexagonRadarChartProps> = ({
         <Polygon
           points={outline.map(p => p.join(',')).join(' ')}
           fill="none"
-          stroke="#b0b0d0"
+          stroke={colors.mediumGray}
           strokeWidth="2"
         />
         {/* 데이터 영역 */}
         <Polygon
           points={points.map(p => p.join(',')).join(' ')}
-          fill="rgba(108,123,255,0.2)"
-          stroke="#6C7BFF"
+          fill={`${colors.softBlue}33`}
+          stroke={colors.softBlue}
           strokeWidth="3"
         />
         {/* 축선 */}
@@ -61,7 +62,7 @@ export const HexagonRadarChart: React.FC<HexagonRadarChartProps> = ({
             y1={center}
             x2={p[0]}
             y2={p[1]}
-            stroke="#b0b0d0"
+            stroke={colors.mediumGray}
             strokeWidth="1"
           />
         ))}
@@ -72,7 +73,7 @@ export const HexagonRadarChart: React.FC<HexagonRadarChartProps> = ({
             x={p[0]}
             y={p[1] - 8}
             fontSize="12"
-            fill="#888"
+            fill={colors.midnightBlue}
             textAnchor="middle"
           >
             {labels[i]}

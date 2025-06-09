@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import Svg, { Polygon, Line, G, Text as SvgText } from 'react-native-svg';
+import { colors } from '@/constants/colors';
 
 export default function ResultChart() {
   const chartSize = 300;
@@ -40,7 +41,7 @@ export default function ResultChart() {
     const y = center + radius * Math.sin(angle);
 
     // x1, y1 = center / x2, y2 = 계산된 좌표
-    return <Line key={i} x1={center} y1={center} x2={x} y2={y} stroke="#ccc" />;
+    return <Line key={i} x1={center} y1={center} x2={x} y2={y} stroke={colors.mediumGray} />;
   });
 
   const axisLabels = [
@@ -72,15 +73,15 @@ export default function ResultChart() {
             points={getCoordinates(new Array(listNum).fill(100))
               .map(p => `${p.x},${p.y}`)
               .join(' ')}
-            stroke="#666"
+            stroke={colors.midnightBlue}
             strokeDasharray="4"
             fill="none"
           />
 
           <Polygon
             points={pointsReturnString}
-            fill="rgba(128, 128, 255, 0.4)"
-            stroke="#8888ff"
+            fill={`${colors.softBlue}66`}
+            stroke={colors.softBlue}
             strokeWidth={2}
           />
 
@@ -97,7 +98,7 @@ export default function ResultChart() {
                 key={i}
                 x={p.x + dx}
                 y={p.y + dy}
-                fill="#999"
+                fill={colors.midnightBlue}
                 fontSize="12"
                 textAnchor={anchor}
                 alignmentBaseline="middle"

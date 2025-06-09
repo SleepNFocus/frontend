@@ -2,12 +2,13 @@ import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Text } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
+import { colors } from '@/constants/colors';
 
 // Intro: Focuz 전체화면 인트로/랜딩 페이지
 export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
   return (
     <LinearGradient
-      colors={['#e8eafe', '#fff']}
+      colors={[colors.lightGray, colors.white]}
       style={styles.root}
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 1 }}
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   logo: {
-    color: '#6C7BFF',
+    color: colors.softBlue,
     fontWeight: 'bold',
     fontSize: 36,
     marginBottom: 16,
@@ -58,11 +59,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 32,
     marginBottom: 24,
-    color: '#222',
+    color: colors.deepNavy,
     textAlign: 'center',
   },
   desc: {
-    color: '#666',
+    color: colors.midnightBlue,
     fontSize: 18,
     textAlign: 'center',
     marginBottom: 36,
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 10,
-    backgroundColor: '#6C7BFF',
+    backgroundColor: colors.softBlue,
     paddingHorizontal: 36,
     paddingVertical: 8,
     elevation: 0,
@@ -80,11 +81,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   buttonHover: {
-    backgroundColor: '#AFC3FF',
+    backgroundColor: colors.midnightBlue,
   },
   buttonLabel: {
     fontSize: 20,
-    color: '#fff',
+    color: colors.white,
     fontWeight: 'bold',
   },
 });
