@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -12,22 +12,26 @@ import { RootStackParamList } from '@/App';
 import { Button } from '../common/Button';
 
 const MAX_STEP = 5;
+const MIN_WAIT_TIME = 1000;
+const RANDOM_NUM_RANGE = 2000;
+const REACTION_TIME_MIN = 150;
+const REACTION_TIME_MAX = 800;
 
 export default function SleepTest1() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [startTime, setStartTime] = useState<number | null>(null);
+  const [isFinished, setIsFinished] = useState<boolean>(false);
   const [clickTimes, setClickTimes] = useState<number[]>([]);
-  const [isFinished, setIsFinished] = useState(false);
-  const [isWaiting, setIsWaiting] = useState(true);
+  const [isWaiting, setIsWaiting] = useState<boolean>(true);
   const timeout = useRef<number | null>(null);
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState<number>(0);
 
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
 
-  const containerHeight = Math.min(windowHeight * 0.6, 1000);
+  const containerHeight = Math.min(windowHeight * 0.7, 1000);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const circlerWidth = Math.min(windowWidth * 0.3, 220);
 
@@ -35,62 +39,75 @@ export default function SleepTest1() {
     navigation.navigate('SleepTest2Desc');
   }
 
-  useEffect(() => {
+  const showGreenLight = useCallback(() => {
     if (step < MAX_STEP && isWaiting) {
-      const delay = Math.random() * 2000 + 1000;
+      const delay = Math.random() * RANDOM_NUM_RANGE + MIN_WAIT_TIME;
 
       timeout.current = setTimeout(() => {
         setStartTime(Date.now());
         setIsWaiting(false);
       }, delay);
     }
+  }, [step, isWaiting]);
+
+  useEffect(() => {
+    showGreenLight();
 
     return () => {
       if (timeout.current) clearTimeout(timeout.current);
     };
-  }, [step, isWaiting]);
+  }, [showGreenLight]);
 
-  const handlePress = () => {
-    if (isWaiting || !startTime) return;
+  const handlePressGreenLight = () => {
+    const isInvalidClick = isWaiting || !startTime;
+    if (isInvalidClick) return;
 
-    const reaction = Date.now() - startTime;
-    const updated = [...clickTimes, reaction];
+    const reactionTime = Date.now() - startTime;
+    const updatedClickTimes = [...clickTimes, reactionTime];
+    const isLastStep = step + 1 >= MAX_STEP;
 
-    if (step + 1 < MAX_STEP) {
-      setClickTimes(updated);
-      setStep(step + 1);
-      setIsWaiting(true);
-      setStartTime(null);
-    } else {
-      setClickTimes(updated);
+    setClickTimes(updatedClickTimes);
+
+    if (isLastStep) {
       setIsFinished(true);
+      return;
     }
+
+    setStep(step + 1);
+    setIsWaiting(true);
+    setStartTime(null);
   };
 
   const calcScore = (times: number[]): number => {
     const scores = times.map(t => {
-      if (t <= 150) return 100;
-      if (t >= 800) return 0;
-      return ((800 - t) / (800 - 150)) * 100;
+      if (t <= REACTION_TIME_MIN) return 100;
+      if (t >= REACTION_TIME_MAX) return 0;
+      return (
+        ((REACTION_TIME_MAX - t) / (REACTION_TIME_MAX - REACTION_TIME_MIN)) *
+        100
+      );
     });
-    const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
-    return Math.round(avg * 10) / 10;
+    const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
+    return Math.round(avgScore * 10) / 10;
   };
 
   const avgScore = calcScore(clickTimes);
-  const recent = clickTimes[clickTimes.length - 1];
 
-  const allAvg = Math.round(clickTimes.reduce((a, b) => a + b, 0) / MAX_STEP);
-  const commaAvg = allAvg.toLocaleString();
+  const recentClickTime = clickTimes[clickTimes.length - 1];
+  const commaRecentClickTime =
+    recentClickTime !== undefined ? recentClickTime.toLocaleString() : '';
 
-  const commaRecent = recent !== undefined ? recent.toLocaleString() : '';
-
-  const recentAvg =
+  const recentClickTimeAvg =
     clickTimes.length > 0
       ? Math.round(clickTimes.reduce((a, b) => a + b, 0) / clickTimes.length)
       : 0;
 
-  const commaRecentAvg = recentAvg.toLocaleString();
+  const commaRecentStepClickTimesAvg = recentClickTimeAvg.toLocaleString();
+
+  const allClickTimeAvg = Math.round(
+    clickTimes.reduce((a, b) => a + b, 0) / MAX_STEP,
+  );
+  const commaAllClickTimeAvg = allClickTimeAvg.toLocaleString();
 
   return (
     <View style={styles.container}>
@@ -100,7 +117,7 @@ export default function SleepTest1() {
           <Text style={styles.scoreText}> {avgScore}점 </Text>
           <View style={styles.resultTextBox}>
             <Text style={styles.text}> 평균 반응속도 : </Text>
-            <Text style={styles.boldText}>{commaAvg} ms</Text>
+            <Text style={styles.boldText}>{commaAllClickTimeAvg} ms</Text>
           </View>
           <Button title="다음" variant="outline" onPress={goToSleepTest2Desc} />
         </View>
@@ -127,7 +144,7 @@ export default function SleepTest1() {
                   </Text>
                 </View>
               ) : (
-                <Pressable onPress={handlePress}>
+                <Pressable onPress={handlePressGreenLight}>
                   <View
                     style={[
                       styles.circle,
@@ -140,10 +157,10 @@ export default function SleepTest1() {
             {clickTimes.length > 0 && (
               <View style={styles.resultText}>
                 <Text style={styles.opacityText}>
-                  최근 반응속도 : {commaRecent} ms
+                  최근 반응속도 : {commaRecentClickTime} ms
                 </Text>
                 <Text style={styles.opacityText}>
-                  평균 반응속도 : {commaRecentAvg} ms
+                  평균 반응속도 : {commaRecentStepClickTimesAvg} ms
                 </Text>
               </View>
             )}

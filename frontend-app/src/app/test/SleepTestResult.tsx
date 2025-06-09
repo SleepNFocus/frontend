@@ -13,7 +13,7 @@ import { RootStackParamList } from '@/App';
 
 export default function SleepTestResult() {
   const { width: windowWidth } = useWindowDimensions();
-  const containerWidth = Math.min(windowWidth * 0.6, 700);
+  const containerWidth = Math.min(windowWidth * 0.9, 700);
 
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   pointDescription: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#8888ff',
