@@ -8,8 +8,8 @@ import {
 } from 'react-native';
 import { Button } from '../common/Button';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { TestStackParamList } from '@/app/test/navigation/TestNavigator';
 import { useNavigation } from 'expo-router';
+import { RootStackParamList } from '@/App';
 
 type RoundInfo = {
   gridSize: number;
@@ -35,7 +35,7 @@ const getRandomIdx = (gridSize: number, patternAns: number): number[] => {
 
 export default function SleepTest3() {
   const navigation =
-    useNavigation<NativeStackNavigationProp<TestStackParamList>>();
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const { width: windowWidth } = useWindowDimensions();
   const { height: windowHeight } = useWindowDimensions();

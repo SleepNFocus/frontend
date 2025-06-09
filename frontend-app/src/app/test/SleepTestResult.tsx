@@ -1,6 +1,8 @@
+import { RootStackParamList } from '@/App';
 import ResultChart from '@/components/chart/ResultChart';
 import { Button } from '@/components/common/Button';
-// import { useRouter } from 'expo-router';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from 'expo-router';
 import {
   View,
   Text,
@@ -10,10 +12,11 @@ import {
 } from 'react-native';
 
 export default function SleepTestResult() {
-  // const router = useRouter();
-
   const { width: windowWidth } = useWindowDimensions();
   const containerWidth = Math.min(windowWidth * 0.6, 700);
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -81,8 +84,7 @@ export default function SleepTestResult() {
             title="대시보드로 이동"
             variant="outline"
             onPress={() => {
-              //  이후 추가 수정 [ 대시보드로 이동 네비게기션 ]
-              // router.replace('/(tabs)/DashboardMain' as any);
+              navigation.navigate('Dashboard');
             }}
           ></Button>
         </View>

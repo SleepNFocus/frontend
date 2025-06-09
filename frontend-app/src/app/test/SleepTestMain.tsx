@@ -1,13 +1,13 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { View, Text, StyleSheet } from 'react-native';
-import { Button } from '@/components/common/Button';
-import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { TestStackParamList } from '@/app/test/navigation/TestNavigator';
+import { useNavigation } from '@react-navigation/native';
+import { Button } from '@/components/common/Button';
+import { RootStackParamList } from '@/App';
 
 export default function SleepTestMain() {
   const navigation =
-    useNavigation<NativeStackNavigationProp<TestStackParamList>>();
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
     <LinearGradient
@@ -23,7 +23,7 @@ export default function SleepTestMain() {
           <Button
             title="테스트 시작하기"
             variant="outline"
-            style={{ width: 170 }}
+            style={styles.button}
             onPress={() => navigation.navigate('SleepTestDesc')}
           />
         </View>
@@ -62,5 +62,8 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     color: '#222',
     textAlign: 'center',
+  },
+  button: {
+    width: 170,
   },
 });

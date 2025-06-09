@@ -9,7 +9,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@/components/common/Button';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { TestStackParamList } from '@/app/test/navigation/TestNavigator';
+import { RootStackParamList } from '@/App';
 
 const MAX_NUM = 9;
 const RANDOM_SYMBOL = ['♥︎', '✦', '♠︎', '▲', '◉', '★', '▼', '☗', '◆'];
@@ -25,7 +25,7 @@ function randomArray(array: string[]) {
 
 export default function SleepTest2() {
   const navigation =
-    useNavigation<NativeStackNavigationProp<TestStackParamList>>();
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const shuffledSymbols = useMemo(() => randomArray(RANDOM_SYMBOL), []);
   const [currentSymbol, setCurrentSymbol] = useState<string>('');
