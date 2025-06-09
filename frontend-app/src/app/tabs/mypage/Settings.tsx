@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/App';
 import { useAuthStore } from '@/store/authStore';
+import { BackButton } from '@/components/common/BackButton';
 
 const Settings = () => {
   const navigation =
@@ -24,9 +25,7 @@ const Settings = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={24} color="#fff" />
-        </TouchableOpacity>
+        <BackButton color="#fff" />
         <Text style={styles.headerTitle}>내 정보 수정</Text>
       </View>
 
