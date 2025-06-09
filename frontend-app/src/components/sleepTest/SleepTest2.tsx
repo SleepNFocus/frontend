@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@/components/common/Button';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/App';
 
 const MAX_NUM = 9;
@@ -29,19 +29,19 @@ export default function SleepTest2() {
 
   const shuffledSymbols = useMemo(() => randomArray(RANDOM_SYMBOL), []);
   const [currentSymbol, setCurrentSymbol] = useState<string>('');
-  const [correctCount, setCorrectCount] = useState(0);
-  const [wrongCount, setWrongCount] = useState(0);
   const [clickTimes, setClickTimes] = useState<number[]>([]);
   const [startTime, setStartTime] = useState<number>(0);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [wrongCount, setWrongCount] = useState(0);
   const [gameOver, setGameOver] = useState(false);
-  const [start, setStart] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
+  const [start, setStart] = useState(false);
 
-  const { width: windowWidth } = useWindowDimensions();
   const { height: windowHeight } = useWindowDimensions();
+  const { width: windowWidth } = useWindowDimensions();
 
-  const containerWidth = Math.min(windowWidth * 0.9, 700);
   const containerHeight = Math.min(windowHeight * 0.7, 1000);
+  const containerWidth = Math.min(windowWidth * 0.9, 700);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
   useEffect(() => {

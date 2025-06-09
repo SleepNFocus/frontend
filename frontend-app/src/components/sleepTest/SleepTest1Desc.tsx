@@ -1,18 +1,18 @@
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
-import { Button } from '@/components/common/Button';
-import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import { Button } from '@/components/common/Button';
 import { RootStackParamList } from '@/App';
 
 export default function SleepTest1Desc() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const { width: windowWidth } = useWindowDimensions();
   const { height: windowHeight } = useWindowDimensions();
+  const { width: windowWidth } = useWindowDimensions();
 
-  const containerWidth = Math.min(windowWidth * 0.9, 700);
   const containerHeight = Math.min(windowHeight * 0.6, 600);
+  const containerWidth = Math.min(windowWidth * 0.9, 700);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
   return (

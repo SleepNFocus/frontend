@@ -1,8 +1,3 @@
-import { RootStackParamList } from '@/App';
-import ResultChart from '@/components/chart/ResultChart';
-import { Button } from '@/components/common/Button';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from 'expo-router';
 import {
   View,
   Text,
@@ -10,6 +5,11 @@ import {
   ScrollView,
   useWindowDimensions,
 } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import ResultChart from '@/components/chart/ResultChart';
+import { Button } from '@/components/common/Button';
+import { useNavigation } from 'expo-router';
+import { RootStackParamList } from '@/App';
 
 export default function SleepTestResult() {
   const { width: windowWidth } = useWindowDimensions();
@@ -18,6 +18,9 @@ export default function SleepTestResult() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  // API 연결 후 Zustand 상태로 점수 받아오기
+  const baseScore = 80;
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.root}></View>
@@ -25,7 +28,7 @@ export default function SleepTestResult() {
         <View style={[styles.container, { width: containerWidth }]}>
           <Text style={styles.mainTitle}> 수면 테스트 측정 완료 </Text>
           <ResultChart />
-          {/* 반응 속도 */}
+
           <View style={styles.rowBox}>
             <View style={styles.textBox}>
               <Text style={styles.boldText}>반응 속도 </Text>
@@ -34,11 +37,10 @@ export default function SleepTestResult() {
               </Text>
             </View>
             <View style={styles.roundScore}>
-              {/* 원형 점수 넣기 */}
-              <Text style={styles.scoreText}>80 </Text>
+              <Text style={styles.scoreText}>{baseScore}</Text>
             </View>
           </View>
-          {/* 처리 속도 */}
+
           <View style={styles.rowBox2}>
             <View style={styles.textBox}>
               <Text style={styles.boldText}>처리 속도 </Text>
@@ -49,11 +51,10 @@ export default function SleepTestResult() {
               <Text style={styles.mainText}>정확도 : [**점수 가져오기] </Text>
             </View>
             <View style={styles.roundScore}>
-              {/* 원형 점수 넣기 */}
-              <Text style={styles.scoreText}>90 </Text>
+              <Text style={styles.scoreText}>{baseScore}</Text>
             </View>
           </View>
-          {/* 패턴 기억 */}
+
           <View style={styles.rowBox}>
             <View style={styles.textBox}>
               <Text style={styles.boldText}>패턴 기억 </Text>
@@ -62,15 +63,15 @@ export default function SleepTestResult() {
               </Text>
             </View>
             <View style={styles.roundScore}>
-              {/* 원형 점수 넣기 */}
-              <Text style={styles.scoreText}>100 </Text>
+              <Text style={styles.scoreText}>{baseScore}</Text>
             </View>
           </View>
+
           <View style={styles.rowText}>
             <Text style={styles.subTitle}> 평균 점수 : </Text>
-            {/* 점수 받아오기 */}
-            <Text style={styles.mainScore}> 80점 </Text>
+            <Text style={styles.mainScore}>{baseScore}</Text>
           </View>
+
           <View style={styles.descriptionBox}>
             <Text style={styles.description}>
               초기 인지 능력 측정이 완료되었습니다.

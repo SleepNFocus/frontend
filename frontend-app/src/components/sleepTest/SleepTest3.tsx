@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import { Button } from '../common/Button';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '@/App';
+import { Button } from '../common/Button';
 
 type RoundInfo = {
   gridSize: number;
@@ -37,22 +37,22 @@ export default function SleepTest3() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const { width: windowWidth } = useWindowDimensions();
   const { height: windowHeight } = useWindowDimensions();
+  const { width: windowWidth } = useWindowDimensions();
 
-  const containerWidth = Math.min(windowWidth * 0.9, 700);
   const containerHeight = Math.min(windowHeight * 0.7, 1200);
-  const lineWidth = Math.min(windowWidth * 0.8, 600);
+  const containerWidth = Math.min(windowWidth * 0.9, 700);
   const squareWidth = Math.max(windowWidth * 0.09, 45);
+  const lineWidth = Math.min(windowWidth * 0.8, 600);
 
   // 상태관리 객체로 수정해보기
-  const [round, setRound] = useState(0);
-  const [pattern, setPattern] = useState<number[]>([]);
+  const [totalStart, setTotalStart] = useState<number | null>(null);
   const [selected, setSelected] = useState<number[]>([]);
   const [showPattern, setShowPattern] = useState(true);
-  const [totalStart, setTotalStart] = useState<number | null>(null);
+  const [pattern, setPattern] = useState<number[]>([]);
   const [totalCorrect, setTotalCorrect] = useState(0);
   const [gameEnded, setGameEnded] = useState(false);
+  const [round, setRound] = useState(0);
 
   useEffect(() => {
     if (round < rounds.length) {
