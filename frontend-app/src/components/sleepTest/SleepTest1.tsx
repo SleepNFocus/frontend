@@ -6,10 +6,10 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native';
-import { Button } from '../common/Button';
-import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '@/App';
+import { Button } from '../common/Button';
 
 const MAX_STEP = 5;
 
@@ -17,18 +17,18 @@ export default function SleepTest1() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const [step, setStep] = useState(0);
-  const [isWaiting, setIsWaiting] = useState(true);
   const [startTime, setStartTime] = useState<number | null>(null);
   const [clickTimes, setClickTimes] = useState<number[]>([]);
   const [isFinished, setIsFinished] = useState(false);
+  const [isWaiting, setIsWaiting] = useState(true);
   const timeout = useRef<number | null>(null);
+  const [step, setStep] = useState(0);
 
-  const { width: windowWidth } = useWindowDimensions();
   const { height: windowHeight } = useWindowDimensions();
+  const { width: windowWidth } = useWindowDimensions();
 
-  const containerWidth = Math.min(windowWidth * 0.9, 700);
   const containerHeight = Math.min(windowHeight * 0.6, 1000);
+  const containerWidth = Math.min(windowWidth * 0.9, 700);
   const circlerWidth = Math.min(windowWidth * 0.3, 220);
 
   useEffect(() => {
@@ -85,6 +85,7 @@ export default function SleepTest1() {
     clickTimes.length > 0
       ? Math.round(clickTimes.reduce((a, b) => a + b, 0) / clickTimes.length)
       : 0;
+
   const commaRecentAvg = recentAvg.toLocaleString();
 
   return (
