@@ -15,6 +15,10 @@ export default function SleepTest2Desc() {
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
+  function goToSleepTest2() {
+    navigation.navigate('SleepTest2');
+  }
+
   return (
     <View style={styles.root}>
       <View
@@ -36,13 +40,7 @@ export default function SleepTest2Desc() {
             [ 제한 시간은 1분 입니다. ]
           </Text>
         </View>
-        <Button
-          title="시작"
-          variant="outline"
-          onPress={() => {
-            navigation.navigate('SleepTest2');
-          }}
-        ></Button>
+        <Button title="시작" variant="outline" onPress={goToSleepTest2} />
       </View>
     </View>
   );

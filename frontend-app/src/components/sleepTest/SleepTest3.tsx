@@ -13,20 +13,20 @@ import { Button } from '../common/Button';
 
 type RoundInfo = {
   gridSize: number;
-  patternAns: number;
+  clickPattern: number;
 };
 
 const rounds: RoundInfo[] = [
-  { gridSize: 4, patternAns: 4 },
-  { gridSize: 5, patternAns: 6 },
-  { gridSize: 6, patternAns: 8 },
+  { gridSize: 4, clickPattern: 4 },
+  { gridSize: 5, clickPattern: 6 },
+  { gridSize: 6, clickPattern: 8 },
 ];
 
-const getRandomIdx = (gridSize: number, patternAns: number): number[] => {
+const getRandomIdx = (gridSize: number, clickPattern: number): number[] => {
   const total = gridSize * gridSize;
   const randomNum = new Set<number>();
 
-  while (randomNum.size < patternAns) {
+  while (randomNum.size < clickPattern) {
     randomNum.add(Math.floor(Math.random() * total));
   }
 
@@ -40,9 +40,9 @@ export default function SleepTest3() {
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
 
-  const containerHeight = Math.min(windowHeight * 0.7, 1200);
+  const containerHeight = Math.min(windowHeight * 0.8, 1200);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
-  const squareWidth = Math.max(windowWidth * 0.09, 45);
+  const squareWidth = Math.min(windowWidth * 0.3, 45);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
   // 상태관리 객체로 수정해보기
@@ -54,19 +54,26 @@ export default function SleepTest3() {
   const [gameEnded, setGameEnded] = useState(false);
   const [round, setRound] = useState(0);
 
+  function goToSleepTestResult() {
+    navigation.navigate('SleepTestResult');
+    resetGame();
+  }
+
+  function finishShow() {
+    setShowPattern(false);
+  }
+
   useEffect(() => {
     if (round < rounds.length) {
-      const { gridSize, patternAns } = rounds[round];
-      const randomPattern = getRandomIdx(gridSize, patternAns);
+      const { gridSize, clickPattern } = rounds[round];
+      const randomPattern = getRandomIdx(gridSize, clickPattern);
       setPattern(randomPattern);
       setSelected([]);
       setShowPattern(true);
 
       if (round === 0) setTotalStart(Date.now());
 
-      const timer = setTimeout(() => {
-        setShowPattern(false);
-      }, 1000);
+      const timer = setTimeout(finishShow, 1000);
 
       return () => clearTimeout(timer);
     }
@@ -75,7 +82,7 @@ export default function SleepTest3() {
   const handlePress = (clickNum: number) => {
     if (showPattern || selected.includes(clickNum)) return;
 
-    const limit = rounds[round].patternAns;
+    const limit = rounds[round].clickPattern;
 
     if (selected.length < limit) {
       const updated = [...selected, clickNum];
@@ -139,17 +146,14 @@ export default function SleepTest3() {
           <Button
             title="최종 결과 보기"
             variant="outline"
-            onPress={() => {
-              navigation.navigate('SleepTestResult');
-              resetGame();
-            }}
+            onPress={goToSleepTestResult}
           />
         </View>
       </View>
     );
   }
 
-  const { gridSize, patternAns } = rounds[round];
+  const { gridSize, clickPattern } = rounds[round];
   const totalsquares = gridSize * gridSize;
   const gridWidth = squareWidth * gridSize * 1.3;
 
@@ -170,7 +174,7 @@ export default function SleepTest3() {
           <Text style={styles.subtitle}>패턴을 기억하세요!</Text>
         ) : (
           <Text style={styles.subtitle}>
-            선택: {selected.length} / {patternAns}
+            선택: {selected.length} / {clickPattern}
           </Text>
         )}
 

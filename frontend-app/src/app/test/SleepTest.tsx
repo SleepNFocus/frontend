@@ -11,6 +11,10 @@ export default function SleepTestDesc() {
   const { width: windowWidth } = useWindowDimensions();
   const containerWidth = Math.min(windowWidth * 0.9, 700);
 
+  function goToSleepTest1Desc() {
+    navigation.navigate('SleepTest1Desc');
+  }
+
   return (
     <View style={styles.root}>
       <View style={[styles.container, { width: containerWidth }]}>
@@ -29,10 +33,8 @@ export default function SleepTestDesc() {
         <Button
           title="측정 시작하기"
           variant="outline"
-          onPress={() => {
-            navigation.navigate('SleepTest1Desc');
-          }}
-        ></Button>
+          onPress={goToSleepTest1Desc}
+        />
       </View>
     </View>
   );

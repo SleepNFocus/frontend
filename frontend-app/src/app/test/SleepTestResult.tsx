@@ -13,13 +13,17 @@ import { RootStackParamList } from '@/App';
 
 export default function SleepTestResult() {
   const { width: windowWidth } = useWindowDimensions();
-  const containerWidth = Math.min(windowWidth * 0.6, 700);
+  const containerWidth = Math.min(windowWidth * 0.9, 700);
 
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   // API 연결 후 Zustand 상태로 점수 받아오기
   const baseScore = 80;
+
+  function goToDashboard() {
+    navigation.navigate('Dashboard');
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -84,10 +88,8 @@ export default function SleepTestResult() {
           <Button
             title="대시보드로 이동"
             variant="outline"
-            onPress={() => {
-              navigation.navigate('Dashboard');
-            }}
-          ></Button>
+            onPress={goToDashboard}
+          />
         </View>
       </View>
     </ScrollView>
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   pointDescription: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#8888ff',

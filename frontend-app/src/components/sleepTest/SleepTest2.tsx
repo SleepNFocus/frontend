@@ -12,12 +12,14 @@ import { Button } from '@/components/common/Button';
 import { RootStackParamList } from '@/App';
 
 const MAX_NUM = 9;
+const TIMER_SECOND = 60000;
 const RANDOM_SYMBOL = ['♥︎', '✦', '♠︎', '▲', '◉', '★', '▼', '☗', '◆'];
 
 function randomArray(array: string[]) {
   const copy = [...array];
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
+    // i번째와 j번째를 자리 바꿈으로 랜덤 배정
     [copy[i], copy[j]] = [copy[j], copy[i]];
   }
   return copy;
@@ -44,16 +46,28 @@ export default function SleepTest2() {
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
+  function goToSleepTest3Desc() {
+    navigation.navigate('SleepTest3Desc');
+  }
+
   useEffect(() => {
     setStart(true);
   }, []);
 
+  const setOneRandomSymbol = () => {
+    const random = shuffledSymbols[Math.floor(Math.random() * MAX_NUM)];
+    setCurrentSymbol(random);
+    setStartTime(Date.now());
+  };
+
+  function finishGame() {
+    setGameOver(true);
+  }
+
   useEffect(() => {
     if (start) {
-      setRandomSymbol();
-      const timer = setTimeout(() => {
-        setGameOver(true);
-      }, 60000);
+      setOneRandomSymbol();
+      const timer = setTimeout(finishGame, TIMER_SECOND);
       return () => clearTimeout(timer);
     }
   }, [start]);
@@ -74,12 +88,6 @@ export default function SleepTest2() {
     }
   }, [start, gameOver]);
 
-  const setRandomSymbol = () => {
-    const random = shuffledSymbols[Math.floor(Math.random() * MAX_NUM)];
-    setCurrentSymbol(random);
-    setStartTime(Date.now());
-  };
-
   const handlePress = (pressedNum: number) => {
     if (gameOver) return;
 
@@ -88,12 +96,13 @@ export default function SleepTest2() {
 
     const correctIndex =
       shuffledSymbols.findIndex(s => s === currentSymbol) + 1;
+
     if (pressedNum === correctIndex) {
       setCorrectCount(prev => prev + 1);
     } else {
       setWrongCount(prev => prev + 1);
     }
-    setRandomSymbol();
+    setOneRandomSymbol();
   };
 
   const calculateScore = () => {
@@ -142,11 +151,7 @@ export default function SleepTest2() {
               </Text>
             </View>
           </View>
-          <Button
-            title="다음"
-            variant="outline"
-            onPress={() => navigation.navigate('SleepTest3Desc')}
-          />
+          <Button title="다음" variant="outline" onPress={goToSleepTest3Desc} />
         </View>
       ) : (
         <>
