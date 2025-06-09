@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Text } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
+import { colors } from '@/constants/colors';
 
 interface CheckinCardProps {
   onCheckin?: () => void;
@@ -11,7 +12,7 @@ interface CheckinCardProps {
 export const CheckinCard: React.FC<CheckinCardProps> = ({ onCheckin }) => {
   return (
     <LinearGradient
-      colors={['#5B6CFF', '#6C7BFF', '#8B5CF6']}
+      colors={[colors.midnightBlue, colors.softBlue]}
       style={styles.root}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
@@ -35,31 +36,27 @@ export const CheckinCard: React.FC<CheckinCardProps> = ({ onCheckin }) => {
 
 const styles = StyleSheet.create({
   root: {
+    width: '100%',
     borderRadius: 16,
     padding: 20,
-    marginBottom: 16,
     alignItems: 'stretch',
-    shadowColor: '#8B5CF6',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.13,
-    shadowRadius: 24,
-    elevation: 6,
   },
   title: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#fff',
+    color: colors.white,
     marginBottom: 8,
     textAlign: 'left',
   },
   desc: {
     fontSize: 15,
-    color: '#e6e6ff',
+    color: colors.white,
+    opacity: 0.8,
     marginBottom: 18,
     textAlign: 'left',
   },
   button: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 12,
     paddingHorizontal: 0,
     paddingVertical: 0,
@@ -68,15 +65,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
     height: 44,
     justifyContent: 'center',
-    shadowColor: 'transparent',
-    elevation: 0,
   },
   buttonPressed: {
-    backgroundColor: '#f3f4ff',
+    backgroundColor: colors.lightGray,
   },
   buttonLabel: {
     fontSize: 17,
-    color: '#8B5CF6',
+    color: colors.softBlue,
     fontWeight: 'bold',
     textAlign: 'center',
     width: '100%',

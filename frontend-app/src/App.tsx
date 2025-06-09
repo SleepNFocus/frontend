@@ -12,7 +12,6 @@ import { HistoryPage } from './app/tabs/HistoryPage';
 import { InsightPage } from './app/tabs/InsightPage';
 import { MorePage } from './app/tabs/MorePage';
 import { SocialLogin } from './app/auth/SocialLogin';
-import Mypage from '@/app/mypage/Mypage';
 import { Layout } from '@/components/common/Layout';
 import { SleepRecordPage } from './app/sleep/SleepRecordPage';
 import { SleepInsightsPage } from './app/sleep/SleepInsightPage';
@@ -21,9 +20,9 @@ import {
   TestNavigator,
   TestStackParamList,
 } from './app/test/navigation/TestNavigator';
-import Settings from '@/app/mypage/Settings';
-import NicknameEdit from './app/mypage/NicknameEdit';
-import MyRecord from './app/mypage/MyRecord';
+import Settings from '@/app/tabs/mypage/Settings';
+import NicknameEdit from './app/tabs/mypage/NicknameEdit';
+import MyRecord from './app/tabs/mypage/MyRecord';
 
 export type RootStackParamList = {
   Dashboard: undefined;
@@ -32,10 +31,8 @@ export type RootStackParamList = {
   Insight: undefined;
   More: undefined;
   SurveyStep1: undefined;
-  Admin: undefined;
   TestSurvey: undefined;
   SocialLogin: undefined;
-  MyPage: undefined;
   SleepRecord: undefined;
   SleepInsights: { recordData?: any } | undefined;
   NotificationSettings: undefined;
@@ -68,7 +65,6 @@ export default function App() {
         <Stack.Screen name="Insight" component={InsightPage} />
         <Stack.Screen name="More" component={MorePage} />
         <Stack.Screen name="SocialLogin" component={SocialLogin} />
-        <Stack.Screen name="MyPage" component={Mypage} />
         <Stack.Screen name="SleepRecord" component={SleepRecordPage} />
         <Stack.Screen name="SleepInsights" component={SleepInsightsPage} />
         <Stack.Screen

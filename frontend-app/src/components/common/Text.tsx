@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text as RNText, TextStyle, StyleSheet } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { colors } from '@/constants/colors';
 
 // Text 컴포넌트의 props 타입 정의
 interface TextProps {
@@ -32,8 +32,6 @@ export const Text: React.FC<TextProps> = ({
   style,
   color,
 }) => {
-  const theme = useTheme(); // 테마 색상 사용
-
   // variant에 따라 스타일 반환
   const getTextStyle = () => {
     switch (variant) {
@@ -76,7 +74,7 @@ export const Text: React.FC<TextProps> = ({
     <RNText
       style={[
         getTextStyle(),
-        { color: color || theme.colors.onSurface }, // 색상 적용
+        { color: color || colors.deepNavy }, // 기본 색상을 deepNavy로 설정
         style,
       ]}
     >

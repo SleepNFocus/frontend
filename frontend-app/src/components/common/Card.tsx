@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle, TouchableOpacity } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { colors } from '@/constants/colors';
 
 // Card 컴포넌트의 props 타입 정의
 interface CardProps {
@@ -17,17 +17,15 @@ export const Card: React.FC<CardProps> = ({
   elevation = 2,
   onPress,
 }) => {
-  const theme = useTheme(); // 테마 색상 사용
-
   // 카드의 실제 내용(스타일 적용)
   const cardContent = (
     <View
       style={[
         styles.card,
         {
-          backgroundColor: theme.colors.surface, // 테마 표면색
-          elevation, // 그림자 깊이
-          shadowColor: theme.colors.shadow, // 그림자 색상
+          backgroundColor: colors.white,
+          elevation,
+          shadowColor: colors.midnightBlue,
         },
         style,
       ]}

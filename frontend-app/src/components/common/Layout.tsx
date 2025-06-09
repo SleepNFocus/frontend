@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, SafeAreaView } from 'react-native';
-import { useTheme } from 'react-native-paper';
 import { Navbar } from './Navbar';
+import { colors } from '@/constants/colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
 // Layout 컴포넌트의 props 타입 정의
 interface LayoutProps {
@@ -10,15 +11,18 @@ interface LayoutProps {
 
 // Layout: 화면 전체를 감싸는 공통 레이아웃 컴포넌트
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const theme = useTheme(); // 테마 색상 사용
-
   return (
     // SafeAreaView: 노치/엣지 등 안전 영역 보장
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
-      <Navbar />
-      <View style={styles.content}>{children}</View>
+    <SafeAreaView style={styles.container}>
+      <LinearGradient
+        colors={[colors.softBlue, colors.white]}
+        style={styles.gradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+      >
+        <Navbar />
+        <View style={styles.content}>{children}</View>
+      </LinearGradient>
     </SafeAreaView>
   );
 };
@@ -26,6 +30,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 // 레이아웃 스타일 정의
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  gradient: {
     flex: 1,
   },
   content: {

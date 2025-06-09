@@ -1,12 +1,18 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import { Layout } from '@/components/common/Layout';
-import { Text } from '@/components/common/Text';
 import { colors } from '@/constants/colors';
-import ProfileCard from './mypage/ProfileCard';
+import ProfileCard from './ProfileCard';
+import { Layout } from '@/components/common/Layout';
 
-export const MorePage: React.FC = () => {
+const MyPage = () => {
   const navigation = useNavigation();
 
   const handleNavigate = (route: string) => {
@@ -66,6 +72,8 @@ export const MorePage: React.FC = () => {
     </Layout>
   );
 };
+
+export default MyPage;
 
 const styles = StyleSheet.create({
   card: {

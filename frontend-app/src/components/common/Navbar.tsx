@@ -7,14 +7,12 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { colors } from '@/constants/colors';
 
 const NAV_ITEMS = [
-  { label: '대시보드', icon: 'home-outline', route: 'Dashboard' },
-  { label: '데일리체크', icon: 'play-circle-outline', route: 'SleepRecord' },
-  { label: '히스토리', icon: 'chart-bar', route: 'History' },
-  { label: '인사이트', icon: 'lightbulb-outline', route: 'SleepInsights' },
-  { label: '내 정보', icon: 'account-outline', route: 'MyPage' },
-  { label: '더보기', icon: 'dots-horizontal', route: 'More' },
-  { label: '테스트', icon: 'clipboard-text-outline', route: 'Navigation' },
-  { label: '관리자', icon: 'account-cog-outline', route: 'Admin' },
+  { icon: 'chart-bar', route: 'History' },
+  { icon: 'play-circle-outline', route: 'SleepRecord' },
+  { icon: 'home-outline', route: 'Dashboard' },
+  { icon: 'lightbulb-outline', route: 'SleepInsights' },
+  { icon: 'dots-horizontal', route: 'More' },
+  { icon: 'clipboard-text-outline', route: 'Navigation' },
 ];
 
 export const Navbar: React.FC = () => {
@@ -28,12 +26,12 @@ export const Navbar: React.FC = () => {
     navigation.navigate(route as never);
   };
 
-  const handleAdminClick = () => {
-    navigation.navigate('Admin' as never);
-  };
-
   const handleLogout = () => {
     navigation.navigate('SocialLogin' as never);
+  };
+
+  const getIconColor = (routeName: string) => {
+    return currentRoute === routeName ? colors.softBlue : colors.mediumGray;
   };
 
   if (isMobile) {
@@ -53,80 +51,42 @@ export const Navbar: React.FC = () => {
       >
         {NAV_ITEMS.filter(item => item.route !== 'Navigation').map(item => (
           <TouchableOpacity
-            key={item.label}
+            key={item.icon}
             style={styles.mobileMenuBtn}
             onPress={() => handleNavigation(item.route)}
           >
             <MaterialCommunityIcons
               name={item.icon}
-              size={22}
-              style={styles.mobileIcon}
-              color={
-                currentRoute === item.route
-                  ? colors.deepNavy
-                  : colors.mediumGray
-              }
+              size={28}
+              color={getIconColor(item.route)}
             />
-            <Text
-              style={{
-                ...styles.mobileMenu,
-                color:
-                  currentRoute === item.route
-                    ? colors.deepNavy
-                    : colors.mediumGray,
-                fontWeight: currentRoute === item.route ? 'bold' : '500',
-              }}
-            >
-              {item.label}
-            </Text>
           </TouchableOpacity>
         ))}
       </View>
     );
   }
 
-  // PC: 기존 상단 네비게이션 바 (아이콘 추가)
+  // PC: 기존 상단 네비게이션 바 (아이콘만)
   return (
     <View style={styles.navbar}>
       <Text style={styles.logo}>FOCUZ</Text>
       <View style={styles.menuWrap}>
         {NAV_ITEMS.slice(0, 5).map(item => (
           <TouchableOpacity
-            key={item.label}
+            key={item.icon}
             onPress={() => handleNavigation(item.route)}
             style={styles.menuItem}
           >
             <MaterialCommunityIcons
               name={item.icon}
-              size={20}
-              style={styles.menuIcon}
-              color={
-                currentRoute === item.route
-                  ? colors.deepNavy
-                  : colors.mediumGray
-              }
+              size={28}
+              color={getIconColor(item.route)}
             />
-            <Text
-              style={
-                currentRoute === item.route
-                  ? {
-                      ...styles.menu,
-                      color: colors.deepNavy,
-                      fontWeight: 'bold',
-                    }
-                  : { ...styles.menu, color: colors.mediumGray }
-              }
-            >
-              {item.label}
-            </Text>
           </TouchableOpacity>
         ))}
       </View>
       <View style={styles.rightWrap}>
         <Text style={styles.icon}>🌱</Text>
-        <TouchableOpacity style={styles.settingBtn} onPress={handleAdminClick}>
-          <Text style={styles.settingText}>관리자</Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={handleLogout}>
           <Text style={styles.logout}>로그아웃</Text>
         </TouchableOpacity>
@@ -164,10 +124,8 @@ const styles = StyleSheet.create({
     gap: 36,
     alignItems: 'center',
   },
-  menu: {
-    fontSize: 16,
-    color: colors.textColor,
-    fontWeight: '500',
+  menuItem: {
+    padding: 8,
   },
   rightWrap: {
     flexDirection: 'row',
@@ -177,20 +135,6 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 18,
     marginRight: 8,
-  },
-  settingBtn: {
-    borderWidth: 1,
-    borderColor: colors.mediumLightGray,
-    borderRadius: 20,
-    paddingHorizontal: 18,
-    paddingVertical: 6,
-    marginRight: 8,
-    backgroundColor: colors.white,
-  },
-  settingText: {
-    fontSize: 15,
-    color: colors.textColor,
-    fontWeight: '500',
   },
   logout: {
     fontSize: 15,
@@ -221,28 +165,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 2,
-  },
-  mobileIcon: {
-    fontSize: 22,
-    marginBottom: 2,
-    color: colors.mediumGray,
-  },
-  mobileMenu: {
-    fontSize: 13,
-    fontWeight: '500',
-  },
-  menuActive: {
-    color: colors.softBlue,
-    fontWeight: 'bold',
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  menuIcon: {
-    marginRight: 2,
   },
 });
 
