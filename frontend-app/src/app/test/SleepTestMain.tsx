@@ -1,10 +1,10 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import { View, Text, StyleSheet } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from '@/components/common/Button';
-import { RootStackParamList } from '@/App';
 import { colors } from '@/constants/colors';
+import { RootStackParamList } from '@/App';
 
 export default function SleepTestMain() {
   const navigation =
@@ -16,18 +16,21 @@ export default function SleepTestMain() {
 
   return (
     <LinearGradient
-      colors={[colors.lightGray, colors.white]}
-      style={styles.root}
-      start={{ x: 0.5, y: 0 }}
-      end={{ x: 0.5, y: 1 }}
+      colors={[colors.softBlue, colors.white]}
+      style={styles.gradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
     >
       <View style={styles.mainBox}>
-        <Text style={styles.title}> Focuz </Text>
+        <Image
+          source={require('@/assets/focuz_text_logo.png')}
+          style={styles.textLogoImage}
+        />
         <View style={styles.btnBox}>
           <Text style={styles.mainText}> 수면 테스트를 진행합니다. </Text>
           <Button
-            title="테스트 시작하기"
-            variant="outline"
+            title="시작"
+            variant="primary"
             style={styles.button}
             onPress={goToSleepTestDesc}
           />
@@ -38,7 +41,7 @@ export default function SleepTestMain() {
 }
 
 const styles = StyleSheet.create({
-  root: {
+  gradient: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -53,22 +56,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  title: {
-    color: colors.softBlue,
-    fontWeight: 'bold',
-    fontSize: 36,
-    marginBottom: 16,
-    letterSpacing: 1,
-    textAlign: 'center',
-  },
   mainText: {
     fontWeight: 'bold',
-    fontSize: 30,
+    fontSize: 28,
     marginBottom: 24,
-    color: colors.textColor,
+    color: '#3F4F80',
     textAlign: 'center',
+    textShadowColor: '#B0B0B0',
+    textShadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    textShadowRadius: 2,
   },
   button: {
-    width: 170,
+    width: 100,
+    paddingVertical: 12,
+    borderRadius: 10,
+    backgroundColor: '#3F4F80',
+    alignItems: 'center',
+    shadowColor: '#909090',
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
+  },
+  textLogoImage: {
+    width: 230,
+    height: 60,
   },
 });

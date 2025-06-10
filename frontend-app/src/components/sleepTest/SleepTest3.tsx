@@ -2,13 +2,17 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from 'expo-router';
+import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
+import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 
 type RoundInfo = {
@@ -40,9 +44,9 @@ export default function SleepTest3() {
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
 
-  const containerHeight = Math.min(windowHeight * 0.8, 1200);
+  const containerHeight = Math.min(windowHeight * 0.7, 1200);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
-  const squareWidth = Math.min(windowWidth * 0.3, 45);
+  const squareWidth = Math.min(windowWidth * 0.118, 55);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
   // 상태관리 객체로 수정해보기
@@ -128,28 +132,49 @@ export default function SleepTest3() {
     const answerPercent = ((totalCorrect / 18) * 100).toFixed(1);
 
     return (
-      <View style={styles.root}>
-        <View style={styles.resultBox}>
-          <Text style={styles.title}> 패턴 기억 결과 </Text>
-          <Text style={styles.scoreText}> {finalScore}점 </Text>
-          <View style={styles.resultContainer}>
-            <View style={styles.resultContainer2}>
-              <Text style={styles.result}>총 정답 수: </Text>
-              <Text style={styles.resultBold}> {totalCorrect}개 / 18개 </Text>
+      <LinearGradient
+        colors={[colors.softBlue, colors.white]}
+        style={styles.gradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+      >
+        <View style={styles.root}>
+          <View style={styles.resultBox}>
+            <Image
+              source={require('@/assets/focuz_name_logo.png')}
+              style={styles.nameLogoImage}
+            />
+            <Image
+              source={require('@/assets/result.png')}
+              style={styles.resultImage}
+            />
+            <View style={styles.resultBox2}>
+              <Text style={styles.title}> 패턴 기억 결과 </Text>
+              <Text style={styles.scoreText}> {finalScore}점 </Text>
+              <View style={styles.resultContainer}>
+                <View style={styles.resultContainer2}>
+                  <Text style={styles.result}>총 정답 수: </Text>
+                  <Text style={styles.resultBold}>
+                    {' '}
+                    {totalCorrect}개 / 18개{' '}
+                  </Text>
+                </View>
+                <View style={styles.resultContainer2}>
+                  <Text style={styles.result}>정확도: </Text>
+                  <Text style={styles.resultBold}> {answerPercent}% </Text>
+                </View>
+              </View>
             </View>
-            <View style={styles.resultContainer2}>
-              <Text style={styles.result}>정확도: </Text>
-              <Text style={styles.resultBold}> {answerPercent}% </Text>
-            </View>
-          </View>
 
-          <Button
-            title="최종 결과 보기"
-            variant="outline"
-            onPress={goToSleepTestResult}
-          />
+            <Button
+              title="최종 결과 보기"
+              variant="primary"
+              style={styles.button}
+              onPress={goToSleepTestResult}
+            />
+          </View>
         </View>
-      </View>
+      </LinearGradient>
     );
   }
 
@@ -158,57 +183,70 @@ export default function SleepTest3() {
   const gridWidth = squareWidth * gridSize * 1.3;
 
   return (
-    <View style={styles.root}>
-      <View
-        style={[
-          styles.container,
-          { width: containerWidth, height: containerHeight },
-        ]}
-      >
-        <View style={styles.titleBox}>
-          <Text style={styles.title}>격자 기억하기</Text>
-          <Text style={styles.subtitle1}> [ {round + 1} 라운드 ] </Text>
-        </View>
-        <View style={[styles.line, { width: lineWidth }]} />
-        {showPattern ? (
-          <Text style={styles.subtitle}>패턴을 기억하세요!</Text>
-        ) : (
-          <Text style={styles.subtitle}>
-            선택: {selected.length} / {clickPattern}
-          </Text>
-        )}
+    <LinearGradient
+      colors={[colors.softBlue, colors.white]}
+      style={styles.gradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+    >
+      <View style={styles.root}>
+        <Image
+          source={require('@/assets/focuz_name_logo.png')}
+          style={styles.nameLogoImage}
+        />
+        <GlassCard
+          style={[
+            styles.container,
+            { width: containerWidth, height: containerHeight },
+          ]}
+        >
+          <View style={styles.titleBox}>
+            <Text style={styles.title}>격자 기억하기</Text>
+            <Text style={styles.subtitle1}> [ {round + 1} 라운드 ] </Text>
+          </View>
+          <View style={[styles.line, { width: lineWidth }]} />
+          {showPattern ? (
+            <Text style={styles.subtitle}>패턴을 기억하세요!</Text>
+          ) : (
+            <Text style={styles.subtitle}>
+              선택: {selected.length} / {clickPattern}
+            </Text>
+          )}
 
-        <View style={[styles.grid, { width: gridWidth }]}>
-          {Array.from({ length: totalsquares }).map((_, index) => {
-            const isCorrect = pattern.includes(index);
-            const isSelected = selected.includes(index);
-            const show = showPattern ? isCorrect : isSelected;
+          <View style={[styles.grid, { width: gridWidth }]}>
+            {Array.from({ length: totalsquares }).map((_, index) => {
+              const isCorrect = pattern.includes(index);
+              const isSelected = selected.includes(index);
+              const show = showPattern ? isCorrect : isSelected;
 
-            return (
-              <TouchableOpacity
-                key={index}
-                style={[
-                  styles.square,
-                  {
-                    backgroundColor: show ? '#7b6cf6' : '#eee',
-                    width: squareWidth,
-                    height: squareWidth,
-                  },
-                ]}
-                onPress={() => handlePress(index)}
-              />
-            );
-          })}
-        </View>
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.square,
+                    {
+                      backgroundColor: show ? '#3F4F80' : '#5a6da350',
+                      width: squareWidth,
+                      height: squareWidth,
+                    },
+                  ]}
+                  onPress={() => handlePress(index)}
+                />
+              );
+            })}
+          </View>
+        </GlassCard>
       </View>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   root: {
     flex: 1,
-    backgroundColor: '#F7F5FF',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -218,21 +256,18 @@ const styles = StyleSheet.create({
     padding: 30,
     paddingHorizontal: 20,
     gap: 25,
-    borderRadius: 20,
-    backgroundColor: '#fff',
-    shadowColor: '#aaa',
-    shadowOffset: {
-      width: 4,
-      height: 4,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.600)',
   },
   resultBox: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     gap: 50,
+  },
+  resultBox2: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
   },
   titleBox: {
     justifyContent: 'center',
@@ -257,10 +292,18 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     paddingBottom: 10,
+    color: '#0F1C36',
+    textShadowColor: '#70707050',
+    textShadowOffset: {
+      width: 1,
+      height: 1,
+    },
+    textShadowRadius: 2,
   },
   subtitle1: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#0F1C36',
   },
   subtitle: {
     fontSize: 18,
@@ -283,21 +326,38 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  button: {
-    marginTop: 30,
-    backgroundColor: '#7b6cf6',
-    paddingVertical: 12,
-    paddingHorizontal: 40,
-    borderRadius: 10,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
   scoreText: {
     fontSize: 40,
     fontWeight: 'bold',
-    color: '#5f78ef',
+    color: '#5A6EA3',
+    textShadowColor: '#70707050',
+    textShadowOffset: {
+      width: 1,
+      height: 1,
+    },
+    textShadowRadius: 2,
+  },
+  nameLogoImage: {
+    width: 100,
+    height: 20,
+    marginBottom: 30,
+  },
+  resultImage: {
+    width: 100,
+    height: 100,
+    opacity: 0.8,
+  },
+  button: {
+    width: 120,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: '#909090',
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
   },
 });
