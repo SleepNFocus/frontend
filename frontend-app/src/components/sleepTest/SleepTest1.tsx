@@ -2,12 +2,15 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   View,
   Text,
+  Image,
   Pressable,
   StyleSheet,
   useWindowDimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { Button } from '../common/Button';
 
@@ -110,71 +113,105 @@ export default function SleepTest1() {
   const commaAllClickTimeAvg = allClickTimeAvg.toLocaleString();
 
   return (
-    <View style={styles.container}>
-      {isFinished ? (
-        <View style={styles.resultBox}>
-          <Text style={styles.title}> 반응 속도 결과 </Text>
-          <Text style={styles.scoreText}> {avgScore}점 </Text>
-          <View style={styles.resultTextBox}>
-            <Text style={styles.text}> 평균 반응속도 : </Text>
-            <Text style={styles.boldText}>{commaAllClickTimeAvg} ms</Text>
-          </View>
-          <Button title="다음" variant="outline" onPress={goToSleepTest2Desc} />
-        </View>
-      ) : (
-        <View
-          style={[
-            styles.secContainer,
-            { width: containerWidth, height: containerHeight },
-          ]}
-        >
-          <View style={styles.testBox}>
-            <View style={styles.headerBox}>
-              <Text style={styles.progress}>
-                진행 : {step + 1}/{MAX_STEP}
-              </Text>
-              <Text style={styles.title}> 초록 불을 잡아라! </Text>
-            </View>
-            <View style={styles.circleWrapper}>
-              {isWaiting ? (
-                <View style={styles.waitBox}>
-                  <Text style={styles.plus}> + </Text>
-                  <Text style={styles.text}>
-                    자극이 나타날 때까지 기다려주세요
-                  </Text>
-                </View>
-              ) : (
-                <Pressable onPress={handlePressGreenLight}>
-                  <View
-                    style={[
-                      styles.circle,
-                      { width: circlerWidth, height: circlerWidth },
-                    ]}
-                  />
-                </Pressable>
-              )}
-            </View>
-            {clickTimes.length > 0 && (
-              <View style={styles.resultText}>
-                <Text style={styles.opacityText}>
-                  최근 반응속도 : {commaRecentClickTime} ms
-                </Text>
-                <Text style={styles.opacityText}>
-                  평균 반응속도 : {commaRecentStepClickTimesAvg} ms
-                </Text>
+    <LinearGradient
+      colors={[colors.softBlue, colors.white]}
+      style={styles.gradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+    >
+      <View style={styles.container}>
+        <Image
+          source={require('@/assets/focuz_name_logo.png')}
+          style={styles.nameLogoImage}
+        />
+        {isFinished ? (
+          <View style={styles.resultBox}>
+            <Image
+              source={require('@/assets/focuz_name_logo.png')}
+              style={styles.nameLogoImage}
+            />
+            <Image
+              source={require('@/assets/result.png')}
+              style={styles.resultImage}
+            />
+            <View style={styles.resultBox2}>
+              <Text style={styles.title}> 반응 속도 결과 </Text>
+              <Text style={styles.scoreText}> {avgScore}점 </Text>
+              <View style={styles.resultTextBox}>
+                <Text style={styles.text}> 평균 반응속도 : </Text>
+                <Text style={styles.boldText}>{commaAllClickTimeAvg} ms</Text>
               </View>
-            )}
+            </View>
+            <Button
+              title="다음"
+              variant="primary"
+              style={styles.button}
+              onPress={goToSleepTest2Desc}
+            />
           </View>
-        </View>
-      )}
-    </View>
+        ) : (
+          <View
+            style={[
+              styles.secContainer,
+              { width: containerWidth, height: containerHeight },
+            ]}
+          >
+            <View style={styles.testBox}>
+              <View style={styles.headerBox}>
+                <Text style={styles.progress}>
+                  진행 : {step + 1}/{MAX_STEP}
+                </Text>
+                <Text style={styles.title}> 초록 불을 잡아라! </Text>
+              </View>
+              <View style={styles.circleWrapper}>
+                {isWaiting ? (
+                  <View style={styles.waitBox}>
+                    <Text style={styles.plus}> + </Text>
+                    <Text style={styles.text}>
+                      자극이 나타날 때까지 기다려주세요
+                    </Text>
+                  </View>
+                ) : (
+                  <View style={styles.circleBox}>
+                    <Pressable onPress={handlePressGreenLight}>
+                      <View
+                        style={[
+                          styles.circle,
+                          { width: circlerWidth, height: circlerWidth },
+                        ]}
+                      />
+                    </Pressable>
+                  </View>
+                )}
+              </View>
+              <View style={styles.msBox}>
+                {clickTimes.length > 0 ? (
+                  <View style={styles.resultText}>
+                    <Text style={styles.opacityText}>
+                      최근 반응속도 : {commaRecentClickTime} ms
+                    </Text>
+                    <Text style={styles.opacityText}>
+                      평균 반응속도 : {commaRecentStepClickTimesAvg} ms
+                    </Text>
+                  </View>
+                ) : (
+                  ''
+                )}
+              </View>
+            </View>
+          </View>
+        )}
+      </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#F7F5FF',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -184,16 +221,18 @@ const styles = StyleSheet.create({
     padding: 30,
     paddingHorizontal: 20,
     gap: 35,
-    borderColor: '#222',
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.600)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderWidth: 1,
     borderRadius: 20,
-    shadowColor: '#aaa',
+    shadowColor: '#000',
     shadowOffset: {
-      width: 4,
+      width: 0,
       height: 4,
     },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 8,
   },
   headerBox: {
     justifyContent: 'center',
@@ -212,6 +251,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: 'bold',
+    color: '#0F1C36',
+    textShadowColor: '#70707050',
+    textShadowOffset: {
+      width: 1,
+      height: 1,
+    },
+    textShadowRadius: 2,
   },
   circleWrapper: {
     marginTop: 18,
@@ -219,6 +265,7 @@ const styles = StyleSheet.create({
   },
   plus: {
     fontSize: 60,
+    color: '#0F1C36',
   },
   circle: {
     width: 100,
@@ -236,13 +283,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 50,
   },
+  resultBox2: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
+  },
   scoreText: {
     fontSize: 40,
-    color: '#5f78ef',
+    color: '#5A6EA3',
     fontWeight: 'bold',
+    textShadowColor: '#70707050',
+    textShadowOffset: {
+      width: 1,
+      height: 1,
+    },
+    textShadowRadius: 2,
   },
   text: {
     fontSize: 20,
+    color: '#0F1C36',
   },
   opacityText: {
     fontSize: 18,
@@ -251,6 +310,7 @@ const styles = StyleSheet.create({
   boldText: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#0F1C36',
   },
   resultTextBox: {
     flexDirection: 'row',
@@ -259,6 +319,36 @@ const styles = StyleSheet.create({
   waitBox: {
     alignItems: 'center',
     justifyContent: 'center',
+    height: 150,
     gap: 80,
+  },
+  circleBox: {
+    height: 150,
+  },
+  msBox: {
+    height: 30,
+  },
+  nameLogoImage: {
+    width: 100,
+    height: 20,
+    marginBottom: 30,
+  },
+  resultImage: {
+    width: 100,
+    height: 100,
+    opacity: 0.8,
+  },
+  button: {
+    width: 70,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: '#909090',
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
   },
 });

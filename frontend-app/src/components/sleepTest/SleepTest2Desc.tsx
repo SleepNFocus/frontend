@@ -86,7 +86,7 @@ export default function SleepTest2Desc() {
                 ♥︎ ✦ ♠︎ ▲ ◉ ★ ▼ ☗ ◆{' '}
               </Animated.Text>
             </View>
-            <Text style={styles.descriptionBold}>[ 제한 시간 1분 ]</Text>
+            <Text style={styles.descriptionBold}>[ 제한 시간 60초 ]</Text>
           </View>
           <Button
             title="시작"

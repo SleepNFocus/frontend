@@ -2,13 +2,16 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from '@/components/common/Button';
+import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 
 const MAX_NUM = 9;
@@ -127,78 +130,106 @@ export default function SleepTest2() {
   const commaNum = avgReactionTime.toLocaleString();
 
   return (
-    <View style={styles.container}>
-      {gameOver ? (
-        <View style={styles.resultBox}>
-          <Text style={styles.title}>반응 속도 결과</Text>
-          <Text style={styles.scoreText}>{totalScore}점</Text>
-          <View style={styles.resultTextBox}>
-            <View style={styles.resultTextBox2}>
-              <Text style={styles.text}> 총 정답 수 : </Text>
-              <Text style={styles.boldText}> {correctCount} 개 </Text>
-            </View>
-            <View style={styles.resultTextBox2}>
-              <Text style={styles.text}>평균 반응속도 : </Text>
-              <Text style={styles.boldText}>{commaNum} ms</Text>
-            </View>
-            <View style={styles.resultTextBox2}>
-              <Text style={styles.text}> 정확도 : </Text>
-              <Text style={styles.boldText}>
-                {Math.round(
-                  (correctCount / (correctCount + wrongCount || 1)) * 100,
-                )}
-                %
-              </Text>
-            </View>
-          </View>
-          <Button title="다음" variant="outline" onPress={goToSleepTest3Desc} />
-        </View>
-      ) : (
-        <>
-          <View
-            style={[
-              styles.secContainer,
-              { width: containerWidth, height: containerHeight },
-            ]}
-          >
-            <Text style={styles.title}>기호 - 숫자 변환</Text>
-            {start && !gameOver && (
-              <Text style={styles.timerText}>남은 시간: {timeLeft}s</Text>
-            )}
-            <View style={[styles.line, { width: lineWidth }]} />
-            <View style={styles.symbolNumberRow}>
-              {shuffledSymbols.map((symbol, idx) => (
-                <View key={idx} style={styles.symbolNumberPair}>
-                  <Text style={styles.symbol}>{symbol}</Text>
-                  <Text style={styles.numberText}>{idx + 1}</Text>
+    <LinearGradient
+      colors={[colors.softBlue, colors.white]}
+      style={styles.gradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+    >
+      <View style={styles.container}>
+        <Image
+          source={require('@/assets/focuz_name_logo.png')}
+          style={styles.nameLogoImage}
+        />
+        {gameOver ? (
+          <View style={styles.resultBox}>
+            <Image
+              source={require('@/assets/focuz_name_logo.png')}
+              style={styles.nameLogoImage}
+            />
+            <Image
+              source={require('@/assets/result.png')}
+              style={styles.resultImage}
+            />
+            <View style={styles.resultBox2}>
+              <Text style={styles.title}>처리 속도 결과</Text>
+              <Text style={styles.scoreText}>{totalScore}점</Text>
+              <View style={styles.resultTextBox}>
+                <View style={styles.resultTextBox2}>
+                  <Text style={styles.text}> 총 정답 수 : </Text>
+                  <Text style={styles.boldText}> {correctCount} 개 </Text>
                 </View>
-              ))}
+                <View style={styles.resultTextBox2}>
+                  <Text style={styles.text}>평균 반응속도 : </Text>
+                  <Text style={styles.boldText}>{commaNum} ms</Text>
+                </View>
+                <View style={styles.resultTextBox2}>
+                  <Text style={styles.text}> 정확도 : </Text>
+                  <Text style={styles.boldText}>
+                    {Math.round(
+                      (correctCount / (correctCount + wrongCount || 1)) * 100,
+                    )}
+                    %
+                  </Text>
+                </View>
+              </View>
             </View>
-            <View style={styles.symbolBox}>
-              <Text style={styles.randomNum}>{currentSymbol}</Text>
-            </View>
-            <View style={styles.numContainer}>
-              {Array.from({ length: MAX_NUM }).map((_, idx) => (
-                <TouchableOpacity
-                  key={idx}
-                  onPress={() => handlePress(idx + 1)}
-                  style={styles.numBox}
-                >
-                  <Text style={styles.number}>{idx + 1}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            <Button
+              title="다음"
+              variant="primary"
+              style={styles.button}
+              onPress={goToSleepTest3Desc}
+            />
           </View>
-        </>
-      )}
-    </View>
+        ) : (
+          <>
+            <View
+              style={[
+                styles.secContainer,
+                { width: containerWidth, height: containerHeight },
+              ]}
+            >
+              <Text style={styles.title}>기호 - 숫자 변환</Text>
+              {start && !gameOver && (
+                <Text style={styles.timerText}>남은 시간: {timeLeft}s</Text>
+              )}
+              <View style={[styles.line, { width: lineWidth }]} />
+              <View style={styles.symbolNumberRow}>
+                {shuffledSymbols.map((symbol, idx) => (
+                  <View key={idx} style={styles.symbolNumberPair}>
+                    <Text style={styles.symbol}>{symbol}</Text>
+                    <Text style={styles.numberText}>{idx + 1}</Text>
+                  </View>
+                ))}
+              </View>
+              <View style={styles.symbolBox}>
+                <Text style={styles.randomNum}>{currentSymbol}</Text>
+              </View>
+              <View style={styles.numContainer}>
+                {Array.from({ length: MAX_NUM }).map((_, idx) => (
+                  <TouchableOpacity
+                    key={idx}
+                    onPress={() => handlePress(idx + 1)}
+                    style={styles.numBox}
+                  >
+                    <Text style={styles.number}>{idx + 1}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          </>
+        )}
+      </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#F7F5FF',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -213,15 +244,18 @@ const styles = StyleSheet.create({
     padding: 30,
     paddingHorizontal: 20,
     gap: 25,
+    backgroundColor: 'rgba(255, 255, 255, 0.600)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderWidth: 1,
     borderRadius: 20,
-    backgroundColor: '#fff',
-    shadowColor: '#aaa',
+    shadowColor: '#000',
     shadowOffset: {
-      width: 4,
+      width: 0,
       height: 4,
     },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 8,
   },
   resultBox: {
     flex: 1,
@@ -232,6 +266,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: 'bold',
+    color: '#0F1C36',
+    textShadowColor: '#70707050',
+    textShadowOffset: {
+      width: 1,
+      height: 1,
+    },
+    textShadowRadius: 2,
   },
   line: {
     backgroundColor: '#bfbfbf',
@@ -243,10 +284,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 12,
     padding: 13,
-    borderColor: '#d6d6d6',
+    borderColor: '#5a6da392',
     borderWidth: 1,
     borderRadius: 10,
-    backgroundColor: '#f7f5ffd2',
+    backgroundColor: '#CBD3DF',
   },
   symbolNumberPair: {
     alignItems: 'center',
@@ -256,11 +297,13 @@ const styles = StyleSheet.create({
   symbol: {
     fontSize: 17,
     textAlign: 'center',
+    color: '#0F1C36',
   },
   numberText: {
     fontSize: 14,
     marginTop: 4,
     textAlign: 'center',
+    color: '#0F1C36',
   },
   symbolBox: {
     width: 90,
@@ -270,6 +313,7 @@ const styles = StyleSheet.create({
   },
   randomNum: {
     fontSize: 60,
+    color: '#0F1C36',
   },
   numContainer: {
     width: 210,
@@ -283,7 +327,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     borderColor: '#929292',
-    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     margin: 5,
@@ -291,6 +334,7 @@ const styles = StyleSheet.create({
   number: {
     fontSize: 22,
     fontWeight: 'bold',
+    color: '#0F1C36',
   },
   startBtn: {
     backgroundColor: '#4CAF50',
@@ -306,7 +350,13 @@ const styles = StyleSheet.create({
   scoreText: {
     fontSize: 40,
     fontWeight: 'bold',
-    color: '#5f78ef',
+    color: '#5A6EA3',
+    textShadowColor: '#70707050',
+    textShadowOffset: {
+      width: 1,
+      height: 1,
+    },
+    textShadowRadius: 2,
   },
   resultTextBox: {
     alignItems: 'center',
@@ -316,11 +366,41 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
+  resultBox2: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
+  },
   text: {
     fontSize: 20,
+    color: '#0F1C36',
   },
   boldText: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#0F1C36',
+  },
+  nameLogoImage: {
+    width: 100,
+    height: 20,
+    marginBottom: 30,
+  },
+  resultImage: {
+    width: 100,
+    height: 100,
+    opacity: 0.8,
+  },
+  button: {
+    width: 70,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: '#909090',
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
   },
 });
