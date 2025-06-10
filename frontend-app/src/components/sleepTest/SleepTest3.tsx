@@ -44,9 +44,9 @@ export default function SleepTest3() {
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
 
-  const containerHeight = Math.min(windowHeight * 0.7, 1200);
+  const containerHeight = Math.min(windowHeight * 0.8, 1200);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
-  const squareWidth = Math.min(windowWidth * 0.118, 55);
+  const squareWidth = Math.min(windowWidth * 0.118, 65);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
   // 상태관리 객체로 수정해보기
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 30,
     paddingHorizontal: 20,
-    gap: 25,
+    gap: 15,
     backgroundColor: 'rgba(255, 255, 255, 0.600)',
   },
   resultBox: {
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
   nameLogoImage: {
     width: 100,
     height: 20,
-    marginBottom: 30,
+    marginBottom: 10,
   },
   resultImage: {
     width: 100,
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   button: {
-    width: 120,
+    width: 130,
     paddingVertical: 12,
     borderRadius: 10,
     alignItems: 'center',

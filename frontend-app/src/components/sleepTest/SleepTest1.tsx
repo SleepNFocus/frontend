@@ -35,7 +35,7 @@ export default function SleepTest1() {
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
 
-  const containerHeight = Math.min(windowHeight * 0.7, 1000);
+  const containerHeight = Math.min(windowHeight * 0.8, 1000);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const circlerWidth = Math.min(windowWidth * 0.3, 220);
 
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 30,
     paddingHorizontal: 20,
-    gap: 35,
+    gap: 25,
     backgroundColor: 'rgba(255, 255, 255, 0.600)',
   },
   headerBox: {
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
   },
   text: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#0F1C36',
   },
   opacityText: {
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
   nameLogoImage: {
     width: 100,
     height: 20,
-    marginBottom: 30,
+    marginBottom: 10,
   },
   resultImage: {
     width: 100,

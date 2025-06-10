@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   },
   symbol: {
     fontSize: 20,
-    letterSpacing: 3,
+    letterSpacing: 2.5,
   },
   button: {
     width: 70,

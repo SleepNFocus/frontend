@@ -4,6 +4,7 @@ import {
   Image,
   Animated,
   StyleSheet,
+  ScrollView,
   useWindowDimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -52,40 +53,45 @@ export default function SleepTestDesc() {
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
     >
-      <View style={styles.root}>
-        <Image
-          source={require('@/assets/focuz_name_logo.png')}
-          style={styles.nameLogoImage}
-        />
-        <GlassCard style={[styles.container, { width: containerWidth }]}>
-          <Text style={styles.title}> 현재 인지 능력 측정하기 </Text>
-          <View style={styles.imageContainer}>
-            <Text style={styles.description}>
-              이제 당신의 현재 인지 능력을 파악하기 위한
-              {`\n`}
-              3가지 게임을 진행합니다.
-              {`\n`}
-              {`\n`}
-              평소 플레이하는 것과 동일한 버전이며,
-              {`\n`}
-              완료까지 약 10~15분 이상 소요될 수 있습니다.
-            </Text>
-            <Animated.Image
-              source={require('@/assets/focuz_logo1.png')}
-              style={[styles.logoImage, { transform: [{ scale: scaleAnim }] }]}
-            />
-          </View>
-          <Text style={styles.subTitle}>
-            집중할 수 있는 조용한 환경에서 시작해 주시기 바랍니다.
-          </Text>
-          <Button
-            title="측정 시작하기"
-            variant="secondary"
-            style={styles.button}
-            onPress={goToSleepTest1Desc}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.root}>
+          <Image
+            source={require('@/assets/focuz_name_logo.png')}
+            style={styles.nameLogoImage}
           />
-        </GlassCard>
-      </View>
+          <GlassCard style={[styles.container, { width: containerWidth }]}>
+            <Text style={styles.title}> 현재 인지 능력 측정하기 </Text>
+            <View style={styles.imageContainer}>
+              <Text style={styles.description}>
+                이제 당신의 현재 인지 능력을 파악하기 위한
+                {`\n`}
+                3가지 게임을 진행합니다.
+                {`\n`}
+                {`\n`}
+                평소 플레이하는 것과 동일한 버전이며,
+                {`\n`}
+                완료까지 약 10~15분 이상 소요될 수 있습니다.
+              </Text>
+              <Animated.Image
+                source={require('@/assets/focuz_logo1.png')}
+                style={[
+                  styles.logoImage,
+                  { transform: [{ scale: scaleAnim }] },
+                ]}
+              />
+            </View>
+            <Text style={styles.subTitle}>
+              집중할 수 있는 조용한 환경에서 시작해 주시기 바랍니다.
+            </Text>
+            <Button
+              title="측정 시작하기"
+              variant="secondary"
+              style={styles.button}
+              onPress={goToSleepTest1Desc}
+            />
+          </GlassCard>
+        </View>
+      </ScrollView>
     </LinearGradient>
   );
 }
@@ -93,6 +99,13 @@ export default function SleepTestDesc() {
 const styles = StyleSheet.create({
   gradient: {
     flex: 1,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 50,
+    paddingBottom: 100,
   },
   root: {
     flex: 1,

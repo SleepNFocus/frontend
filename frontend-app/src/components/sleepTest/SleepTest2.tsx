@@ -46,8 +46,9 @@ export default function SleepTest2() {
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
 
-  const containerHeight = Math.min(windowHeight * 0.7, 1000);
+  const containerHeight = Math.min(windowHeight * 0.8, 1000);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
+  const symbolBoxWidth = Math.min(windowWidth * 0.8, 400);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
   function goToSleepTest3Desc() {
@@ -195,7 +196,7 @@ export default function SleepTest2() {
                 <Text style={styles.timerText}>남은 시간: {timeLeft}s</Text>
               )}
               <View style={[styles.line, { width: lineWidth }]} />
-              <View style={styles.symbolNumberRow}>
+              <View style={[styles.symbolNumberRow, { width: symbolBoxWidth }]}>
                 {shuffledSymbols.map((symbol, idx) => (
                   <View key={idx} style={styles.symbolNumberPair}>
                     <Text style={styles.symbol}>{symbol}</Text>
@@ -244,7 +245,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 30,
     paddingHorizontal: 20,
-    gap: 25,
+    gap: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.600)',
   },
   resultBox: {
@@ -273,7 +274,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexWrap: 'wrap',
     gap: 12,
-    padding: 13,
+    padding: 10,
     borderColor: '#5a6da392',
     borderWidth: 1,
     borderRadius: 10,
@@ -285,7 +286,7 @@ const styles = StyleSheet.create({
     width: 17,
   },
   symbol: {
-    fontSize: 17,
+    fontSize: 20,
     textAlign: 'center',
     color: '#0F1C36',
   },
@@ -373,7 +374,7 @@ const styles = StyleSheet.create({
   nameLogoImage: {
     width: 100,
     height: 20,
-    marginBottom: 30,
+    marginBottom: 10,
   },
   resultImage: {
     width: 100,

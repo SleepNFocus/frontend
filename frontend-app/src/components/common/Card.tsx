@@ -100,6 +100,5 @@ const GlassStyles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 8,
-    elevation: 8,
   },
 });

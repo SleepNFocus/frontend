@@ -1,6 +1,7 @@
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   ScrollView,
   useWindowDimensions,
@@ -36,8 +37,11 @@ export default function SleepTestResult() {
       end={{ x: 0, y: 1 }}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* <View style={styles.root}></View> */}
         <View style={styles.root}>
+          <Image
+            source={require('@/assets/focuz_name_logo.png')}
+            style={styles.nameLogoImage}
+          />
           <GlassCard style={[styles.container, { width: containerWidth }]}>
             <Text style={styles.mainTitle}> 수면 테스트 측정 완료 </Text>
             <ResultChart />
@@ -112,12 +116,17 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 100,
-    paddingBottom: 200,
+    paddingTop: 40,
+    paddingBottom: 100,
   },
   root: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  nameLogoImage: {
+    width: 100,
+    height: 20,
+    marginBottom: 10,
   },
   container: {
     justifyContent: 'space-evenly',
@@ -228,7 +237,7 @@ const styles = StyleSheet.create({
     gap: 50,
   },
   button: {
-    width: 130,
+    width: 140,
     paddingVertical: 12,
     borderRadius: 10,
     alignItems: 'center',
