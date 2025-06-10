@@ -1,8 +1,18 @@
-import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
+import {
+  View,
+  Text,
+  Animated,
+  StyleSheet,
+  useWindowDimensions,
+  Image,
+} from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@/components/common/Button';
 import { RootStackParamList } from '@/App';
+import { LinearGradient } from 'expo-linear-gradient';
+import { colors } from '@/constants/colors';
+import { useEffect, useRef } from 'react';
 
 export default function SleepTest1Desc() {
   const navigation =
@@ -19,31 +29,77 @@ export default function SleepTest1Desc() {
     navigation.navigate('SleepTest1');
   }
 
+  const colorAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(colorAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: false,
+        }),
+        Animated.timing(colorAnim, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: false,
+        }),
+      ]),
+    ).start();
+  }, []);
+
+  const interpolatedColor = colorAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['#00800090', '#008000'],
+  });
+
   return (
-    <View style={styles.root}>
-      <View
-        style={[
-          styles.container,
-          { width: containerWidth, height: containerHeight },
-        ]}
-      >
-        <View>
-          <Text style={styles.title}> 초록 불을 잡아라. </Text>
-          <View style={[styles.line, { width: lineWidth }]} />
+    <LinearGradient
+      colors={[colors.softBlue, colors.white]}
+      style={styles.gradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+    >
+      <View style={styles.root}>
+        <Image
+          source={require('@/assets/focuz_name_logo.png')}
+          style={styles.nameLogoImage}
+        />
+        <View
+          style={[
+            styles.container,
+            { width: containerWidth, height: containerHeight },
+          ]}
+        >
+          <View>
+            <Text style={styles.title}> 초록 불을 잡아라. </Text>
+            <View style={[styles.line, { width: lineWidth }]} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.description}>
+              화면에 초록색 원이 나타나면 {`\n`} 최대한 빠르게 클릭하세요.
+            </Text>
+            <Animated.View
+              style={[styles.circle, { backgroundColor: interpolatedColor }]}
+            />
+            <Text style={styles.descriptionBold}>[ 5회 측정 ]</Text>
+          </View>
+          <Button
+            title="시작"
+            variant="primary"
+            style={styles.button}
+            onPress={goToSleepTest1}
+          />
         </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.description}>
-            화면에 초록색 원이 나타나면 최대한 빠르게 클릭하세요.
-          </Text>
-          <Text style={styles.descriptionBold}>[ 5회 측정 ]</Text>
-        </View>
-        <Button title="시작" variant="outline" onPress={goToSleepTest1} />
       </View>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   root: {
     flex: 1,
     justifyContent: 'center',
@@ -54,16 +110,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 30,
     gap: 35,
-    borderColor: '#222',
+    backgroundColor: 'rgba(255, 255, 255, 0.600)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderWidth: 1,
     borderRadius: 20,
-    shadowColor: '#a5a5a5',
+    shadowColor: '#000',
     shadowOffset: {
-      width: 10,
-      height: 10,
+      width: 0,
+      height: 4,
     },
-    shadowOpacity: 2,
-    shadowRadius: 20,
-    backgroundColor: 'white',
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 8,
   },
   textContainer: {
     flex: 1,
@@ -78,25 +136,48 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 27,
-    marginBottom: 50,
-    color: '#222',
+    marginBottom: 30,
+    color: '#0F1C36',
     textAlign: 'center',
+    textShadowColor: '#70707050',
+    textShadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    textShadowRadius: 2,
   },
   description: {
     fontSize: 18,
-    marginBottom: 24,
     color: '#222',
     textAlign: 'center',
   },
   descriptionBold: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#0F1C36',
   },
-  subTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 24,
-    color: '#222',
-    textAlign: 'center',
+  circle: {
+    width: 70,
+    height: 70,
+    borderRadius: 150,
+    margin: 20,
+  },
+  nameLogoImage: {
+    width: 100,
+    height: 20,
+    marginBottom: 40,
+  },
+  button: {
+    width: 70,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: '#909090',
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
   },
 });

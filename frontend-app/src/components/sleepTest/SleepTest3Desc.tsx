@@ -1,8 +1,20 @@
-import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  Animated,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@/components/common/Button';
 import { RootStackParamList } from '@/App';
+import { LinearGradient } from 'expo-linear-gradient';
+import { colors } from '@/constants/colors';
+import { useEffect, useRef } from 'react';
+
+const SQUARE = 4;
 
 export default function SleepTest3Desc() {
   const navigation =
@@ -19,34 +31,86 @@ export default function SleepTest3Desc() {
     navigation.navigate('SleepTest3');
   }
 
+  const colorAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(colorAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: false,
+        }),
+        Animated.timing(colorAnim, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: false,
+        }),
+      ]),
+    ).start();
+  }, []);
+
+  const changeColor = colorAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['#0f1c36c0', '#0F1C36'],
+  });
+
   return (
-    <View style={styles.root}>
-      <View
-        style={[
-          styles.container,
-          { width: containerWidth, height: containerHeight },
-        ]}
-      >
-        <View>
-          <Text style={styles.title}> 격자 기억하기 </Text>
-          <View style={[styles.line, { width: lineWidth }]} />
+    <LinearGradient
+      colors={[colors.softBlue, colors.white]}
+      style={styles.gradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+    >
+      <View style={styles.root}>
+        <Image
+          source={require('@/assets/focuz_name_logo.png')}
+          style={styles.nameLogoImage}
+        />
+        <View
+          style={[
+            styles.container,
+            { width: containerWidth, height: containerHeight },
+          ]}
+        >
+          <View>
+            <Text style={styles.title}> 격자 기억하기 </Text>
+            <View style={[styles.line, { width: lineWidth }]} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.description}>
+              화면에 잠시 표시되는 격자 패턴을 기억한 후, 같은 위치를
+              클릭하세요.
+            </Text>
+            <View style={styles.squareBox}>
+              {Array.from({ length: SQUARE }).map((_, index) => (
+                <Animated.View
+                  key={index}
+                  style={[styles.square, { backgroundColor: changeColor }]}
+                />
+              ))}
+            </View>
+            <Text style={styles.descriptionBold}> [ 총 3라운드로 진행 ] </Text>
+            <Text style={styles.description}>
+              라운드마다 기억해야 할 패턴이 더 복잡해집니다.
+            </Text>
+          </View>
+          <Button
+            title="시작"
+            variant="primary"
+            style={styles.button}
+            onPress={goToSleepTest3}
+          />
         </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.description}>
-            화면에 잠시 표시되는 격자 패턴을 기억한 후, 같은 위치를 클릭하세요.
-          </Text>
-          <Text style={styles.descriptionBold}> [ 총 3라운드로 진행 ] </Text>
-          <Text style={styles.description}>
-            라운드마다 기억해야 할 패턴이 더 복잡해집니다.
-          </Text>
-        </View>
-        <Button title="시작" variant="outline" onPress={goToSleepTest3} />
       </View>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   root: {
     flex: 1,
     justifyContent: 'center',
@@ -57,16 +121,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 30,
     gap: 35,
-    borderColor: '#222',
+    backgroundColor: 'rgba(255, 255, 255, 0.600)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderWidth: 1,
     borderRadius: 20,
-    shadowColor: '#a5a5a5',
+    shadowColor: '#000',
     shadowOffset: {
-      width: 10,
-      height: 10,
+      width: 0,
+      height: 4,
     },
-    shadowOpacity: 2,
-    shadowRadius: 20,
-    backgroundColor: 'white',
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 8,
   },
   textContainer: {
     flex: 1,
@@ -81,8 +147,8 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 27,
-    marginBottom: 50,
-    color: '#222',
+    marginBottom: 30,
+    color: '#0F1C36',
     textAlign: 'center',
   },
   description: {
@@ -95,12 +161,36 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: '#0F1C36',
   },
-  subTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 24,
-    color: '#222',
-    textAlign: 'center',
+  button: {
+    width: 70,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: '#909090',
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
+  },
+  nameLogoImage: {
+    width: 100,
+    height: 20,
+    marginBottom: 40,
+  },
+  squareBox: {
+    flexDirection: 'row',
+    width: 70,
+    flexWrap: 'wrap',
+    gap: 5,
+    marginBottom: 20,
+  },
+  square: {
+    width: 30,
+    height: 30,
+    borderRadius: 4,
   },
 });
