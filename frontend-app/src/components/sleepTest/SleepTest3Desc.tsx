@@ -24,7 +24,7 @@ export default function SleepTest3Desc() {
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
 
-  const containerHeight = Math.min(windowHeight * 0.6, 600);
+  const containerHeight = Math.min(windowHeight * 0.7, 600);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
