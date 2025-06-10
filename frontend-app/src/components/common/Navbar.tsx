@@ -31,7 +31,7 @@ export const Navbar: React.FC = () => {
   };
 
   const getIconColor = (routeName: string) => {
-    return currentRoute === routeName ? colors.softBlue : colors.mediumGray;
+    return currentRoute === routeName ? colors.textColor : colors.mediumGray;
   };
 
   if (isMobile) {
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   logo: {
     fontWeight: 'bold',
     fontSize: 24,
-    color: colors.softBlue,
+    color: colors.textColor,
     letterSpacing: 1,
   },
   menuWrap: {
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   },
   // 모바일/태블릿 하단 네비게이션 바
   mobileBar: {
-    position: 'absolute',
+    position: 'fixed',
     left: 0,
     right: 0,
     bottom: 0,

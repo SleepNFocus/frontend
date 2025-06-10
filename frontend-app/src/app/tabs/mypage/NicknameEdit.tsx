@@ -10,6 +10,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import { colors } from '@/constants/colors';
 
 const NicknameEdit = () => {
   const navigation = useNavigation();
@@ -104,7 +105,7 @@ export default NicknameEdit;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0D0D2B',
+    backgroundColor: colors.deepNavy,
     padding: 24,
   },
   header: {
@@ -114,19 +115,19 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   title: {
-    color: '#fff',
+    color: colors.textColor,
     fontSize: 18,
     fontWeight: 'bold',
   },
   label: {
-    color: '#fff',
+    color: colors.textColor,
     fontSize: 14,
     marginBottom: 8,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1C1C40',
+    backgroundColor: colors.midnightBlue,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -134,28 +135,28 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: '#fff',
+    color: colors.textColor,
     fontSize: 14,
   },
   inputError: {
-    borderColor: 'red',
+    borderColor: colors.softOrange,
     borderWidth: 1,
   },
   warning: {
-    color: '#f88',
+    color: colors.softOrange,
     fontSize: 12,
     marginBottom: 16,
   },
   button: {
-    backgroundColor: '#6c5ce7',
+    backgroundColor: colors.softBlue,
     padding: 12,
     borderRadius: 8,
   },
   buttonDisabled: {
-    backgroundColor: '#555',
+    backgroundColor: colors.mediumGray,
   },
   buttonText: {
-    color: '#fff',
+    color: colors.white,
     textAlign: 'center',
     fontWeight: 'bold',
   },

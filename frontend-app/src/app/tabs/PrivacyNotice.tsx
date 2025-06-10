@@ -77,6 +77,8 @@ export const PrivacyNotice: React.FC<{ onAgree?: () => void }> = ({
   );
 };
 
+export default PrivacyNotice;
+
 const styles = StyleSheet.create({
   root: {
     flex: 1,

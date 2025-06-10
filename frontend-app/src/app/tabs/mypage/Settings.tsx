@@ -1,32 +1,27 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  // useWindowDimensions,
-} from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/App';
 import { useAuthStore } from '@/store/authStore';
 import { BackButton } from '@/components/common/BackButton';
+import { Text } from '@/components/common/Text';
+import { Button } from '@/components/common/Button';
+import { Card } from '@/components/common/Card';
+import { colors } from '@/constants/colors';
 
 const Settings = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  // const { width } = useWindowDimensions();
-  // const isMobile = width < 600; 웹에서도 필요하면 추가, 필요 없으면 삭제
 
   const user = useAuthStore(state => state.user);
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <BackButton color="#fff" />
-        <Text style={styles.headerTitle}>내 정보 수정</Text>
+        <BackButton color={colors.white} />
+        <Text variant="titleMedium" style={styles.headerTitle}>내 정보 수정</Text>
       </View>
 
       <View style={styles.profileBox}>
@@ -34,51 +29,56 @@ const Settings = () => {
           source={require('@/assets/profile.png')}
           style={styles.profileImage}
         />
-        <Text style={styles.nickname}>{user?.nickname ?? '-'}</Text>
+        <Text variant="titleMedium" style={styles.nickname}>{user?.nickname ?? '-'}</Text>
       </View>
 
-      <View style={styles.card}>
+      <Card style={styles.card}>
         <TouchableOpacity
           style={styles.itemRow}
           onPress={() => navigation.navigate('NicknameEdit')}
         >
-          <Text style={styles.label}>닉네임</Text>
-          <Text style={styles.nickname}>{user?.nickname ?? '-'}</Text>
+          <Text variant="bodyMedium" style={styles.label}>닉네임</Text>
           <View style={styles.rightWrap}>
-            <Text style={styles.value}>{user?.nickname ?? '-'}</Text>
-            <Ionicons name="chevron-forward" size={16} color="#ccc" />
+            <Text variant="bodyMedium" style={styles.value}>{user?.nickname ?? '-'}</Text>
+            <Ionicons name="chevron-forward" size={16} color={colors.mediumGray} />
           </View>
         </TouchableOpacity>
 
         <View style={styles.itemRow}>
-          <Text style={styles.label}>아이디</Text>
-          <Text style={styles.value}>TES@TEST.COM</Text>
+          <Text variant="bodyMedium" style={styles.label}>아이디</Text>
+          <Text variant="bodyMedium" style={styles.value}>TES@TEST.COM</Text>
         </View>
 
         <View style={styles.itemRow}>
-          <Text style={styles.label}>가입일</Text>
-          <Text style={styles.value}>2024.01.01</Text>
+          <Text variant="bodyMedium" style={styles.label}>가입일</Text>
+          <Text variant="bodyMedium" style={styles.value}>2024.01.01</Text>
         </View>
 
         <View style={styles.itemRow}>
-          <Text style={styles.label}>연동된 계정</Text>
+          <Text variant="bodyMedium" style={styles.label}>연동된 계정</Text>
           <View style={styles.rightWrap}>
             <Image
               source={require('@/assets/google.png')}
               style={styles.icon}
             />
-            <Text style={[styles.value, { color: '#9EDC7A' }]}>Google</Text>
+            <Text variant="bodyMedium" style={styles.googleText}>Google</Text>
           </View>
         </View>
-      </View>
+      </Card>
 
       <View style={styles.buttonGroup}>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>로그아웃</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>회원탈퇴</Text>
-        </TouchableOpacity>
+        <Button
+          title="로그아웃"
+          variant="outline"
+          onPress={() => {}}
+          style={styles.button}
+        />
+        <Button
+          title="회원탈퇴"
+          variant="outline"
+          onPress={() => {}}
+          style={styles.button}
+        />
       </View>
     </View>
   );
@@ -89,7 +89,7 @@ export default Settings;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0D0D2B',
+    backgroundColor: colors.deepNavy,
     padding: 24,
   },
   header: {
@@ -98,15 +98,13 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   headerTitle: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: colors.textColor,
     marginLeft: 12,
   },
   profileBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1C1C40',
+    backgroundColor: colors.midnightBlue,
     padding: 16,
     borderRadius: 12,
     marginBottom: 24,
@@ -118,12 +116,10 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   nickname: {
-    fontSize: 18,
-    color: '#fff',
+    color: colors.textColor,
   },
   card: {
-    backgroundColor: '#1C1C40',
-    borderRadius: 12,
+    backgroundColor: colors.midnightBlue,
     padding: 12,
     marginBottom: 24,
   },
@@ -133,15 +129,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#34346A',
+    borderBottomColor: colors.mediumLightGray,
   },
   label: {
-    color: '#fff',
-    fontSize: 14,
+    color: colors.textColor,
   },
   value: {
-    color: '#ccc',
-    fontSize: 14,
+    color: colors.mediumGray,
   },
   icon: {
     width: 16,
@@ -157,13 +151,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   button: {
-    backgroundColor: '#252556',
-    padding: 12,
-    borderRadius: 12,
+    backgroundColor: colors.midnightBlue,
   },
-  buttonText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 14,
+  googleText: {
+    color: colors.softBlue,
   },
 });

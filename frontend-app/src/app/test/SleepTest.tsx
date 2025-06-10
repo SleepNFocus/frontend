@@ -3,6 +3,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@/components/common/Button';
 import { RootStackParamList } from '@/App';
+import { colors } from '@/constants/colors';
 
 export default function SleepTestDesc() {
   const navigation =
@@ -51,35 +52,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 30,
     gap: 70,
-    borderColor: '#222',
+    borderColor: colors.textColor,
     borderRadius: 20,
-    shadowColor: '#a5a5a5',
+    shadowColor: colors.mediumGray,
     shadowOffset: {
       width: 10,
       height: 10,
     },
     shadowOpacity: 2,
     shadowRadius: 20,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
   },
   title: {
     fontWeight: 'bold',
     fontSize: 23,
     marginBottom: 24,
-    color: '#222',
+    color: colors.textColor,
     textAlign: 'center',
   },
   description: {
     fontSize: 15,
     marginBottom: 24,
-    color: '#222',
+    color: colors.textColor,
     textAlign: 'center',
   },
   subTitle: {
     fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 24,
-    color: '#222',
+    color: colors.textColor,
     textAlign: 'center',
   },
 });

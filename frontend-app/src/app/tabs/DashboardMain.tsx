@@ -11,6 +11,9 @@ import { Text } from '@/components/common/Text';
 import { colors } from '@/constants/colors';
 import { fontSize, spacing, isSmallDevice, getResponsiveStyle } from '@/utils/responsive';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/App';
 
 // 타입 정의
 interface ScoreDetail {
@@ -113,6 +116,7 @@ const ScoreDetailCard: React.FC<ScoreDetailCardProps> = memo(({ details, average
  * 사용자의 인지 능력 프로필과 수면 점수를 보여주는 메인 화면
  */
 export const DashboardMain: React.FC = memo(() => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [cognitionData, setCognitionData] = useState<CognitionData>(initialCognitionData);
@@ -181,7 +185,7 @@ export const DashboardMain: React.FC = memo(() => {
             </Card>
 
             <View style={styles.checkinSection}>
-              <CheckinCard onCheckin={() => alert('컨디션 체크 시작!')} />
+              <CheckinCard onCheckin={() => navigation.navigate('SleepRecord')} />
             </View>
           </ScrollView>
         </LinearGradient>

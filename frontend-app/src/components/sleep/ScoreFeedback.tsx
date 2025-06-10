@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Card } from 'react-native-paper';
 import { ScoreBreakdown } from '@/app/types/sleep';
+import { colors } from '@/constants/colors';
 
 interface ScoreFeedbackProps {
   score: number;
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
   },
   score: {
     fontWeight: 'bold',
-    color: '#6C7BFF',
+    color: colors.softBlue,
   },
   message: {
     marginBottom: 16,
@@ -172,13 +173,13 @@ const styles = StyleSheet.create({
   suggestionsSection: {
     marginBottom: 16,
     padding: 12,
-    backgroundColor: '#f8f9ff',
+    backgroundColor: colors.lightGray,
     borderRadius: 8,
   },
   suggestionsTitle: {
     marginBottom: 8,
     fontWeight: 'bold',
-    color: '#6C7BFF',
+    color: colors.softBlue,
   },
   suggestion: {
     marginBottom: 4,
@@ -201,11 +202,11 @@ const styles = StyleSheet.create({
     minWidth: 80,
     alignItems: 'center',
     padding: 8,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.lightGray,
     borderRadius: 6,
   },
   scoreValue: {
     fontWeight: 'bold',
-    color: '#6C7BFF',
+    color: colors.softBlue,
   },
 });

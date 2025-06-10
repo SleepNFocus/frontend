@@ -21,6 +21,8 @@ export const Loading: React.FC = () => {
   );
 };
 
+export default Loading;
+
 // 로딩 화면 스타일 정의
 const styles = StyleSheet.create({
   container: {

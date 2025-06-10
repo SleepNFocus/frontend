@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
-import { Text, Button } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { colors } from '@/constants/colors';
+import { Button } from '@/components/common/Button';
 
 interface SleepRecordData {
   selectedDate: string;
@@ -353,13 +355,12 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
         </View>
 
         <Button
-          mode="contained"
           onPress={handleSave}
+          title={`수면 기록 저장 (${totalScore}점)`}
           disabled={!isFormValid}
           style={styles.saveButton}
-        >
-          수면 기록 저장 ({totalScore}점)
-        </Button>
+          variant="primary"
+        />
       </View>
     </TouchableWithoutFeedback>
   );
@@ -370,7 +371,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   scoreSection: {
-    backgroundColor: '#f8f9ff',
+    backgroundColor: colors.lightGray,
     borderRadius: 16,
     padding: 20,
     marginBottom: 24,
@@ -378,10 +379,10 @@ const styles = StyleSheet.create({
   },
   scoreTitle: {
     marginBottom: 8,
-    color: '#6C7BFF',
+    color: colors.textColor,
   },
   totalScore: {
-    color: '#6C7BFF',
+    color: colors.textColor,
     fontWeight: 'bold',
     marginBottom: 12,
   },
@@ -397,11 +398,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     marginBottom: 12,
     fontWeight: 'bold',
-    color: '#222',
+    color: colors.textColor,
   },
   subtitle: {
     marginBottom: 12,
-    color: '#666',
+    color: colors.mediumGray,
   },
   subQuestion: {
     marginBottom: 16,
@@ -409,14 +410,14 @@ const styles = StyleSheet.create({
   subQuestionTitle: {
     marginBottom: 8,
     fontWeight: '500',
-    color: '#444',
+    color: colors.midnightBlue,
   },
   dropdown: {
-    borderColor: '#ddd',
+    borderColor: colors.mediumLightGray,
     borderRadius: 8,
   },
   dropdownContainer: {
-    borderColor: '#ddd',
+    borderColor: colors.mediumLightGray,
     borderRadius: 8,
   },
   checkboxItem: {
@@ -429,21 +430,22 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderWidth: 2,
-    borderColor: '#6C7BFF',
+    borderColor: colors.softBlue,
     borderRadius: 4,
     marginRight: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
   },
   checkmark: {
-    color: '#6C7BFF',
+    color: colors.softBlue,
     fontWeight: 'bold',
     fontSize: 16,
   },
   checkboxLabel: {
     flex: 1,
     lineHeight: 20,
+    color: colors.deepNavy,
   },
   saveButton: {
     marginTop: 24,

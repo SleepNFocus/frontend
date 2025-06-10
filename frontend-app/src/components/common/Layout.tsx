@@ -38,5 +38,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
+    paddingBottom: 80, // 네비게이션 바 높이(64) + 여유 공간(16)
   },
 });
