@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, ViewStyle, TouchableOpacity } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  TouchableOpacity,
+} from 'react-native';
 import { colors } from '@/constants/colors';
 
 // Card 컴포넌트의 props 타입 정의
@@ -55,5 +61,45 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25, // 그림자 투명도
     shadowRadius: 3.84, // 그림자 번짐
+  },
+});
+
+// [GlassCard]
+interface GlassCardProps {
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+  onPress?: () => void;
+}
+
+export const GlassCard: React.FC<GlassCardProps> = ({
+  children,
+  style,
+  onPress,
+}) => {
+  const cardContent = <View style={[GlassStyles.card, style]}>{children}</View>;
+
+  if (onPress) {
+    return <TouchableOpacity onPress={onPress}>{cardContent}</TouchableOpacity>;
+  }
+
+  return cardContent;
+};
+
+const GlassStyles = StyleSheet.create({
+  card: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 16,
+    marginVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 8,
   },
 });
