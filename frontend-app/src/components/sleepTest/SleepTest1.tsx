@@ -327,6 +327,7 @@ const styles = StyleSheet.create({
   },
   msBox: {
     height: 30,
+    marginTop: 30,
   },
   nameLogoImage: {
     width: 100,

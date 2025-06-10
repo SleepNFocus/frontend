@@ -7,10 +7,11 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ResultChart from '@/components/chart/ResultChart';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from '@/components/common/Button';
 import { useNavigation } from 'expo-router';
-import { RootStackParamList } from '@/App';
 import { colors } from '@/constants/colors';
+import { RootStackParamList } from '@/App';
 
 export default function SleepTestResult() {
   const { width: windowWidth } = useWindowDimensions();
@@ -27,77 +28,85 @@ export default function SleepTestResult() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.root}></View>
-      <View style={styles.root}>
-        <View style={[styles.container, { width: containerWidth }]}>
-          <Text style={styles.mainTitle}> 수면 테스트 측정 완료 </Text>
-          <ResultChart />
+    <LinearGradient
+      colors={[colors.softBlue, colors.white]}
+      style={styles.gradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.root}></View>
+        <View style={styles.root}>
+          <View style={[styles.container, { width: containerWidth }]}>
+            <Text style={styles.mainTitle}> 수면 테스트 측정 완료 </Text>
+            <ResultChart />
 
-          <View style={styles.rowBox}>
-            <View style={styles.textBox}>
-              <Text style={styles.boldText}>반응 속도 </Text>
-              <Text style={styles.mainText}>
-                평균 반응 시간 : [**점수 가져오기]
+            <View style={styles.rowBox}>
+              <View style={styles.textBox}>
+                <Text style={styles.boldText}>반응 속도 </Text>
+                <Text style={styles.mainText}>
+                  평균 반응 시간 : [**점수 가져오기]
+                </Text>
+              </View>
+              <View style={styles.roundScore}>
+                <Text style={styles.scoreText}>{baseScore}</Text>
+              </View>
+            </View>
+
+            <View style={styles.rowBox2}>
+              <View style={styles.textBox}>
+                <Text style={styles.boldText}>처리 속도 </Text>
+                <Text style={styles.mainText}>
+                  맞춘 개수 : [**점수 가져오기]
+                </Text>
+                <Text style={styles.mainText}>
+                  평균 반응 속도 : [**점수 가져오기]
+                </Text>
+                <Text style={styles.mainText}>정확도 : [**점수 가져오기] </Text>
+              </View>
+              <View style={styles.roundScore}>
+                <Text style={styles.scoreText}>{baseScore}</Text>
+              </View>
+            </View>
+
+            <View style={styles.rowBox}>
+              <View style={styles.textBox}>
+                <Text style={styles.boldText}>패턴 기억 </Text>
+                <Text style={styles.mainText}>
+                  기억력 점수 : [**점수 가져오기]
+                </Text>
+              </View>
+              <View style={styles.roundScore}>
+                <Text style={styles.scoreText}>{baseScore}</Text>
+              </View>
+            </View>
+            <Text style={styles.mainScore}>{baseScore}점</Text>
+            <View style={styles.descriptionBox}>
+              <Text style={styles.description}>
+                초기 인지 능력 측정이 완료되었습니다.
+              </Text>
+              <Text style={styles.pointDescription}>
+                이제 대시보드에서 당신의 프로필을 확인하고, {`\n`} 매일의 컨디션
+                변화를 기록해보세요.
               </Text>
             </View>
-            <View style={styles.roundScore}>
-              <Text style={styles.scoreText}>{baseScore}</Text>
-            </View>
+            <Button
+              title="대시보드로 이동"
+              variant="primary"
+              style={styles.button}
+              onPress={goToDashboard}
+            />
           </View>
-
-          <View style={styles.rowBox2}>
-            <View style={styles.textBox}>
-              <Text style={styles.boldText}>처리 속도 </Text>
-              <Text style={styles.mainText}>맞춘 개수 : [**점수 가져오기]</Text>
-              <Text style={styles.mainText}>
-                평균 반응 속도 : [**점수 가져오기]
-              </Text>
-              <Text style={styles.mainText}>정확도 : [**점수 가져오기] </Text>
-            </View>
-            <View style={styles.roundScore}>
-              <Text style={styles.scoreText}>{baseScore}</Text>
-            </View>
-          </View>
-
-          <View style={styles.rowBox}>
-            <View style={styles.textBox}>
-              <Text style={styles.boldText}>패턴 기억 </Text>
-              <Text style={styles.mainText}>
-                기억력 점수 : [**점수 가져오기]
-              </Text>
-            </View>
-            <View style={styles.roundScore}>
-              <Text style={styles.scoreText}>{baseScore}</Text>
-            </View>
-          </View>
-
-          <View style={styles.rowText}>
-            <Text style={styles.subTitle}> 평균 점수 : </Text>
-            <Text style={styles.mainScore}>{baseScore}</Text>
-          </View>
-
-          <View style={styles.descriptionBox}>
-            <Text style={styles.description}>
-              초기 인지 능력 측정이 완료되었습니다.
-            </Text>
-            <Text style={styles.pointDescription}>
-              이제 대시보드에서 당신의 프로필을 확인하고, {`\n`} 매일의 컨디션
-              변화를 기록해보세요.
-            </Text>
-          </View>
-          <Button
-            title="대시보드로 이동"
-            variant="outline"
-            onPress={goToDashboard}
-          />
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
@@ -110,17 +119,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    backgroundColor: colors.white,
-    borderRadius: 20,
     justifyContent: 'space-evenly',
     alignItems: 'center',
     padding: 30,
     paddingHorizontal: 20,
     gap: 40,
-    shadowColor: colors.mediumGray,
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.750)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderWidth: 1,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 8,
   },
   mainTitle: {
     fontSize: 22,
@@ -131,7 +146,14 @@ const styles = StyleSheet.create({
   subTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: colors.textColor,
+    color: '#0F1C36',
+    textAlign: 'center',
+    textShadowColor: '#70707050',
+    textShadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    textShadowRadius: 2,
   },
   boldText: {
     fontWeight: 'bold',
@@ -139,23 +161,30 @@ const styles = StyleSheet.create({
     color: colors.textColor,
   },
   mainText: {
-    color: colors.midnightBlue,
+    color: '#0F1C36',
     fontSize: 12,
   },
   mainScore: {
-    fontSize: 18,
+    fontSize: 34,
     fontWeight: 'bold',
-    color: colors.softBlue,
+    color: '#5A6EA3',
+    textShadowColor: '#70707050',
+    textShadowOffset: {
+      width: 1,
+      height: 1,
+    },
+    textShadowRadius: 2,
   },
   scoreText: {
     textAlign: 'center',
-    color: colors.white,
+    color: '#0F1C36',
   },
   rowBox: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderColor: colors.mediumLightGray,
+    backgroundColor: '#cbd3df70',
+    borderColor: '#5a6da392',
     borderWidth: 1,
     borderRadius: 10,
     width: '100%',
@@ -166,7 +195,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderColor: colors.mediumLightGray,
+    backgroundColor: '#cbd3df70',
+    borderColor: '#5a6da392',
     borderWidth: 1,
     borderRadius: 10,
     width: '100%',
@@ -194,17 +224,30 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     textAlign: 'center',
-    color: colors.textColor,
+    color: '#0F1C36',
   },
   pointDescription: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: colors.softBlue,
+    color: '#3F4F80',
   },
   descriptionBox: {
     justifyContent: 'center',
     alignItems: 'center',
     gap: 50,
+  },
+  button: {
+    width: 130,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: '#909090',
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
   },
 });

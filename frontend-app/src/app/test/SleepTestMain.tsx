@@ -5,7 +5,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from '@/components/common/Button';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
-import { colors } from '@/constants/colors';
 
 export default function SleepTestMain() {
   const navigation =
@@ -17,17 +16,10 @@ export default function SleepTestMain() {
 
   return (
     <LinearGradient
-<<<<<<< HEAD
-      colors={[colors.lightGray, colors.white]}
-      style={styles.root}
-      start={{ x: 0.5, y: 0 }}
-      end={{ x: 0.5, y: 1 }}
-=======
       colors={[colors.softBlue, colors.white]}
       style={styles.gradient}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
->>>>>>> 7309cd4d (design: 수면 테스트 메인 및 시작 페이지 UI 디자인 수정)
     >
       <View style={styles.mainBox}>
         {/* <Text style={styles.title}> Focuz </Text> */}
@@ -65,34 +57,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-<<<<<<< HEAD
-  title: {
-    color: colors.softBlue,
-    fontWeight: 'bold',
-    fontSize: 36,
-    marginBottom: 16,
-    letterSpacing: 1,
-    textAlign: 'center',
-  },
-=======
-  // title: {
-  //   color: '#0F1C36',
-  //   fontWeight: 'bold',
-  //   fontSize: 40,
-  //   marginBottom: 16,
-  //   letterSpacing: 1,
-  //   textAlign: 'center',
-  // },
->>>>>>> 7309cd4d (design: 수면 테스트 메인 및 시작 페이지 UI 디자인 수정)
   mainText: {
     fontWeight: 'bold',
     fontSize: 28,
     marginBottom: 24,
-<<<<<<< HEAD
-    color: colors.textColor,
-=======
     color: '#3F4F80',
->>>>>>> 7309cd4d (design: 수면 테스트 메인 및 시작 페이지 UI 디자인 수정)
     textAlign: 'center',
     textShadowColor: '#B0B0B0',
     textShadowOffset: {
@@ -105,6 +74,7 @@ const styles = StyleSheet.create({
     width: 100,
     paddingVertical: 12,
     borderRadius: 10,
+    backgroundColor: '#3F4F80',
     alignItems: 'center',
     shadowColor: '#909090',
     shadowOffset: {

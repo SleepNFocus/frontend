@@ -12,11 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from '@/components/common/Button';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
-<<<<<<< HEAD
-import { colors } from '@/constants/colors';
-=======
 import { useEffect, useRef } from 'react';
->>>>>>> 7309cd4d (design: 수면 테스트 메인 및 시작 페이지 UI 디자인 수정)
 
 export default function SleepTestDesc() {
   const navigation =
@@ -106,42 +102,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 30,
-<<<<<<< HEAD
-    gap: 70,
-    borderColor: colors.textColor,
-    borderRadius: 20,
-    shadowColor: colors.mediumGray,
-=======
     gap: 50,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderColor: 'rgba(255, 255, 255, 0.4)',
     borderWidth: 1,
     borderRadius: 20,
     shadowColor: '#000',
->>>>>>> 7309cd4d (design: 수면 테스트 메인 및 시작 페이지 UI 디자인 수정)
     shadowOffset: {
       width: 0,
       height: 4,
     },
-<<<<<<< HEAD
-    shadowOpacity: 2,
-    shadowRadius: 20,
-    backgroundColor: colors.white,
-=======
     shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 8,
->>>>>>> 7309cd4d (design: 수면 테스트 메인 및 시작 페이지 UI 디자인 수정)
   },
   title: {
     fontWeight: 'bold',
     fontSize: 23,
     marginBottom: 24,
-<<<<<<< HEAD
-    color: colors.textColor,
-=======
     color: '#0F1C36',
->>>>>>> 7309cd4d (design: 수면 테스트 메인 및 시작 페이지 UI 디자인 수정)
     textAlign: 'center',
     textShadowColor: '#70707050',
     textShadowOffset: {
@@ -160,11 +139,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 24,
-<<<<<<< HEAD
-    color: colors.textColor,
-=======
     color: '#0F1C36',
->>>>>>> 7309cd4d (design: 수면 테스트 메인 및 시작 페이지 UI 디자인 수정)
     textAlign: 'center',
   },
   imageContainer: {
@@ -184,6 +159,7 @@ const styles = StyleSheet.create({
     width: 130,
     paddingVertical: 12,
     borderRadius: 10,
+    backgroundColor: '#3F4F80',
     alignItems: 'center',
     shadowColor: '#909090',
     shadowOffset: {

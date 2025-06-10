@@ -45,7 +45,7 @@ export default function SleepTest3() {
 
   const containerHeight = Math.min(windowHeight * 0.7, 1200);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
-  const squareWidth = Math.min(windowWidth * 0.3, 45);
+  const squareWidth = Math.min(windowWidth * 0.118, 55);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
   // 상태관리 객체로 수정해보기
