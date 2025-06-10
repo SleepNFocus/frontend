@@ -22,7 +22,6 @@ export default function SleepTestMain() {
       end={{ x: 0, y: 1 }}
     >
       <View style={styles.mainBox}>
-        {/* <Text style={styles.title}> Focuz </Text> */}
         <Image
           source={require('@/assets/focuz_text_logo.png')}
           style={styles.textLogoImage}

@@ -1,17 +1,17 @@
 import {
   View,
   Text,
+  Image,
   Animated,
   StyleSheet,
   useWindowDimensions,
-  Image,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { Button } from '@/components/common/Button';
-import { RootStackParamList } from '@/App';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Button } from '@/components/common/Button';
 import { colors } from '@/constants/colors';
+import { RootStackParamList } from '@/App';
 import { useEffect, useRef } from 'react';
 
 export default function SleepTest2Desc() {
