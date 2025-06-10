@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
+import { colors } from '@/constants/colors';
 
 interface GreetingCardProps {
   userName?: string;
@@ -36,16 +37,16 @@ const styles = StyleSheet.create({
   hello: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#222',
+    color: colors.textColor,
   },
   desc: {
     fontSize: 16,
-    color: '#666',
+    color: colors.midnightBlue,
     marginBottom: 8,
   },
   score: {
     fontSize: 16,
-    color: '#6C7BFF',
+    color: colors.softBlue,
     fontWeight: 'bold',
   },
 });
