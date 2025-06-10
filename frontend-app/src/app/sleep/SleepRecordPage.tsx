@@ -1,22 +1,15 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text, Button, MD3LightTheme } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import { Layout } from '@/components/common/Layout';
+import { Text } from '@/components/common/Text';
+import { Button } from '@/components/common/Button';
 import { SleepRecordForm } from '@/components/sleep/SleepRecordForm';
 import { ScoreFeedback } from '@/components/sleep/ScoreFeedback';
-import { useNavigation } from '@react-navigation/native';
 import { SleepRecordData } from '@/app/types/sleep';
 import { RootStackParamList } from '@/App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '@/constants/colors';
-
-const theme = {
-  ...MD3LightTheme,
-  colors: {
-    ...MD3LightTheme.colors,
-    primary: colors.softBlue,
-  },
-};
 
 export const SleepRecordPage: React.FC = () => {
   const navigation = useNavigation();
@@ -52,10 +45,35 @@ export const SleepRecordPage: React.FC = () => {
         <Text variant="headlineMedium" style={styles.title}>
           수면 기록
         </Text>
+        
         {!isRecordSaved ? (
           <SleepRecordForm onSave={handleSaveRecord} />
         ) : (
           <View style={styles.resultSection}>
+            {/* 수면 점수는 저장 후에만 표시 */}
+            <View style={styles.scoreSection}>
+              <Text variant="headlineSmall" style={styles.scoreTitle}>
+                오늘의 수면 점수
+              </Text>
+              <Text variant="displayMedium" style={styles.totalScore}>
+                {savedRecordData?.totalScore}점
+              </Text>
+              <View style={styles.scoreBreakdown}>
+                <Text variant="bodySmall">
+                  수면시간: {savedRecordData?.scoreBreakdown.durationScore}/25
+                </Text>
+                <Text variant="bodySmall">
+                  수면질: {savedRecordData?.scoreBreakdown.qualityScore}/30
+                </Text>
+                <Text variant="bodySmall">
+                  수면효율: {savedRecordData?.scoreBreakdown.sleepEfficiencyScore}/25
+                </Text>
+                <Text variant="bodySmall">
+                  수면환경: {savedRecordData?.scoreBreakdown.environmentScore}/20
+                </Text>
+              </View>
+            </View>
+
             {savedRecordData && (
               <ScoreFeedback
                 score={savedRecordData.totalScore}
@@ -65,33 +83,27 @@ export const SleepRecordPage: React.FC = () => {
 
             <View style={styles.actionButtons}>
               <Button
-                mode="contained"
                 onPress={navigateToInsights}
+                title="AI 인사이트 보기"
+                variant="primary"
                 style={styles.primaryButton}
-                icon="lightbulb-outline"
-                theme={theme}
-              >
-                AI 인사이트 보기
-              </Button>
+              />
 
               <Button
-                mode="outlined"
                 onPress={startNewRecord}
+                title="새로운 기록 입력"
+                variant="outline"
                 style={styles.secondaryButton}
-                theme={theme}
-              >
-                새로운 기록 입력
-              </Button>
+              />
+              
               <Button
-                mode="outlined"
                 onPress={() => {
                   navigation2.navigate('SleepTestMain');
                 }}
+                title="테스트"
+                variant="outline"
                 style={styles.secondaryButton}
-                theme={theme}
-              >
-                테스트
-              </Button>
+              />
             </View>
 
             <View style={styles.savedInfo}>
@@ -120,6 +132,28 @@ const styles = StyleSheet.create({
   },
   resultSection: {
     paddingBottom: 32,
+  },
+  scoreSection: {
+    backgroundColor: colors.lightGray,
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 24,
+    alignItems: 'center',
+  },
+  scoreTitle: {
+    marginBottom: 8,
+    color: colors.textColor,
+  },
+  totalScore: {
+    color: colors.textColor,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  scoreBreakdown: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    justifyContent: 'center',
   },
   actionButtons: {
     gap: 12,
