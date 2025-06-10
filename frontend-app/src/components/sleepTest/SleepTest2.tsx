@@ -16,7 +16,7 @@ import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 
 const MAX_NUM = 9;
-const TIMER_SECOND = 10000;
+const TIMER_SECOND = 60000;
 const RANDOM_SYMBOL = ['♥︎', '✦', '♠︎', '▲', '◉', '★', '▼', '☗', '◆'];
 
 function randomArray(array: string[]) {

@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     textAlign: 'center',
-    color: '#0F1C36',
+    color: '#ffffff',
   },
   rowBox: {
     flexDirection: 'row',
