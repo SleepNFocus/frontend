@@ -10,6 +10,7 @@ import ResultChart from '@/components/chart/ResultChart';
 import { Button } from '@/components/common/Button';
 import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '@/App';
+import { colors } from '@/constants/colors';
 
 export default function SleepTestResult() {
   const { width: windowWidth } = useWindowDimensions();
@@ -109,14 +110,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    backgroundColor: '#FFF',
+    backgroundColor: colors.white,
     borderRadius: 20,
     justifyContent: 'space-evenly',
     alignItems: 'center',
     padding: 30,
     paddingHorizontal: 20,
     gap: 40,
-    shadowColor: '#aaa',
+    shadowColor: colors.mediumGray,
     shadowOffset: { width: 4, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 10,
@@ -125,32 +126,36 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: colors.textColor,
   },
   subTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: colors.textColor,
   },
   boldText: {
     fontWeight: 'bold',
     fontSize: 15,
+    color: colors.textColor,
   },
   mainText: {
-    color: '#6c6c6c',
+    color: colors.midnightBlue,
     fontSize: 12,
   },
   mainScore: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#8888ff',
+    color: colors.softBlue,
   },
   scoreText: {
     textAlign: 'center',
+    color: colors.white,
   },
   rowBox: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderColor: '#ccc',
+    borderColor: colors.mediumLightGray,
     borderWidth: 1,
     borderRadius: 10,
     width: '100%',
@@ -161,7 +166,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderColor: '#ccc',
+    borderColor: colors.mediumLightGray,
     borderWidth: 1,
     borderRadius: 10,
     width: '100%',
@@ -180,7 +185,7 @@ const styles = StyleSheet.create({
   },
   roundScore: {
     borderRadius: 50,
-    backgroundColor: '#ccc',
+    backgroundColor: colors.softBlue,
     width: 30,
     height: 30,
     justifyContent: 'center',
@@ -189,12 +194,13 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     textAlign: 'center',
+    color: colors.textColor,
   },
   pointDescription: {
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#8888ff',
+    color: colors.softBlue,
   },
   descriptionBox: {
     justifyContent: 'center',

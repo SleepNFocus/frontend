@@ -29,7 +29,7 @@ export const MorePage: React.FC = () => {
           <Text style={styles.title}>데이터 관리</Text>
           <TouchableOpacity 
             style={styles.menuItem}
-            onPress={() => handleNavigate('MyRecord')}
+            onPress={() => handleNavigate('History')}
           >
             <Text style={styles.subText}>기록 보기</Text>
           </TouchableOpacity>
@@ -66,6 +66,8 @@ export const MorePage: React.FC = () => {
     </Layout>
   );
 };
+
+export default MorePage;
 
 const styles = StyleSheet.create({
   card: {

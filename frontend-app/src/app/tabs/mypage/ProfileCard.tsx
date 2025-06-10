@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/App';
 import NicknameChangeModal from './NicknameChangeModal';
 import { useAuthStore } from '@/store/authStore';
+import { Card } from '@/components/common/Card';
+import { Text } from '@/components/common/Text';
+import { Button } from '@/components/common/Button';
+import { colors } from '@/constants/colors';
 
 const ProfileCard = () => {
   const navigation =
@@ -16,10 +20,10 @@ const ProfileCard = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
-    <View style={styles.wrapper}>
+    <Card style={styles.wrapper}>
       <View style={styles.headerRow}>
         <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-          <Ionicons name="settings-outline" size={22} color="#ccc" />
+          <Ionicons name="settings-outline" size={22} color={colors.mediumGray} />
         </TouchableOpacity>
       </View>
 
@@ -29,48 +33,39 @@ const ProfileCard = () => {
       />
 
       <TouchableOpacity onPress={() => setModalVisible(true)}>
-        <Text style={styles.welcomeText}>
+        <Text variant="titleMedium" style={styles.welcomeText}>
           <Text style={styles.highlight}>반가워요!</Text> {nickname} 님
         </Text>
       </TouchableOpacity>
 
-      <Text style={styles.trackingText}>
+      <Text variant="bodyMedium" style={styles.trackingText}>
         수면과 집중력을 추적한지 벌써 <Text style={styles.days}>__일째</Text>
       </Text>
 
       <View style={styles.announceBox}>
-        <Text style={styles.announceText}>인지테스트 하러가기</Text>
-        <Text style={styles.announceSubText}>(매일 달라지는 유도문구)</Text>
-        <Text style={styles.announceSubText}>
+        <Text variant="titleSmall" style={styles.announceText}>인지테스트 하러가기</Text>
+        <Text variant="bodySmall" style={styles.announceSubText}>(매일 달라지는 유도문구)</Text>
+        <Text variant="bodySmall" style={styles.announceSubText}>
           게임 완료 시 이 칸이 없어지거나, 그날의 응원문구로 변경됨
         </Text>
       </View>
 
       <View style={styles.sleepSummary}>
         <View style={styles.averageBox}>
-          <Text style={styles.averageLabel}>총 수면시간</Text>
-          <Text style={styles.averageValue}>6시간 40분</Text>
+          <Text variant="bodyMedium" style={styles.averageLabel}>총 수면시간</Text>
+          <Text variant="titleMedium" style={styles.averageValue}>6시간 40분</Text>
         </View>
         <View style={styles.averageBox}>
-          <Text style={styles.averageLabel}>평균 점수</Text>
-          <Text style={styles.averageValue}>84점</Text>
+          <Text variant="bodyMedium" style={styles.averageLabel}>평균 점수</Text>
+          <Text variant="titleMedium" style={styles.averageValue}>84점</Text>
         </View>
       </View>
-
-      <TouchableOpacity
-        style={styles.recordBtn}
-        onPress={() => navigation.navigate('MyRecord')}
-      >
-        <Text style={styles.recordBtnText}>나의 기록 확인하기</Text>
-      </TouchableOpacity>
 
       <NicknameChangeModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        // onSubmit={() => setModalVisible(false)}
-        // initialValue={nickname}
       />
-    </View>
+    </Card>
   );
 };
 
@@ -78,65 +73,51 @@ export default ProfileCard;
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 20,
+    backgroundColor: colors.lightGray,
     padding: 24,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-    elevation: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: colors.mediumLightGray,
   },
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     marginBottom: 16,
   },
   welcomeText: {
-    fontSize: 18,
-    color: '#F2F2FF',
-    fontWeight: '600',
+    color: colors.textColor,
     marginBottom: 4,
   },
   highlight: {
-    color: '#BFAFF2',
+    color: colors.softBlue,
   },
   trackingText: {
-    fontSize: 14,
-    color: '#D8D6E8',
+    color: colors.textColor,
     marginBottom: 16,
   },
   days: {
     fontWeight: 'bold',
-    color: '#D3C1FF',
+    color: colors.softBlue,
   },
-
   announceBox: {
-    backgroundColor: 'rgba(214, 236, 243, 0.1)',
+    backgroundColor: colors.lightGray,
     padding: 12,
     borderRadius: 12,
-    borderColor: '#CFE7EF',
+    borderColor: colors.softBlue,
     borderWidth: 1,
     marginBottom: 20,
     width: '100%',
   },
   announceText: {
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.textColor,
     textAlign: 'center',
     marginBottom: 2,
   },
   announceSubText: {
-    fontSize: 12,
-    color: '#FFFFFF',
+    color: colors.textColor,
     textAlign: 'center',
   },
-
   sleepSummary: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -148,26 +129,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   averageLabel: {
-    fontSize: 14,
-    color: '#CFCFFF',
+    color: colors.textColor,
     marginBottom: 6,
   },
   averageValue: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.textColor,
   },
-
   recordBtn: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-  },
-  recordBtnText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
+    backgroundColor: colors.lightGray,
   },
   headerRow: {
     width: '100%',

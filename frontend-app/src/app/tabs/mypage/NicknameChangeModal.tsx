@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { View, TextInput, StyleSheet, Modal as RNModal, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import { useAuthStore } from '@/store/authStore';
+import { Text } from '@/components/common/Text';
+import { Button } from '@/components/common/Button';
+import { colors } from '@/constants/colors';
 
 interface Props {
   visible: boolean;
@@ -58,13 +54,13 @@ const NicknameChangeModal: React.FC<Props> = ({
   };
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
+    <RNModal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text style={styles.title}>닉네임 변경</Text>
+            <Text variant="titleMedium" style={styles.title}>닉네임 변경</Text>
             <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close" size={24} color="#fff" />
+              <Ionicons name="close" size={24} color={colors.white} />
             </TouchableOpacity>
           </View>
 
@@ -74,27 +70,27 @@ const NicknameChangeModal: React.FC<Props> = ({
               !isValid && nickname ? styles.inputError : null,
             ]}
             placeholder="새 닉네임을 입력하세요"
-            placeholderTextColor="#888"
+            placeholderTextColor={colors.mediumGray}
             value={nickname}
             onChangeText={setNickname}
           />
 
           {!isValid && nickname.length > 0 && (
-            <Text style={styles.warning}>
+            <Text variant="bodySmall" style={styles.warning}>
               한글, 영문, 숫자 2~20자 입력 가능
             </Text>
           )}
 
-          <TouchableOpacity
-            style={[styles.button, !isValid && styles.buttonDisabled]}
+          <Button
+            title="변경 완료"
+            variant="primary"
+            onPress={handleSubmit}
             disabled={!isValid}
-            onPress={handleSubmit} // ✅ 여기 수정!
-          >
-            <Text style={styles.buttonText}>변경 완료</Text>
-          </TouchableOpacity>
+            style={styles.button}
+          />
         </View>
       </View>
-    </Modal>
+    </RNModal>
   );
 };
 
@@ -103,12 +99,12 @@ export default NicknameChangeModal;
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: colors.mediumGray,
     justifyContent: 'center',
     alignItems: 'center',
   },
   container: {
-    backgroundColor: '#1C1C40',
+    backgroundColor: colors.deepNavy,
     padding: 24,
     borderRadius: 12,
     width: '80%',
@@ -120,38 +116,25 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#fff',
+    color: colors.textColor,
   },
   input: {
-    backgroundColor: '#2A2A5A',
-    color: '#fff',
+    backgroundColor: colors.midnightBlue,
+    color: colors.textColor,
     borderRadius: 8,
     padding: 12,
     fontSize: 14,
     marginBottom: 8,
   },
   inputError: {
-    borderColor: '#f66',
+    borderColor: colors.softOrange,
     borderWidth: 1,
   },
   warning: {
-    color: '#f88',
-    fontSize: 12,
+    color: colors.softOrange,
     marginBottom: 12,
   },
   button: {
-    backgroundColor: '#6c5ce7',
-    padding: 12,
-    borderRadius: 8,
-  },
-  buttonDisabled: {
-    backgroundColor: '#555',
-  },
-  buttonText: {
-    textAlign: 'center',
-    color: '#fff',
-    fontWeight: 'bold',
+    marginTop: 8,
   },
 });

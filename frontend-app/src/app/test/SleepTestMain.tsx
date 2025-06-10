@@ -4,6 +4,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@/components/common/Button';
 import { RootStackParamList } from '@/App';
+import { colors } from '@/constants/colors';
 
 export default function SleepTestMain() {
   const navigation =
@@ -15,7 +16,7 @@ export default function SleepTestMain() {
 
   return (
     <LinearGradient
-      colors={['#e8eafe', '#fff']}
+      colors={[colors.lightGray, colors.white]}
       style={styles.root}
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 1 }}
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: '#6C7BFF',
+    color: colors.softBlue,
     fontWeight: 'bold',
     fontSize: 36,
     marginBottom: 16,
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 30,
     marginBottom: 24,
-    color: '#222',
+    color: colors.textColor,
     textAlign: 'center',
   },
   button: {

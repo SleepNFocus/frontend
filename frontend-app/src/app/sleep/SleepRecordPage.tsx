@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text, Button } from 'react-native-paper';
+import { Text, Button, MD3LightTheme } from 'react-native-paper';
 import { Layout } from '@/components/common/Layout';
 import { SleepRecordForm } from '@/components/sleep/SleepRecordForm';
 import { ScoreFeedback } from '@/components/sleep/ScoreFeedback';
@@ -8,6 +8,15 @@ import { useNavigation } from '@react-navigation/native';
 import { SleepRecordData } from '@/app/types/sleep';
 import { RootStackParamList } from '@/App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { colors } from '@/constants/colors';
+
+const theme = {
+  ...MD3LightTheme,
+  colors: {
+    ...MD3LightTheme.colors,
+    primary: colors.softBlue,
+  },
+};
 
 export const SleepRecordPage: React.FC = () => {
   const navigation = useNavigation();
@@ -43,7 +52,6 @@ export const SleepRecordPage: React.FC = () => {
         <Text variant="headlineMedium" style={styles.title}>
           수면 기록
         </Text>
-
         {!isRecordSaved ? (
           <SleepRecordForm onSave={handleSaveRecord} />
         ) : (
@@ -61,6 +69,7 @@ export const SleepRecordPage: React.FC = () => {
                 onPress={navigateToInsights}
                 style={styles.primaryButton}
                 icon="lightbulb-outline"
+                theme={theme}
               >
                 AI 인사이트 보기
               </Button>
@@ -69,6 +78,7 @@ export const SleepRecordPage: React.FC = () => {
                 mode="outlined"
                 onPress={startNewRecord}
                 style={styles.secondaryButton}
+                theme={theme}
               >
                 새로운 기록 입력
               </Button>
@@ -78,6 +88,7 @@ export const SleepRecordPage: React.FC = () => {
                   navigation2.navigate('SleepTestMain');
                 }}
                 style={styles.secondaryButton}
+                theme={theme}
               >
                 테스트
               </Button>
@@ -105,7 +116,7 @@ const styles = StyleSheet.create({
   title: {
     marginBottom: 24,
     textAlign: 'center',
-    color: '#6C7BFF',
+    color: colors.textColor,
   },
   resultSection: {
     paddingBottom: 32,
@@ -116,22 +127,24 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     paddingVertical: 6,
+    backgroundColor: colors.softBlue,
   },
   secondaryButton: {
     paddingVertical: 6,
+    borderColor: colors.softBlue,
   },
   savedInfo: {
     padding: 16,
-    backgroundColor: '#e8f5e8',
+    backgroundColor: colors.lightGray,
     borderRadius: 8,
     alignItems: 'center',
   },
   savedInfoText: {
-    color: '#2e7d2e',
+    color: colors.textColor,
     fontWeight: '500',
     marginBottom: 4,
   },
   savedDate: {
-    color: '#5e7e5e',
+    color: colors.mediumGray,
   },
 });

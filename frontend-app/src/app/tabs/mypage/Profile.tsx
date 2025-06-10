@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+import { colors } from '@/constants/colors';
 
 const ProfileEdit = () => {
   const [nickname, setNickname] = useState('');
@@ -46,13 +47,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: '#ccc',
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: colors.mediumGray,
+    marginBottom: 16,
   },
   changeText: {
-    color: '#6C7BFF',
+    color: colors.softBlue,
     marginTop: 8,
   },
   inputWrap: {
@@ -62,15 +64,41 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 8,
-    color: '#333',
+    color: colors.textColor,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#E5E5E5',
+    borderColor: colors.mediumLightGray,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: '#FFF',
-    color: '#333',
+    backgroundColor: colors.white,
+    color: colors.textColor,
+  },
+  nickname: {
+    color: colors.softBlue,
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  info: {
+    color: colors.textColor,
+    fontSize: 16,
+    marginBottom: 4,
+  },
+  border: {
+    borderColor: colors.mediumLightGray,
+    borderWidth: 1,
+    marginVertical: 16,
+  },
+  card: {
+    backgroundColor: colors.white,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+  },
+  cardText: {
+    color: colors.textColor,
+    fontSize: 16,
   },
 });
