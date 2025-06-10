@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
-import { Text } from 'react-native-paper';
-import DropDownPicker from 'react-native-dropdown-picker';
-import { colors } from '@/constants/colors';
+import { View, StyleSheet, TouchableWithoutFeedback, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import { Text } from '@/components/common/Text';
 import { Button } from '@/components/common/Button';
+import { colors } from '@/constants/colors';
 
 interface SleepRecordData {
   selectedDate: string;
@@ -25,21 +24,100 @@ interface SleepRecordFormProps {
   onSave: (data: SleepRecordData) => void;
 }
 
+interface DropdownItem {
+  label: string;
+  value: string;
+  score: number;
+}
+
+interface DropdownProps {
+  items: DropdownItem[];
+  value: string | null;
+  onSelect: (value: string) => void;
+  placeholder: string;
+}
+
+const CustomDropdown: React.FC<DropdownProps> = ({ items, value, onSelect, placeholder }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  
+  const selectedItem = items.find(item => item.value === value);
+  
+  return (
+    <View style={styles.dropdownContainer}>
+      <TouchableOpacity 
+        style={styles.dropdownButton}
+        onPress={() => setIsVisible(true)}
+      >
+        <Text 
+          variant="bodyMedium" 
+          style={!selectedItem 
+            ? { ...styles.dropdownButtonText, ...styles.placeholderText }
+            : styles.dropdownButtonText
+          }
+        >
+          {selectedItem ? selectedItem.label : placeholder}
+        </Text>
+        <Text style={styles.dropdownArrow}>▼</Text>
+      </TouchableOpacity>
+      
+      <Modal
+        visible={isVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setIsVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text variant="titleMedium" style={styles.modalTitle}>
+                {placeholder}
+              </Text>
+              <TouchableOpacity onPress={() => setIsVisible(false)}>
+                <Text style={styles.closeButton}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            
+            <ScrollView style={styles.modalScrollView}>
+              {items.map((item) => (
+                <TouchableOpacity
+                  key={item.value}
+                  style={[
+                    styles.modalItem,
+                    value === item.value && styles.selectedItem
+                  ]}
+                  onPress={() => {
+                    onSelect(item.value);
+                    setIsVisible(false);
+                  }}
+                >
+                  <Text 
+                    variant="bodyMedium" 
+                    style={value === item.value 
+                      ? { ...styles.modalItemText, ...styles.selectedItemText }
+                      : styles.modalItemText
+                    }
+                  >
+                    {item.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+};
+
 export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split('T')[0],
   );
 
   const [sleepDuration, setSleepDuration] = useState<string | null>(null);
-  const [openSleepDuration, setOpenSleepDuration] = useState(false);
-
   const [sleepQuality, setSleepQuality] = useState<string | null>(null);
-  const [openSleepQuality, setOpenSleepQuality] = useState(false);
-
   const [fallAsleepTime, setFallAsleepTime] = useState<string | null>(null);
   const [nightWakeCount, setNightWakeCount] = useState<string | null>(null);
-  const [openFallAsleep, setOpenFallAsleep] = useState(false);
-  const [openWakeCount, setOpenWakeCount] = useState(false);
 
   const [sleepDisruptors, setSleepDisruptors] = useState<{
     [key: string]: boolean;
@@ -122,8 +200,7 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
     },
     {
       key: 'exercise',
-      label:
-        '잠들기 2시간 이내 격렬한 운동 (숨이 많이 차거나 땀이 많이 나는 운동)',
+      label: '잠들기 2시간 이내 격렬한 운동 (숨이 많이 차거나 땀이 많이 나는 운동)',
       penalty: 4,
     },
   ];
@@ -222,175 +299,103 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
   const isFormValid =
     sleepDuration && sleepQuality && fallAsleepTime && nightWakeCount;
 
-  const closeAllDropdowns = () => {
-    setOpenSleepDuration(false);
-    setOpenSleepQuality(false);
-    setOpenFallAsleep(false);
-    setOpenWakeCount(false);
-  };
-
   return (
-    <TouchableWithoutFeedback onPress={closeAllDropdowns}>
-      <View style={styles.container}>
-        <View style={styles.scoreSection}>
-          <Text variant="headlineSmall" style={styles.scoreTitle}>
-            오늘의 수면 점수
-          </Text>
-          <Text variant="displayMedium" style={styles.totalScore}>
-            {totalScore}점
-          </Text>
-          <View style={styles.scoreBreakdown}>
-            <Text variant="bodySmall">
-              수면시간: {scoreBreakdown.durationScore}/25
-            </Text>
-            <Text variant="bodySmall">
-              수면질: {scoreBreakdown.qualityScore}/30
-            </Text>
-            <Text variant="bodySmall">
-              수면효율: {scoreBreakdown.sleepEfficiencyScore}/25
-            </Text>
-            <Text variant="bodySmall">
-              수면환경: {scoreBreakdown.environmentScore}/20
-            </Text>
-          </View>
-        </View>
-
-        <View style={[styles.section, { zIndex: 4000 }]}>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
-            1. 어젯밤 총 몇 시간 주무셨나요? (25점)
-          </Text>
-          <DropDownPicker
-            open={openSleepDuration}
-            value={sleepDuration}
-            items={sleepDurationItems}
-            setOpen={setOpenSleepDuration}
-            setValue={setSleepDuration}
-            placeholder="수면 시간을 선택하세요"
-            style={styles.dropdown}
-            dropDownContainerStyle={styles.dropdownContainer}
-            listMode="SCROLLVIEW"
-            maxHeight={200}
-          />
-        </View>
-
-        <View style={[styles.section, { zIndex: 3000 }]}>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
-            2. 아침에 기상했을 때 느낀 주관적인 수면의 질은 어떠셨나요? (30점)
-          </Text>
-          <DropDownPicker
-            open={openSleepQuality}
-            value={sleepQuality}
-            items={sleepQualityItems}
-            setOpen={setOpenSleepQuality}
-            setValue={setSleepQuality}
-            placeholder="수면의 질을 선택하세요"
-            style={styles.dropdown}
-            dropDownContainerStyle={styles.dropdownContainer}
-          />
-        </View>
-
-        <View style={styles.section}>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
-            3. 잠드는 데 걸린 시간과 밤새 깬 횟수는 어떻게 되시나요? (25점)
-          </Text>
-
-          <View style={[styles.subQuestion, { zIndex: 2000 }]}>
-            <Text variant="bodyMedium" style={styles.subQuestionTitle}>
-              A. 잠드는 데 걸린 시간
-            </Text>
-            <DropDownPicker
-              open={openFallAsleep}
-              value={fallAsleepTime}
-              items={fallAsleepItems}
-              setOpen={setOpenFallAsleep}
-              setValue={setFallAsleepTime}
-              placeholder="선택하세요"
-              style={styles.dropdown}
-              dropDownContainerStyle={styles.dropdownContainer}
-            />
-          </View>
-
-          <View style={[styles.subQuestion, { zIndex: 1000 }]}>
-            <Text variant="bodyMedium" style={styles.subQuestionTitle}>
-              B. 수면시간 내 깬 횟수
-            </Text>
-            <DropDownPicker
-              open={openWakeCount}
-              value={nightWakeCount}
-              items={wakeCountItems}
-              setOpen={setOpenWakeCount}
-              setValue={setNightWakeCount}
-              placeholder="선택하세요"
-              style={styles.dropdown}
-              dropDownContainerStyle={styles.dropdownContainer}
-            />
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
-            4. 어젯밤, 다음 중 수면에 방해가 될 만한 요인이 있었나요? (20점)
-          </Text>
-          <Text variant="bodySmall" style={styles.subtitle}>
-            해당하는 항목을 모두 선택해주세요. (각 항목당 -4점)
-          </Text>
-
-          {disruptorOptions.map(option => (
-            <TouchableWithoutFeedback
-              key={option.key}
-              onPress={() => handleDisruptorToggle(option.key)}
-            >
-              <View style={styles.checkboxItem}>
-                <View style={styles.checkbox}>
-                  {sleepDisruptors[option.key] && (
-                    <Text style={styles.checkmark}>✓</Text>
-                  )}
-                </View>
-                <Text variant="bodyMedium" style={styles.checkboxLabel}>
-                  {option.label}
-                </Text>
-              </View>
-            </TouchableWithoutFeedback>
-          ))}
-        </View>
-
-        <Button
-          onPress={handleSave}
-          title={`수면 기록 저장 (${totalScore}점)`}
-          disabled={!isFormValid}
-          style={styles.saveButton}
-          variant="primary"
+    <View style={styles.container}>
+      <View style={styles.section}>
+        <Text variant="titleMedium" style={styles.sectionTitle}>
+          1. 어젯밤 총 몇 시간 주무셨나요?
+        </Text>
+        <CustomDropdown
+          items={sleepDurationItems}
+          value={sleepDuration}
+          onSelect={setSleepDuration}
+          placeholder="수면 시간을 선택하세요"
         />
       </View>
-    </TouchableWithoutFeedback>
+
+      <View style={styles.section}>
+        <Text variant="titleMedium" style={styles.sectionTitle}>
+          2. 아침에 기상했을 때 느낀 주관적인 수면의 질은 어떠셨나요?
+        </Text>
+        <CustomDropdown
+          items={sleepQualityItems}
+          value={sleepQuality}
+          onSelect={setSleepQuality}
+          placeholder="수면의 질을 선택하세요"
+        />
+      </View>
+
+      <View style={styles.section}>
+        <Text variant="titleMedium" style={styles.sectionTitle}>
+          3. 잠드는 데 걸린 시간과 밤새 깬 횟수는 어떻게 되시나요?
+        </Text>
+
+        <View style={styles.subQuestion}>
+          <Text variant="bodyMedium" style={styles.subQuestionTitle}>
+            A. 잠드는 데 걸린 시간
+          </Text>
+          <CustomDropdown
+            items={fallAsleepItems}
+            value={fallAsleepTime}
+            onSelect={setFallAsleepTime}
+            placeholder="선택하세요"
+          />
+        </View>
+
+        <View style={styles.subQuestion}>
+          <Text variant="bodyMedium" style={styles.subQuestionTitle}>
+            B. 수면시간 내 깬 횟수
+          </Text>
+          <CustomDropdown
+            items={wakeCountItems}
+            value={nightWakeCount}
+            onSelect={setNightWakeCount}
+            placeholder="선택하세요"
+          />
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text variant="titleMedium" style={styles.sectionTitle}>
+          4. 어젯밤, 다음 중 수면에 방해가 될 만한 요인이 있었나요?
+        </Text>
+        <Text variant="bodySmall" style={styles.subtitle}>
+          해당하는 항목을 모두 선택해주세요.
+        </Text>
+
+        {disruptorOptions.map(option => (
+          <TouchableWithoutFeedback
+            key={option.key}
+            onPress={() => handleDisruptorToggle(option.key)}
+          >
+            <View style={styles.checkboxItem}>
+              <View style={styles.checkbox}>
+                {sleepDisruptors[option.key] && (
+                  <Text style={styles.checkmark}>✓</Text>
+                )}
+              </View>
+              <Text variant="bodyMedium" style={styles.checkboxLabel}>
+                {option.label}
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
+        ))}
+      </View>
+
+      <Button
+        onPress={handleSave}
+        title="수면 기록 저장"
+        disabled={!isFormValid}
+        style={styles.saveButton}
+        variant="primary"
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-  },
-  scoreSection: {
-    backgroundColor: colors.lightGray,
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 24,
-    alignItems: 'center',
-  },
-  scoreTitle: {
-    marginBottom: 8,
-    color: colors.textColor,
-  },
-  totalScore: {
-    color: colors.textColor,
-    fontWeight: 'bold',
-    marginBottom: 12,
-  },
-  scoreBreakdown: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    justifyContent: 'center',
   },
   section: {
     marginBottom: 24,
@@ -412,13 +417,77 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: colors.midnightBlue,
   },
-  dropdown: {
-    borderColor: colors.mediumLightGray,
-    borderRadius: 8,
-  },
+  // 커스텀 드롭다운 스타일
   dropdownContainer: {
+    marginBottom: 8,
+  },
+  dropdownButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderWidth: 1,
     borderColor: colors.mediumLightGray,
     borderRadius: 8,
+    padding: 16,
+    backgroundColor: colors.white,
+  },
+  dropdownButtonText: {
+    flex: 1,
+    color: colors.textColor,
+  },
+  placeholderText: {
+    color: colors.mediumGray,
+  },
+  dropdownArrow: {
+    fontSize: 12,
+    color: colors.mediumGray,
+  },
+  // 모달 스타일
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '70%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.mediumLightGray,
+  },
+  modalTitle: {
+    color: colors.textColor,
+    fontWeight: 'bold',
+  },
+  closeButton: {
+    fontSize: 18,
+    color: colors.mediumGray,
+    padding: 4,
+  },
+  modalScrollView: {
+    maxHeight: 400,
+  },
+  modalItem: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lightGray,
+  },
+  selectedItem: {
+    backgroundColor: colors.lightGray,
+  },
+  modalItemText: {
+    color: colors.textColor,
+  },
+  selectedItemText: {
+    color: colors.softBlue,
+    fontWeight: 'bold',
   },
   checkboxItem: {
     flexDirection: 'row',
