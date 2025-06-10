@@ -9,6 +9,7 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { GlassCard } from '@/components/common/Card';
 import { Button } from '@/components/common/Button';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
@@ -56,7 +57,7 @@ export default function SleepTestDesc() {
           source={require('@/assets/focuz_name_logo.png')}
           style={styles.nameLogoImage}
         />
-        <View style={[styles.container, { width: containerWidth }]}>
+        <GlassCard style={[styles.container, { width: containerWidth }]}>
           <Text style={styles.title}> 현재 인지 능력 측정하기 </Text>
           <View style={styles.imageContainer}>
             <Text style={styles.description}>
@@ -83,7 +84,7 @@ export default function SleepTestDesc() {
             style={styles.button}
             onPress={goToSleepTest1Desc}
           />
-        </View>
+        </GlassCard>
       </View>
     </LinearGradient>
   );
@@ -103,18 +104,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 30,
     gap: 50,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-    borderWidth: 1,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 8,
   },
   title: {
     fontWeight: 'bold',
@@ -153,7 +142,7 @@ const styles = StyleSheet.create({
   nameLogoImage: {
     width: 100,
     height: 20,
-    marginBottom: 40,
+    marginBottom: 30,
   },
   button: {
     width: 130,

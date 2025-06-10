@@ -12,6 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
+import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 
 const MAX_STEP = 5;
@@ -120,10 +121,6 @@ export default function SleepTest1() {
       end={{ x: 0, y: 1 }}
     >
       <View style={styles.container}>
-        <Image
-          source={require('@/assets/focuz_name_logo.png')}
-          style={styles.nameLogoImage}
-        />
         {isFinished ? (
           <View style={styles.resultBox}>
             <Image
@@ -150,56 +147,62 @@ export default function SleepTest1() {
             />
           </View>
         ) : (
-          <View
-            style={[
-              styles.secContainer,
-              { width: containerWidth, height: containerHeight },
-            ]}
-          >
-            <View style={styles.testBox}>
-              <View style={styles.headerBox}>
-                <Text style={styles.progress}>
-                  진행 : {step + 1}/{MAX_STEP}
-                </Text>
-                <Text style={styles.title}> 초록 불을 잡아라! </Text>
+          <>
+            <Image
+              source={require('@/assets/focuz_name_logo.png')}
+              style={styles.nameLogoImage}
+            />
+            <GlassCard
+              style={[
+                styles.secContainer,
+                { width: containerWidth, height: containerHeight },
+              ]}
+            >
+              <View style={styles.testBox}>
+                <View style={styles.headerBox}>
+                  <Text style={styles.progress}>
+                    진행 : {step + 1}/{MAX_STEP}
+                  </Text>
+                  <Text style={styles.title}> 초록 불을 잡아라! </Text>
+                </View>
+                <View style={styles.circleWrapper}>
+                  {isWaiting ? (
+                    <View style={styles.waitBox}>
+                      <Text style={styles.plus}> + </Text>
+                      <Text style={styles.text}>
+                        자극이 나타날 때까지 기다려주세요
+                      </Text>
+                    </View>
+                  ) : (
+                    <View style={styles.circleBox}>
+                      <Pressable onPress={handlePressGreenLight}>
+                        <View
+                          style={[
+                            styles.circle,
+                            { width: circlerWidth, height: circlerWidth },
+                          ]}
+                        />
+                      </Pressable>
+                    </View>
+                  )}
+                </View>
+                <View style={styles.msBox}>
+                  {clickTimes.length > 0 ? (
+                    <View style={styles.resultText}>
+                      <Text style={styles.opacityText}>
+                        최근 반응속도 : {commaRecentClickTime} ms
+                      </Text>
+                      <Text style={styles.opacityText}>
+                        평균 반응속도 : {commaRecentStepClickTimesAvg} ms
+                      </Text>
+                    </View>
+                  ) : (
+                    ''
+                  )}
+                </View>
               </View>
-              <View style={styles.circleWrapper}>
-                {isWaiting ? (
-                  <View style={styles.waitBox}>
-                    <Text style={styles.plus}> + </Text>
-                    <Text style={styles.text}>
-                      자극이 나타날 때까지 기다려주세요
-                    </Text>
-                  </View>
-                ) : (
-                  <View style={styles.circleBox}>
-                    <Pressable onPress={handlePressGreenLight}>
-                      <View
-                        style={[
-                          styles.circle,
-                          { width: circlerWidth, height: circlerWidth },
-                        ]}
-                      />
-                    </Pressable>
-                  </View>
-                )}
-              </View>
-              <View style={styles.msBox}>
-                {clickTimes.length > 0 ? (
-                  <View style={styles.resultText}>
-                    <Text style={styles.opacityText}>
-                      최근 반응속도 : {commaRecentClickTime} ms
-                    </Text>
-                    <Text style={styles.opacityText}>
-                      평균 반응속도 : {commaRecentStepClickTimesAvg} ms
-                    </Text>
-                  </View>
-                ) : (
-                  ''
-                )}
-              </View>
-            </View>
-          </View>
+            </GlassCard>
+          </>
         )}
       </View>
     </LinearGradient>
@@ -222,17 +225,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     gap: 35,
     backgroundColor: 'rgba(255, 255, 255, 0.600)',
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-    borderWidth: 1,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 8,
   },
   headerBox: {
     justifyContent: 'center',

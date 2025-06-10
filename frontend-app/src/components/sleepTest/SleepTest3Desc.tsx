@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from '@/components/common/Button';
 import { colors } from '@/constants/colors';
+import { GlassCard } from '../common/Card';
 import { RootStackParamList } from '@/App';
 import { useEffect, useRef } from 'react';
 
@@ -67,7 +68,7 @@ export default function SleepTest3Desc() {
           source={require('@/assets/focuz_name_logo.png')}
           style={styles.nameLogoImage}
         />
-        <View
+        <GlassCard
           style={[
             styles.container,
             { width: containerWidth, height: containerHeight },
@@ -101,7 +102,7 @@ export default function SleepTest3Desc() {
             style={styles.button}
             onPress={goToSleepTest3}
           />
-        </View>
+        </GlassCard>
       </View>
     </LinearGradient>
   );
@@ -122,17 +123,6 @@ const styles = StyleSheet.create({
     padding: 30,
     gap: 35,
     backgroundColor: 'rgba(255, 255, 255, 0.600)',
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-    borderWidth: 1,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 8,
   },
   textContainer: {
     flex: 1,

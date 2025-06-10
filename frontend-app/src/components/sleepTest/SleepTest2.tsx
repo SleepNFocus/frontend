@@ -13,9 +13,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from '@/components/common/Button';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
+import { GlassCard } from '../common/Card';
 
 const MAX_NUM = 9;
-const TIMER_SECOND = 60000;
+const TIMER_SECOND = 10000;
 const RANDOM_SYMBOL = ['♥︎', '✦', '♠︎', '▲', '◉', '★', '▼', '☗', '◆'];
 
 function randomArray(array: string[]) {
@@ -137,10 +138,6 @@ export default function SleepTest2() {
       end={{ x: 0, y: 1 }}
     >
       <View style={styles.container}>
-        <Image
-          source={require('@/assets/focuz_name_logo.png')}
-          style={styles.nameLogoImage}
-        />
         {gameOver ? (
           <View style={styles.resultBox}>
             <Image
@@ -183,7 +180,11 @@ export default function SleepTest2() {
           </View>
         ) : (
           <>
-            <View
+            <Image
+              source={require('@/assets/focuz_name_logo.png')}
+              style={styles.nameLogoImage}
+            />
+            <GlassCard
               style={[
                 styles.secContainer,
                 { width: containerWidth, height: containerHeight },
@@ -216,7 +217,7 @@ export default function SleepTest2() {
                   </TouchableOpacity>
                 ))}
               </View>
-            </View>
+            </GlassCard>
           </>
         )}
       </View>
@@ -245,17 +246,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     gap: 25,
     backgroundColor: 'rgba(255, 255, 255, 0.600)',
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-    borderWidth: 1,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 8,
   },
   resultBox: {
     flex: 1,

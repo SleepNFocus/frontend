@@ -12,6 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from 'expo-router';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
+import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 
 type RoundInfo = {
@@ -193,7 +194,7 @@ export default function SleepTest3() {
           source={require('@/assets/focuz_name_logo.png')}
           style={styles.nameLogoImage}
         />
-        <View
+        <GlassCard
           style={[
             styles.container,
             { width: containerWidth, height: containerHeight },
@@ -234,7 +235,7 @@ export default function SleepTest3() {
               );
             })}
           </View>
-        </View>
+        </GlassCard>
       </View>
     </LinearGradient>
   );
@@ -256,17 +257,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     gap: 25,
     backgroundColor: 'rgba(255, 255, 255, 0.600)',
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-    borderWidth: 1,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 8,
   },
   resultBox: {
     flex: 1,

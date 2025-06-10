@@ -8,6 +8,7 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ResultChart from '@/components/chart/ResultChart';
 import { LinearGradient } from 'expo-linear-gradient';
+import { GlassCard } from '@/components/common/Card';
 import { Button } from '@/components/common/Button';
 import { useNavigation } from 'expo-router';
 import { colors } from '@/constants/colors';
@@ -35,9 +36,9 @@ export default function SleepTestResult() {
       end={{ x: 0, y: 1 }}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.root}></View>
+        {/* <View style={styles.root}></View> */}
         <View style={styles.root}>
-          <View style={[styles.container, { width: containerWidth }]}>
+          <GlassCard style={[styles.container, { width: containerWidth }]}>
             <Text style={styles.mainTitle}> 수면 테스트 측정 완료 </Text>
             <ResultChart />
 
@@ -96,7 +97,7 @@ export default function SleepTestResult() {
               style={styles.button}
               onPress={goToDashboard}
             />
-          </View>
+          </GlassCard>
         </View>
       </ScrollView>
     </LinearGradient>
@@ -125,17 +126,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     gap: 40,
     backgroundColor: 'rgba(255, 255, 255, 0.750)',
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-    borderWidth: 1,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 8,
   },
   mainTitle: {
     fontSize: 22,
