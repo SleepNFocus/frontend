@@ -34,55 +34,57 @@ const Analytics = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      {/* 사용자 통계 차트 */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold mb-4">사용자 통계</h2>
-        <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={lineData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="value" stroke="#8884d8" />
-            </LineChart>
-          </ResponsiveContainer>
+    <div className="p-6">
+      <div className="space-y-6">
+        {/* 사용자 통계 차트 */}
+        <div className="bg-white rounded-lg shadow-md border border-mediumLightGray p-6">
+          <h2 className="text-xl font-semibold mb-4 text-textColor">사용자 통계</h2>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={lineData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#DFE3EA" />
+                <XAxis dataKey="name" stroke="#0F1C36" />
+                <YAxis stroke="#0F1C36" />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="value" stroke="#5A6EA3" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-      </div>
 
-      {/* 주간 테스트 통계 차트 */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold mb-4">주간 테스트 통계</h2>
-        <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={barData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="value" fill="#82ca9d" />
-            </BarChart>
-          </ResponsiveContainer>
+        {/* 주간 테스트 통계 차트 */}
+        <div className="bg-white rounded-lg shadow-md border border-mediumLightGray p-6">
+          <h2 className="text-xl font-semibold mb-4 text-textColor">주간 테스트 통계</h2>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={barData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#DFE3EA" />
+                <XAxis dataKey="name" stroke="#0F1C36" />
+                <YAxis stroke="#0F1C36" />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="value" fill="#5A6EA3" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-      </div>
 
-      {/* 수면 데이터 분석 차트 */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold mb-4">수면 데이터 분석</h2>
-        <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={lineData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="value" stroke="#8884d8" />
-            </LineChart>
-          </ResponsiveContainer>
+        {/* 수면 데이터 분석 차트 */}
+        <div className="bg-white rounded-lg shadow-md border border-mediumLightGray p-6">
+          <h2 className="text-xl font-semibold mb-4 text-textColor">수면 데이터 분석</h2>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={lineData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#DFE3EA" />
+                <XAxis dataKey="name" stroke="#0F1C36" />
+                <YAxis stroke="#0F1C36" />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="value" stroke="#5A6EA3" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
     </div>
