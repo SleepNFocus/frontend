@@ -39,49 +39,48 @@ const UserManagement = () => {
   );
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">사용자 관리</h1>
+    <div className="p-6">
       
       {/* 검색 입력창 */}
       <div className="mb-6">
         <input
           type="text"
           placeholder="사용자 검색..."
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full px-4 py-2 border border-mediumLightGray rounded-lg focus:outline-none focus:ring-2 focus:ring-softBlue focus:border-transparent"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 
       {/* 사용자 목록 */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white rounded-lg shadow-md border border-mediumLightGray p-6">
         <div className="overflow-x-auto">
           <table className="min-w-full">
             <thead>
-              <tr className="bg-gray-50">
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이름</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이메일</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">역할</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">마지막 로그인</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">작업</th>
+              <tr className="bg-lightGray">
+                <th className="px-6 py-3 text-left text-xs font-medium text-textColor uppercase tracking-wider">이름</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-textColor uppercase tracking-wider">이메일</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-textColor uppercase tracking-wider">역할</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-textColor uppercase tracking-wider">마지막 로그인</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-textColor uppercase tracking-wider">작업</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-mediumLightGray">
               {filteredUsers.map(user => (
-                <tr key={user.id} onClick={() => setSelectedUser(user)} className="cursor-pointer hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                <tr key={user.id} onClick={() => setSelectedUser(user)} className="cursor-pointer hover:bg-lightGray">
+                  <td className="px-6 py-4 whitespace-nowrap text-textColor">{user.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-textColor">{user.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'
+                      user.role === 'admin' ? 'bg-deepNavy bg-opacity-10 text-deepNavy' : 'bg-softBlue bg-opacity-10 text-softBlue'
                     }`}>
                       {user.role === 'admin' ? '관리자' : '일반 사용자'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.lastLogin}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <button className="text-indigo-600 hover:text-indigo-900 mr-4">수정</button>
-                    <button className="text-red-600 hover:text-red-900">삭제</button>
+                  <td className="px-6 py-4 whitespace-nowrap text-textColor">{user.lastLogin}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <button className="text-softBlue hover:text-deepNavy mr-4">수정</button>
+                    <button className="text-red-600 hover:text-red-800">삭제</button>
                   </td>
                 </tr>
               ))}
@@ -92,24 +91,24 @@ const UserManagement = () => {
 
       {/* 선택된 사용자 상세 정보 */}
       {selectedUser && (
-        <div className="mt-6 bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold mb-4">사용자 상세 정보</h2>
+        <div className="mt-6 bg-white rounded-lg shadow-md border border-mediumLightGray p-6">
+          <h2 className="text-2xl font-bold mb-4 text-textColor">사용자 상세 정보</h2>
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-gray-500">이름</p>
-              <p className="text-lg">{selectedUser.name}</p>
+              <p className="text-sm text-softBlue">이름</p>
+              <p className="text-lg text-textColor">{selectedUser.name}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">이메일</p>
-              <p className="text-lg">{selectedUser.email}</p>
+              <p className="text-sm text-softBlue">이메일</p>
+              <p className="text-lg text-textColor">{selectedUser.email}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">역할</p>
-              <p className="text-lg">{selectedUser.role === 'admin' ? '관리자' : '일반 사용자'}</p>
+              <p className="text-sm text-softBlue">역할</p>
+              <p className="text-lg text-textColor">{selectedUser.role === 'admin' ? '관리자' : '일반 사용자'}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">마지막 로그인</p>
-              <p className="text-lg">{selectedUser.lastLogin}</p>
+              <p className="text-sm text-softBlue">마지막 로그인</p>
+              <p className="text-lg text-textColor">{selectedUser.lastLogin}</p>
             </div>
           </div>
         </div>
