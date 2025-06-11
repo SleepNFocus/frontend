@@ -26,8 +26,10 @@ import SleepTest3 from './components/sleepTest/SleepTest3';
 import SleepTestResult from './app/test/SleepTestResult';
 import { PrivacyNotice } from './app/tabs/PrivacyNotice';
 import { Loading } from './app/tabs/Loading';
+import LandingPage from './app/landing/LandingPage';
 
 export type RootStackParamList = {
+  LandingPage: undefined;
   Dashboard: undefined;
   DailyCheck: undefined;
   History: undefined;
@@ -60,11 +62,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Dashboard"
-        screenOptions={{
-          headerShown: false,
-        }}
+        initialRouteName="LandingPage"
+        screenOptions={{ headerShown: false }}
       >
+        <Stack.Screen name="LandingPage" component={LandingPage} />
         <Stack.Screen name="Dashboard" component={DashboardMain} />
         <Stack.Screen name="DailyCheck">
           {() => (
