@@ -1,18 +1,23 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { View, Text, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Button } from '@/components/common/Button';
+import { View, StyleSheet } from 'react-native';
+import { Text } from '@/components/common/Text';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
+import { useEffect } from 'react';
 
 export default function SleepTestMain() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  function goToSleepTestDesc() {
-    navigation.navigate('SleepTestDesc');
-  }
+  useEffect(() => {
+    const timeOut = setTimeout(() => {
+      navigation.navigate('SleepTestDesc');
+    }, 2000);
+
+    return () => clearTimeout(timeOut);
+  }, []);
 
   return (
     <LinearGradient
@@ -22,19 +27,12 @@ export default function SleepTestMain() {
       end={{ x: 0, y: 1 }}
     >
       <View style={styles.mainBox}>
-        <Image
-          source={require('@/assets/focuz_text_logo.png')}
-          style={styles.textLogoImage}
-        />
-        <View style={styles.btnBox}>
-          <Text style={styles.mainText}> 수면 테스트를 진행합니다. </Text>
-          <Button
-            title="시작"
-            variant="primary"
-            style={styles.button}
-            onPress={goToSleepTestDesc}
-          />
-        </View>
+        <Text variant="displayMedium" style={styles.title}>
+          FOCUZ
+        </Text>
+        <Text variant="displayMedium" style={styles.mainText}>
+          수면 테스트를 진행합니다.
+        </Text>
       </View>
     </LinearGradient>
   );
@@ -46,15 +44,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  title: {
+    fontWeight: 'bold',
+  },
   mainBox: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 70,
-  },
-  btnBox: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    gap: 30,
   },
   mainText: {
     fontWeight: 'bold',
@@ -68,23 +65,5 @@ const styles = StyleSheet.create({
       height: 2,
     },
     textShadowRadius: 2,
-  },
-  button: {
-    width: 100,
-    paddingVertical: 12,
-    borderRadius: 10,
-    backgroundColor: '#3F4F80',
-    alignItems: 'center',
-    shadowColor: '#909090',
-    shadowOffset: {
-      width: 4,
-      height: 4,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
-  },
-  textLogoImage: {
-    width: 230,
-    height: 60,
   },
 });
