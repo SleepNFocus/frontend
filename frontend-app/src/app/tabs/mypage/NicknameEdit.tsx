@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import {
   View,
-  Text,
   TextInput,
   StyleSheet,
   TouchableOpacity,
@@ -11,6 +10,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { colors } from '@/constants/colors';
+import { Text } from '@/components/common/Text';
+import { Layout } from '@/components/common/Layout';
+import { Card } from '@/components/common/Card';
+import { BackButton } from '@/components/common/BackButton';
+import { Button } from '@/components/common/Button';
 
 const NicknameEdit = () => {
   const navigation = useNavigation();
@@ -55,48 +59,50 @@ const NicknameEdit = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={24} color="#fff" />
-        </TouchableOpacity>
-        <Text style={styles.title}>닉네임 변경</Text>
+    <Layout>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <BackButton color={colors.deepNavy} />
+          <Text variant="titleMedium" style={styles.title}>닉네임 변경</Text>
+        </View>
+
+        <Card style={styles.card}>
+          <Text variant="bodyMedium" style={styles.label}>새로운 닉네임을 입력해주세요</Text>
+
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={[
+                styles.input,
+                !isValid && nickname ? styles.inputError : null,
+              ]}
+              placeholder="닉네임 입력..."
+              placeholderTextColor={colors.mediumGray}
+              value={nickname}
+              onChangeText={setNickname}
+            />
+            {nickname.length > 0 && (
+              <TouchableOpacity onPress={() => setNickname('')}>
+                <Ionicons name="close-circle" size={20} color={colors.mediumGray} />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {!isValid && nickname.length > 0 && (
+            <Text variant="bodySmall" style={styles.warning}>
+              닉네임은 한글, 영문, 숫자만 입력 가능합니다.
+            </Text>
+          )}
+
+          <Button
+            title="변경 완료"
+            onPress={handleSave}
+            variant="primary"
+            disabled={!isValid}
+            style={styles.button}
+          />
+        </Card>
       </View>
-
-      <Text style={styles.label}>새로운 닉네임을 입력해주세요</Text>
-
-      <View style={styles.inputWrapper}>
-        <TextInput
-          style={[
-            styles.input,
-            !isValid && nickname ? styles.inputError : null,
-          ]}
-          placeholder="닉네임 입력..."
-          placeholderTextColor="#999"
-          value={nickname}
-          onChangeText={setNickname}
-        />
-        {nickname.length > 0 && (
-          <TouchableOpacity onPress={() => setNickname('')}>
-            <Ionicons name="close-circle" size={20} color="#aaa" />
-          </TouchableOpacity>
-        )}
-      </View>
-
-      {!isValid && nickname.length > 0 && (
-        <Text style={styles.warning}>
-          닉네임은 한글, 영문, 숫자만 입력 가능합니다.
-        </Text>
-      )}
-
-      <TouchableOpacity
-        style={[styles.button, !isValid && styles.buttonDisabled]}
-        disabled={!isValid}
-        onPress={handleSave}
-      >
-        <Text style={styles.buttonText}>변경 완료</Text>
-      </TouchableOpacity>
-    </View>
+    </Layout>
   );
 };
 
@@ -105,8 +111,7 @@ export default NicknameEdit;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.deepNavy,
-    padding: 24,
+    padding: 12,
   },
   header: {
     flexDirection: 'row',
@@ -115,49 +120,46 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   title: {
-    color: colors.textColor,
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: colors.deepNavy,
+  },
+  card: {
+    backgroundColor: colors.white,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: colors.mediumLightGray,
+    shadowColor: colors.midnightBlue,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 10,
   },
   label: {
-    color: colors.textColor,
-    fontSize: 14,
+    color: colors.deepNavy,
     marginBottom: 8,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.midnightBlue,
+    backgroundColor: colors.lightGray,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
     marginBottom: 8,
+    borderWidth: 1,
+    borderColor: colors.mediumLightGray,
   },
   input: {
     flex: 1,
-    color: colors.textColor,
-    fontSize: 14,
+    color: colors.deepNavy,
   },
   inputError: {
     borderColor: colors.softOrange,
-    borderWidth: 1,
   },
   warning: {
     color: colors.softOrange,
-    fontSize: 12,
     marginBottom: 16,
   },
   button: {
-    backgroundColor: colors.softBlue,
-    padding: 12,
-    borderRadius: 8,
-  },
-  buttonDisabled: {
-    backgroundColor: colors.mediumGray,
-  },
-  buttonText: {
-    color: colors.white,
-    textAlign: 'center',
-    fontWeight: 'bold',
+    marginTop: 12,
   },
 });

@@ -15,6 +15,18 @@ export const colors = {
   mediumLightGray: '#DFE3EA',
   mediumGray: '#CBD3DF',
   white: '#FFFFFF',
+
+  // New Colors
+  red: '#EF4444',      // error
+  green: '#22C55E',    // success
+  blue: '#3B82F6',     // info
+  yellow: '#EAB308',   // warning
+
+  // Score Feedback Colors
+  scoreExcellent: '#22C55E',    // 90점 이상
+  scoreGood: '#A3E635',         // 70-89점 (비비드한 연두색)
+  scoreNormal: '#FF9800',       // 50-69점
+  scorePoor: '#EF4444',     // 50점 미만
 } as const;
 
 // TypeScript 타입 정의

@@ -1,16 +1,13 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Navbar from '../../components/common/Navbar';
-import { Text } from '../../components/common/Text';
+import { Layout } from '@/components/common/Layout';
 
 export const DailyCheckPage: React.FC = () => {
   return (
-    <View style={styles.container}>
-      <Navbar />
+    <Layout>
       <View style={styles.content}>
-        <Text style={styles.title}>데일리 체크</Text>
       </View>
-    </View>
+    </Layout>
   );
 };
 

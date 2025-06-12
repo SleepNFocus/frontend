@@ -13,15 +13,13 @@ export const HistoryPage: React.FC = () => {
       <Navbar />
       <ScrollView contentContainerStyle={styles.content}>
         <Card style={styles.card}>
-          <Text variant="titleMedium" style={styles.title}>아직 기록이 없어요</Text>
-          <Text variant="bodyMedium" style={styles.subText}>
-            여기에 수면 및 집중력 테스트 기록이 표시될 거예요
-          </Text>
+          <Text style={styles.sectionTitle}>아직 기록이 없어요</Text>
+          <Text style={styles.sectionLabel}>여기에 수면 및 집중력 테스트 기록이 표시될 거예요</Text>
         </Card>
         <Card style={styles.card}>
-          <Text variant="titleMedium" style={styles.title}>수면 기록 목록</Text>
-          <Text variant="titleMedium" style={styles.title}>테스트 결과 목록</Text>
-          <Text variant="bodyMedium" style={styles.subText}>갤러리 뷰 / 리스트 뷰 전환</Text>
+          <Text style={styles.sectionTitle}>수면 기록 목록</Text>
+          <Text style={styles.sectionTitle}>테스트 결과 목록</Text>
+          <Text style={styles.sectionLabel}>갤러리 뷰 / 리스트 뷰 전환</Text>
         </Card>
       </ScrollView>
     </Layout>
@@ -31,7 +29,7 @@ export const HistoryPage: React.FC = () => {
 const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
-    padding: spacing.lg,
+    padding: spacing.lg / 2,
     gap: spacing.lg,
     alignItems: 'center',
     justifyContent: 'center',
@@ -39,26 +37,30 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
     borderRadius: spacing.lg,
-    padding: spacing.xl,
+    padding: spacing.lg,
     width: '100%',
     maxWidth: 400,
     borderWidth: 1,
     borderColor: colors.mediumLightGray,
     shadowColor: colors.textColor,
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 10,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 6,
   },
-  title: {
-    color: colors.textColor,
-    fontSize: fontSize.lg,
+  sectionTitle: {
+    color: colors.deepNavy,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    textAlign: 'center',
   },
-  subText: {
-    color: colors.mediumGray,
-    fontSize: fontSize.md,
+  sectionLabel: {
+    color: colors.midnightBlue,
+    fontSize: 14,
+    fontWeight: '400',
+    marginBottom: 8,
+    textAlign: 'center',
   },
 });
 

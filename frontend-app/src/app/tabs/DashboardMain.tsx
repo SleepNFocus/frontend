@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from 'react';
 import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Navbar from '@/components/common/Navbar';
+import { Layout } from '@/components/common/Layout';
 import { GreetingCard } from '@/components/sleep/GreetingCard';
 import { Card } from '@/components/common/Card';
 import { HexagonRadarChart } from '@/components/test/HexagonRadarChart';
@@ -76,8 +76,8 @@ const scoreDetails = [
 const AbilityProfileCard: React.FC<AbilityProfileCardProps> = memo(({ data, labels, sleepScore }) => {
   return (
     <Card style={styles.abilityCard}>
-      <Text style={styles.sectionLabel}>오늘의 수면 점수: {sleepScore ?? '-'}점</Text>
       <Text style={styles.sectionTitle}>나의 인지 능력 프로필</Text>
+      <Text style={styles.sectionLabel}>오늘의 수면 점수: {sleepScore ?? '-'}점</Text>
       <View style={styles.chartContainer}>
         <HexagonRadarChart data={data} labels={labels} />
       </View>
@@ -154,42 +154,35 @@ export const DashboardMain: React.FC = memo(() => {
 
   return (
     <ErrorBoundary>
-      <View style={styles.root}>
-        <Navbar />
-        <LinearGradient
-          colors={[colors.softBlue, colors.white]}
-          style={styles.gradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
+      <Layout>
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
         >
-          <ScrollView 
-            style={styles.scrollView}
-            contentContainerStyle={[styles.scrollContent, { paddingBottom: spacing.xxl * 4 }]}
-          >
-            <Card style={styles.greetingWrap}>
-              <GreetingCard userName="닉네임" />
-            </Card>
-            
-            <AbilityProfileCard 
-              data={cognitionData.data}
-              labels={cognitionData.labels}
-            />
+          <Card style={styles.greetingWrap}>
+            <GreetingCard userName="닉네임" />
+          </Card>
+          
+          <AbilityProfileCard 
+            data={cognitionData.data}
+            labels={cognitionData.labels}
+          />
 
-            <ScoreDetailCard 
-              details={scoreDetails}
-              averageScore={averageScore}
-            />
+          <ScoreDetailCard 
+            details={scoreDetails}
+            averageScore={averageScore}
+          />
 
-            <Card style={styles.summarySection}>
-              <SummaryCard />
-            </Card>
+          <Card style={styles.summarySection}>
+            <SummaryCard />
+          </Card>
 
-            <View style={styles.checkinSection}>
-              <CheckinCard onCheckin={() => navigation.navigate('SleepRecord')} />
-            </View>
-          </ScrollView>
-        </LinearGradient>
-      </View>
+          <View style={styles.checkinSection}>
+            <CheckinCard onCheckin={() => navigation.navigate('SleepRecord')} />
+          </View>
+        </ScrollView>
+      </Layout>
     </ErrorBoundary>
   );
 });
@@ -212,27 +205,26 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    padding: spacing.lg,
-    gap: spacing.lg,
+    padding: 16,
+    gap: 12
   },
   greetingWrap: {
     width: '100%',
-    padding: spacing.lg,
-    borderRadius: spacing.lg,
+    padding: 16,
+    borderRadius: 8,
     backgroundColor: colors.white,
   },
   abilityCard: {
-    padding: spacing.lg,
-    borderRadius: spacing.lg,
+    padding: 16,
+    borderRadius: 8,
     backgroundColor: colors.white,
   },
   chartContainer: {
     alignItems: 'center',
-    marginTop: spacing.lg,
   },
   detailCard: {
-    padding: spacing.lg,
-    borderRadius: spacing.lg,
+    padding: 16,
+    borderRadius: 8,
     backgroundColor: colors.white,
   },
   summarySection: {
@@ -243,19 +235,19 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     color: colors.midnightBlue,
-    fontSize: fontSize.sm,
+    fontSize: fontSize.md,
     fontWeight: 'bold',
     marginBottom: spacing.sm,
   },
   sectionTitle: {
-    color: colors.deepNavy,
-    fontSize: fontSize.xl,
+    color: colors.textColor,
+    fontSize: fontSize.lg,
     fontWeight: 'bold',
     marginBottom: spacing.lg,
   },
   avgScore: {
     color: colors.midnightBlue,
-    fontSize: fontSize.sm,
+    fontSize: fontSize.md,
     marginBottom: spacing.lg,
   },
   avgScorePoint: {
@@ -263,12 +255,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   scoreCardList: {
-    gap: spacing.sm,
+    gap: 16,
   },
   scoreCard: {
     backgroundColor: colors.lightGray,
-    borderRadius: spacing.sm,
-    padding: spacing.lg,
+    borderRadius: 8,
+    padding: 16,
   },
   scoreCardRow: {
     flexDirection: 'row',
@@ -286,18 +278,17 @@ const styles = StyleSheet.create({
   scoreCardValue: {
     color: colors.midnightBlue,
     fontSize: fontSize.xs,
-    marginTop: spacing.xs,
   },
   scoreCardPoint: {
     color: colors.softBlue,
-    fontSize: fontSize.xl,
+    fontSize: fontSize.lg,
     fontWeight: 'bold',
   },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: spacing.lg,
+    padding: 16,
   },
   errorText: {
     color: colors.midnightBlue,
