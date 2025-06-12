@@ -30,16 +30,16 @@ export const Button: React.FC<ButtonProps> = ({
   // variant에 따라 버튼 배경 스타일 반환
   const getButtonStyle = () => {
     switch (variant) {
-      case 'secondary':
-        return { backgroundColor: colors.softBlue };
       case 'outline':
         return {
           backgroundColor: 'transparent',
           borderWidth: 1,
-          borderColor: colors.deepNavy,
+          borderColor: colors.softBlue,
         };
+      case 'secondary':
+        return { backgroundColor: colors.midnightBlue };
       default:
-        return { backgroundColor: colors.deepNavy };
+        return { backgroundColor: colors.softBlue };
     }
   };
 
@@ -47,7 +47,9 @@ export const Button: React.FC<ButtonProps> = ({
   const getTextStyle = () => {
     switch (variant) {
       case 'outline':
-        return { color: colors.deepNavy };
+        return { color: colors.softBlue };
+      case 'secondary':
+        return { color: colors.white };
       default:
         return { color: colors.white };
     }

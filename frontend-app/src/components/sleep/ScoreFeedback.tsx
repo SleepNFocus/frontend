@@ -3,6 +3,16 @@ import { View, StyleSheet } from 'react-native';
 import { Text, Card } from 'react-native-paper';
 import { ScoreBreakdown } from '@/app/types/sleep';
 import { colors } from '@/constants/colors';
+import { Button } from '@/components/common/Button';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+type RootStackParamList = {
+  SleepRecord: undefined;
+  SleepTest: undefined;
+};
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 interface ScoreFeedbackProps {
   score: number;
@@ -13,6 +23,8 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({
   score,
   scoreBreakdown,
 }) => {
+  const navigation = useNavigation<NavigationProp>();
+
   const getFeedback = (score: number) => {
     if (score >= 90) {
       return {
@@ -20,7 +32,7 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({
         title: '최고의 수면!',
         message:
           '완벽한 수면 습관을 가지고 계시는군요! 오늘 하루도 활기차게 시작하세요!',
-        color: '#4CAF50',
+        color: colors.scoreExcellent,
       };
     }
     if (score >= 70) {
@@ -29,7 +41,7 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({
         title: '좋은 수면!',
         message:
           '건강한 수면 패턴을 잘 유지하고 계세요. 작은 개선으로 더 완벽해질 수 있어요.',
-        color: '#8BC34A',
+        color: colors.scoreGood,
       };
     }
     if (score >= 50) {
@@ -37,7 +49,7 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({
         emoji: '🤔',
         title: '보통 수면.',
         message: '괜찮지만, 조금 더 신경 쓰면 수면의 질을 높일 수 있어요.',
-        color: '#FF9800',
+        color: colors.scoreNormal,
       };
     }
     return {
@@ -45,7 +57,7 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({
       title: '개선이 필요한 수면.',
       message:
         '수면 습관을 점검하고 개선해 보세요. 가장 점수가 낮은 부분부터 시작해보세요.',
-      color: '#F44336',
+      color: colors.scorePoor,
     };
   };
 
@@ -208,5 +220,8 @@ const styles = StyleSheet.create({
   scoreValue: {
     fontWeight: 'bold',
     color: colors.softBlue,
+  },
+  button: {
+    marginTop: 24,
   },
 });

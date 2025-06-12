@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Image } from 'react-native';
 import { Navbar } from './Navbar';
 import { colors } from '@/constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
+import Modal from '@/components/common/Modal';
 
 // Layout 컴포넌트의 props 타입 정의
 interface LayoutProps {
@@ -20,8 +21,16 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
       >
-        <Navbar />
+        <View style={styles.logoContainer}>
+          <Image source={require('@/assets/focuz_name_logo.png')} style={styles.logo} resizeMode="contain" />
+        </View>
         <View style={styles.content}>{children}</View>
+        <Navbar />
+        <Modal type="success" />
+        <Modal type="error" />
+        <Modal type="warning" />
+        <Modal type="info" />
+        <Modal type="confirm" />
       </LinearGradient>
     </SafeAreaView>
   );
@@ -34,6 +43,15 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  logo: {
+    width: 100,
+    height: 20,
+    marginBottom: 0,
   },
   content: {
     flex: 1,

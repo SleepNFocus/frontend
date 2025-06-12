@@ -19,17 +19,7 @@ const MyPage = () => {
     <Layout>
       <ProfileCard />
 
-      <Card>
-        <Text variant="titleMedium" style={styles.title}>데이터 관리</Text>
-        <Button
-          title="설정"
-          variant="outline"
-          onPress={() => handleNavigate('Settings')}
-          style={styles.menuItem}
-        />
-      </Card>
-
-      <Card>
+      <Card style={styles.infoCard}>
         <Text variant="titleMedium" style={styles.title}>정보</Text>
         <Button
           title="개인정보처리방침"
@@ -64,15 +54,29 @@ const MyPage = () => {
 export default MyPage;
 
 const styles = StyleSheet.create({
+  infoCard: {
+    marginBottom: 24,
+    padding: 24,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: colors.mediumLightGray,
+    shadowColor: colors.midnightBlue,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 10,
+  },
   title: {
     color: colors.deepNavy,
-    marginBottom: 10,
+    marginBottom: 16,
   },
   menuItem: {
-    marginBottom: 8,
+    marginBottom: 12,
   },
   logoutBtn: {
-    marginTop: 12,
+    marginTop: 24,
+    marginBottom: 16,
     alignSelf: 'center',
+    width: '100%',
   },
 });

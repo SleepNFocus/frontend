@@ -5,41 +5,43 @@ import { Layout } from '@/components/common/Layout';
 import { Text } from '@/components/common/Text';
 import { colors } from '@/constants/colors';
 import ProfileCard from './mypage/ProfileCard';
+import { Button } from '@/components/common/Button';
+import useUiStore from '@/store/uiStore';
+import { useAuthStore } from '@/store/authStore';
 
 export const MorePage: React.FC = () => {
   const navigation = useNavigation();
+  const { openModal } = useUiStore();
+  const { resetAuth } = useAuthStore();
 
-  const handleNavigate = (route: string) => {
-    navigation.navigate(route as never);
+  const handleLogout = () => {
+    openModal('info', {
+      isOpen: true,
+      title: '로그아웃',
+      content: '로그아웃 하시겠습니까?',
+      confirmText: '확인',
+      cancelText: '취소',
+      onConfirm: () => {
+        resetAuth();
+        openModal('success', {
+          isOpen: true,
+          title: '로그아웃 완료',
+          content: '로그아웃 되었습니다.',
+          confirmText: '확인',
+        });
+        navigation.navigate('SocialLogin' as never);
+      },
+    });
   };
 
   return (
     <Layout>
       <ScrollView
-        contentContainerStyle={{
-          padding: 20,
-          paddingBottom: 80,
-          gap: 24,
-          flexGrow: 1,
-        }}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
       >
         <ProfileCard />
-
-        <View style={styles.card}>
-          <Text style={styles.title}>데이터 관리</Text>
-          <TouchableOpacity 
-            style={styles.menuItem}
-            onPress={() => handleNavigate('History')}
-          >
-            <Text style={styles.subText}>기록 보기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.menuItem}
-            onPress={() => handleNavigate('Settings')}
-          >
-            <Text style={styles.subText}>설정</Text>
-          </TouchableOpacity>
-        </View>
 
         <View style={styles.card}>
           <Text style={styles.title}>정보</Text>
@@ -56,12 +58,12 @@ export const MorePage: React.FC = () => {
           </View>
         </View>
 
-        <TouchableOpacity 
-          style={styles.logoutBtn}
-          onPress={() => handleNavigate('SocialLogin')}
-        >
-          <Text style={styles.logoutBtnText}>로그아웃</Text>
-        </TouchableOpacity>
+        <Button
+          title="로그아웃"
+          onPress={handleLogout}
+          variant="primary"
+          style={styles.button}
+        />
       </ScrollView>
     </Layout>
   );
@@ -70,10 +72,18 @@ export const MorePage: React.FC = () => {
 export default MorePage;
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    padding: 12,
+    gap: 12
+  },
   card: {
     backgroundColor: colors.white,
-    borderRadius: 20,
-    padding: 24,
+    borderRadius: 8,
+    padding: 16,
     width: '100%',
     borderWidth: 1,
     borderColor: colors.mediumLightGray,
@@ -87,36 +97,19 @@ const styles = StyleSheet.create({
     color: colors.deepNavy,
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   subText: {
     color: colors.midnightBlue,
     fontSize: 14,
-    marginBottom: 8,
   },
   linkGroup: {
-    marginTop: 12,
+    marginTop: 8,
   },
   menuItem: {
     paddingVertical: 8,
   },
-  logoutBtn: {
-    backgroundColor: colors.softBlue,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    marginTop: 12,
-    alignSelf: 'center',
-    shadowColor: colors.midnightBlue,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  logoutBtnText: {
-    color: colors.white,
-    fontSize: 14,
-    fontWeight: '600',
-    textAlign: 'center',
+  button: {
+    marginTop: 8,
   },
 });
