@@ -4,7 +4,6 @@ import logo from '../../assets/LOGO.png';
 const AdminNavigator = () => {
   const location = useLocation();
   const navItems = [
-    { to: '/', label: '홈' },
     { to: '/admin', label: '대시보드' },
     { to: '/admin/users', label: '사용자 관리' },
     { to: '/admin/tests', label: '테스트 관리' },
@@ -37,7 +36,9 @@ const AdminNavigator = () => {
               })}
             </div>
             <div className="flex items-center">
-              <img src={logo} alt="Sleep&Focus Logo" className="h-10 w-auto" />
+              <Link to="/">
+                <img src={logo} alt="Sleep&Focus Logo" className="h-10 w-auto" />
+              </Link>
             </div>
           </div>
         </div>
