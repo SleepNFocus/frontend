@@ -10,14 +10,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/store/authStore';
 
 const ProfileCard = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const user = useAuthStore(state => state.user);
 
   return (
     <Card style={styles.wrapper}>
       <View style={styles.headerRow}>
         <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-          <Ionicons name="settings-outline" size={22} color={colors.mediumGray} />
+          <Ionicons
+            name="settings-outline"
+            size={22}
+            color={colors.mediumGray}
+          />
         </TouchableOpacity>
       </View>
 
@@ -27,16 +32,26 @@ const ProfileCard = () => {
       />
 
       <Text variant="titleMedium" style={styles.welcomeText}>
-        <Text variant="titleMedium" style={styles.highlight}>반가워요!</Text> {user?.nickname ?? '-'} 님
+        <Text variant="titleMedium" style={styles.highlight}>
+          반가워요!
+        </Text>{' '}
+        {user?.nickname ?? '-'} 님
       </Text>
 
       <Text variant="bodyMedium" style={styles.trackingText}>
-        수면과 집중력을 추적한지 벌써 <Text variant="bodyMedium" style={styles.days}>__일째</Text>
+        수면과 집중력을 추적한지 벌써{' '}
+        <Text variant="bodyMedium" style={styles.days}>
+          __일째
+        </Text>
       </Text>
 
       <Card style={styles.announceBox}>
-        <Text variant="titleSmall" style={styles.announceText}>인지테스트 하러가기</Text>
-        <Text variant="bodySmall" style={styles.announceSubText}>(매일 달라지는 유도문구)</Text>
+        <Text variant="titleSmall" style={styles.announceText}>
+          인지테스트 하러가기
+        </Text>
+        <Text variant="bodySmall" style={styles.announceSubText}>
+          (매일 달라지는 유도문구)
+        </Text>
         <Text variant="bodySmall" style={styles.announceSubText}>
           게임 완료 시 이 칸이 없어지거나, 그날의 응원문구로 변경됨
         </Text>
@@ -44,20 +59,35 @@ const ProfileCard = () => {
 
       <Card style={styles.sleepSummary}>
         <View style={styles.averageBox}>
-          <Text variant="bodyMedium" style={styles.averageLabel}>총 수면시간</Text>
-          <Text variant="titleMedium" style={styles.averageValue}>6시간 40분</Text>
+          <Text variant="bodyMedium" style={styles.averageLabel}>
+            총 수면시간
+          </Text>
+          <Text variant="titleMedium" style={styles.averageValue}>
+            6시간 40분
+          </Text>
         </View>
         <View style={styles.averageBox}>
-          <Text variant="bodyMedium" style={styles.averageLabel}>평균 점수</Text>
-          <Text variant="titleMedium" style={styles.averageValue}>84점</Text>
+          <Text variant="bodyMedium" style={styles.averageLabel}>
+            평균 점수
+          </Text>
+          <Text variant="titleMedium" style={styles.averageValue}>
+            84점
+          </Text>
         </View>
       </Card>
+
+      <TouchableOpacity onPress={() => navigation.navigate('MyRecord')}>
+        <Card style={styles.recordLinkBox}>
+          <Text variant="bodyMedium" style={styles.recordLinkText}>
+            나의 기록 보기
+          </Text>
+        </Card>
+      </TouchableOpacity>
     </Card>
   );
 };
 
 export default ProfileCard;
-
 const styles = StyleSheet.create({
   wrapper: {
     padding: 24,
@@ -70,6 +100,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 20,
     elevation: 10,
+  },
+  headerRow: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 16,
   },
   profileImage: {
     width: 100,
@@ -126,7 +162,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    marginBottom: 24,
+    marginBottom: 16,
     backgroundColor: colors.white,
     padding: 16,
     borderColor: colors.mediumLightGray,
@@ -150,10 +186,22 @@ const styles = StyleSheet.create({
     color: colors.textColor,
     fontWeight: 'bold',
   },
-  headerRow: {
+
+  recordLinkBox: {
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.mediumLightGray,
+    padding: 16,
     width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginBottom: 16,
+    alignItems: 'center',
+    shadowColor: colors.midnightBlue,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  recordLinkText: {
+    color: colors.softBlue,
+    fontWeight: 'bold',
   },
 });
