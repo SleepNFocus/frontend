@@ -92,7 +92,6 @@ const GlassStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 20,
     padding: 16,
-    marginVertical: 8,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

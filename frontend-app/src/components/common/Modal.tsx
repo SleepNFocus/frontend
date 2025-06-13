@@ -66,32 +66,32 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   errorConfirmButton: {
-    backgroundColor: colors.goldOrange,
+    backgroundColor: colors.red,
   },
   errorCancelButton: {
     borderWidth: 1,
-    borderColor: colors.goldOrange,
+    borderColor: colors.red,
   },
   successConfirmButton: {
-    backgroundColor: colors.softBlue,
+    backgroundColor: colors.green,
   },
   successCancelButton: {
     borderWidth: 1,
-    borderColor: colors.softBlue,
+    borderColor: colors.green,
   },
   warningConfirmButton: {
-    backgroundColor: colors.softOrange,
+    backgroundColor: colors.yellow,
   },
   warningCancelButton: {
     borderWidth: 1,
-    borderColor: colors.softOrange,
+    borderColor: colors.yellow,
   },
   infoConfirmButton: {
-    backgroundColor: colors.midnightBlue,
+    backgroundColor: colors.blue,
   },
   infoCancelButton: {
     borderWidth: 1,
-    borderColor: colors.midnightBlue,
+    borderColor: colors.blue,
   },
   confirmButtonText: {
     color: colors.white,
@@ -107,45 +107,31 @@ const styles = StyleSheet.create({
 
 const ICON_MAP = {
   error: {
-    icon: <Ionicons name="close-circle" size={24} color={colors.goldOrange} />,
+    icon: <Ionicons name="close-circle" size={24} color={colors.red} />,
     confirmStyle: styles.errorConfirmButton,
     cancelStyle: styles.errorCancelButton,
     role: 'alertdialog',
   },
   success: {
-    icon: (
-      <Ionicons name="checkmark-circle" size={24} color={colors.softBlue} />
-    ),
+    icon: <Ionicons name="checkmark-circle" size={24} color={colors.green} />,
     confirmStyle: styles.successConfirmButton,
     cancelStyle: styles.successCancelButton,
     role: 'alertdialog',
   },
   warning: {
-    icon: <Ionicons name="warning" size={24} color={colors.softOrange} />,
+    icon: <Ionicons name="warning" size={24} color={colors.yellow} />,
     confirmStyle: styles.warningConfirmButton,
     cancelStyle: styles.warningCancelButton,
     role: 'alertdialog',
   },
   info: {
-    icon: (
-      <Ionicons
-        name="information-circle"
-        size={24}
-        color={colors.midnightBlue}
-      />
-    ),
+    icon: <Ionicons name="information-circle" size={24} color={colors.blue} />,
     confirmStyle: styles.infoConfirmButton,
     cancelStyle: styles.infoCancelButton,
     role: 'dialog',
   },
   confirm: {
-    icon: (
-      <Ionicons
-        name="information-circle"
-        size={24}
-        color={colors.midnightBlue}
-      />
-    ),
+    icon: <Ionicons name="information-circle" size={24} color={colors.blue} />,
     confirmStyle: styles.infoConfirmButton,
     cancelStyle: styles.infoCancelButton,
     role: 'dialog',

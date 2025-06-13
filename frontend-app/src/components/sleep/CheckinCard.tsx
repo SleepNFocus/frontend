@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '@/constants/colors';
+import { Button } from '@/components/common/Button';
 
 interface CheckinCardProps {
   onCheckin?: () => void;
@@ -12,7 +13,7 @@ interface CheckinCardProps {
 export const CheckinCard: React.FC<CheckinCardProps> = ({ onCheckin }) => {
   return (
     <LinearGradient
-      colors={[colors.midnightBlue, colors.softBlue]}
+      colors={[colors.deepNavy, colors.softBlue]}
       style={styles.root}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
@@ -21,15 +22,13 @@ export const CheckinCard: React.FC<CheckinCardProps> = ({ onCheckin }) => {
       <Text style={styles.desc}>
         지금 2분만 투자하여 오늘의 컨디션을 체크해보세요.
       </Text>
-      <Pressable
-        onPress={onCheckin}
-        style={({ pressed }) => [
-          styles.button,
-          pressed && styles.buttonPressed,
-        ]}
-      >
-        <Text style={styles.buttonLabel}>오늘의 컨디션 체크 & 게임 시작</Text>
-      </Pressable>
+      <Button
+        onPress={onCheckin ?? (() => {})}
+        title="오늘의 컨디션 체크 & 게임 시작"
+        variant="primary"
+        style={{ backgroundColor: colors.white }}
+        textStyle={{ color: colors.textColor }}
+      />
     </LinearGradient>
   );
 };
@@ -37,7 +36,7 @@ export const CheckinCard: React.FC<CheckinCardProps> = ({ onCheckin }) => {
 const styles = StyleSheet.create({
   root: {
     width: '100%',
-    borderRadius: 16,
+    borderRadius: 8,
     padding: 20,
     alignItems: 'stretch',
   },
@@ -58,16 +57,13 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: colors.white,
     borderRadius: 12,
-    paddingHorizontal: 0,
-    paddingVertical: 0,
-    alignItems: 'center',
-    minWidth: 0,
     marginTop: 8,
     height: 44,
     justifyContent: 'center',
-  },
-  buttonPressed: {
-    backgroundColor: colors.lightGray,
+    alignItems: 'center',
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    minWidth: 0,
   },
   buttonLabel: {
     fontSize: 17,

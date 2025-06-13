@@ -73,7 +73,7 @@ export default function SleepTestDesc() {
                 완료까지 약 10~15분 이상 소요될 수 있습니다.
               </Text>
               <Animated.Image
-                source={require('@/assets/focuz_logo1.png')}
+                source={require('@/assets/Logo_Navy.png')}
                 style={[
                   styles.logoImage,
                   { transform: [{ scale: scaleAnim }] },

@@ -518,6 +518,6 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     marginTop: 24,
-    paddingVertical: 8,
+    paddingVertical: 12,
   },
 });

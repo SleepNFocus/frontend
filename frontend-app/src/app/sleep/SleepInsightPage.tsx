@@ -44,10 +44,6 @@ export const SleepInsightsPage: React.FC = () => {
   return (
     <Layout>
       <ScrollView style={styles.container}>
-        <Text variant="headlineMedium" style={styles.title}>
-          AI 인사이트
-        </Text>
-
         <AISleepTips tips={insights?.sleepTips || []} />
         <RoutineRecommendations routines={insights?.routines || []} />
       </ScrollView>

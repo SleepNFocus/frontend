@@ -1,66 +1,60 @@
-import React, { useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet, Modal as RNModal, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import Toast from 'react-native-toast-message';
-import { useAuthStore } from '@/store/authStore';
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import { Text } from '@/components/common/Text';
-import { Button } from '@/components/common/Button';
+import { Card } from '@/components/common/Card';
 import { colors } from '@/constants/colors';
+import { Button } from '@/components/common/Button';
 
-interface Props {
+interface NicknameChangeModalProps {
   visible: boolean;
   onClose: () => void;
-  initialValue?: string;
+  onConfirm: (newNickname: string) => void;
 }
 
-const NicknameChangeModal: React.FC<Props> = ({
+export default function NicknameChangeModal({
   visible,
   onClose,
-  initialValue = '',
-}) => {
-  const [nickname, setNickname] = useState(initialValue);
-  const nicknamevalidity = /^[가-힣a-zA-Z0-9]{2,20}$/;
-  const user = useAuthStore(state => state.user);
-  const setUser = useAuthStore(state => state.setUser);
-
-  useEffect(() => {
-    setNickname(initialValue);
-  }, [initialValue]);
-
-  const isValid = nicknamevalidity.test(nickname);
+  onConfirm,
+}: NicknameChangeModalProps) {
+  const [nickname, setNickname] = useState('');
+  const [isValid, setIsValid] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = () => {
-    if (!user) {
-      Toast.show({
-        type: 'error',
-        text1: '유저 정보가 없습니다.',
-        text2: '현재 Mockup기능만 구현 되어있습니다. ',
-      });
-      return;
+    setSubmitted(true);
+
+    const nicknameSyntax = /^[가-힣a-zA-Z0-9]{2,20}$/;
+    if (nicknameSyntax.test(nickname)) {
+      onConfirm(nickname);
+      setNickname('');
+      setIsValid(true);
+      setSubmitted(false);
+    } else {
+      setIsValid(false);
     }
-
-    if (!isValid) {
-      return;
-    }
-
-    setUser({ ...user, nickname });
-
-    Toast.show({
-      type: 'success',
-      text1: '정상적으로 변경되었습니다.',
-    });
-
-    onClose();
   };
 
   return (
-    <RNModal visible={visible} transparent animationType="fade">
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+    >
       <View style={styles.overlay}>
-        <View style={styles.container}>
+        <Card style={styles.container}>
           <View style={styles.header}>
-            <Text variant="titleMedium" style={styles.title}>닉네임 변경</Text>
+            <Text variant="titleMedium" style={styles.title}>
+              닉네임 변경
+            </Text>
             <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close" size={24} color={colors.white} />
+              <Text style={styles.closeButton}>✕</Text>
             </TouchableOpacity>
           </View>
 
@@ -69,72 +63,81 @@ const NicknameChangeModal: React.FC<Props> = ({
               styles.input,
               !isValid && nickname ? styles.inputError : null,
             ]}
-            placeholder="새 닉네임을 입력하세요"
-            placeholderTextColor={colors.mediumGray}
             value={nickname}
             onChangeText={setNickname}
+            placeholder="새로운 닉네임을 입력하세요"
+            placeholderTextColor={colors.mediumGray}
           />
 
-          {!isValid && nickname.length > 0 && (
+          {!isValid && submitted && (
             <Text variant="bodySmall" style={styles.warning}>
               한글, 영문, 숫자 2~20자 입력 가능
             </Text>
           )}
 
           <Button
-            title="변경 완료"
+            title="변경하기"
             variant="primary"
             onPress={handleSubmit}
-            disabled={!isValid}
             style={styles.button}
           />
-        </View>
+        </Card>
       </View>
-    </RNModal>
+    </Modal>
   );
-};
-
-export default NicknameChangeModal;
+}
 
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: colors.mediumGray,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   container: {
-    backgroundColor: colors.deepNavy,
+    width: '90%',
+    maxWidth: 400,
     padding: 24,
-    borderRadius: 12,
-    width: '80%',
+    borderWidth: 1,
+    borderColor: colors.mediumLightGray,
+    shadowColor: colors.midnightBlue,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 10,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   title: {
-    color: colors.textColor,
+    color: colors.deepNavy,
+  },
+  closeButton: {
+    fontSize: 18,
+    color: colors.mediumGray,
+    padding: 4,
   },
   input: {
-    backgroundColor: colors.midnightBlue,
+    backgroundColor: colors.lightGray,
     color: colors.textColor,
     borderRadius: 8,
-    padding: 12,
-    fontSize: 14,
-    marginBottom: 8,
+    padding: 16,
+    fontSize: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: colors.mediumLightGray,
   },
   inputError: {
     borderColor: colors.softOrange,
-    borderWidth: 1,
   },
   warning: {
     color: colors.softOrange,
-    marginBottom: 12,
+    marginBottom: 16,
   },
   button: {
-    marginTop: 8,
+    marginTop: 12,
   },
 });
