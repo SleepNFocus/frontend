@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Modal, TouchableOpacity, TextInput } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import { Text } from '@/components/common/Text';
 import { Card } from '@/components/common/Card';
 import { colors } from '@/constants/colors';
@@ -11,16 +17,24 @@ interface NicknameChangeModalProps {
   onConfirm: (newNickname: string) => void;
 }
 
-export default function NicknameChangeModal({ visible, onClose, onConfirm }: NicknameChangeModalProps) {
+export default function NicknameChangeModal({
+  visible,
+  onClose,
+  onConfirm,
+}: NicknameChangeModalProps) {
   const [nickname, setNickname] = useState('');
   const [isValid, setIsValid] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = () => {
-    const nicknameRegex = /^[가-힣a-zA-Z0-9]{2,20}$/;
-    if (nicknameRegex.test(nickname)) {
+    setSubmitted(true);
+
+    const nicknameSyntax = /^[가-힣a-zA-Z0-9]{2,20}$/;
+    if (nicknameSyntax.test(nickname)) {
       onConfirm(nickname);
       setNickname('');
       setIsValid(true);
+      setSubmitted(false);
     } else {
       setIsValid(false);
     }
@@ -36,21 +50,26 @@ export default function NicknameChangeModal({ visible, onClose, onConfirm }: Nic
       <View style={styles.overlay}>
         <Card style={styles.container}>
           <View style={styles.header}>
-            <Text variant="titleMedium" style={styles.title}>닉네임 변경</Text>
+            <Text variant="titleMedium" style={styles.title}>
+              닉네임 변경
+            </Text>
             <TouchableOpacity onPress={onClose}>
               <Text style={styles.closeButton}>✕</Text>
             </TouchableOpacity>
           </View>
 
           <TextInput
-            style={[styles.input, !isValid && nickname ? styles.inputError : null]}
+            style={[
+              styles.input,
+              !isValid && nickname ? styles.inputError : null,
+            ]}
             value={nickname}
             onChangeText={setNickname}
             placeholder="새로운 닉네임을 입력하세요"
             placeholderTextColor={colors.mediumGray}
           />
 
-          {!isValid && nickname.length > 0 && (
+          {!isValid && submitted && (
             <Text variant="bodySmall" style={styles.warning}>
               한글, 영문, 숫자 2~20자 입력 가능
             </Text>
