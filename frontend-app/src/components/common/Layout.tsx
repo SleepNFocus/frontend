@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, SafeAreaView, Image } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Navbar } from './Navbar';
 import { colors } from '@/constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,7 +15,7 @@ interface LayoutProps {
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     // SafeAreaView: 노치/엣지 등 안전 영역 보장
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom', 'left', 'right']}>
       <LinearGradient
         colors={[colors.softBlue, colors.white]}
         style={styles.gradient}
