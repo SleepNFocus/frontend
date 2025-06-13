@@ -46,7 +46,7 @@ export const Navbar: React.FC = () => {
 
 const styles = StyleSheet.create({
   navbar: {
-    position: 'fixed',
+    position: Platform.OS === 'web' ? 'fixed' : 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
