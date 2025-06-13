@@ -1,16 +1,15 @@
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   ScrollView,
   useWindowDimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ResultChart from '@/components/chart/ResultChart';
-import { LinearGradient } from 'expo-linear-gradient';
 import { GlassCard } from '@/components/common/Card';
 import { Button } from '@/components/common/Button';
+import { Layout } from '@/components/common/Layout';
 import { useNavigation } from 'expo-router';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
@@ -30,18 +29,9 @@ export default function SleepTestResult() {
   }
 
   return (
-    <LinearGradient
-      colors={[colors.softBlue, colors.white]}
-      style={styles.gradient}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
-    >
+    <Layout>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.root}>
-          <Image
-            source={require('@/assets/focuz_name_logo.png')}
-            style={styles.nameLogoImage}
-          />
           <GlassCard style={[styles.container, { width: containerWidth }]}>
             <Text style={styles.mainTitle}> 수면 테스트 측정 완료 </Text>
             <ResultChart />
@@ -104,29 +94,21 @@ export default function SleepTestResult() {
           </GlassCard>
         </View>
       </ScrollView>
-    </LinearGradient>
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 40,
-    paddingBottom: 100,
+    paddingTop: 10,
+    paddingBottom: 50,
   },
   root: {
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  nameLogoImage: {
-    width: 100,
-    height: 20,
-    marginBottom: 10,
   },
   container: {
     justifyContent: 'space-evenly',

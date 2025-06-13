@@ -8,12 +8,11 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from 'expo-router';
-import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
+import { Layout } from '../common/Layout';
 
 type RoundInfo = {
   gridSize: number;
@@ -44,9 +43,9 @@ export default function SleepTest3() {
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
 
-  const containerHeight = Math.min(windowHeight * 0.8, 1200);
+  const containerHeight = Math.min(windowHeight * 0.77, 1200);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
-  const squareWidth = Math.min(windowWidth * 0.118, 65);
+  const squareWidth = Math.min(windowWidth * 0.118, 80);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
   // 상태관리 객체로 수정해보기
@@ -132,18 +131,9 @@ export default function SleepTest3() {
     const answerPercent = ((totalCorrect / 18) * 100).toFixed(1);
 
     return (
-      <LinearGradient
-        colors={[colors.softBlue, colors.white]}
-        style={styles.gradient}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-      >
+      <Layout>
         <View style={styles.root}>
           <View style={styles.resultBox}>
-            <Image
-              source={require('@/assets/focuz_name_logo.png')}
-              style={styles.nameLogoImage}
-            />
             <Image
               source={require('@/assets/result.png')}
               style={styles.resultImage}
@@ -174,26 +164,17 @@ export default function SleepTest3() {
             />
           </View>
         </View>
-      </LinearGradient>
+      </Layout>
     );
   }
 
   const { gridSize, clickPattern } = rounds[round];
   const totalsquares = gridSize * gridSize;
-  const gridWidth = squareWidth * gridSize * 1.3;
+  const gridWidth = squareWidth * gridSize * 1.2;
 
   return (
-    <LinearGradient
-      colors={[colors.softBlue, colors.white]}
-      style={styles.gradient}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
-    >
+    <Layout>
       <View style={styles.root}>
-        <Image
-          source={require('@/assets/focuz_name_logo.png')}
-          style={styles.nameLogoImage}
-        />
         <GlassCard
           style={[
             styles.container,
@@ -237,14 +218,11 @@ export default function SleepTest3() {
           </View>
         </GlassCard>
       </View>
-    </LinearGradient>
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
   root: {
     flex: 1,
     justifyContent: 'center',
@@ -253,8 +231,8 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    marginTop: 10,
     padding: 30,
-    paddingHorizontal: 20,
     gap: 15,
     backgroundColor: 'rgba(255, 255, 255, 0.600)',
   },
@@ -316,7 +294,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   square: {
-    margin: 5,
+    margin: 3,
     borderRadius: 6,
   },
   result: {
@@ -336,11 +314,6 @@ const styles = StyleSheet.create({
       height: 1,
     },
     textShadowRadius: 2,
-  },
-  nameLogoImage: {
-    width: 100,
-    height: 20,
-    marginBottom: 10,
   },
   resultImage: {
     width: 100,

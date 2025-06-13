@@ -9,11 +9,10 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
+import { Layout } from '../common/Layout';
 
 const MAX_STEP = 5;
 const MIN_WAIT_TIME = 1000;
@@ -35,9 +34,9 @@ export default function SleepTest1() {
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
 
-  const containerHeight = Math.min(windowHeight * 0.8, 1000);
+  const containerHeight = Math.min(windowHeight * 0.75, 1000);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
-  const circlerWidth = Math.min(windowWidth * 0.3, 220);
+  const circlerWidth = Math.min(windowWidth * 0.3, 180);
 
   function goToSleepTest2Desc() {
     navigation.navigate('SleepTest2Desc');
@@ -114,19 +113,10 @@ export default function SleepTest1() {
   const commaAllClickTimeAvg = allClickTimeAvg.toLocaleString();
 
   return (
-    <LinearGradient
-      colors={[colors.softBlue, colors.white]}
-      style={styles.gradient}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
-    >
+    <Layout>
       <View style={styles.container}>
         {isFinished ? (
           <View style={styles.resultBox}>
-            <Image
-              source={require('@/assets/focuz_name_logo.png')}
-              style={styles.nameLogoImage}
-            />
             <Image
               source={require('@/assets/result.png')}
               style={styles.resultImage}
@@ -148,10 +138,6 @@ export default function SleepTest1() {
           </View>
         ) : (
           <>
-            <Image
-              source={require('@/assets/focuz_name_logo.png')}
-              style={styles.nameLogoImage}
-            />
             <GlassCard
               style={[
                 styles.secContainer,
@@ -205,14 +191,11 @@ export default function SleepTest1() {
           </>
         )}
       </View>
-    </LinearGradient>
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -221,6 +204,7 @@ const styles = StyleSheet.create({
   secContainer: {
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    marginTop: 10,
     padding: 30,
     paddingHorizontal: 20,
     gap: 25,
@@ -233,7 +217,7 @@ const styles = StyleSheet.create({
   },
   testBox: {
     alignItems: 'center',
-    gap: 60,
+    gap: 40,
   },
   progress: {
     fontSize: 20,
@@ -320,11 +304,6 @@ const styles = StyleSheet.create({
   msBox: {
     height: 30,
     marginTop: 30,
-  },
-  nameLogoImage: {
-    width: 100,
-    height: 20,
-    marginBottom: 10,
   },
   resultImage: {
     width: 100,
