@@ -27,6 +27,7 @@ import SleepTestResult from './app/test/SleepTestResult';
 import { PrivacyNotice } from './app/tabs/PrivacyNotice';
 import { Loading } from './app/tabs/Loading';
 import LandingPage from './app/landing/LandingPage';
+import MyRecord from './app/tabs/mypage/MyRecord';
 
 export type RootStackParamList = {
   LandingPage: undefined;
@@ -54,6 +55,7 @@ export type RootStackParamList = {
   SleepTestResult: undefined;
   PrivacyNotice: undefined;
   Loading: undefined;
+  MyRecord: undefined;
 };
 
 export const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -97,6 +99,7 @@ export default function App() {
         <Stack.Screen name="SleepTestResult" component={SleepTestResult} />
         <Stack.Screen name="PrivacyNotice" component={PrivacyNotice} />
         <Stack.Screen name="Loading" component={Loading} />
+        <Stack.Screen name="MyRecord" component={MyRecord} />
       </Stack.Navigator>
 
       <Toast />
