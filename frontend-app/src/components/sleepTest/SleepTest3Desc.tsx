@@ -1,19 +1,17 @@
 import {
   View,
   Text,
-  Image,
   Animated,
   StyleSheet,
   useWindowDimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from '@/components/common/Button';
-import { colors } from '@/constants/colors';
 import { GlassCard } from '../common/Card';
 import { RootStackParamList } from '@/App';
 import { useEffect, useRef } from 'react';
+import { Layout } from '../common/Layout';
 
 const SQUARE = 4;
 
@@ -57,17 +55,8 @@ export default function SleepTest3Desc() {
   });
 
   return (
-    <LinearGradient
-      colors={[colors.softBlue, colors.white]}
-      style={styles.gradient}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
-    >
+    <Layout>
       <View style={styles.root}>
-        <Image
-          source={require('@/assets/focuz_name_logo.png')}
-          style={styles.nameLogoImage}
-        />
         <GlassCard
           style={[
             styles.container,
@@ -104,14 +93,11 @@ export default function SleepTest3Desc() {
           />
         </GlassCard>
       </View>
-    </LinearGradient>
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
   root: {
     flex: 1,
     justifyContent: 'center',
@@ -165,11 +151,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.8,
     shadowRadius: 10,
-  },
-  nameLogoImage: {
-    width: 100,
-    height: 20,
-    marginBottom: 40,
   },
   squareBox: {
     flexDirection: 'row',

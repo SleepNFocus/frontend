@@ -1,9 +1,8 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Layout } from '@/components/common/Layout';
 import { View, StyleSheet } from 'react-native';
 import { Text } from '@/components/common/Text';
-import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { useEffect } from 'react';
 
@@ -15,17 +14,11 @@ export default function SleepTestMain() {
     const timeOut = setTimeout(() => {
       navigation.navigate('SleepTestDesc');
     }, 2000);
-
     return () => clearTimeout(timeOut);
   }, []);
 
   return (
-    <LinearGradient
-      colors={[colors.softBlue, colors.white]}
-      style={styles.gradient}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
-    >
+    <Layout showLogo={false}>
       <View style={styles.mainBox}>
         <Text variant="displayMedium" style={styles.title}>
           FOCUZ
@@ -34,16 +27,11 @@ export default function SleepTestMain() {
           수면 테스트를 진행합니다.
         </Text>
       </View>
-    </LinearGradient>
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   title: {
     fontWeight: 'bold',
   },

@@ -9,11 +9,10 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from '@/components/common/Button';
-import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
+import { Layout } from '../common/Layout';
 
 const MAX_NUM = 9;
 const TIMER_SECOND = 60000;
@@ -46,7 +45,7 @@ export default function SleepTest2() {
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
 
-  const containerHeight = Math.min(windowHeight * 0.8, 1000);
+  const containerHeight = Math.min(windowHeight * 0.77, 1000);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const symbolBoxWidth = Math.min(windowWidth * 0.8, 400);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
@@ -132,19 +131,10 @@ export default function SleepTest2() {
   const commaNum = avgReactionTime.toLocaleString();
 
   return (
-    <LinearGradient
-      colors={[colors.softBlue, colors.white]}
-      style={styles.gradient}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
-    >
+    <Layout>
       <View style={styles.container}>
         {gameOver ? (
           <View style={styles.resultBox}>
-            <Image
-              source={require('@/assets/focuz_name_logo.png')}
-              style={styles.nameLogoImage}
-            />
             <Image
               source={require('@/assets/result.png')}
               style={styles.resultImage}
@@ -181,20 +171,18 @@ export default function SleepTest2() {
           </View>
         ) : (
           <>
-            <Image
-              source={require('@/assets/focuz_name_logo.png')}
-              style={styles.nameLogoImage}
-            />
             <GlassCard
               style={[
                 styles.secContainer,
                 { width: containerWidth, height: containerHeight },
               ]}
             >
-              <Text style={styles.title}>기호 - 숫자 변환</Text>
-              {start && !gameOver && (
-                <Text style={styles.timerText}>남은 시간: {timeLeft}s</Text>
-              )}
+              <View style={styles.titleBox}>
+                <Text style={styles.title}>기호 - 숫자 변환</Text>
+                {start && !gameOver && (
+                  <Text style={styles.timerText}>남은 시간: {timeLeft}s</Text>
+                )}
+              </View>
               <View style={[styles.line, { width: lineWidth }]} />
               <View style={[styles.symbolNumberRow, { width: symbolBoxWidth }]}>
                 {shuffledSymbols.map((symbol, idx) => (
@@ -222,27 +210,25 @@ export default function SleepTest2() {
           </>
         )}
       </View>
-    </LinearGradient>
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   timerText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#555',
   },
   secContainer: {
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    marginTop: 10,
     padding: 30,
     paddingHorizontal: 20,
     gap: 20,
@@ -264,6 +250,10 @@ const styles = StyleSheet.create({
       height: 1,
     },
     textShadowRadius: 2,
+  },
+  titleBox: {
+    alignItems: 'center',
+    gap: 10,
   },
   line: {
     backgroundColor: '#bfbfbf',
@@ -370,11 +360,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#0F1C36',
-  },
-  nameLogoImage: {
-    width: 100,
-    height: 20,
-    marginBottom: 10,
   },
   resultImage: {
     width: 100,

@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  Image,
   Animated,
   StyleSheet,
   ScrollView,
@@ -9,9 +8,9 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { GlassCard } from '@/components/common/Card';
 import { Button } from '@/components/common/Button';
+import { Layout } from '@/components/common/Layout';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { useEffect, useRef } from 'react';
@@ -47,18 +46,9 @@ export default function SleepTestDesc() {
   }
 
   return (
-    <LinearGradient
-      colors={[colors.softBlue, colors.white]}
-      style={styles.gradient}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
-    >
+    <Layout>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.root}>
-          <Image
-            source={require('@/assets/focuz_name_logo.png')}
-            style={styles.nameLogoImage}
-          />
           <GlassCard style={[styles.container, { width: containerWidth }]}>
             <Text style={styles.title}> 현재 인지 능력 측정하기 </Text>
             <View style={styles.imageContainer}>
@@ -92,20 +82,16 @@ export default function SleepTestDesc() {
           </GlassCard>
         </View>
       </ScrollView>
-    </LinearGradient>
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 50,
-    paddingBottom: 100,
+    paddingTop: 10,
   },
   root: {
     flex: 1,
@@ -116,6 +102,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 30,
+    marginBottom: 10,
     gap: 50,
   },
   title: {
@@ -151,11 +138,6 @@ const styles = StyleSheet.create({
   logoImage: {
     width: 200,
     height: 150,
-  },
-  nameLogoImage: {
-    width: 100,
-    height: 20,
-    marginBottom: 30,
   },
   button: {
     width: 130,

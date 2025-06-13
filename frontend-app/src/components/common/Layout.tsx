@@ -9,22 +9,35 @@ import Modal from '@/components/common/Modal';
 // Layout 컴포넌트의 props 타입 정의
 interface LayoutProps {
   children: React.ReactNode; // 레이아웃 내부에 들어갈 자식 요소
+  showLogo?: boolean;
 }
 
 // Layout: 화면 전체를 감싸는 공통 레이아웃 컴포넌트
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
+export const Layout: React.FC<LayoutProps> = ({
+  children,
+  showLogo = true,
+}) => {
   return (
-    // SafeAreaView: 노치/엣지 등 안전 영역 보장
-    <SafeAreaView style={styles.container} edges={['top', 'bottom', 'left', 'right']}>
-      <LinearGradient
-        colors={[colors.softBlue, colors.white]}
-        style={styles.gradient}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
+    <LinearGradient
+      colors={[colors.softBlue, colors.white]}
+      style={styles.gradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+    >
+      {/* SafeAreaView: 노치/엣지 등 안전 영역 보장 */}
+      <SafeAreaView
+        style={styles.container}
+        edges={['top', 'bottom', 'left', 'right']}
       >
-        <View style={styles.logoContainer}>
-          <Image source={require('@/assets/focuz_name_logo.png')} style={styles.logo} resizeMode="contain" />
-        </View>
+        {showLogo && (
+          <View style={styles.logoContainer}>
+            <Image
+              source={require('@/assets/focuz_name_logo.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
+        )}
         <View style={styles.content}>{children}</View>
         <Navbar />
         <Modal type="success" />
@@ -32,8 +45,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Modal type="warning" />
         <Modal type="info" />
         <Modal type="confirm" />
-      </LinearGradient>
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
@@ -56,7 +69,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 16,
+    padding: 10,
     paddingBottom: 80, // 네비게이션 바 높이(64) + 여유 공간(16)
   },
 });
