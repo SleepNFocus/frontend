@@ -27,7 +27,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <div className="flex flex-col items-center">
             <img src={focuzLogoSB} alt="Focuz Logo" className="h-8 mb-2" />
             <p className="text-center text-softBlue text-sm">
-              © 2024 관리자 대시보드. All rights reserved.
+              © 2025 관리자 대시보드. All rights reserved.
             </p>
           </div>
         </div>
