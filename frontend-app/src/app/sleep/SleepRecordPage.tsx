@@ -11,6 +11,7 @@ import { RootStackParamList } from '@/App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '@/constants/colors';
 import useUiStore from '@/store/uiStore';
+import { saveSleepRecord } from '@/services/sleepApi';
 
 export const SleepRecordPage: React.FC = () => {
   const navigation = useNavigation();
@@ -19,22 +20,26 @@ export const SleepRecordPage: React.FC = () => {
   const [isRecordSaved, setIsRecordSaved] = useState(false);
   const [savedRecordData, setSavedRecordData] =
     useState<SleepRecordData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { openModal } = useUiStore();
 
   const handleSaveRecord = async (recordData: SleepRecordData) => {
+    setIsLoading(true);
+    
     try {
-      // TODO: 실제 API 호출로 데이터 저장
-      // 예시: const response = await api.save(recordData);
-      // 임시로 항상 성공 처리 (실패 테스트는 isSuccess = false로 변경)
-      const isSuccess = true;
-      if (isSuccess) {
+      console.log('수면 기록 저장 시작:', recordData);
+      
+      const result = await saveSleepRecord(recordData);
+      
+      if (result.success) {
+        console.log('저장 성공:', result.data);
+        
         openModal('success', {
           isOpen: true,
           title: '저장 완료',
-          content: '수면 기록이 성공적으로 저장되었습니다.',
+          content: `수면 기록이 성공적으로 저장되었습니다. (ID: ${result.data?.id || 'Unknown'})`,
           confirmText: '확인',
           onConfirm: () => {
-            // 모달이 닫힌 후에 상태 변경
             setTimeout(() => {
               setSavedRecordData(recordData);
               setIsRecordSaved(true);
@@ -42,29 +47,49 @@ export const SleepRecordPage: React.FC = () => {
           },
         });
       } else {
+        console.error('저장 실패:', result.error);
+        
         openModal('error', {
           isOpen: true,
           title: '저장 실패',
-          content: '수면 기록 저장에 실패했습니다. 다시 시도해 주세요.',
+          content: result.error || '수면 기록 저장에 실패했습니다. 다시 시도해 주세요.',
           confirmText: '확인',
           onConfirm: () => {},
         });
       }
-    } catch (e) {
+    } catch (error) {
+      console.error('예외 발생:', error);
+      
       openModal('error', {
         isOpen: true,
         title: '저장 실패',
-        content: '수면 기록 저장에 실패했습니다. 다시 시도해 주세요.',
+        content: '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.',
         confirmText: '확인',
         onConfirm: () => {},
       });
+    } finally {
+      setIsLoading(false);
     }
   };
+
+
 
   const startNewRecord = () => {
     setIsRecordSaved(false);
     setSavedRecordData(null);
   };
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <View style={styles.loadingContainer}>
+          <Text variant="titleMedium" style={styles.loadingText}>
+            처리 중입니다...
+          </Text>
+        </View>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -73,7 +98,6 @@ export const SleepRecordPage: React.FC = () => {
           <SleepRecordForm onSave={handleSaveRecord} />
         ) : (
           <View style={styles.resultSection}>
-            {/* 수면 점수는 저장 후에만 표시 */}
             <View style={styles.scoreSection}>
               <Text variant="headlineSmall" style={styles.scoreTitle}>
                 오늘의 수면 점수
@@ -89,19 +113,18 @@ export const SleepRecordPage: React.FC = () => {
                   수면질: {savedRecordData?.scoreBreakdown.qualityScore}/30
                 </Text>
                 <Text variant="bodySmall">
-                  수면효율: {savedRecordData?.scoreBreakdown.sleepEfficiencyScore}/25
-                </Text>
-                <Text variant="bodySmall">
                   수면환경: {savedRecordData?.scoreBreakdown.environmentScore}/20
                 </Text>
               </View>
             </View>
+            
             {savedRecordData && (
               <ScoreFeedback
                 score={savedRecordData.totalScore}
                 scoreBreakdown={savedRecordData.scoreBreakdown}
               />
             )}
+            
             <View style={styles.actionButtons}>
               <Button
                 onPress={startNewRecord}
@@ -186,5 +209,15 @@ const styles = StyleSheet.create({
   },
   savedDate: {
     color: colors.mediumGray,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  loadingText: {
+    color: colors.textColor,
+    textAlign: 'center',
   },
 });
