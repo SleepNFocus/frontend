@@ -8,6 +8,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { calculateSleepTest3Score } from '@/utils/sleepTestScore';
+import { useSleepTestStore } from '@/store/testStore';
 import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
@@ -117,18 +119,21 @@ export default function SleepTest3() {
     }
   };
 
-  if (gameEnded) {
-    const totalTimeSec =
-      totalStart && Date.now() ? (Date.now() - totalStart) / 1000 : 0;
-    const baseScore = totalCorrect * 5;
-    const bonusScore =
-      totalTimeSec <= 10
-        ? 10
-        : totalTimeSec >= 20
-          ? 0
-          : Math.round((20 - totalTimeSec) * 1);
-    const finalScore = baseScore + bonusScore;
-    const answerPercent = ((totalCorrect / 18) * 100).toFixed(1);
+  const setTest3 = useSleepTestStore(state => state.setTest3);
+
+  useEffect(() => {
+    if (gameEnded && totalStart !== null) {
+      const result = calculateSleepTest3Score(totalCorrect, totalStart);
+      console.log('[SleepTest3] 계산된 결과:', result);
+      setTest3(result);
+    }
+  }, [gameEnded, totalStart]);
+
+  if (gameEnded && totalStart !== null) {
+    const { finalScore, accuracy } = calculateSleepTest3Score(
+      totalCorrect,
+      totalStart,
+    );
 
     return (
       <Layout>
@@ -151,7 +156,7 @@ export default function SleepTest3() {
                 </View>
                 <View style={styles.resultContainer2}>
                   <Text style={styles.result}>정확도: </Text>
-                  <Text style={styles.resultBold}> {answerPercent}% </Text>
+                  <Text style={styles.resultBold}> {accuracy}% </Text>
                 </View>
               </View>
             </View>
