@@ -1,26 +1,31 @@
 {
   "expo": {
-    "name": "focuz-app",
+    "name": "FOCUZ",
     "slug": "focuz-app",
     "version": "1.0.0",
     "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": ["**/*", "assets/_redirects"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.focuz.sleepapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#DFE3EA"
+      },
+      "package": "com.focuz.sleepapp",
+      "versionCode": 1,
+      "compileSdkVersion": 34,
+      "targetSdkVersion": 34,
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.SYSTEM_ALERT_WINDOW"
+      ],
+      "usesCleartextTraffic": false
     },
     "web": {
       "favicon": "./assets/favicon.png",
