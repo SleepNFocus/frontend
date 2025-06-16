@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/store/authStore';
 import NicknameChangeModal from './NicknameChangeModal';
 import Toast from 'react-native-toast-message';
+import useUiStore from '@/store/uiStore';
 
 const ProfileCard = () => {
   const navigation =
@@ -19,16 +20,32 @@ const ProfileCard = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleNicknameChange = (_newNickname: string) => {
-    void _newNickname; // API 연결 전이라 저장 X
-    Toast.show({
-      type: 'error',
-      text1: '닉네임 변경 실패',
-      text2: '해당 기능은 MOCKUP기능만 구현되었습니다',
-    });
-    setModalVisible(false);
-  };
+  // const handleNicknameChange = (_newNickname: string) => {
+  //   void _newNickname; // API 연결 전이라 저장 X
+  //   Toast.show({
+  //     type: 'error',
+  //     text1: '닉네임 변경 실패',
+  //     text2: '해당 기능은 MOCKUP기능만 구현되었습니다',
+  //   });
+  //   setModalVisible(false);
+  // };
+  const { openModal } = useUiStore();
 
+  const handleClick = () => {
+    openModal('error', {
+      title: '에러 발생!',
+      content: '뭔가 잘못됐어요.',
+      confirmText: '확인',
+      cancelText: '닫기',
+      onConfirm: () => {
+        console.log('확인 클릭!');
+      },
+      onCancel: () => {
+        console.log('취소 클릭!');
+      },
+      isOpen: false,
+    });
+  };
   // const handleNicknameChange = (newNickname: string) => {
   //   if (!user) return;
 
@@ -122,7 +139,7 @@ const ProfileCard = () => {
       <NicknameChangeModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        onConfirm={handleNicknameChange}
+        onConfirm={handleClick}
       />
     </>
   );
