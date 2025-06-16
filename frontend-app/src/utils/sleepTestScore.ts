@@ -16,7 +16,7 @@ export function calculateSleepTest1Score(times: number[]) {
   return {
     avgScore: Math.round(avgScore * 10) / 10,
     avgReactionTime: Math.round(avgReactionTime),
-    reactionTimes: times,
+    reactionList: times,
   };
 }
 

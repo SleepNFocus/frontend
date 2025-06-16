@@ -15,6 +15,8 @@ import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
+import { sendAllResults } from '@/services/testResultApi';
+import Toast from 'react-native-toast-message';
 
 type RoundInfo = {
   gridSize: number;
@@ -59,9 +61,46 @@ export default function SleepTest3() {
   const [gameEnded, setGameEnded] = useState(false);
   const [round, setRound] = useState(0);
 
-  function goToSleepTestResult() {
-    navigation.navigate('SleepTestResult');
-    resetGame();
+  async function goToSleepTestResult() {
+    const { test1, test2, test3 } = useSleepTestStore.getState();
+    const userId = '1234';
+    // useAuthStore.getState().user?.id; // 실제 로그인된 유저 ID
+
+    if (!userId || !test1 || !test2 || !test3) {
+      Toast.show({
+        type: 'error',
+        text1: '결과 전송 실패',
+        text2: '유저 정보 또는 테스트 결과가 없습니다.',
+      });
+      return;
+    }
+
+    try {
+      const result = await sendAllResults({
+        userId,
+        test1,
+        test2,
+        test3,
+      });
+
+      if (result) {
+        navigation.navigate('SleepTestResult');
+        resetGame();
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: '결과 전송 실패',
+          text2: '서버 응답이 없습니다.',
+        });
+      }
+    } catch (error) {
+      console.error('결과 전송 오류:', error);
+      Toast.show({
+        type: 'error',
+        text1: '결과 전송 오류',
+        text2: '잠시 후 다시 시도해주세요.',
+      });
+    }
   }
 
   function finishShow() {
@@ -124,7 +163,7 @@ export default function SleepTest3() {
   useEffect(() => {
     if (gameEnded && totalStart !== null) {
       const result = calculateSleepTest3Score(totalCorrect, totalStart);
-      console.log('[SleepTest3] 계산된 결과:', result);
+      console.log('결과:', result);
       setTest3(result);
     }
   }, [gameEnded, totalStart]);
