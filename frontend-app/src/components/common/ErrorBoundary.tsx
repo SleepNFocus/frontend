@@ -1,6 +1,10 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { View, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { Layout } from '@/components/common/Layout';
+import { Text } from '@/components/common/Text';
+import { Button } from '@/components/common/Button';
+import { colors } from '@/constants/colors';
 
 // ErrorBoundary 컴포넌트의 props 타입 정의
 interface Props {
@@ -30,20 +34,53 @@ export class ErrorBoundary extends Component<Props, State> {
     console.error('Uncaught error:', error, errorInfo);
   }
 
+  // 홈으로 이동하는 함수 (클래스 컴포넌트에서는 navigation hook 사용 불가)
+  private handleGoHome = () => {
+    // 페이지 새로고침으로 대체 (웹) 또는 앱 재시작
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
+  };
+
   public render() {
     if (this.state.hasError) {
       // 에러 발생 시 보여줄 UI
       return (
-        <View style={styles.container}>
-          <Text style={styles.title}>오류가 발생했습니다</Text>
-          <Text style={styles.message}>{this.state.error?.message}</Text>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.setState({ hasError: false, error: null })}
-          >
-            <Text style={styles.buttonText}>다시 시도</Text>
-          </TouchableOpacity>
-        </View>
+        <Layout showLogo={false}>
+          <View style={styles.container}>
+            <View style={styles.iconContainer}>
+              <Ionicons 
+                name="warning-outline" 
+                size={80} 
+                color={colors.red} 
+              />
+            </View>
+            
+            <View style={styles.textContainer}>
+              <Text variant="headlineSmall" style={styles.title}>
+                오류가 발생했습니다
+              </Text>
+              <Text variant="bodyLarge" style={styles.message}>
+                {this.state.error?.message || '예상치 못한 오류가 발생했습니다.'}
+              </Text>
+            </View>
+
+            <View style={styles.buttonContainer}>
+              <Button
+                title="다시 시도"
+                variant="outline"
+                onPress={() => this.setState({ hasError: false, error: null })}
+                style={styles.retryButton}
+              />
+              <Button
+                title="홈으로 돌아가기"
+                variant="primary"
+                onPress={this.handleGoHome}
+                style={styles.homeButton}
+              />
+            </View>
+          </View>
+        </Layout>
       );
     }
 
@@ -58,24 +95,34 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: 24,
+  },
+  iconContainer: {
+    marginBottom: 32,
+  },
+  textContainer: {
+    alignItems: 'center',
+    marginBottom: 40,
   },
   title: {
-    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 16,
+    textAlign: 'center',
   },
   message: {
+    color: colors.mediumGray,
     textAlign: 'center',
-    marginBottom: 20,
+    lineHeight: 24,
   },
-  button: {
-    backgroundColor: '#007AFF',
-    padding: 10,
-    borderRadius: 5,
+  buttonContainer: {
+    width: '100%',
+    maxWidth: 300,
+    gap: 12,
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
+  retryButton: {
+    borderColor: colors.red,
+  },
+  homeButton: {
+    backgroundColor: colors.red,
   },
 });

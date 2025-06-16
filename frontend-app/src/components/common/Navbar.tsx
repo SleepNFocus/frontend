@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { icon: 'chart-bar', route: 'History' },
   { icon: 'play-circle-outline', route: 'SleepRecord' },
   { icon: 'home-outline', route: 'Dashboard' },
-  { icon: 'lightbulb-outline', route: 'SleepInsights' },
+  { icon: 'lightbulb-outline', route: 'Insight' },
   { icon: 'dots-horizontal', route: 'More' },
 ];
 
