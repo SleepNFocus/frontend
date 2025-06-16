@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { useSleepTestStore } from '@/store/testStore';
 import { Button } from '@/components/common/Button';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
@@ -53,6 +54,20 @@ export default function SleepTest2() {
   function goToSleepTest3Desc() {
     navigation.navigate('SleepTest3Desc');
   }
+
+  const setTest2 = useSleepTestStore(state => state.setTest2);
+
+  useEffect(() => {
+    if (gameOver) {
+      setTest2({
+        reactionTimes: clickTimes,
+        correctCount,
+        wrongCount,
+        avgReactionTime,
+        totalScore,
+      });
+    }
+  }, [gameOver]);
 
   useEffect(() => {
     setStart(true);

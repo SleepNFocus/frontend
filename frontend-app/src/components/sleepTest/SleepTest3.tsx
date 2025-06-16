@@ -13,6 +13,7 @@ import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
+import { useSleepTestStore } from '@/store/testStore';
 
 type RoundInfo = {
   gridSize: number;
@@ -117,7 +118,10 @@ export default function SleepTest3() {
     }
   };
 
-  if (gameEnded) {
+  function calculateTest3Score(
+    totalCorrect: number,
+    totalStart: number | null,
+  ) {
     const totalTimeSec =
       totalStart && Date.now() ? (Date.now() - totalStart) / 1000 : 0;
     const baseScore = totalCorrect * 5;
@@ -129,6 +133,33 @@ export default function SleepTest3() {
           : Math.round((20 - totalTimeSec) * 1);
     const finalScore = baseScore + bonusScore;
     const answerPercent = ((totalCorrect / 18) * 100).toFixed(1);
+
+    return { totalTimeSec, baseScore, bonusScore, finalScore, answerPercent };
+  }
+
+  const setTest3 = useSleepTestStore(state => state.setTest3);
+
+  useEffect(() => {
+    if (gameEnded && totalStart !== null) {
+      const { totalTimeSec, finalScore, answerPercent } = calculateTest3Score(
+        totalCorrect,
+        totalStart,
+      );
+
+      setTest3({
+        totalCorrect,
+        totalTimeSec,
+        finalScore,
+        accuracy: parseFloat(answerPercent),
+      });
+    }
+  }, [gameEnded]);
+
+  if (gameEnded) {
+    const { finalScore, answerPercent } = calculateTest3Score(
+      totalCorrect,
+      totalStart,
+    );
 
     return (
       <Layout>

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { useSleepTestStore } from '@/store/testStore';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
@@ -111,6 +112,18 @@ export default function SleepTest1() {
     clickTimes.reduce((a, b) => a + b, 0) / MAX_STEP,
   );
   const commaAllClickTimeAvg = allClickTimeAvg.toLocaleString();
+
+  const setTest1 = useSleepTestStore(state => state.setTest1);
+
+  useEffect(() => {
+    if (isFinished) {
+      setTest1({
+        reactionTimes: clickTimes,
+        avgReactionTime: allClickTimeAvg,
+        avgScore,
+      });
+    }
+  }, [isFinished]);
 
   return (
     <Layout>
