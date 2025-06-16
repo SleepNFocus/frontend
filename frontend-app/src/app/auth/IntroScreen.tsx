@@ -13,12 +13,13 @@ import {
   Platform,
   Alert,
 } from 'react-native';
+import { loginWithKakaoAccount } from '@react-native-seoul/kakao-login';
 
 // type IntroScreenProps = {
 //   onNext: () => void;
 // };
 
-// (const IntroScreen: React.FC<IntroScreenProps> = ({ onNext }) => {  아래부분 나중에 소셜 연동할때 이렇게 변경 및 소셜로그인에서 추가해줘야댐댐
+// (const IntroScreen: React.FC<IntroScreenProps> = ({ onNext }) => {  아래부분 나중에 소셜 연동할때 이렇게 변경 및 소셜로그인에서 추가해줘야댐
 const IntroScreen: React.FC = () => {
   const { width, height } = useWindowDimensions();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -38,7 +39,15 @@ const IntroScreen: React.FC = () => {
     }).start(() => setIsStarted(true));
   };
 
-  const handleSocialLogin = (provider: string) => {
+  const handleSocialLogin = async (provider: string) => {
+    if (provider === "카카오") {
+      try {
+        const token = await loginWithKakaoAccount();
+        console.log('로그인 성공:', token);
+      } catch (err) {
+        console.warn('로그인 실패:', err);
+      }
+    }
     Alert.alert(`${provider} 로그인은 아직 구현되지 않았습니다.`);
   };
 
