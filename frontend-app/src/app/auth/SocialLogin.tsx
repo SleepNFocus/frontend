@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, Image, Animated } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import IntroScreen from './IntroScreen';
+import { KakaoLoginButton } from './KakaoLoginButton';
 
 export const SocialLogin: React.FC = () => {
-  const [isStarted] = useState(false);
+  const [isStarted, setIsStarted] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -18,14 +19,15 @@ export const SocialLogin: React.FC = () => {
   }, [isStarted]);
 
   const handleSocialLogin = (provider: string) => {
-    alert(`${provider} 로그인은 아직 구현되지 않았습니다.`);
+    if (provider === '구글') {
+      alert('구글 로그인은 아직 구현되지 않았습니다.');
+    }
   };
 
   if (!isStarted) {
     return (
       <View style={{ flex: 1 }}>
-        {/* <IntroScreen onNext={() => setIsStarted(true)} /> 나중에 onNext사용시 이렇게 변경 */}
-        <IntroScreen />
+        <IntroScreen onNext={() => setIsStarted(true)} />
       </View>
     );
   }
@@ -37,23 +39,7 @@ export const SocialLogin: React.FC = () => {
       </Text>
 
       <Animated.View style={[styles.fadeContainer, { opacity: fadeAnim }]}>
-        <Button
-          mode="contained"
-          icon={() => (
-            <Image
-              source={{
-                uri: 'https://developers.kakao.com/tool/resource/static/img/button/kakaoAccount/kakao_account_login_btn_medium_narrow.png',
-              }}
-              style={styles.icon}
-            />
-          )}
-          onPress={() => handleSocialLogin('카카오')}
-          style={[styles.button, { backgroundColor: '#FEE500' }]}
-          labelStyle={{ color: '#3C1E1E', fontWeight: 'bold' }}
-          contentStyle={{ paddingVertical: 10 }}
-        >
-          카카오로 로그인
-        </Button>
+        <KakaoLoginButton />
 
         <Button
           mode="contained"
