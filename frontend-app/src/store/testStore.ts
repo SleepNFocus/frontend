@@ -2,9 +2,9 @@
 import { create } from 'zustand';
 
 interface SleepTest1Result {
-  reactionTimes: number[];
   avgReactionTime: number;
   avgScore: number;
+  reactionList: number[];
 }
 
 interface SleepTest2Result {
