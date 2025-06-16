@@ -1,95 +1,75 @@
 import { SleepRecordData } from '@/app/types/sleep';
-import { API_CONFIG, getDefaultHeaders, API_ENDPOINTS } from '@/config/api';
+import { apiClient } from '@/config/axios';
 
 export const saveSleepRecord = async (recordData: SleepRecordData) => {
   try {
-    const response = await fetch(`${API_CONFIG.BASE_URL}${API_ENDPOINTS.SLEEP_RECORD}/`, {
-      method: 'POST',
-      headers: getDefaultHeaders(),
-      body: JSON.stringify({
-        date: recordData.selectedDate,
-        sleep_duration: recordData.sleepDuration,
-        subjective_quality: parseInt(recordData.sleepQuality),
-        sleep_latency: parseInt(recordData.fallAsleepTime),
-        wake_count: parseInt(recordData.nightWakeCount),
-        disturb_factors: recordData.sleepDisruptors,
-        memo: "앱에서 기록됨"
-      }),
+    const response = await apiClient.post('/sleepRecord/', {
+      date: recordData.selectedDate,
+      sleep_duration: parseInt(recordData.sleepDuration),
+      subjective_quality: parseInt(recordData.sleepQuality),
+      sleep_latency: parseInt(recordData.fallAsleepTime),
+      wake_count: parseInt(recordData.nightWakeCount),
+      disturb_factors: recordData.sleepDisruptors,
+      memo: "앱에서 기록됨"
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    return { success: true, data: response.data };
+
+  } catch (error: any) {
+    console.error('수면 기록 저장 실패:', error);
+    
+    if (error.response) {
+      return {
+        success: false,
+        error: error.response.data?.message || error.response.data?.detail || '서버 오류가 발생했습니다.'
+      };
+    } else if (error.request) {
+      return {
+        success: false,
+        error: '네트워크 연결을 확인해주세요.'
+      };
+    } else {
+      return {
+        success: false,
+        error: '알 수 없는 오류가 발생했습니다.'
+      };
     }
-
-    const data = await response.json();
-    console.log('API 응답:', data); 
-
-    return { success: true, data };
-
-  } catch (error) {
-    console.error('API 호출 오류:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.' 
-    };
   }
 };
 
 export const getSleepRecord = async (recordId: number) => {
   try {
-    const response = await fetch(`${API_CONFIG.BASE_URL}${API_ENDPOINTS.SLEEP_RECORD}/${recordId}/`, {
-      method: 'GET',
-      headers: getDefaultHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('GET 응답:', data);
-    
-    return { success: true, data };
-
-  } catch (error) {
-    console.error('GET API 호출 오류:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : '데이터를 불러오는데 실패했습니다.' 
+    const response = await apiClient.get(`/sleepRecord/${recordId}/`);
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    console.error('수면 기록 조회 실패:', error);
+    return {
+      success: false,
+      error: error.response?.data?.detail || '기록을 불러오는데 실패했습니다.'
     };
   }
 };
 
 export const updateSleepRecord = async (recordId: number, updateData: Partial<SleepRecordData>) => {
   try {
-    const response = await fetch(`${API_CONFIG.BASE_URL}${API_ENDPOINTS.SLEEP_RECORD}/${recordId}/`, {
-      method: 'PATCH',
-      headers: getDefaultHeaders(),
-      body: JSON.stringify({
-        ...(updateData.selectedDate && { date: updateData.selectedDate }),
-        ...(updateData.sleepDuration && { sleep_duration: parseInt(updateData.sleepDuration) }),
-        ...(updateData.sleepQuality && { subjective_quality: parseInt(updateData.sleepQuality) }),
-        ...(updateData.fallAsleepTime && { sleep_latency: parseInt(updateData.fallAsleepTime) }),
-        ...(updateData.nightWakeCount && { wake_count: parseInt(updateData.nightWakeCount) }),
-        ...(updateData.sleepDisruptors && { disturb_factors: updateData.sleepDisruptors }),
-        memo: "앱에서 수정됨"
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('PATCH 응답:', data);
+    const requestData: any = {};
     
-    return { success: true, data };
+    if (updateData.selectedDate) requestData.date = updateData.selectedDate;
+    if (updateData.sleepDuration) requestData.sleep_duration = parseInt(updateData.sleepDuration);
+    if (updateData.sleepQuality) requestData.subjective_quality = parseInt(updateData.sleepQuality);
+    if (updateData.fallAsleepTime) requestData.sleep_latency = parseInt(updateData.fallAsleepTime);
+    if (updateData.nightWakeCount) requestData.wake_count = parseInt(updateData.nightWakeCount);
+    if (updateData.sleepDisruptors) requestData.disturb_factors = updateData.sleepDisruptors;
+    
+    requestData.memo = "앱에서 수정됨";
 
-  } catch (error) {
-    console.error('PATCH API 호출 오류:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : '수정 중 오류가 발생했습니다.' 
+    const response = await apiClient.patch(`/sleepRecord/${recordId}/`, requestData);
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    console.error('수면 기록 수정 실패:', error);
+    return {
+      success: false,
+      error: error.response?.data?.detail || '기록 수정에 실패했습니다.'
     };
   }
 };
