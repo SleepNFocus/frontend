@@ -17,6 +17,7 @@ import {
 // type IntroScreenProps = {
 //   onNext: () => void;
 // };
+import { login } from '@react-native-seoul/kakao-login'; // 추가
 
 // (const IntroScreen: React.FC<IntroScreenProps> = ({ onNext }) => {  아래부분 나중에 소셜 연동할때 이렇게 변경 및 소셜로그인에서 추가해줘야댐댐
 const IntroScreen: React.FC = () => {
@@ -38,8 +39,21 @@ const IntroScreen: React.FC = () => {
     }).start(() => setIsStarted(true));
   };
 
-  const handleSocialLogin = (provider: string) => {
-    Alert.alert(`${provider} 로그인은 아직 구현되지 않았습니다.`);
+  const handleSocialLogin = async (provider: string) => {
+    if (provider === '카카오') {
+      try {
+        const result = await login();
+        Alert.alert('카카오 로그인 성공', JSON.stringify(result));
+        // TODO: result.accessToken 등으로 서버 인증 처리
+      } catch (e) {
+        Alert.alert(
+          '카카오 로그인 실패',
+          e instanceof Error ? e.message : '알 수 없는 오류',
+        );
+      }
+    } else {
+      Alert.alert(`${provider} 로그인은 아직 구현되지 않았습니다.`);
+    }
   };
 
   return (

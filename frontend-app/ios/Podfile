@@ -62,3 +62,4 @@ target 'focuzapp' do
     end
   end
 end
+$KakaoSDKVersion="2.19.0"

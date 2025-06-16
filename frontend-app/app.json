@@ -3,32 +3,28 @@
     "name": "focuz-app",
     "slug": "focuz-app",
     "version": "1.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*",
-      "assets/_redirects"
-    ],
+    "assetBundlePatterns": ["**/*", "assets/_redirects"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.focuz-app"
+      "bundleIdentifier": "com.focuz.app",
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": ["kakaod78965eba92adbfc84acac7de52e62fd"]
+          }
+        ],
+        "LSApplicationQueriesSchemes": ["kakaokompassauth", "kakaolink"]
+      }
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+      "package": "com.focuz.app"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -36,14 +32,19 @@
       "output": "static",
       "build": {
         "babel": {
-          "include": [
-            "node_modules/expo"
-          ]
+          "include": ["node_modules/expo"]
         }
       }
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "@react-native-seoul/kakao-login",
+        {
+          "kakaoAppKey": "d78965eba92adbfc84acac7de52e62fd",
+          "overrideKakaoSDKVersion": "2.19.0"
+        }
+      ]
     ],
     "scheme": "focuz-app",
     "experiments": {
