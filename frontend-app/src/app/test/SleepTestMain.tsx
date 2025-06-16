@@ -47,11 +47,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     color: '#3F4F80',
     textAlign: 'center',
-    textShadowColor: '#B0B0B0',
-    textShadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    textShadowRadius: 2,
+    // textShadow 효과 제거 (deprecated 경고 해결)
   },
 });

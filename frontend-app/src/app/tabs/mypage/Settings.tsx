@@ -98,10 +98,7 @@ const Settings = () => {
           <View style={styles.itemRow}>
             <Text variant="bodyMedium" style={styles.label}>연동된 계정</Text>
             <View style={styles.rightWrap}>
-              <Image
-                source={require('@/assets/google.png')}
-                style={styles.icon}
-              />
+              <Text style={styles.googleIcon}>G</Text>
               <Text variant="bodyMedium" style={styles.googleText}>Google</Text>
             </View>
           </View>
@@ -210,5 +207,10 @@ const styles = StyleSheet.create({
   },
   googleText: {
     color: colors.softBlue,
+  },
+  googleIcon: {
+    color: colors.softBlue,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

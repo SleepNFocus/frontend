@@ -13,7 +13,6 @@ import { Layout } from '@/components/common/Layout';
 import { NotFoundPage } from '@/components/common/NotFoundPage';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { SleepRecordPage } from './app/sleep/SleepRecordPage';
-import { SleepInsightsPage } from './app/sleep/SleepInsightPage';
 import { NotificationSettingsPage } from './app/notifications/NotificationSettingsPage';
 import Settings from '@/app/tabs/mypage/Settings';
 import NicknameEdit from './app/tabs/mypage/NicknameEdit';
@@ -26,13 +25,16 @@ import SleepTest2 from './components/sleepTest/SleepTest2';
 import SleepTest3Desc from './components/sleepTest/SleepTest3Desc';
 import SleepTest3 from './components/sleepTest/SleepTest3';
 import SleepTestResult from './app/test/SleepTestResult';
-import { PrivacyNotice } from './app/tabs/PrivacyNotice';
-import LandingPage from './app/landing/LandingPage';
+import { PrivacyNotice } from './app/splash/PrivacyNotice';
+import LandingPage from './app/splash/LandingPage';
 import MyRecord from './app/tabs/mypage/MyRecord';
-import { Loading } from './app/tabs/Loading';
+import { OnboardingSteps } from './app/splash/OnboardingSteps';
+import { IntroCard } from '@/app/splash/IntroCard';
 
 export type RootStackParamList = {
   LandingPage: undefined;
+  IntroCard: undefined;
+  Onboarding: undefined;
   Dashboard: undefined;
   DailyCheck: undefined;
   History: undefined;
@@ -42,7 +44,6 @@ export type RootStackParamList = {
   TestSurvey: undefined;
   SocialLogin: undefined;
   SleepRecord: undefined;
-  SleepInsights: { recordData?: any } | undefined;
   NotificationSettings: undefined;
   Settings: undefined;
   NicknameEdit: undefined;
@@ -57,7 +58,6 @@ export type RootStackParamList = {
   SleepTestResult: undefined;
   PrivacyNotice: undefined;
   MyRecord: undefined;
-  Loading: undefined;
   NotFound: undefined;
 };
 
@@ -72,6 +72,8 @@ export default function App() {
           screenOptions={{ headerShown: false }}
         >
           <Stack.Screen name="LandingPage" component={LandingPage} />
+          <Stack.Screen name="IntroCard" component={IntroCard} />
+          <Stack.Screen name="Onboarding" component={OnboardingSteps} />
           <Stack.Screen name="Dashboard" component={DashboardMain} />
           <Stack.Screen name="DailyCheck">
             {() => (
@@ -85,7 +87,6 @@ export default function App() {
           <Stack.Screen name="More" component={MorePage} />
           <Stack.Screen name="SocialLogin" component={SocialLogin} />
           <Stack.Screen name="SleepRecord" component={SleepRecordPage} />
-          <Stack.Screen name="SleepInsights" component={SleepInsightsPage} />
           <Stack.Screen
             name="NotificationSettings"
             component={NotificationSettingsPage}
@@ -103,7 +104,6 @@ export default function App() {
           <Stack.Screen name="SleepTestResult" component={SleepTestResult} />
           <Stack.Screen name="PrivacyNotice" component={PrivacyNotice} />
           <Stack.Screen name="MyRecord" component={MyRecord} />
-          <Stack.Screen name="Loading" component={Loading} />
           <Stack.Screen name="NotFound" component={NotFoundPage} />
         </Stack.Navigator>
 

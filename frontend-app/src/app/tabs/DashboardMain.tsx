@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Layout } from '@/components/common/Layout';
 import { GreetingCard } from '@/components/sleep/GreetingCard';
 import { Card } from '@/components/common/Card';
-import { HexagonRadarChart } from '@/components/test/HexagonRadarChart';
+import ResultChart from '@/components/chart/ResultChart';
 import { SummaryCard } from '@/components/test/SummaryCard';
 import { CheckinCard } from '@/components/sleep/CheckinCard';
 import { Text } from '@/components/common/Text';
@@ -79,7 +79,7 @@ const AbilityProfileCard: React.FC<AbilityProfileCardProps> = memo(({ data, labe
       <Text style={styles.sectionTitle}>나의 인지 능력 프로필</Text>
       <Text style={styles.sectionLabel}>오늘의 수면 점수: {sleepScore ?? '-'}점</Text>
       <View style={styles.chartContainer}>
-        <HexagonRadarChart data={data} labels={labels} />
+        <ResultChart />
       </View>
     </Card>
   );

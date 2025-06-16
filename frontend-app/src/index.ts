@@ -1,5 +1,4 @@
 export { Layout } from './components/common/Layout';
-export { Loading } from './app/tabs/Loading';
 export { ErrorBoundary } from './components/common/ErrorBoundary';
 export { NotFoundPage } from './components/common/NotFoundPage';
 export { Button } from './components/common/Button';
