@@ -8,12 +8,13 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { calculateSleepTest3Score } from '@/utils/sleepTestScore';
+import { useSleepTestStore } from '@/store/testStore';
 import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
-import { useSleepTestStore } from '@/store/testStore';
 
 type RoundInfo = {
   gridSize: number;
@@ -118,45 +119,18 @@ export default function SleepTest3() {
     }
   };
 
-  function calculateTest3Score(
-    totalCorrect: number,
-    totalStart: number | null,
-  ) {
-    const totalTimeSec =
-      totalStart && Date.now() ? (Date.now() - totalStart) / 1000 : 0;
-    const baseScore = totalCorrect * 5;
-    const bonusScore =
-      totalTimeSec <= 10
-        ? 10
-        : totalTimeSec >= 20
-          ? 0
-          : Math.round((20 - totalTimeSec) * 1);
-    const finalScore = baseScore + bonusScore;
-    const answerPercent = ((totalCorrect / 18) * 100).toFixed(1);
-
-    return { totalTimeSec, baseScore, bonusScore, finalScore, answerPercent };
-  }
-
   const setTest3 = useSleepTestStore(state => state.setTest3);
 
   useEffect(() => {
     if (gameEnded && totalStart !== null) {
-      const { totalTimeSec, finalScore, answerPercent } = calculateTest3Score(
-        totalCorrect,
-        totalStart,
-      );
-
-      setTest3({
-        totalCorrect,
-        totalTimeSec,
-        finalScore,
-        accuracy: parseFloat(answerPercent),
-      });
+      const result = calculateSleepTest3Score(totalCorrect, totalStart);
+      console.log('[SleepTest3] 계산된 결과:', result);
+      setTest3(result);
     }
-  }, [gameEnded]);
+  }, [gameEnded, totalStart]);
 
-  if (gameEnded) {
-    const { finalScore, answerPercent } = calculateTest3Score(
+  if (gameEnded && totalStart !== null) {
+    const { finalScore, accuracy } = calculateSleepTest3Score(
       totalCorrect,
       totalStart,
     );
@@ -182,7 +156,7 @@ export default function SleepTest3() {
                 </View>
                 <View style={styles.resultContainer2}>
                   <Text style={styles.result}>정확도: </Text>
-                  <Text style={styles.resultBold}> {answerPercent}% </Text>
+                  <Text style={styles.resultBold}> {accuracy}% </Text>
                 </View>
               </View>
             </View>

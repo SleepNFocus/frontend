@@ -8,6 +8,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { calculateSleepTest1Score } from '@/utils/sleepTestScore';
 import { useNavigation } from '@react-navigation/native';
 import { useSleepTestStore } from '@/store/testStore';
 import { RootStackParamList } from '@/App';
@@ -18,8 +19,6 @@ import { Layout } from '../common/Layout';
 const MAX_STEP = 5;
 const MIN_WAIT_TIME = 1000;
 const RANDOM_NUM_RANGE = 2000;
-const REACTION_TIME_MIN = 150;
-const REACTION_TIME_MAX = 800;
 
 export default function SleepTest1() {
   const navigation =
@@ -32,16 +31,11 @@ export default function SleepTest1() {
   const timeout = useRef<number | null>(null);
   const [step, setStep] = useState<number>(0);
 
-  const { height: windowHeight } = useWindowDimensions();
-  const { width: windowWidth } = useWindowDimensions();
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
 
   const containerHeight = Math.min(windowHeight * 0.75, 1000);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const circlerWidth = Math.min(windowWidth * 0.3, 180);
-
-  function goToSleepTest2Desc() {
-    navigation.navigate('SleepTest2Desc');
-  }
 
   const showGreenLight = useCallback(() => {
     if (step < MAX_STEP && isWaiting) {
@@ -56,23 +50,20 @@ export default function SleepTest1() {
 
   useEffect(() => {
     showGreenLight();
-
     return () => {
       if (timeout.current) clearTimeout(timeout.current);
     };
   }, [showGreenLight]);
 
   const handlePressGreenLight = () => {
-    const isInvalidClick = isWaiting || !startTime;
-    if (isInvalidClick) return;
+    if (isWaiting || !startTime) return;
 
     const reactionTime = Date.now() - startTime;
     const updatedClickTimes = [...clickTimes, reactionTime];
-    const isLastStep = step + 1 >= MAX_STEP;
 
     setClickTimes(updatedClickTimes);
 
-    if (isLastStep) {
+    if (step + 1 >= MAX_STEP) {
       setIsFinished(true);
       return;
     }
@@ -82,20 +73,8 @@ export default function SleepTest1() {
     setStartTime(null);
   };
 
-  const calcScore = (times: number[]): number => {
-    const scores = times.map(t => {
-      if (t <= REACTION_TIME_MIN) return 100;
-      if (t >= REACTION_TIME_MAX) return 0;
-      return (
-        ((REACTION_TIME_MAX - t) / (REACTION_TIME_MAX - REACTION_TIME_MIN)) *
-        100
-      );
-    });
-    const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
-    return Math.round(avgScore * 10) / 10;
-  };
-
-  const avgScore = calcScore(clickTimes);
+  const { avgScore, avgReactionTime } = calculateSleepTest1Score(clickTimes);
+  const commaAllClickTimeAvg = avgReactionTime.toLocaleString();
 
   const recentClickTime = clickTimes[clickTimes.length - 1];
   const commaRecentClickTime =
@@ -108,22 +87,19 @@ export default function SleepTest1() {
 
   const commaRecentStepClickTimesAvg = recentClickTimeAvg.toLocaleString();
 
-  const allClickTimeAvg = Math.round(
-    clickTimes.reduce((a, b) => a + b, 0) / MAX_STEP,
-  );
-  const commaAllClickTimeAvg = allClickTimeAvg.toLocaleString();
-
   const setTest1 = useSleepTestStore(state => state.setTest1);
 
   useEffect(() => {
     if (isFinished) {
-      setTest1({
-        reactionTimes: clickTimes,
-        avgReactionTime: allClickTimeAvg,
-        avgScore,
-      });
+      const result = calculateSleepTest1Score(clickTimes);
+      console.log('결과:', result);
+      setTest1(result);
     }
   }, [isFinished]);
+
+  const goToSleepTest2Desc = () => {
+    navigation.navigate('SleepTest2Desc');
+  };
 
   return (
     <Layout>
@@ -186,7 +162,7 @@ export default function SleepTest1() {
                   )}
                 </View>
                 <View style={styles.msBox}>
-                  {clickTimes.length > 0 ? (
+                  {clickTimes.length > 0 && (
                     <View style={styles.resultText}>
                       <Text style={styles.opacityText}>
                         최근 반응속도 : {commaRecentClickTime} ms
@@ -195,8 +171,6 @@ export default function SleepTest1() {
                         평균 반응속도 : {commaRecentStepClickTimesAvg} ms
                       </Text>
                     </View>
-                  ) : (
-                    ''
                   )}
                 </View>
               </View>
@@ -242,10 +216,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#0F1C36',
     textShadowColor: '#70707050',
-    textShadowOffset: {
-      width: 1,
-      height: 1,
-    },
+    textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
   circleWrapper: {
@@ -282,10 +253,7 @@ const styles = StyleSheet.create({
     color: '#5A6EA3',
     fontWeight: 'bold',
     textShadowColor: '#70707050',
-    textShadowOffset: {
-      width: 1,
-      height: 1,
-    },
+    textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
   text: {
@@ -329,10 +297,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     shadowColor: '#909090',
-    shadowOffset: {
-      width: 4,
-      height: 4,
-    },
+    shadowOffset: { width: 4, height: 4 },
     shadowOpacity: 0.8,
     shadowRadius: 10,
   },

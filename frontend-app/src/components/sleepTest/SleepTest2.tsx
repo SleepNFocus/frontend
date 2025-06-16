@@ -8,6 +8,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { calculateSleepTest2Score } from '@/utils/sleepTestScore';
 import { useNavigation } from '@react-navigation/native';
 import { useSleepTestStore } from '@/store/testStore';
 import { Button } from '@/components/common/Button';
@@ -23,7 +24,6 @@ function randomArray(array: string[]) {
   const copy = [...array];
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    // i번째와 j번째를 자리 바꿈으로 랜덤 배정
     [copy[i], copy[j]] = [copy[j], copy[i]];
   }
   return copy;
@@ -51,21 +51,21 @@ export default function SleepTest2() {
   const symbolBoxWidth = Math.min(windowWidth * 0.8, 400);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
+  const setTest2 = useSleepTestStore(state => state.setTest2);
+
   function goToSleepTest3Desc() {
     navigation.navigate('SleepTest3Desc');
   }
 
-  const setTest2 = useSleepTestStore(state => state.setTest2);
-
   useEffect(() => {
     if (gameOver) {
-      setTest2({
-        reactionTimes: clickTimes,
+      const result = calculateSleepTest2Score(
+        clickTimes,
         correctCount,
         wrongCount,
-        avgReactionTime,
-        totalScore,
-      });
+      );
+      console.log('결과:', result);
+      setTest2(result);
     }
   }, [gameOver]);
 
@@ -124,24 +124,16 @@ export default function SleepTest2() {
     setOneRandomSymbol();
   };
 
-  const calculateScore = () => {
-    const total = correctCount + wrongCount;
-    const accuracy = total === 0 ? 0 : correctCount / total;
-    const countScore = correctCount >= 20 ? 60 : correctCount * 3;
-    const accuracyScore = Math.round(accuracy * 40);
-    return {
-      countScore,
-      accuracyScore,
-      totalScore: countScore + accuracyScore,
-    };
-  };
-
   const avgReactionTime =
     clickTimes.length === 0
       ? 0
       : Math.round(clickTimes.reduce((a, b) => a + b, 0) / clickTimes.length);
 
-  const { totalScore } = calculateScore();
+  const totalScore = calculateSleepTest2Score(
+    clickTimes,
+    correctCount,
+    wrongCount,
+  ).totalScore;
 
   const commaNum = avgReactionTime.toLocaleString();
 
@@ -185,44 +177,42 @@ export default function SleepTest2() {
             />
           </View>
         ) : (
-          <>
-            <GlassCard
-              style={[
-                styles.secContainer,
-                { width: containerWidth, height: containerHeight },
-              ]}
-            >
-              <View style={styles.titleBox}>
-                <Text style={styles.title}>기호 - 숫자 변환</Text>
-                {start && !gameOver && (
-                  <Text style={styles.timerText}>남은 시간: {timeLeft}s</Text>
-                )}
-              </View>
-              <View style={[styles.line, { width: lineWidth }]} />
-              <View style={[styles.symbolNumberRow, { width: symbolBoxWidth }]}>
-                {shuffledSymbols.map((symbol, idx) => (
-                  <View key={idx} style={styles.symbolNumberPair}>
-                    <Text style={styles.symbol}>{symbol}</Text>
-                    <Text style={styles.numberText}>{idx + 1}</Text>
-                  </View>
-                ))}
-              </View>
-              <View style={styles.symbolBox}>
-                <Text style={styles.randomNum}>{currentSymbol}</Text>
-              </View>
-              <View style={styles.numContainer}>
-                {Array.from({ length: MAX_NUM }).map((_, idx) => (
-                  <TouchableOpacity
-                    key={idx}
-                    onPress={() => handlePress(idx + 1)}
-                    style={styles.numBox}
-                  >
-                    <Text style={styles.number}>{idx + 1}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </GlassCard>
-          </>
+          <GlassCard
+            style={[
+              styles.secContainer,
+              { width: containerWidth, height: containerHeight },
+            ]}
+          >
+            <View style={styles.titleBox}>
+              <Text style={styles.title}>기호 - 숫자 변환</Text>
+              {start && !gameOver && (
+                <Text style={styles.timerText}>남은 시간: {timeLeft}s</Text>
+              )}
+            </View>
+            <View style={[styles.line, { width: lineWidth }]} />
+            <View style={[styles.symbolNumberRow, { width: symbolBoxWidth }]}>
+              {shuffledSymbols.map((symbol, idx) => (
+                <View key={idx} style={styles.symbolNumberPair}>
+                  <Text style={styles.symbol}>{symbol}</Text>
+                  <Text style={styles.numberText}>{idx + 1}</Text>
+                </View>
+              ))}
+            </View>
+            <View style={styles.symbolBox}>
+              <Text style={styles.randomNum}>{currentSymbol}</Text>
+            </View>
+            <View style={styles.numContainer}>
+              {Array.from({ length: MAX_NUM }).map((_, idx) => (
+                <TouchableOpacity
+                  key={idx}
+                  onPress={() => handlePress(idx + 1)}
+                  style={styles.numBox}
+                >
+                  <Text style={styles.number}>{idx + 1}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </GlassCard>
         )}
       </View>
     </Layout>
