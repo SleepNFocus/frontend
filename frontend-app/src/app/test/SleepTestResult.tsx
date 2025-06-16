@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ResultChart from '@/components/chart/ResultChart';
+import { useSleepTestStore } from '@/store/testStore';
 import { GlassCard } from '@/components/common/Card';
 import { Button } from '@/components/common/Button';
 import { Layout } from '@/components/common/Layout';
@@ -15,6 +16,8 @@ import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 
 export default function SleepTestResult() {
+  const { test1, test2, test3 } = useSleepTestStore();
+
   const { width: windowWidth } = useWindowDimensions();
   const containerWidth = Math.min(windowWidth * 0.9, 700);
 
@@ -22,11 +25,25 @@ export default function SleepTestResult() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   // API 연결 후 Zustand 상태로 점수 받아오기
-  const baseScore = 80;
+  // const baseScore = 80;
 
   function goToDashboard() {
     navigation.navigate('Dashboard');
   }
+
+  const correctPercent =
+    test2 && test2.correctCount + test2.wrongCount > 0
+      ? Math.round(
+          (test2.correctCount / (test2.correctCount + test2.wrongCount)) * 100,
+        )
+      : '-';
+
+  const totalScore = Math.round(
+    ((test1?.avgScore ?? 0) +
+      (test2?.totalScore ?? 0) +
+      (test3?.finalScore ?? 0)) /
+      3,
+  );
 
   return (
     <Layout>
@@ -40,11 +57,11 @@ export default function SleepTestResult() {
               <View style={styles.textBox}>
                 <Text style={styles.boldText}>반응 속도 </Text>
                 <Text style={styles.mainText}>
-                  평균 반응 시간 : [**점수 가져오기]
+                  평균 반응 시간 : {test1?.avgReactionTime}
                 </Text>
               </View>
               <View style={styles.roundScore}>
-                <Text style={styles.scoreText}>{baseScore}</Text>
+                <Text style={styles.scoreText}>{test1?.avgScore}</Text>
               </View>
             </View>
 
@@ -52,15 +69,15 @@ export default function SleepTestResult() {
               <View style={styles.textBox}>
                 <Text style={styles.boldText}>처리 속도 </Text>
                 <Text style={styles.mainText}>
-                  맞춘 개수 : [**점수 가져오기]
+                  맞춘 개수 : {test2?.correctCount}개
                 </Text>
                 <Text style={styles.mainText}>
-                  평균 반응 속도 : [**점수 가져오기]
+                  평균 반응 속도 : {test2?.avgReactionTime}ms
                 </Text>
-                <Text style={styles.mainText}>정확도 : [**점수 가져오기] </Text>
+                <Text style={styles.mainText}>정확도 : {correctPercent}% </Text>
               </View>
               <View style={styles.roundScore}>
-                <Text style={styles.scoreText}>{baseScore}</Text>
+                <Text style={styles.scoreText}>{test2?.totalScore}</Text>
               </View>
             </View>
 
@@ -68,14 +85,14 @@ export default function SleepTestResult() {
               <View style={styles.textBox}>
                 <Text style={styles.boldText}>패턴 기억 </Text>
                 <Text style={styles.mainText}>
-                  기억력 점수 : [**점수 가져오기]
+                  기억력 점수 : {test3?.finalScore}
                 </Text>
               </View>
               <View style={styles.roundScore}>
-                <Text style={styles.scoreText}>{baseScore}</Text>
+                <Text style={styles.scoreText}>{test3?.finalScore}</Text>
               </View>
             </View>
-            <Text style={styles.mainScore}>{baseScore}점</Text>
+            <Text style={styles.mainScore}>{totalScore}점</Text>
             <View style={styles.descriptionBox}>
               <Text style={styles.description}>
                 초기 인지 능력 측정이 완료되었습니다.
@@ -162,7 +179,7 @@ const styles = StyleSheet.create({
   },
   rowBox: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#cbd3df70',
     borderColor: '#5a6da392',
@@ -171,10 +188,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     gap: 40,
+    paddingHorizontal: 20,
   },
   rowBox2: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#cbd3df70',
     borderColor: '#5a6da392',
@@ -183,8 +201,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 100,
     gap: 40,
+    paddingHorizontal: 20,
   },
   textBox: {
+    flex: 1,
     gap: 3,
     alignItems: 'flex-start',
     textAlign: 'left',

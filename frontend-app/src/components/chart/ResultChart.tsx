@@ -2,15 +2,24 @@ import React from 'react';
 import { View } from 'react-native';
 import Svg, { Polygon, Line, G, Text as SvgText } from 'react-native-svg';
 import { colors } from '@/constants/colors';
+import { useSleepTestStore } from '@/store/testStore';
 
 export default function ResultChart() {
+  const { test1, test2, test3 } = useSleepTestStore();
+
   const chartSize = 300;
   const center = chartSize / 2;
   const radius = 100;
   const listNum = 6;
 
-  // 예시 데이터 (이후 Zustand 설정 후 결과 데이터 가져오기)
-  const data = [70, 40, 90, 0, 0, 0];
+  const data = [
+    Number(test1?.avgScore),
+    Number(test2?.totalScore),
+    Number(test3?.finalScore),
+    0,
+    0,
+    0,
+  ];
 
   const getCoordinates = (values: number[], r = radius) => {
     return values.map((value, i) => {
@@ -41,7 +50,16 @@ export default function ResultChart() {
     const y = center + radius * Math.sin(angle);
 
     // x1, y1 = center / x2, y2 = 계산된 좌표
-    return <Line key={i} x1={center} y1={center} x2={x} y2={y} stroke={colors.mediumGray} />;
+    return (
+      <Line
+        key={i}
+        x1={center}
+        y1={center}
+        x2={x}
+        y2={y}
+        stroke={colors.mediumGray}
+      />
+    );
   });
 
   const axisLabels = [
