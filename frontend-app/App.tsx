@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { SocialLogin } from '@/app/auth/SocialLogin';
-import { AdminNavigator } from './src/app/admin/navigation/AdminNavigator';
-import { IntroCard } from './src/components/common/IntroCard';
-import { OnboardingSteps } from './src/components/sleep/OnboardingSteps';
-import { PrivacyNotice } from './src/app/tabs/PrivacyNotice';
+import { IntroCard } from './src/app/splash/IntroCard';
+import { OnboardingSteps } from './src/app/splash/OnboardingSteps';
+import { PrivacyNotice } from './src/app/splash/PrivacyNotice';
 
 // App: IntroCard, OnboardingSteps, PrivacyNotice, SocialLogin, AdminNavigator를 전환해서 볼 수 있는 메인 컴포넌트
 export default function App() {
   const [tab, setTab] = useState<
-    'intro' | 'onboarding' | 'privacy' | 'login' | 'admin'
+    'intro' | 'onboarding' | 'privacy' | 'login'
   >('intro');
 
   return (
@@ -60,16 +59,7 @@ export default function App() {
             소셜 로그인
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tabButton, tab === 'admin' && styles.activeTab]}
-          onPress={() => setTab('admin')}
-        >
-          <Text
-            style={[styles.tabText, tab === 'admin' && styles.activeTabText]}
-          >
-            관리자 페이지
-          </Text>
-        </TouchableOpacity>
+
       </View>
       {/* 선택된 화면 렌더링 */}
       <View style={styles.content}>
@@ -79,7 +69,7 @@ export default function App() {
         )}
         {tab === 'privacy' && <PrivacyNotice onAgree={() => setTab('login')} />}
         {tab === 'login' && <SocialLogin />}
-        {tab === 'admin' && <AdminNavigator />}
+
       </View>
       <StatusBar style="auto" />
     </View>

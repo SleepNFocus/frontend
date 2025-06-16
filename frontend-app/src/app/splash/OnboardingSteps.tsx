@@ -1,19 +1,28 @@
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
-import { Text } from 'react-native-paper';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, StyleSheet } from 'react-native';
+import { Text } from '@/components/common/Text';
+import { Button } from '@/components/common/Button';
+import { colors } from '@/constants/colors';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/App';
 
 // OnboardingSteps: 잠과 퍼포먼스의 연결고리 찾기 안내 페이지
 export const OnboardingSteps: React.FC<{ onNext?: () => void }> = ({
   onNext,
 }) => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const handleNext = () => {
+    if (onNext) {
+      onNext();
+    } else {
+      navigation.navigate('PrivacyNotice');
+    }
+  };
+
   return (
-    <LinearGradient
-      colors={['#e8eafe', '#fff']}
-      style={styles.root}
-      start={{ x: 0.5, y: 0 }}
-      end={{ x: 0.5, y: 1 }}
-    >
+    <View style={styles.root}>
       <View style={styles.centerBox}>
         <Text style={styles.title}>잠과 퍼포먼스의 연결고리 찾기</Text>
         {/* 1단계 */}
@@ -44,18 +53,15 @@ export const OnboardingSteps: React.FC<{ onNext?: () => void }> = ({
           </Text>
           <Text style={styles.stepDesc}>당신만의 패턴을 발견하고 개선해요</Text>
         </View>
-        <Pressable
-          onPress={onNext}
-          // @ts-ignore
-          style={({ hovered, pressed }) => [
-            styles.button,
-            (hovered || pressed) && styles.buttonHover,
-          ]}
-        >
-          <Text style={styles.buttonLabel}>다음</Text>
-        </Pressable>
+        
+        <Button
+          title="다음"
+          onPress={handleNext}
+          variant="primary"
+          style={styles.nextButton}
+        />
       </View>
-    </LinearGradient>
+    </View>
   );
 };
 
@@ -64,6 +70,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.mediumLightGray,
   },
   centerBox: {
     alignItems: 'center',
@@ -75,27 +82,27 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 28,
     marginBottom: 32,
-    color: '#222',
+    color: colors.textColor,
     textAlign: 'center',
   },
   stepCard: {
     width: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 16,
     paddingVertical: 24,
     paddingHorizontal: 20,
-    marginBottom: 24,
+    marginBottom: 20,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#f0f0f0',
+    borderColor: colors.mediumLightGray,
     elevation: 2,
   },
   stepNum: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#e8eafe',
-    color: '#6C7BFF',
+    backgroundColor: colors.lightGray,
+    color: colors.softBlue,
     fontWeight: 'bold',
     fontSize: 20,
     textAlign: 'center',
@@ -105,33 +112,18 @@ const styles = StyleSheet.create({
   stepTitle: {
     fontWeight: 'bold',
     fontSize: 17,
-    color: '#222',
+    color: colors.textColor,
     textAlign: 'center',
     marginBottom: 6,
   },
   stepDesc: {
-    color: '#888',
+    color: colors.midnightBlue,
     fontSize: 14,
     textAlign: 'center',
   },
-  button: {
-    borderRadius: 10,
-    backgroundColor: '#6C7BFF',
-    paddingHorizontal: 36,
-    paddingVertical: 8,
-    elevation: 0,
-    marginTop: 8,
+  nextButton: {
     width: '100%',
-    alignItems: 'center',
-    minWidth: 160,
-    alignSelf: 'center',
-  },
-  buttonHover: {
-    backgroundColor: '#AFC3FF',
-  },
-  buttonLabel: {
-    fontSize: 18,
-    color: '#fff',
-    fontWeight: 'bold',
+    marginTop: 8,
+    backgroundColor: colors.softBlue,
   },
 });

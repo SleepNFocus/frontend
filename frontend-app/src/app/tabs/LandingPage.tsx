@@ -9,16 +9,15 @@ import { View } from 'react-native';
 import { Text } from '@/components/common/Text';
 
 export default function LandingPage() {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     const timeOut = setTimeout(() => {
-      navigation.navigate('Dashboard');
+      navigation.navigate('IntroCard'); // IntroCard로 이동
     }, 3000);
 
     return () => clearTimeout(timeOut);
-  }, []);
+  }, [navigation]);
 
   return (
     <View style={styles.root}>
@@ -38,8 +37,8 @@ export default function LandingPage() {
         </Text>
         <Text variant="titleMedium">가 만든 수면 & 생산성 관리 앱입니다.</Text>
       </View>
-      <LogoAnimation />
-      <Text style={styles.loadingText}> 앱을 준비하고 있습니다... </Text>
+            <LogoAnimation />
+      <Text style={styles.loadingText}>앱을 준비하고 있습니다...</Text>
     </View>
   );
 }
