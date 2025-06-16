@@ -11,80 +11,66 @@ import { RootStackParamList } from '@/App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '@/constants/colors';
 import useUiStore from '@/store/uiStore';
-import { saveSleepRecord } from '@/services/sleepApi';
+import { useSaveSleepRecord } from '@/services/sleepApi';
 
 export const SleepRecordPage: React.FC = () => {
   const navigation = useNavigation();
-  const navigation2 =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation2 = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isRecordSaved, setIsRecordSaved] = useState(false);
-  const [savedRecordData, setSavedRecordData] =
-    useState<SleepRecordData | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [savedRecordData, setSavedRecordData] = useState<SleepRecordData | null>(null);
   const { openModal } = useUiStore();
 
+  const saveSleepRecordMutation = useSaveSleepRecord();
+
   const handleSaveRecord = async (recordData: SleepRecordData) => {
-    setIsLoading(true);
-    
     try {
       console.log('수면 기록 저장 시작:', recordData);
       
-      const result = await saveSleepRecord(recordData);
+      const result = await saveSleepRecordMutation.mutateAsync(recordData);
       
-      if (result.success) {
-        console.log('저장 성공:', result.data);
-        
-        openModal('success', {
-          isOpen: true,
-          title: '저장 완료',
-          content: `수면 기록이 성공적으로 저장되었습니다. (ID: ${result.data?.id || 'Unknown'})`,
-          confirmText: '확인',
-          onConfirm: () => {
-            setTimeout(() => {
-              setSavedRecordData(recordData);
-              setIsRecordSaved(true);
-            }, 100);
-          },
-        });
-      } else {
-        console.error('저장 실패:', result.error);
-        
-        openModal('error', {
-          isOpen: true,
-          title: '저장 실패',
-          content: result.error || '수면 기록 저장에 실패했습니다. 다시 시도해 주세요.',
-          confirmText: '확인',
-          onConfirm: () => {},
-        });
-      }
+      console.log('저장 성공:', result);
+      
+      openModal('success', {
+        isOpen: true,
+        title: '저장 완료',
+        content: `수면 기록이 성공적으로 저장되었습니다. (ID: ${result.id || 'Unknown'})`,
+        confirmText: '확인',
+        onConfirm: () => {
+          setTimeout(() => {
+            setSavedRecordData(recordData);
+            setIsRecordSaved(true);
+          }, 100);
+        },
+      });
+      
     } catch (error) {
-      console.error('예외 발생:', error);
+      console.error('저장 실패:', error);
+      
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : '수면 기록 저장에 실패했습니다. 다시 시도해 주세요.';
       
       openModal('error', {
         isOpen: true,
         title: '저장 실패',
-        content: '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.',
+        content: errorMessage,
         confirmText: '확인',
         onConfirm: () => {},
       });
-    } finally {
-      setIsLoading(false);
     }
   };
-
-
 
   const startNewRecord = () => {
     setIsRecordSaved(false);
     setSavedRecordData(null);
   };
 
-  if (isLoading) {
+  if (saveSleepRecordMutation.isPending) {
     return (
       <Layout>
         <View style={styles.loadingContainer}>
           <Text variant="titleMedium" style={styles.loadingText}>
-            처리 중입니다...
+            저장 중입니다...
           </Text>
         </View>
       </Layout>
