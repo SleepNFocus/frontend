@@ -1,16 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Image, Animated, Alert } from 'react-native';
+import { View, StyleSheet, Image, Animated } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import IntroScreen from './IntroScreen';
 import KakaoLoginWebView from './KakaoLoginWebView';
-import { sendKakaoLoginCode } from './sendKakaoLoginCode';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '@/App';
 
 export const SocialLogin: React.FC = () => {
+  console.log('✅ SocialLogin 컴포넌트 렌더링됨!');
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  console.log('navigation 확인:', navigation);
+
   const [isStarted, setIsStarted] = useState(false);
   const [showKakaoWebView, setShowKakaoWebView] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -25,32 +26,9 @@ export const SocialLogin: React.FC = () => {
     }
   }, [isStarted]);
 
-  const handleKakaoLoginSuccess = async (code: string) => {
-    console.log('1. 인가코드 받음:', code);
-    setShowKakaoWebView(false);
-
-    try {
-      console.log('2. sendKakaoLoginCode 실행 시작');
-      const { access, refresh, user } = await sendKakaoLoginCode(code);
-      console.log('3. 서버 응답 완료:', user);
-
-      await AsyncStorage.setItem('accessToken', access);
-      await AsyncStorage.setItem('refreshToken', refresh);
-      await AsyncStorage.setItem('userInfo', JSON.stringify(user));
-      console.log('4. access, refresh, user 저장 완료');
-
-      Alert.alert('로그인 성공', `${user.nickname}님 환영합니다!`);
-      console.log('5. 네비게이션 이동 시작');
-      navigation.navigate('Settings');
-    } catch (err: any) {
-      console.error('❌ 로그인 실패:', err.response?.data || err.message);
-      Alert.alert('로그인 실패', '서버와의 연결에 실패했어요.');
-    }
-  };
-
   const handleSocialLogin = (provider: string) => {
     if (provider === '구글') {
-      Alert.alert('구글 로그인은 아직 구현되지 않았습니다.');
+      alert('구글 로그인은 아직 구현되지 않았습니다.');
     }
   };
 
@@ -65,7 +43,8 @@ export const SocialLogin: React.FC = () => {
   if (showKakaoWebView) {
     return (
       <View style={{ flex: 1 }}>
-        <KakaoLoginWebView onLoginSuccess={handleKakaoLoginSuccess} />
+        {/* ✅ 더 이상 props 안 넘겨도 됨 */}
+        <KakaoLoginWebView />
       </View>
     );
   }

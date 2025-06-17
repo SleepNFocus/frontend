@@ -22,6 +22,7 @@ interface LoginResponse {
 export const sendKakaoLoginCode = async (code: string): Promise<LoginResponse> => {
   try {
     const response = await axios.post<LoginResponse>(
+  
       `${BASE_URL}/api/users/social-login/`,
       {
         provider: 'kakao',

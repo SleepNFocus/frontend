@@ -1,12 +1,20 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import {
   useNavigation,
   useRoute,
   RouteProp,
   NavigationProp,
 } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuthStore } from '@/store/authStore';
+import { sendKakaoLoginCode } from './sendKakaoLoginCode';
 
 type LocalParamList = {
   Dashboard: undefined;
@@ -34,28 +42,37 @@ const OAuthCallback = () => {
     const { code } = route.params ?? {};
 
     if (!code) {
+      console.log('❗ 인가 코드 없음. 이전 화면으로 이동.');
       navigation.goBack();
       return;
     }
 
-    const mockAuthenticate = async () => {
-      await new Promise(resolve => setTimeout(resolve, 1200));
+    const authenticate = async () => {
+      try {
+        console.log('🚀 인가 코드 수신됨:', code);
+        const { access, refresh, user } = await sendKakaoLoginCode(code);
+        console.log('🐤 서버에서 받은 유저 정보:', user);
 
-      setLogin(true);
-      setUser({
-        id: 1,
-        email: 'test@test.mockup.io',
-        nickname: 'TEST',
-        image_url: '',
-      });
+        await AsyncStorage.setItem('accessToken', access);
+        await AsyncStorage.setItem('refreshToken', refresh);
+        await AsyncStorage.setItem('userInfo', JSON.stringify(user));
 
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Dashboard' }],
-      });
+        setLogin(true);
+        setUser(user);
+
+        console.log('✅ 상태 저장 완료. 대시보드로 이동합니다.');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Dashboard' }],
+        });
+      } catch (err) {
+        console.error('❌ 로그인 실패:', err);
+        Alert.alert('로그인 실패', '카카오 로그인에 실패했어요!');
+        navigation.goBack();
+      }
     };
 
-    mockAuthenticate();
+    authenticate();
   }, [route.params]);
 
   return (
