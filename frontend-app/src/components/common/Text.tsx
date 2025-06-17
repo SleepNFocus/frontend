@@ -1,10 +1,10 @@
 import React from 'react';
 import { Text as RNText, TextStyle, StyleSheet } from 'react-native';
 import { colors } from '@/constants/colors';
+import { fonts } from '@/constants/fonts';
 
-// Text 컴포넌트의 props 타입 정의
 interface TextProps {
-  children: React.ReactNode; // 텍스트 내용
+  children: React.ReactNode;
   variant?:
     | 'displayLarge'
     | 'displayMedium'
@@ -20,61 +20,51 @@ interface TextProps {
     | 'bodySmall'
     | 'labelLarge'
     | 'labelMedium'
-    | 'labelSmall'; // 텍스트 스타일 종류
-  style?: TextStyle; // 커스텀 스타일
-  color?: string; // 텍스트 색상
+    | 'labelSmall';
+  style?: TextStyle;
+  color?: string;
+  fontFamily?: keyof typeof fonts;
 }
 
-// Text: 공통 텍스트 UI 컴포넌트
 export const Text: React.FC<TextProps> = ({
   children,
   variant = 'bodyMedium',
   style,
   color,
+  fontFamily,
 }) => {
-  // variant에 따라 스타일 반환
   const getTextStyle = () => {
-    switch (variant) {
-      case 'displayLarge':
-        return styles.displayLarge;
-      case 'displayMedium':
-        return styles.displayMedium;
-      case 'displaySmall':
-        return styles.displaySmall;
-      case 'headlineLarge':
-        return styles.headlineLarge;
-      case 'headlineMedium':
-        return styles.headlineMedium;
-      case 'headlineSmall':
-        return styles.headlineSmall;
-      case 'titleLarge':
-        return styles.titleLarge;
-      case 'titleMedium':
-        return styles.titleMedium;
-      case 'titleSmall':
-        return styles.titleSmall;
-      case 'bodyLarge':
-        return styles.bodyLarge;
-      case 'bodyMedium':
-        return styles.bodyMedium;
-      case 'bodySmall':
-        return styles.bodySmall;
-      case 'labelLarge':
-        return styles.labelLarge;
-      case 'labelMedium':
-        return styles.labelMedium;
-      case 'labelSmall':
-        return styles.labelSmall;
-      default:
-        return styles.bodyMedium;
+    const baseStyle = styles[variant] || styles.bodyMedium;
+    
+    let selectedFont: keyof typeof fonts = 'regular';
+    
+    if (fontFamily) {
+      selectedFont = fontFamily;
+    } else {
+      const fontWeight = String(baseStyle.fontWeight);
+      if (fontWeight === '700' || fontWeight === 'bold') {
+        selectedFont = 'bold';
+      } else if (fontWeight === '800') {
+        selectedFont = 'extraBold';
+      } else if (fontWeight === '300') {
+        selectedFont = 'light';
+      } else {
+        selectedFont = 'regular'; 
+      }
     }
+    
+    return {
+      ...baseStyle,
+      fontFamily: fonts[selectedFont],
+    };
   };
 
   return (
     <RNText
       style={[
+        { fontFamily: fonts.regular }, 
         getTextStyle(),
-        { color: color || colors.deepNavy }, // 기본 색상을 deepNavy로 설정
+        { color: color || colors.deepNavy },
         style,
       ]}
     >
@@ -83,65 +73,64 @@ export const Text: React.FC<TextProps> = ({
   );
 };
 
-// Material Design 3 기준 텍스트 스타일 정의
 const styles = StyleSheet.create({
   displayLarge: {
     fontSize: 57,
-    fontWeight: '400',
+    fontWeight: '800', 
     letterSpacing: 0,
     lineHeight: 64,
   },
   displayMedium: {
     fontSize: 45,
-    fontWeight: '400',
+    fontWeight: '700', 
     letterSpacing: 0,
     lineHeight: 52,
   },
   displaySmall: {
     fontSize: 36,
-    fontWeight: '400',
+    fontWeight: '700', 
     letterSpacing: 0,
     lineHeight: 44,
   },
   headlineLarge: {
     fontSize: 32,
-    fontWeight: '400',
+    fontWeight: '700', 
     letterSpacing: 0,
     lineHeight: 40,
   },
   headlineMedium: {
     fontSize: 28,
-    fontWeight: '400',
+    fontWeight: '700',
     letterSpacing: 0,
     lineHeight: 36,
   },
   headlineSmall: {
     fontSize: 24,
-    fontWeight: '400',
+    fontWeight: '700', 
     letterSpacing: 0,
     lineHeight: 32,
   },
   titleLarge: {
     fontSize: 22,
-    fontWeight: '400',
+    fontWeight: '700', 
     letterSpacing: 0,
     lineHeight: 28,
   },
   titleMedium: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '700', 
     letterSpacing: 0.15,
     lineHeight: 24,
   },
   titleSmall: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '700', 
     letterSpacing: 0.1,
     lineHeight: 20,
   },
   bodyLarge: {
     fontSize: 16,
-    fontWeight: '400',
+    fontWeight: '400', 
     letterSpacing: 0.5,
     lineHeight: 24,
   },
@@ -159,19 +148,19 @@ const styles = StyleSheet.create({
   },
   labelLarge: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '700',
     letterSpacing: 0.1,
     lineHeight: 20,
   },
   labelMedium: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: '700',
     letterSpacing: 0.5,
     lineHeight: 16,
   },
   labelSmall: {
     fontSize: 11,
-    fontWeight: '500',
+    fontWeight: '700', 
     letterSpacing: 0.5,
     lineHeight: 16,
   },
