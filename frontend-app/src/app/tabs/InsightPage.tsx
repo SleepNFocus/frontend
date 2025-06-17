@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text, Card } from 'react-native-paper';
+import { Text } from '@/components/common/Text';
 import { Layout } from '@/components/common/Layout';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { AISleepTips } from '@/components/sleep/AISleepTips';
 import { RoutineRecommendations } from '@/components/sleep/RoutineRecommendations';
+import { colors } from '@/constants/colors';
+import { spacing, fontSize } from '@/utils/responsive';
 
 export const InsightPage: React.FC = () => {
   const [insights, setInsights] = useState<any>(null);
@@ -37,7 +39,9 @@ export const InsightPage: React.FC = () => {
       <ErrorBoundary>
         <Layout>
           <View style={styles.loadingContainer}>
-            <Text variant="bodyLarge">AI 인사이트를 생성하는 중...</Text>
+            <Text variant="bodyLarge" style={styles.loadingText}>
+              AI 인사이트를 생성하는 중...
+            </Text>
           </View>
         </Layout>
       </ErrorBoundary>
@@ -47,7 +51,10 @@ export const InsightPage: React.FC = () => {
   return (
     <ErrorBoundary>
       <Layout>
-        <ScrollView style={styles.container}>
+        <ScrollView 
+          style={styles.container}
+          contentContainerStyle={styles.scrollContent}
+        >
           <AISleepTips tips={insights?.sleepTips || []} />
           <RoutineRecommendations routines={insights?.routines || []} />
         </ScrollView>
@@ -60,13 +67,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollContent: {
+    padding: spacing.lg,
+  },
   title: {
-    marginBottom: 24,
+    marginBottom: spacing.xl,
     textAlign: 'center',
+    fontSize: fontSize.xl,
+    color: colors.textColor,
+    fontWeight: 'bold',
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: spacing.xl,
+  },
+  loadingText: {
+    color: colors.midnightBlue,
+    fontSize: fontSize.lg,
   },
 });

@@ -15,7 +15,7 @@ export const MorePage: React.FC = () => {
   const { resetAuth } = useAuthStore();
 
   const handleLogout = () => {
-    openModal('info', {
+    openModal('confirm', {
       isOpen: true,
       title: '로그아웃',
       content: '로그아웃 하시겠습니까?',
@@ -29,7 +29,7 @@ export const MorePage: React.FC = () => {
           content: '로그아웃 되었습니다.',
           confirmText: '확인',
         });
-        navigation.navigate('SocialLogin' as never);
+        navigation.navigate('LandingPage' as never);
       },
     });
   };

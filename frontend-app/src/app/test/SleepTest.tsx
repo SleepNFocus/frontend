@@ -1,6 +1,5 @@
-import {
+import { Text } from '@/components/common/Text';import {
   View,
-  Text,
   Animated,
   StyleSheet,
   ScrollView,

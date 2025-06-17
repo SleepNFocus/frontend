@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Animated,
   StyleSheet,
   useWindowDimensions,
@@ -12,6 +11,7 @@ import { GlassCard } from '../common/Card';
 import { RootStackParamList } from '@/App';
 import { useEffect, useRef } from 'react';
 import { Layout } from '../common/Layout';
+import { Text } from '@/components/common/Text';
 
 export default function SleepTest1Desc() {
   const navigation =

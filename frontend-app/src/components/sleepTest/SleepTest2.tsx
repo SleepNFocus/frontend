@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   TouchableOpacity,
@@ -15,6 +14,7 @@ import { Button } from '@/components/common/Button';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Layout } from '../common/Layout';
+import { Text } from '@/components/common/Text';
 
 const MAX_NUM = 9;
 const TIMER_SECOND = 60000;

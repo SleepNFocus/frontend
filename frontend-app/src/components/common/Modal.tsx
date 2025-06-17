@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import {
   View,
-  Text,
   Modal as RNModal,
   TouchableOpacity,
   StyleSheet,
@@ -10,6 +9,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import useUiStore from '@/store/uiStore';
 import { colors } from '@/constants/colors';
+import { Text } from '@/components/common/Text';
 
 const styles = StyleSheet.create({
   overlay: {
@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContainer: {
-    width: '90%',
+    width: '80%',
     maxWidth: 420,
-    minHeight: 200,
+    minHeight: 240,
   },
   modalContent: {
     backgroundColor: colors.white,
@@ -48,11 +48,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: colors.textColor,
-    marginBottom: 4,
+    marginBottom: 6,
   },
   content: {
     fontSize: 14,
-    color: colors.mediumGray,
+    color: colors.midnightBlue,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -102,6 +102,9 @@ const styles = StyleSheet.create({
     color: colors.textColor,
     fontSize: 14,
     fontWeight: '500',
+  },
+  lightGrayCancelButton: {
+    backgroundColor: colors.lightGray,
   },
 });
 
@@ -212,7 +215,7 @@ const Modal: React.FC<ModalProps> = ({
                 cancelText && (
                   <TouchableOpacity
                     onPress={handleCancel}
-                    style={[styles.button, cancelStyle]}
+                    style={[styles.button, styles.lightGrayCancelButton, cancelStyle]}
                   >
                     <Text style={styles.cancelButtonText}>{cancelText}</Text>
                   </TouchableOpacity>

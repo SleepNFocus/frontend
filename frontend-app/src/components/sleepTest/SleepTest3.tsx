@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   TouchableOpacity,
@@ -17,6 +16,7 @@ import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
 import { useSendAllResults } from '@/services/testResultApi';
 import Toast from 'react-native-toast-message';
+import { Text } from '@/components/common/Text';
 
 type RoundInfo = {
   gridSize: number;

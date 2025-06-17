@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Text, Card } from 'react-native-paper';
+import { Text } from '@/components/common/Text';
+import { Card } from '@/components/common/Card';
+import { colors } from '@/constants/colors';
+import { spacing, fontSize } from '@/utils/responsive';
 
 interface RoutineRecommendationsProps {
   routines: string[];
@@ -11,29 +14,34 @@ export const RoutineRecommendations: React.FC<RoutineRecommendationsProps> = ({
 }) => {
   return (
     <Card style={styles.card}>
-      <Card.Content>
-        <Text variant="titleLarge" style={styles.cardTitle}>
-          추천 루틴
-        </Text>
-        {routines.map((routine, index) => (
-          <View key={index} style={styles.routineItem}>
-            <Text variant="bodyMedium">• {routine}</Text>
-          </View>
-        ))}
-      </Card.Content>
+      <Text style={styles.cardTitle}>추천 루틴</Text>
+      {routines.map((routine, index) => (
+        <View key={index} style={styles.routineItem}>
+          <Text variant="bodyMedium" style={styles.routineText}>• {routine}</Text>
+        </View>
+      ))}
     </Card>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    marginBottom: 16,
+    marginBottom: spacing.lg,
+    backgroundColor: colors.white,
+    borderColor: colors.mediumLightGray,
+    borderWidth: 1,
   },
   cardTitle: {
-    marginBottom: 16,
+    marginBottom: spacing.md,
+    fontSize: fontSize.lg,
     fontWeight: 'bold',
+    color: colors.textColor,
   },
   routineItem: {
-    marginBottom: 8,
+    marginBottom: spacing.sm,
+  },
+  routineText: {
+    color: colors.midnightBlue,
+    fontSize: fontSize.md,
   },
 });

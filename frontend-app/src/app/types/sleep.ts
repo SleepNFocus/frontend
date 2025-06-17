@@ -1,3 +1,14 @@
+export interface SleepRecord {
+  id: number;
+  date: string;
+  sleep_duration: number; // 분 단위
+  sleep_latency: number; // 분 단위
+  wake_count: number;
+  subjective_quality: number; // 1-5
+  environment_quality: number; // 1-5
+  score: number;
+}
+
 export interface ScoreBreakdown {
   durationScore: number;
   qualityScore: number;

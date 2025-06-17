@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   View,
-  Text,
   Image,
   Pressable,
   StyleSheet,
@@ -15,6 +14,7 @@ import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
+import { Text } from '@/components/common/Text';
 
 const MAX_STEP = 5;
 const MIN_WAIT_TIME = 1000;
