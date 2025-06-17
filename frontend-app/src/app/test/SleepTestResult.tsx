@@ -7,16 +7,26 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ResultChart from '@/components/chart/ResultChart';
-import { useSleepTestStore } from '@/store/testStore';
+// import { useSleepTestStore } from '@/store/testStore';
 import { GlassCard } from '@/components/common/Card';
 import { Button } from '@/components/common/Button';
 import { Layout } from '@/components/common/Layout';
 import { useNavigation } from 'expo-router';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { CognitiveResultType } from '../types/cognitive';
+
+type SleepTestResultRouteProp = RouteProp<
+  RootStackParamList,
+  'SleepTestResult'
+>;
 
 export default function SleepTestResult() {
-  const { test1, test2, test3 } = useSleepTestStore();
+  // const { test1, test2, test3 } = useSleepTestStore();
+
+  const { params } = useRoute<SleepTestResultRouteProp>();
+  const basic: CognitiveResultType = params.basic;
 
   const { width: windowWidth } = useWindowDimensions();
   const containerWidth = Math.min(windowWidth * 0.9, 700);
@@ -24,26 +34,23 @@ export default function SleepTestResult() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  // API 연결 후 Zustand 상태로 점수 받아오기
-  // const baseScore = 80;
-
   function goToDashboard() {
     navigation.navigate('Dashboard');
   }
 
-  const correctPercent =
-    test2 && test2.correctCount + test2.wrongCount > 0
-      ? Math.round(
-          (test2.correctCount / (test2.correctCount + test2.wrongCount)) * 100,
-        )
-      : '-';
+  // const correctPercent =
+  //   test2 && test2.correctCount + test2.wrongCount > 0
+  //     ? Math.round(
+  //         (test2.correctCount / (test2.correctCount + test2.wrongCount)) * 100,
+  //       )
+  //     : '-';
 
-  const totalScore = Math.round(
-    ((test1?.avgScore ?? 0) +
-      (test2?.totalScore ?? 0) +
-      (test3?.finalScore ?? 0)) /
-      3,
-  );
+  // const totalScore = Math.round(
+  //   ((test1?.avgScore ?? 0) +
+  //     (test2?.totalScore ?? 0) +
+  //     (test3?.finalScore ?? 0)) /
+  //     3,
+  // );
 
   return (
     <Layout>
@@ -51,17 +58,26 @@ export default function SleepTestResult() {
         <View style={styles.root}>
           <GlassCard style={[styles.container, { width: containerWidth }]}>
             <Text style={styles.mainTitle}> 수면 테스트 측정 완료 </Text>
-            <ResultChart />
+            <ResultChart
+              data={[
+                basic.raw_scores.srt.average_score,
+                basic.raw_scores.symbol.average_score,
+                basic.raw_scores.pattern.average_score,
+              ]}
+              labels={['반응 속도', '처리 속도', '패턴 기억']}
+            />
 
             <View style={styles.rowBox}>
               <View style={styles.textBox}>
                 <Text style={styles.boldText}>반응 속도 </Text>
                 <Text style={styles.mainText}>
-                  평균 반응 시간 : {test1?.avgReactionTime}
+                  평균 반응 시간 : {basic.raw_scores.srt.avg_ms}
                 </Text>
               </View>
               <View style={styles.roundScore}>
-                <Text style={styles.scoreText}>{test1?.avgScore}</Text>
+                <Text style={styles.scoreText}>
+                  {basic.raw_scores.srt.average_score}
+                </Text>
               </View>
             </View>
 
@@ -69,15 +85,19 @@ export default function SleepTestResult() {
               <View style={styles.textBox}>
                 <Text style={styles.boldText}>처리 속도 </Text>
                 <Text style={styles.mainText}>
-                  맞춘 개수 : {test2?.correctCount}개
+                  맞춘 개수 : {basic.raw_scores.symbol.correct}개
                 </Text>
                 <Text style={styles.mainText}>
-                  평균 반응 속도 : {test2?.avgReactionTime}ms
+                  평균 반응 속도 : {basic.raw_scores.symbol.avg_ms}ms
                 </Text>
-                <Text style={styles.mainText}>정확도 : {correctPercent}% </Text>
+                <Text style={styles.mainText}>
+                  정확도 : {basic.raw_scores.symbol.symbol_accuracy}%{' '}
+                </Text>
               </View>
               <View style={styles.roundScore}>
-                <Text style={styles.scoreText}>{test2?.totalScore}</Text>
+                <Text style={styles.scoreText}>
+                  {basic.raw_scores.symbol.average_score}
+                </Text>
               </View>
             </View>
 
@@ -85,14 +105,16 @@ export default function SleepTestResult() {
               <View style={styles.textBox}>
                 <Text style={styles.boldText}>패턴 기억 </Text>
                 <Text style={styles.mainText}>
-                  기억력 점수 : {test3?.finalScore}
+                  맞춘 개수 : 18 / {basic.raw_scores.pattern.correct}개
                 </Text>
               </View>
               <View style={styles.roundScore}>
-                <Text style={styles.scoreText}>{test3?.finalScore}</Text>
+                <Text style={styles.scoreText}>
+                  {basic.raw_scores.pattern.average_score}
+                </Text>
               </View>
             </View>
-            <Text style={styles.mainScore}>{totalScore}점</Text>
+            <Text style={styles.mainScore}>{basic.average_score}점</Text>
             <View style={styles.descriptionBox}>
               <Text style={styles.description}>
                 초기 인지 능력 측정이 완료되었습니다.

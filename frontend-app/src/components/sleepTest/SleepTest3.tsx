@@ -65,8 +65,7 @@ export default function SleepTest3() {
 
   function goToSleepTestResult() {
     const { test1, test2, test3 } = useSleepTestStore.getState();
-    const userId = '1234';
-    // const userId = useAuthStore.getState().user?.id;
+    const userId = '1234'; // 나중에 실제 사용자 ID로 변경
 
     if (!userId || !test1 || !test2 || !test3) {
       Toast.show({
@@ -77,18 +76,26 @@ export default function SleepTest3() {
       return;
     }
 
-    sendAllResults(
-      { userId, test1, test2, test3 },
-      {
-        onSuccess: () => {
-          navigation.navigate('SleepTestResult');
-          resetGame();
-        },
-        onError: () => {
-          // 여기 에러 메시지는 useSendAllResults 훅 안에서 Toast로 (우선) 처리됨으로 생략
-        },
+    const requestBody = {
+      userId,
+      test1,
+      test2,
+      test3,
+    };
+
+    sendAllResults(requestBody, {
+      onSuccess: basicResult => {
+        navigation.navigate('SleepTestResult', { basic: basicResult });
+        resetGame();
       },
-    );
+      onError: () => {
+        Toast.show({
+          type: 'error',
+          text1: '결과 전송 실패',
+          text2: '서버 오류가 발생했습니다.',
+        });
+      },
+    });
   }
 
   function finishShow() {
