@@ -15,7 +15,7 @@ import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
-import { sendAllResults } from '@/services/testResultApi';
+import { useSendAllResults } from '@/services/testResultApi';
 import Toast from 'react-native-toast-message';
 
 type RoundInfo = {
@@ -41,6 +41,8 @@ const getRandomIdx = (gridSize: number, clickPattern: number): number[] => {
 };
 
 export default function SleepTest3() {
+  const { mutate: sendAllResults } = useSendAllResults();
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -61,10 +63,10 @@ export default function SleepTest3() {
   const [gameEnded, setGameEnded] = useState(false);
   const [round, setRound] = useState(0);
 
-  async function goToSleepTestResult() {
+  function goToSleepTestResult() {
     const { test1, test2, test3 } = useSleepTestStore.getState();
     const userId = '1234';
-    // useAuthStore.getState().user?.id; // 실제 로그인된 유저 ID
+    // const userId = useAuthStore.getState().user?.id;
 
     if (!userId || !test1 || !test2 || !test3) {
       Toast.show({
@@ -75,32 +77,18 @@ export default function SleepTest3() {
       return;
     }
 
-    try {
-      const result = await sendAllResults({
-        userId,
-        test1,
-        test2,
-        test3,
-      });
-
-      if (result) {
-        navigation.navigate('SleepTestResult');
-        resetGame();
-      } else {
-        Toast.show({
-          type: 'error',
-          text1: '결과 전송 실패',
-          text2: '서버 응답이 없습니다.',
-        });
-      }
-    } catch (error) {
-      console.error('결과 전송 오류:', error);
-      Toast.show({
-        type: 'error',
-        text1: '결과 전송 오류',
-        text2: '잠시 후 다시 시도해주세요.',
-      });
-    }
+    sendAllResults(
+      { userId, test1, test2, test3 },
+      {
+        onSuccess: () => {
+          navigation.navigate('SleepTestResult');
+          resetGame();
+        },
+        onError: () => {
+          // 여기 에러 메시지는 useSendAllResults 훅 안에서 Toast로 (우선) 처리됨으로 생략
+        },
+      },
+    );
   }
 
   function finishShow() {
@@ -160,20 +148,24 @@ export default function SleepTest3() {
 
   const setTest3 = useSleepTestStore(state => state.setTest3);
 
+  const [finalResult, setFinalResult] = useState<{
+    finalScore: number;
+    accuracy: number;
+    totalCorrect: number;
+  } | null>(null);
+
   useEffect(() => {
     if (gameEnded && totalStart !== null) {
       const result = calculateSleepTest3Score(totalCorrect, totalStart);
-      console.log('결과:', result);
+      setFinalResult({
+        ...result,
+        totalCorrect,
+      });
       setTest3(result);
     }
   }, [gameEnded, totalStart]);
 
   if (gameEnded && totalStart !== null) {
-    const { finalScore, accuracy } = calculateSleepTest3Score(
-      totalCorrect,
-      totalStart,
-    );
-
     return (
       <Layout>
         <View style={styles.root}>
@@ -184,20 +176,30 @@ export default function SleepTest3() {
             />
             <View style={styles.resultBox2}>
               <Text style={styles.title}> 패턴 기억 결과 </Text>
-              <Text style={styles.scoreText}> {finalScore}점 </Text>
-              <View style={styles.resultContainer}>
-                <View style={styles.resultContainer2}>
-                  <Text style={styles.result}>총 정답 수: </Text>
-                  <Text style={styles.resultBold}>
+              {finalResult && (
+                <>
+                  <Text style={styles.scoreText}>
                     {' '}
-                    {totalCorrect}개 / 18개{' '}
+                    {finalResult.finalScore}점{' '}
                   </Text>
-                </View>
-                <View style={styles.resultContainer2}>
-                  <Text style={styles.result}>정확도: </Text>
-                  <Text style={styles.resultBold}> {accuracy}% </Text>
-                </View>
-              </View>
+                  <View style={styles.resultContainer}>
+                    <View style={styles.resultContainer2}>
+                      <Text style={styles.result}>총 정답 수: </Text>
+                      <Text style={styles.resultBold}>
+                        {' '}
+                        {finalResult.totalCorrect}개 / 18개{' '}
+                      </Text>
+                    </View>
+                    <View style={styles.resultContainer2}>
+                      <Text style={styles.result}>정확도: </Text>
+                      <Text style={styles.resultBold}>
+                        {' '}
+                        {finalResult.accuracy}%{' '}
+                      </Text>
+                    </View>
+                  </View>
+                </>
+              )}
             </View>
 
             <Button

@@ -1,121 +1,166 @@
+import { useMutation } from '@tanstack/react-query';
 import { apiClient } from '@/config/axios';
 import Toast from 'react-native-toast-message';
 import { AxiosError } from 'axios';
 
-export async function postSRTResult({
-  cognitiveSession,
-  score,
-  reactionAvgMs,
-  reactionList,
-}: {
+type SRTPayload = {
   cognitiveSession: number;
   score: number;
   reactionAvgMs: number;
   reactionList: number[];
-}) {
-  try {
-    const payload = {
-      cognitive_session: cognitiveSession,
+};
+
+export function usePostSRTResult() {
+  return useMutation({
+    mutationFn: async ({
+      cognitiveSession,
       score,
-      reaction_avg_ms: reactionAvgMs,
-      reaction_list: reactionList.join(','), // 서버가 문자열을 요구
-    };
+      reactionAvgMs,
+      reactionList,
+    }: SRTPayload) => {
+      const payload = {
+        cognitive_session: cognitiveSession,
+        score,
+        reaction_avg_ms: reactionAvgMs,
+        reaction_list: reactionList.join(','),
+      };
 
-    console.log('데이터 전송', payload);
+      console.log('SRT 데이터', payload);
+      const res = await apiClient.post(
+        'api/cognitive-statistics/result/srt/',
+        payload,
+      );
+      return res.data;
+    },
 
-    const response = await apiClient.post(
-      'api/cognitive-statistics/result/srt/',
-      payload,
-    );
+    onSuccess: () => {
+      Toast.show({
+        type: 'success',
+        text1: 'SRT 점수 저장 완료!',
+      });
+    },
 
-    return response.data;
-  } catch (error) {
-    const axiosError = error as AxiosError<{ message: string }>;
-    console.error('에러:', axiosError.response?.data || axiosError.message);
+    onError: error => {
+      const axiosError = error as AxiosError<{ message: string }>;
+      console.error(
+        'SRT 전송 실패:',
+        axiosError.response?.data || axiosError.message,
+      );
 
-    Toast.show({
-      type: 'error',
-      text1: '점수 전송 실패',
-      text2: axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
-    });
-    return null;
-  }
+      Toast.show({
+        type: 'error',
+        text1: 'SRT 점수 전송 실패',
+        text2:
+          axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
+      });
+    },
+  });
 }
 
-export async function postSymbolResult({
-  cognitiveSession,
-  score,
-  symbolCorrect,
-  symbolAccuracy,
-}: {
+type SymbolPayload = {
   cognitiveSession: number;
   score: number;
   symbolCorrect: number;
   symbolAccuracy: number;
-}) {
-  try {
-    const payload = {
-      cognitive_session: cognitiveSession,
+};
+
+export function usePostSymbolResult() {
+  return useMutation({
+    mutationFn: async ({
+      cognitiveSession,
       score,
-      symbol_correct: symbolCorrect,
-      symbol_accuracy: symbolAccuracy,
-    };
+      symbolCorrect,
+      symbolAccuracy,
+    }: SymbolPayload) => {
+      const payload = {
+        cognitive_session: cognitiveSession,
+        score,
+        symbol_correct: symbolCorrect,
+        symbol_accuracy: symbolAccuracy,
+      };
 
-    console.log('데이터 전송', payload);
+      console.log('Symbol 데이터', payload);
+      const res = await apiClient.post(
+        'api/cognitive-statistics/result/symbol/',
+        payload,
+      );
+      return res.data;
+    },
 
-    const response = await apiClient.post(
-      'api/cognitive-statistics/result/symbol/',
-      payload,
-    );
-    return response.data;
-  } catch (error) {
-    const axiosError = error as AxiosError<{ message: string }>;
-    console.error('에러:', axiosError.response?.data || axiosError.message);
+    onSuccess: () => {
+      Toast.show({
+        type: 'success',
+        text1: 'Symbol 점수 저장 완료!',
+      });
+    },
 
-    Toast.show({
-      type: 'error',
-      text1: '점수 전송 실패',
-      text2: axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
-    });
-    return null;
-  }
+    onError: error => {
+      const axiosError = error as AxiosError<{ message: string }>;
+      console.error(
+        'Symbol 전송 실패:',
+        axiosError.response?.data || axiosError.message,
+      );
+
+      Toast.show({
+        type: 'error',
+        text1: 'Symbol 점수 전송 실패',
+        text2:
+          axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
+      });
+    },
+  });
 }
 
-export async function postPatternResult({
-  cognitiveSession,
-  score,
-  patternCorrect,
-  patternTimeSec,
-}: {
+type PatternPayload = {
   cognitiveSession: number;
   score: number;
   patternCorrect: number;
   patternTimeSec: number;
-}) {
-  try {
-    const payload = {
-      cognitive_session: cognitiveSession,
+};
+
+export function usePostPatternResult() {
+  return useMutation({
+    mutationFn: async ({
+      cognitiveSession,
       score,
-      pattern_correct: patternCorrect,
-      pattern_time_sec: patternTimeSec,
-    };
+      patternCorrect,
+      patternTimeSec,
+    }: PatternPayload) => {
+      const payload = {
+        cognitive_session: cognitiveSession,
+        score,
+        pattern_correct: patternCorrect,
+        pattern_time_sec: patternTimeSec,
+      };
 
-    console.log('데이터 전송', payload);
+      console.log('Pattern 데이터', payload);
+      const res = await apiClient.post(
+        'api/cognitive-statistics/result/pattern/',
+        payload,
+      );
+      return res.data;
+    },
 
-    const response = await apiClient.post(
-      'api/cognitive-statistics/result/pattern/',
-      payload,
-    );
-    return response.data;
-  } catch (error) {
-    const axiosError = error as AxiosError<{ message: string }>;
-    console.error('에러:', axiosError.response?.data || axiosError.message);
+    onSuccess: () => {
+      Toast.show({
+        type: 'success',
+        text1: 'Pattern 점수 저장 완료!',
+      });
+    },
 
-    Toast.show({
-      type: 'error',
-      text1: '점수 전송 실패',
-      text2: axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
-    });
-    return null;
-  }
+    onError: error => {
+      const axiosError = error as AxiosError<{ message: string }>;
+      console.error(
+        'Pattern 전송 실패:',
+        axiosError.response?.data || axiosError.message,
+      );
+
+      Toast.show({
+        type: 'error',
+        text1: 'Pattern 점수 전송 실패',
+        text2:
+          axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
+      });
+    },
+  });
 }
