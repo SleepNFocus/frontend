@@ -141,32 +141,17 @@ const ICON_MAP = {
   },
 };
 
-type ModalType = 'error' | 'success' | 'warning' | 'info' | 'confirm';
-
-interface ModalProps {
-  type?: ModalType;
-  closeOnOutsideClick?: boolean;
-}
-
-/**
- * 모달 컴포넌트 - Zustand와 통합
- * @param {Object} props
- * @param {string} props.type - 모달 타입 ('error' | 'success' | 'warning' | 'info' | 'confirm')
- * @param {boolean} props.closeOnOutsideClick - 외부 클릭 시 닫기 여부 (기본값: true)
- */
-const Modal: React.FC<ModalProps> = ({
-  type = 'info',
-  closeOnOutsideClick = true,
-}) => {
+const Modal: React.FC = () => {
   const modalRef = useRef<View>(null);
-
-  // Zustand 스토어 사용
   const { modals, closeModal } = useUiStore();
 
-  const modal = modals[type];
-  const isOpen = modal?.isOpen || false;
+  // isOpen인 첫 번째 모달 찾기
+  const openModalEntry = Object.entries(modals).find(([, modal]) => modal.isOpen);
+  if (!openModalEntry) return null;
+  const [type, modal] = openModalEntry;
+
   const title = modal?.title || '';
-  const content = modal?.content || '';
+  const content = modal?.content || null;
   const confirmText = modal?.confirmText || '확인';
   const cancelText = modal?.cancelText || '취소';
   const onConfirm = modal?.onConfirm;
@@ -183,19 +168,18 @@ const Modal: React.FC<ModalProps> = ({
   };
 
   const handleOutsideClick = () => {
-    if (closeOnOutsideClick) {
-      closeModal(type);
-    }
+    closeModal(type);
   };
 
-  const { icon, confirmStyle, cancelStyle, role } = ICON_MAP[type];
+  const iconMap = ICON_MAP[type as keyof typeof ICON_MAP] || ICON_MAP.info;
+  const { icon, confirmStyle, cancelStyle } = iconMap;
 
   return (
     <RNModal
-      visible={isOpen}
+      visible={modal.isOpen}
       transparent
       animationType="fade"
-      onRequestClose={() => closeModal(type)}
+      onRequestClose={handleOutsideClick}
     >
       <Pressable style={styles.overlay} onPress={handleOutsideClick}>
         <View style={styles.modalContainer}>
@@ -205,7 +189,11 @@ const Modal: React.FC<ModalProps> = ({
               {icon}
               <View style={styles.textContainer}>
                 <Text style={styles.title}>{title}</Text>
-                <Text style={styles.content}>{content}</Text>
+                {typeof content === 'string' ? (
+                  <Text style={styles.content}>{content}</Text>
+                ) : (
+                  content
+                )}
               </View>
             </View>
 

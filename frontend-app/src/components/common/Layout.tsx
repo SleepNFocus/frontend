@@ -4,8 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Navbar } from './Navbar';
 import { colors } from '@/constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
-import Modal from '@/components/common/Modal';
 import { spacing } from '@/utils/responsive';
+import { ToastList } from '@/components/common/Toast';
 
 // Layout 컴포넌트의 props 타입 정의
 interface LayoutProps {
@@ -41,11 +41,7 @@ export const Layout: React.FC<LayoutProps> = ({
         )}
         <View style={styles.content}>{children}</View>
         <Navbar />
-        <Modal type="success" />
-        <Modal type="error" />
-        <Modal type="warning" />
-        <Modal type="info" />
-        <Modal type="confirm" />
+        <ToastList />
       </SafeAreaView>
     </LinearGradient>
   );
