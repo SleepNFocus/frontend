@@ -5,6 +5,7 @@ import { View, StyleSheet } from 'react-native';
 import { Text } from '@/components/common/Text';
 import { RootStackParamList } from '@/App';
 import { useEffect } from 'react';
+
 export default function SleepTestMain() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
