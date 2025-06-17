@@ -2,11 +2,11 @@
 import { useMutation } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import { AxiosError } from 'axios';
-import { SendAllResultsPayload } from '@/app/types/test';
+import { SendAllResultsPayload } from '@/types/test';
 import { usePostSRTResult } from '@/services/testApi';
 import { usePostSymbolResult } from '@/services/testApi';
 import { usePostPatternResult } from '@/services/testApi';
-import { apiClient } from '@/config/axios';
+import { apiClient } from '@/services/axios';
 
 export function useSendAllResults() {
   const { mutateAsync: postSRT } = usePostSRTResult();
@@ -57,7 +57,8 @@ export function useSendAllResults() {
         type: 'success',
         text1: '모든 점수가 저장되고 결과가 조회되었습니다!',
       });
-      console.log('기본 통계 결과:', data);
+      // [정리 필요] console.log 등 디버깅 코드는 배포 전 반드시 제거해야 함
+      // 이유: 불필요한 콘솔 출력은 성능 저하, 보안 이슈, 로그 오염의 원인이 됨
     },
 
     onError: error => {

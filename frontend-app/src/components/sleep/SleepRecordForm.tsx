@@ -538,7 +538,7 @@ const styles = StyleSheet.create({
   },
   // 점수 미리보기 스타일
   scorePreview: {
-    backgroundColor: colors.lightGray,
+    backgroundColor: colors.white,
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,

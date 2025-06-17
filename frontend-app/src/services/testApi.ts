@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { apiClient } from '@/config/axios';
+import { apiClient } from '@/services/axios';
 import Toast from 'react-native-toast-message';
 import { AxiosError } from 'axios';
 
@@ -25,6 +25,8 @@ export function usePostSRTResult() {
         reaction_list: reactionList.join(','),
       };
 
+      // [정리 필요] console.log 등 디버깅 코드는 배포 전 반드시 제거해야 함
+      // 이유: 불필요한 콘솔 출력은 성능 저하, 보안 이슈, 로그 오염의 원인이 됨
       console.log('SRT 데이터', payload);
       const res = await apiClient.post(
         'api/cognitive-statistics/result/srt/',
@@ -79,6 +81,8 @@ export function usePostSymbolResult() {
         symbol_accuracy: symbolAccuracy,
       };
 
+      // [정리 필요] console.log 등 디버깅 코드는 배포 전 반드시 제거해야 함
+      // 이유: 불필요한 콘솔 출력은 성능 저하, 보안 이슈, 로그 오염의 원인이 됨
       console.log('Symbol 데이터', payload);
       const res = await apiClient.post(
         'api/cognitive-statistics/result/symbol/',
@@ -133,6 +137,8 @@ export function usePostPatternResult() {
         pattern_time_sec: patternTimeSec,
       };
 
+      // [정리 필요] console.log 등 디버깅 코드는 배포 전 반드시 제거해야 함
+      // 이유: 불필요한 콘솔 출력은 성능 저하, 보안 이슈, 로그 오염의 원인이 됨
       console.log('Pattern 데이터', payload);
       const res = await apiClient.post(
         'api/cognitive-statistics/result/pattern/',

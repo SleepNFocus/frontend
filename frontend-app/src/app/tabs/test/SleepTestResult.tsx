@@ -14,7 +14,7 @@ import { useNavigation } from 'expo-router';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { CognitiveResultType } from '../types/cognitive';
+import { CognitiveResultType } from '@/types/cognitive';
 import { Text } from '@/components/common/Text'
 
 type SleepTestResultRouteProp = RouteProp<
@@ -125,9 +125,9 @@ export default function SleepTestResult() {
               </Text>
             </View>
             <Button
-              title="대시보드로 이동"
+              title="결과 보기"
               variant="primary"
-              style={styles.button}
+              style={styles.resultButton}
               onPress={goToDashboard}
             />
           </GlassCard>
@@ -260,17 +260,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 50,
   },
-  button: {
-    width: 140,
-    paddingVertical: 12,
-    borderRadius: 10,
-    alignItems: 'center',
-    shadowColor: '#909090',
-    shadowOffset: {
-      width: 4,
-      height: 4,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
+  resultButton: {
+    marginTop: 20,
+    width: '100%',
+    maxWidth: 320,
   },
 });
