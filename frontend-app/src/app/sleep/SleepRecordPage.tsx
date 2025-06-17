@@ -81,57 +81,58 @@ export const SleepRecordPage: React.FC = () => {
 
   return (
     <Layout>
-      {/* <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         {!isRecordSaved ? (
           <SleepRecordForm onSave={handleSaveRecord} />
-        ) : ( */}
-      <View style={styles.resultSection}>
-        <View style={styles.scoreSection}>
-          <Text variant="headlineSmall" style={styles.scoreTitle}>
-            오늘의 수면 점수
-          </Text>
-          <Text variant="displayMedium" style={styles.totalScore}>
-            {savedRecordData?.totalScore}점
-          </Text>
-          <View style={styles.scoreBreakdown}>
-            <Text variant="bodySmall">
-              수면시간: {savedRecordData?.scoreBreakdown.durationScore}/25
-            </Text>
-            <Text variant="bodySmall">
-              수면질: {savedRecordData?.scoreBreakdown.qualityScore}/30
-            </Text>
-            <Text variant="bodySmall">
-              수면환경: {savedRecordData?.scoreBreakdown.environmentScore}/20
-            </Text>
+        ) : (
+          <View style={styles.resultSection}>
+            <View style={styles.scoreSection}>
+              <Text variant="headlineSmall" style={styles.scoreTitle}>
+                오늘의 수면 점수
+              </Text>
+              <Text variant="displayMedium" style={styles.totalScore}>
+                {savedRecordData?.totalScore}점
+              </Text>
+              <View style={styles.scoreBreakdown}>
+                <Text variant="bodySmall">
+                  수면시간: {savedRecordData?.scoreBreakdown.durationScore}/25
+                </Text>
+                <Text variant="bodySmall">
+                  수면질: {savedRecordData?.scoreBreakdown.qualityScore}/30
+                </Text>
+                <Text variant="bodySmall">
+                  수면환경: {savedRecordData?.scoreBreakdown.environmentScore}
+                  /20
+                </Text>
+              </View>
+            </View>
+
+            {savedRecordData && (
+              <ScoreFeedback
+                score={savedRecordData.totalScore}
+                scoreBreakdown={savedRecordData.scoreBreakdown}
+              />
+            )}
+
+            <View style={styles.actionButtons}>
+              <Button
+                onPress={startNewRecord}
+                title="새로운 기록 입력"
+                variant="outline"
+                style={styles.secondaryButton}
+              />
+              <Button
+                onPress={() => {
+                  navigation2.navigate('SleepTestMain');
+                }}
+                title="테스트"
+                variant="outline"
+                style={styles.secondaryButton}
+              />
+            </View>
           </View>
-        </View>
-
-        {savedRecordData && (
-          <ScoreFeedback
-            score={savedRecordData.totalScore}
-            scoreBreakdown={savedRecordData.scoreBreakdown}
-          />
         )}
-
-        <View style={styles.actionButtons}>
-          <Button
-            onPress={startNewRecord}
-            title="새로운 기록 입력"
-            variant="outline"
-            style={styles.secondaryButton}
-          />
-          <Button
-            onPress={() => {
-              navigation2.navigate('SleepTestMain');
-            }}
-            title="테스트"
-            variant="outline"
-            style={styles.secondaryButton}
-          />
-        </View>
-      </View>
-      {/* )} */}
-      {/* </ScrollView> */}
+      </ScrollView>
     </Layout>
   );
 };
