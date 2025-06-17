@@ -1,28 +1,18 @@
+// src/services/useSendAllResults.ts
 import { useMutation } from '@tanstack/react-query';
-import { apiClient } from '@/config/axios';
 import Toast from 'react-native-toast-message';
 import { AxiosError } from 'axios';
-
-type SendAllResultsPayload = {
-  userId: string;
-  test1: {
-    avgReactionTime: number;
-    avgScore: number;
-    reactionList: number[];
-  };
-  test2: {
-    correctCount: number;
-    wrongCount: number;
-    totalScore: number;
-  };
-  test3: {
-    totalCorrect: number;
-    finalScore: number;
-    totalTimeSec: number;
-  };
-};
+import { SendAllResultsPayload } from '@/app/types/test';
+import { usePostSRTResult } from '@/services/testApi';
+import { usePostSymbolResult } from '@/services/testApi';
+import { usePostPatternResult } from '@/services/testApi';
+import { apiClient } from '@/config/axios';
 
 export function useSendAllResults() {
+  const { mutateAsync: postSRT } = usePostSRTResult();
+  const { mutateAsync: postSymbol } = usePostSymbolResult();
+  const { mutateAsync: postPattern } = usePostPatternResult();
+
   return useMutation({
     mutationFn: async ({
       userId,
@@ -32,47 +22,42 @@ export function useSendAllResults() {
     }: SendAllResultsPayload) => {
       const cognitiveSession = Number(userId);
 
-      const srtPayload = {
-        cognitive_session: cognitiveSession,
+      await postSRT({
+        cognitiveSession,
         score: test1.avgScore,
-        reaction_avg_ms: test1.avgReactionTime,
-        reaction_list: test1.reactionList.join(','),
-      };
-      console.log('SRT', srtPayload);
-      await apiClient.post('api/cognitive-statistics/result/srt/', srtPayload);
+        reactionAvgMs: test1.avgReactionTime,
+        reactionList: test1.reactionList,
+      });
 
       const total = test2.correctCount + test2.wrongCount || 1;
       const symbolAccuracy = Math.round((test2.correctCount / total) * 100);
-      const symbolPayload = {
-        cognitive_session: cognitiveSession,
-        score: test2.totalScore,
-        symbol_correct: test2.correctCount,
-        symbol_accuracy: symbolAccuracy,
-      };
-      console.log('Symbol', symbolPayload);
-      await apiClient.post(
-        'api/cognitive-statistics/result/symbol/',
-        symbolPayload,
-      );
 
-      const patternPayload = {
-        cognitive_session: cognitiveSession,
+      await postSymbol({
+        cognitiveSession,
+        score: test2.totalScore,
+        symbolCorrect: test2.correctCount,
+        symbolAccuracy,
+      });
+
+      await postPattern({
+        cognitiveSession,
         score: test3.finalScore,
-        pattern_correct: test3.totalCorrect,
-        pattern_time_sec: test3.totalTimeSec,
-      };
-      console.log('Pattern', patternPayload);
-      await apiClient.post(
-        'api/cognitive-statistics/result/pattern/',
-        patternPayload,
+        patternCorrect: test3.totalCorrect,
+        patternTimeSec: test3.totalTimeSec,
+      });
+
+      const { data: basicResult } = await apiClient.get(
+        '/api/cognitive-statistics/result/basic/',
       );
+      return basicResult; // 이 데이터를 onSuccess로 전달
     },
 
-    onSuccess: () => {
+    onSuccess: data => {
       Toast.show({
         type: 'success',
-        text1: '모든 점수가 저장되었습니다!',
+        text1: '모든 점수가 저장되고 결과가 조회되었습니다!',
       });
+      console.log('기본 통계 결과:', data);
     },
 
     onError: error => {
@@ -83,7 +68,7 @@ export function useSendAllResults() {
       const errorMsg =
         axiosError.response?.data?.message || axiosError.response?.data?.detail;
 
-      console.error('[점수 전송 실패]', errorMsg || axiosError.message);
+      console.error('[전체 전송 실패]', errorMsg || axiosError.message);
       Toast.show({
         type: 'error',
         text1: '점수 저장 실패',
