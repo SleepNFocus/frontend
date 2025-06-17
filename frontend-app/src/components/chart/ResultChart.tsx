@@ -2,54 +2,47 @@ import React from 'react';
 import { View } from 'react-native';
 import Svg, { Polygon, Line, G, Text as SvgText } from 'react-native-svg';
 import { colors } from '@/constants/colors';
-import { useSleepTestStore } from '@/store/testStore';
 
-export default function ResultChart() {
-  const { test1, test2, test3 } = useSleepTestStore();
+type Props = {
+  data: number[]; // 점수 배열 (최대 6개)
+  labels: string[]; // 각 점수에 대한 라벨 (data.length와 동일 길이)
+};
 
+export default function ResultChart({ data, labels }: Props) {
   const chartSize = 300;
   const center = chartSize / 2;
   const radius = 100;
   const listNum = 6;
 
-  const data = [
-    Number(test1?.avgScore),
-    Number(test2?.totalScore),
-    Number(test3?.finalScore),
-    0,
-    0,
-    0,
+  // 6개 이하 데이터 입력 시 남은 값은 0으로 채움
+  const paddedData = [
+    ...data,
+    ...Array(Math.max(0, listNum - data.length)).fill(0),
+  ];
+  const paddedLabels = [
+    ...labels,
+    ...Array(Math.max(0, listNum - labels.length)).fill('(추가예정)'),
   ];
 
   const getCoordinates = (values: number[], r = radius) => {
     return values.map((value, i) => {
-      // [꼭지점 찍기] ex. (2π × 1)/6 60도
-      //                 라디안에서 0은 오른쪽(3시 방향) -> 90도 = π/2
       const angle = (Math.PI * 2 * i) / listNum - Math.PI / 2;
-
-      // 포인트 영역 표시 : 점수가 100이면 반지름 끝까지
       const pointRadius = (value / 100) * r;
       return {
-        // 원 위의 점 좌표를 구하는 공식 ( x, y 좌표 확인 )
         x: center + pointRadius * Math.cos(angle),
         y: center + pointRadius * Math.sin(angle),
       };
     });
   };
 
-  // 점수 데이터에 맞는 좌표를 "x,y x,y ..." 형태의 문자열로 변환
-  const pointsReturnString = getCoordinates(data)
+  const pointsString = getCoordinates(paddedData)
     .map(p => `${p.x},${p.y}`)
     .join(' ');
 
   const chartInLines = Array.from({ length: listNum }, (_, i) => {
-    // 축의 시작을 12시 방향으로 설정
     const angle = (Math.PI * 2 * i) / listNum - Math.PI / 2;
-
     const x = center + radius * Math.cos(angle);
     const y = center + radius * Math.sin(angle);
-
-    // x1, y1 = center / x2, y2 = 계산된 좌표
     return (
       <Line
         key={i}
@@ -62,18 +55,9 @@ export default function ResultChart() {
     );
   });
 
-  const axisLabels = [
-    '반응속도',
-    '처리속도',
-    '패턴기억',
-    '(추가예정)',
-    '(추가예정)',
-    '(추가예정)',
-  ];
-
-  const labelLocation = Array.from({ length: listNum }, (_, i) => {
+  const labelPositions = Array.from({ length: listNum }, (_, i) => {
     const angle = (Math.PI * 2 * i) / listNum - Math.PI / 2;
-    const r = radius + 30; // 레이블이 점수 영역보다 바깥 쪽에 위치
+    const r = radius + 30;
     return {
       x: center + r * Math.cos(angle),
       y: center + r * Math.sin(angle),
@@ -87,6 +71,7 @@ export default function ResultChart() {
         <G>
           {chartInLines}
 
+          {/* 바깥 점선 원 */}
           <Polygon
             points={getCoordinates(new Array(listNum).fill(100))
               .map(p => `${p.x},${p.y}`)
@@ -96,14 +81,16 @@ export default function ResultChart() {
             fill="none"
           />
 
+          {/* 점수 영역 */}
           <Polygon
-            points={pointsReturnString}
+            points={pointsString}
             fill={`${colors.softBlue}66`}
             stroke={colors.softBlue}
             strokeWidth={2}
           />
 
-          {labelLocation.map((p, i) => {
+          {/* 축 레이블 */}
+          {labelPositions.map((p, i) => {
             const dx = Math.cos(p.angle) * 5;
             const dy = Math.sin(p.angle) * 5;
 
@@ -121,7 +108,7 @@ export default function ResultChart() {
                 textAnchor={anchor}
                 alignmentBaseline="middle"
               >
-                {axisLabels[i]}
+                {paddedLabels[i]}
               </SvgText>
             );
           })}

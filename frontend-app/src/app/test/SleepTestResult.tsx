@@ -58,7 +58,14 @@ export default function SleepTestResult() {
         <View style={styles.root}>
           <GlassCard style={[styles.container, { width: containerWidth }]}>
             <Text style={styles.mainTitle}> 수면 테스트 측정 완료 </Text>
-            <ResultChart />
+            <ResultChart
+              data={[
+                basic.raw_scores.srt.average_score,
+                basic.raw_scores.symbol.average_score,
+                basic.raw_scores.pattern.average_score,
+              ]}
+              labels={['반응 속도', '처리 속도', '패턴 기억']}
+            />
 
             <View style={styles.rowBox}>
               <View style={styles.textBox}>
