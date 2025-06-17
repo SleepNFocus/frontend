@@ -1,13 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Card } from 'react-native-paper';
-import { Text } from '@/components/common/Text';
+import { ScoreBreakdown } from '@/app/types/sleep';
 import { colors } from '@/constants/colors';
 import { Button } from '@/components/common/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useSleepRecord } from '@/services/sleepApi';
-import { calculateScoreBreakdown, formatSleepDuration, formatSleepLatency } from '@/utils/scoreCalculation';
+import { Text } from '@/components/common/Text';
 
 type RootStackParamList = {
   SleepRecord: undefined;

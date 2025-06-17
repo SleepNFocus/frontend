@@ -2,8 +2,9 @@ import React from 'react';
 import { Text as RNText, TextStyle, StyleSheet } from 'react-native';
 import { colors } from '@/constants/colors';
 import { fonts } from '@/constants/fonts';
+import { TextProps as RNTextProps } from 'react-native';
 
-interface TextProps {
+export interface TextProps extends RNTextProps {
   children: React.ReactNode;
   variant?:
     | 'displayLarge'
@@ -21,7 +22,7 @@ interface TextProps {
     | 'labelLarge'
     | 'labelMedium'
     | 'labelSmall';
-  style?: TextStyle;
+  style?: TextStyle | TextStyle[];
   color?: string;
   fontFamily?: keyof typeof fonts;
 }

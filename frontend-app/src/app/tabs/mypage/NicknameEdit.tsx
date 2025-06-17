@@ -23,9 +23,18 @@ const NicknameEdit = () => {
   const setUser = useAuthStore(state => state.setUser);
 
   const [nickname, setNickname] = useState('');
-  const nicknamevalidity = /^[가-힣a-zA-Z0-9]{2,20}$/;
-
+  // 초성(ㄱ-ㅎ), 모음(ㅏ-ㅣ), 완성형 한글(가-힣), 영문, 숫자 허용
+  const nicknamevalidity = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{2,20}$/;
   const isValid = nicknamevalidity.test(nickname);
+  const isLengthValid = nickname.length >= 2 && nickname.length <= 20;
+  const isCharsetValid = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/.test(nickname);
+
+  let errorMsg = '';
+  if (!isLengthValid && nickname.length > 0) {
+    errorMsg = '닉네임은 2~20자여야 합니다.';
+  } else if (!isCharsetValid && nickname.length > 0) {
+    errorMsg = '닉네임은 한글, 영문, 숫자만 입력 가능합니다.';
+  }
 
   const handleSave = () => {
     if (!user) {
@@ -40,7 +49,7 @@ const NicknameEdit = () => {
     if (!isValid) {
       Toast.show({
         type: 'error',
-        text1: '닉네임이 너무 짧거나 잘못된 형식이에요!',
+        text1: errorMsg || '닉네임이 너무 짧거나 잘못된 형식이에요!',
         text2: '한글, 영문, 숫자 2~20자만 입력 가능해요.',
       });
       return;
@@ -89,7 +98,7 @@ const NicknameEdit = () => {
 
           {!isValid && nickname.length > 0 && (
             <Text variant="bodySmall" style={styles.warning}>
-              닉네임은 한글, 영문, 숫자만 입력 가능합니다.
+              {errorMsg || '닉네임은 한글, 영문, 숫자만 입력 가능합니다.'}
             </Text>
           )}
 
@@ -116,7 +125,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 12,
     gap: 12,
   },
   title: {
@@ -144,6 +153,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
+    marginTop: 8,
     marginBottom: 8,
     borderWidth: 1,
     borderColor: colors.mediumLightGray,
@@ -157,7 +167,6 @@ const styles = StyleSheet.create({
   },
   warning: {
     color: colors.softOrange,
-    marginBottom: 16,
   },
   button: {
     marginTop: 12,

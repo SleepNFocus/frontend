@@ -3,8 +3,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Layout } from '@/components/common/Layout';
 import { GreetingCard } from '@/components/sleep/GreetingCard';
 import { Card } from '@/components/common/Card';
-import ResultChart from '@/components/chart/ResultChart';
-import { SummaryCard } from '@/components/test/SummaryCard';
+import ResultChart from '@/components/common/ResultChart';
 import { CheckinCard } from '@/components/sleep/CheckinCard';
 import { Text } from '@/components/common/Text';
 import { colors } from '@/constants/colors';
@@ -182,10 +181,6 @@ export const DashboardMain: React.FC = memo(() => {
 
           <ScoreDetailCard details={scoreDetails} averageScore={averageScore} />
 
-          <Card style={styles.summarySection}>
-            <SummaryCard />
-          </Card>
-
           <View style={styles.checkinSection}>
             <CheckinCard onCheckin={() => navigation.navigate('SleepRecord')} />
           </View>
@@ -225,9 +220,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     backgroundColor: colors.white,
-  },
-  summarySection: {
-    width: '100%',
   },
   checkinSection: {
     width: '100%',

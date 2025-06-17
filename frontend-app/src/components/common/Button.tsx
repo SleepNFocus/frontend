@@ -2,11 +2,11 @@ import React from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
-  Text,
   ViewStyle,
   TextStyle,
 } from 'react-native';
 import { colors } from '@/constants/colors';
+import { Text } from '@/components/common/Text';
 
 // Button 컴포넌트의 props 타입 정의
 interface ButtonProps {
@@ -66,7 +66,7 @@ export const Button: React.FC<ButtonProps> = ({
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={[styles.text, getTextStyle(), textStyle]}>{title}</Text>
+      <Text style={([styles.text, getTextStyle(), textStyle].filter(Boolean) as TextStyle[])}>{title}</Text>
     </TouchableOpacity>
   );
 };

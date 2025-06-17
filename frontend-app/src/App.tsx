@@ -29,7 +29,6 @@ import SleepTest3 from './components/sleepTest/SleepTest3';
 import SleepTestResult from './app/test/SleepTestResult';
 import { PrivacyNotice } from './app/splash/PrivacyNotice';
 import LandingPage from './app/splash/LandingPage';
-import MyRecord from './app/tabs/mypage/MyRecord';
 import { OnboardingSteps } from './app/splash/OnboardingSteps';
 import { IntroCard } from '@/app/splash/IntroCard';
 import { SplashScreen } from 'expo-router';
@@ -89,7 +88,7 @@ export type RootStackParamList = {
     basic: CognitiveResultType;
   };
   PrivacyNotice: undefined;
-  MyRecord: undefined;
+  DailyCheckScreen: undefined;
   NotFound: undefined;
   AISleepTips: { date: string; score: number };
 };
@@ -177,7 +176,7 @@ export default function App() {
                 component={SleepTestResult}
               />
               <Stack.Screen name="PrivacyNotice" component={PrivacyNotice} />
-              <Stack.Screen name="MyRecord" component={MyRecord} />
+              <Stack.Screen name="DailyCheckScreen" component={DailyCheckPage} />
               <Stack.Screen name="NotFound" component={NotFoundPage} />
             </Stack.Navigator>
 

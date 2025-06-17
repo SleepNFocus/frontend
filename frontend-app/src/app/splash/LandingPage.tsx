@@ -1,5 +1,5 @@
 import { RootStackParamList } from '@/App';
-import LogoAnimation from '@/components/logo/LogoAnimation';
+import LogoAnimation from '@/components/common/LogoAnimation';
 import { colors } from '@/constants/colors';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from 'expo-router';

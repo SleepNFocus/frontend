@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Animated,
   StyleSheet,
   ScrollView,
@@ -14,6 +13,7 @@ import { Layout } from '@/components/common/Layout';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { useEffect, useRef } from 'react';
+import { Text } from '@/components/common/Text';
 
 export default function SleepTestDesc() {
   const navigation =
