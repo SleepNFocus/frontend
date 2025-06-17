@@ -20,7 +20,7 @@ export const Layout: React.FC<LayoutProps> = ({
 }) => {
   return (
     <LinearGradient
-      colors={[colors.softBlue, colors.white]}
+      colors={[colors.bgColor, colors.white]}
       style={styles.gradient}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}

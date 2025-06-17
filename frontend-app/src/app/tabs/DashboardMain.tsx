@@ -3,7 +3,6 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Layout } from '@/components/common/Layout';
 import { GreetingCard } from '@/components/sleep/GreetingCard';
 import { Card } from '@/components/common/Card';
-import { ResultChart } from '@/components/common/ResultChart';
 import { SummaryCard } from '@/components/sleep/SummaryCard';
 import { CheckinCard } from '@/components/sleep/CheckinCard';
 import { Text } from '@/components/common/Text';
@@ -14,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/App';
 import { useGetDailySummary } from '@/services/testSummaryApi';
+import ResultChart from '@/components/common/ResultChart';
 
 interface ScoreDetail {
   label: string;
