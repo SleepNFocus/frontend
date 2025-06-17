@@ -34,6 +34,7 @@ import { OnboardingSteps } from './app/splash/OnboardingSteps';
 import { IntroCard } from '@/app/splash/IntroCard';
 import { SplashScreen } from 'expo-router';
 import { AISleepTipsScreen } from './components/sleep/AISleepTipsScreen';
+import { KakaoWebView } from './app/auth/KakaoWebView';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -89,6 +90,7 @@ export type RootStackParamList = {
   MyRecord: undefined;
   NotFound: undefined;
   AISleepTips: { date: string; score: number };
+  KakaoWebView: undefined;
 };
 
 export const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -96,23 +98,23 @@ export const Stack = createNativeStackNavigator<RootStackParamList>();
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, 
-      gcTime: 10 * 60 * 1000, 
-      retry: 2, 
-      refetchOnWindowFocus: false, 
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      retry: 2,
+      refetchOnWindowFocus: false,
     },
     mutations: {
-      retry: 1, 
+      retry: 1,
     },
   },
 });
 
 export default function App() {
   const [fontsLoaded] = useFonts({
-    'NanumSquareRoundL': require('./assets/fonts/NanumSquareRoundL.ttf'),
-    'NanumSquareRoundR': require('./assets/fonts/NanumSquareRoundR.ttf'),
-    'NanumSquareRoundB': require('./assets/fonts/NanumSquareRoundB.ttf'),
-    'NanumSquareRoundEB': require('./assets/fonts/NanumSquareRoundEB.ttf'),
+    NanumSquareRoundL: require('./assets/fonts/NanumSquareRoundL.ttf'),
+    NanumSquareRoundR: require('./assets/fonts/NanumSquareRoundR.ttf'),
+    NanumSquareRoundB: require('./assets/fonts/NanumSquareRoundB.ttf'),
+    NanumSquareRoundEB: require('./assets/fonts/NanumSquareRoundEB.ttf'),
   });
 
   useEffect(() => {
@@ -150,7 +152,11 @@ export default function App() {
               <Stack.Screen name="More" component={MorePage} />
               <Stack.Screen name="SocialLogin" component={SocialLogin} />
               <Stack.Screen name="SleepRecord" component={SleepRecordPage} />
-              <Stack.Screen name="AISleepTips" component={AISleepTipsScreen} options={{ headerShown: true,title: 'AI 수면 분석' }}/>
+              <Stack.Screen
+                name="AISleepTips"
+                component={AISleepTipsScreen}
+                options={{ headerShown: true, title: 'AI 수면 분석' }}
+              />
               <Stack.Screen
                 name="NotificationSettings"
                 component={NotificationSettingsPage}
@@ -165,10 +171,14 @@ export default function App() {
               <Stack.Screen name="SleepTest2" component={SleepTest2} />
               <Stack.Screen name="SleepTest3Desc" component={SleepTest3Desc} />
               <Stack.Screen name="SleepTest3" component={SleepTest3} />
-              <Stack.Screen name="SleepTestResult" component={SleepTestResult} />
+              <Stack.Screen
+                name="SleepTestResult"
+                component={SleepTestResult}
+              />
               <Stack.Screen name="PrivacyNotice" component={PrivacyNotice} />
               <Stack.Screen name="MyRecord" component={MyRecord} />
               <Stack.Screen name="NotFound" component={NotFoundPage} />
+              <Stack.Screen name="KakaoWebView" component={KakaoWebView} />
             </Stack.Navigator>
 
             <Toast />
