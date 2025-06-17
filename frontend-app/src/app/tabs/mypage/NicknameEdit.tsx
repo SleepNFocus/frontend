@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import Toast from 'react-native-toast-message';
+import useUiStore from '@/store/uiStore';
 import { colors } from '@/constants/colors';
 import { Text } from '@/components/common/Text';
 import { Layout } from '@/components/common/Layout';
@@ -18,6 +18,7 @@ import { Button } from '@/components/common/Button';
 
 const NicknameEdit = () => {
   const navigation = useNavigation();
+  const { openToast } = useUiStore();
 
   const user = useAuthStore(state => state.user);
   const setUser = useAuthStore(state => state.setUser);
@@ -38,29 +39,18 @@ const NicknameEdit = () => {
 
   const handleSave = () => {
     if (!user) {
-      Toast.show({
-        type: 'error',
-        text1: '유저 정보가 없습니다.',
-        text2: '로그인이 필요합니다.',
-      });
+      openToast('error', '변경 실패', '닉네임 변경에 실패했어요');
       return;
     }
 
     if (!isValid) {
-      Toast.show({
-        type: 'error',
-        text1: errorMsg || '닉네임이 너무 짧거나 잘못된 형식이에요!',
-        text2: '한글, 영문, 숫자 2~20자만 입력 가능해요.',
-      });
+      openToast('error', errorMsg || '닉네임이 너무 짧거나 잘못된 형식이에요!', '한글, 영문, 숫자 2~20자만 입력 가능해요.');
       return;
     }
 
     setUser({ ...user, nickname });
 
-    Toast.show({
-      type: 'success',
-      text1: '닉네임이 변경되었어요!',
-    });
+    openToast('success', '닉네임 변경', '닉네임이 변경되었어요!');
 
     setTimeout(() => {
       navigation.goBack();

@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableWithoutFeedback, Modal, TouchableOpacity, Sc
 import { Text } from '@/components/common/Text';
 import { Button } from '@/components/common/Button';
 import { colors } from '@/constants/colors';
+import useUiStore from '@/store/uiStore';
 
 interface SleepRecordData {
   selectedDate: string;
@@ -38,15 +39,51 @@ interface DropdownProps {
 }
 
 const CustomDropdown: React.FC<DropdownProps> = ({ items, value, onSelect, placeholder }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  
+  const { openModal, closeModal } = useUiStore();
   const selectedItem = items.find(item => item.value === value);
-  
+
+  const handleOpenDropdown = () => {
+    openModal('dropdown', {
+      isOpen: true,
+      title: placeholder,
+      content: (
+        <ScrollView style={styles.modalScrollView}>
+          {items.map((item) => (
+            <TouchableOpacity
+              key={item.value}
+              style={[
+                styles.modalItem,
+                value === item.value && styles.selectedItem
+              ]}
+              onPress={() => {
+                onSelect(item.value);
+                closeModal('dropdown');
+              }}
+            >
+              <Text 
+                variant="bodyMedium" 
+                style={value === item.value 
+                  ? { ...styles.modalItemText, ...styles.selectedItemText }
+                  : styles.modalItemText
+                }
+              >
+                {item.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      ),
+      confirmText: '', // 확인 버튼 없음
+      cancelText: '닫기',
+      onCancel: () => closeModal('dropdown'),
+    });
+  };
+
   return (
     <View style={styles.dropdownContainer}>
       <TouchableOpacity 
         style={styles.dropdownButton}
-        onPress={() => setIsVisible(true)}
+        onPress={handleOpenDropdown}
       >
         <Text 
           variant="bodyMedium" 
@@ -59,52 +96,6 @@ const CustomDropdown: React.FC<DropdownProps> = ({ items, value, onSelect, place
         </Text>
         <Text style={styles.dropdownArrow}>▼</Text>
       </TouchableOpacity>
-      
-      <Modal
-        visible={isVisible}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setIsVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text variant="titleMedium" style={styles.modalTitle}>
-                {placeholder}
-              </Text>
-              <TouchableOpacity onPress={() => setIsVisible(false)}>
-                <Text style={styles.closeButton}>✕</Text>
-              </TouchableOpacity>
-            </View>
-            
-            <ScrollView style={styles.modalScrollView}>
-              {items.map((item) => (
-                <TouchableOpacity
-                  key={item.value}
-                  style={[
-                    styles.modalItem,
-                    value === item.value && styles.selectedItem
-                  ]}
-                  onPress={() => {
-                    onSelect(item.value);
-                    setIsVisible(false);
-                  }}
-                >
-                  <Text 
-                    variant="bodyMedium" 
-                    style={value === item.value 
-                      ? { ...styles.modalItemText, ...styles.selectedItemText }
-                      : styles.modalItemText
-                    }
-                  >
-                    {item.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 };
