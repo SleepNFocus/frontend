@@ -3,7 +3,6 @@ import { View, StyleSheet, TouchableWithoutFeedback, Modal, TouchableOpacity, Sc
 import { Text } from '@/components/common/Text';
 import { Button } from '@/components/common/Button';
 import { colors } from '@/constants/colors';
-import useUiStore from '@/store/uiStore';
 
 interface SleepRecordData {
   selectedDate: string;
@@ -39,51 +38,14 @@ interface DropdownProps {
 }
 
 const CustomDropdown: React.FC<DropdownProps> = ({ items, value, onSelect, placeholder }) => {
-  const { openModal, closeModal } = useUiStore();
+  const [isVisible, setIsVisible] = useState(false);
   const selectedItem = items.find(item => item.value === value);
-
-  const handleOpenDropdown = () => {
-    openModal('dropdown', {
-      isOpen: true,
-      title: placeholder,
-      content: (
-        <ScrollView style={styles.modalScrollView}>
-          {items.map((item) => (
-            <TouchableOpacity
-              key={item.value}
-              style={[
-                styles.modalItem,
-                value === item.value && styles.selectedItem
-              ]}
-              onPress={() => {
-                onSelect(item.value);
-                closeModal('dropdown');
-              }}
-            >
-              <Text 
-                variant="bodyMedium" 
-                style={value === item.value 
-                  ? { ...styles.modalItemText, ...styles.selectedItemText }
-                  : styles.modalItemText
-                }
-              >
-                {item.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      ),
-      confirmText: '', // 확인 버튼 없음
-      cancelText: '닫기',
-      onCancel: () => closeModal('dropdown'),
-    });
-  };
 
   return (
     <View style={styles.dropdownContainer}>
       <TouchableOpacity 
         style={styles.dropdownButton}
-        onPress={handleOpenDropdown}
+        onPress={() => setIsVisible(true)}
       >
         <Text 
           variant="bodyMedium" 
@@ -96,6 +58,56 @@ const CustomDropdown: React.FC<DropdownProps> = ({ items, value, onSelect, place
         </Text>
         <Text style={styles.dropdownArrow}>▼</Text>
       </TouchableOpacity>
+
+      <Modal
+        visible={isVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsVisible(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setIsVisible(false)}
+        >
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text variant="titleMedium" style={styles.modalTitle}>
+                {placeholder}
+              </Text>
+              <TouchableOpacity onPress={() => setIsVisible(false)}>
+                <Text style={styles.closeButton}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            
+            <ScrollView style={styles.modalScrollView}>
+              {items.map((item) => (
+                <TouchableOpacity
+                  key={item.value}
+                  style={[
+                    styles.modalItem,
+                    value === item.value && styles.selectedItem
+                  ]}
+                  onPress={() => {
+                    onSelect(item.value);
+                    setIsVisible(false);
+                  }}
+                >
+                  <Text 
+                    variant="bodyMedium" 
+                    style={value === item.value 
+                      ? { ...styles.modalItemText, ...styles.selectedItemText }
+                      : styles.modalItemText
+                    }
+                  >
+                    {item.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 };
@@ -373,6 +385,22 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
         ))}
       </View>
 
+      {/* 실시간 점수 표시 */}
+      {(sleepDuration || sleepQuality || fallAsleepTime || nightWakeCount) && (
+        <View style={styles.scorePreview}>
+          <Text variant="titleSmall" style={styles.scorePreviewTitle}>
+            현재 예상 점수: {totalScore}점
+          </Text>
+          <View style={styles.scorePreviewBreakdown}>
+            <Text variant="bodySmall">수면시간: {scoreBreakdown.durationScore}/25</Text>
+            <Text variant="bodySmall">수면질: {scoreBreakdown.qualityScore}/30</Text>
+            <Text variant="bodySmall">수면효율: {scoreBreakdown.sleepEfficiencyScore}/25</Text>
+            <Text variant="bodySmall">수면환경: {scoreBreakdown.environmentScore}/20</Text>
+          </View>
+        </View>
+      )}
+
+      <View style={styles.buttonContainer}>
       <Button
         onPress={handleSave}
         title="수면 기록 저장"
@@ -380,6 +408,7 @@ export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
         style={styles.saveButton}
         variant="primary"
       />
+      </View>
     </View>
   );
 };
@@ -507,8 +536,29 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: colors.deepNavy,
   },
-  saveButton: {
+  // 점수 미리보기 스타일
+  scorePreview: {
+    backgroundColor: colors.lightGray,
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.softBlue,
+  },
+  scorePreviewTitle: {
+    fontWeight: 'bold',
+    color: colors.deepNavy,
+    marginBottom: 8,
+  },
+  scorePreviewBreakdown: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  buttonContainer: {
     marginTop: 24,
+  },
+  saveButton: {
     paddingVertical: 12,
   },
 });
