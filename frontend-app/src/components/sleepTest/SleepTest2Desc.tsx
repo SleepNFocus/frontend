@@ -1,9 +1,4 @@
-import {
-  View,
-  Animated,
-  StyleSheet,
-  useWindowDimensions,
-} from 'react-native';
+import { View, Animated, StyleSheet, useWindowDimensions } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@/components/common/Button';
@@ -12,10 +7,14 @@ import { RootStackParamList } from '@/App';
 import { useEffect, useRef } from 'react';
 import { Layout } from '../common/Layout';
 import { Text } from '@/components/common/Text';
+import { useStartGameSession } from '@/services/testApi';
+import { TestSession } from '@/types/cognitive';
 
 export default function SleepTest2Desc() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const { mutate: startSession } = useStartGameSession();
 
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
@@ -25,7 +24,11 @@ export default function SleepTest2Desc() {
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
   function goToSleepTest2() {
-    navigation.navigate('SleepTest2');
+    startSession(TestSession.SYMBOL, {
+      onSuccess: () => {
+        navigation.navigate('SleepTest2');
+      },
+    });
   }
 
   const colorAnim = useRef(new Animated.Value(0)).current;

@@ -26,3 +26,9 @@ export type CognitiveResultType = {
   average_score: number;
   total_duration_sec: number;
 };
+
+export enum TestSession {
+  SRT = 1,
+  SYMBOL = 2,
+  PATTERN = 3,
+}

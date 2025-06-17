@@ -14,7 +14,7 @@ import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
-import { useSendAllResults } from '@/services/testResultApi';
+import { useSendAllResults } from '@/services/testApi';
 import Toast from 'react-native-toast-message';
 import { Text } from '@/components/common/Text';
 
