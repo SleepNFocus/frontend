@@ -12,7 +12,7 @@ import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/App';
-import { useGetDailySummary } from '@/services/testSummaryApi';
+import { useGetDailySummary } from '@/services/testApi';
 import ResultChart from '@/components/common/ResultChart';
 
 interface ScoreDetail {
@@ -153,13 +153,13 @@ export const DashboardMain: React.FC = memo(() => {
 
   // if (isError) {
   //   return (
-  //     // <ErrorBoundary>
-  //     //   <View style={styles.errorContainer}>
-  //     //     <Text style={styles.errorText}>
-  //     //       데이터 로딩 실패: {(error as Error).message}
-  //     //     </Text>
-  //     //   </View>
-  //     // </ErrorBoundary>
+  //     <ErrorBoundary>
+  //       <View style={styles.errorContainer}>
+  //         <Text style={styles.errorText}>
+  //           데이터 로딩 실패: {(error as Error).message}
+  //         </Text>
+  //       </View>
+  //     </ErrorBoundary>
   //   );
   // }
 
