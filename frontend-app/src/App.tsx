@@ -33,6 +33,7 @@ import MyRecord from './app/tabs/mypage/MyRecord';
 import { OnboardingSteps } from './app/splash/OnboardingSteps';
 import { IntroCard } from '@/app/splash/IntroCard';
 import { SplashScreen } from 'expo-router';
+import { AISleepTipsScreen } from './components/sleep/AISleepTipsScreen';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -87,6 +88,7 @@ export type RootStackParamList = {
   PrivacyNotice: undefined;
   MyRecord: undefined;
   NotFound: undefined;
+  AISleepTips: { date: string; score: number };
 };
 
 export const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -148,6 +150,7 @@ export default function App() {
               <Stack.Screen name="More" component={MorePage} />
               <Stack.Screen name="SocialLogin" component={SocialLogin} />
               <Stack.Screen name="SleepRecord" component={SleepRecordPage} />
+              <Stack.Screen name="AISleepTips" component={AISleepTipsScreen} options={{ headerShown: true,title: 'AI 수면 분석' }}/>
               <Stack.Screen
                 name="NotificationSettings"
                 component={NotificationSettingsPage}
