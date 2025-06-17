@@ -18,8 +18,7 @@ export const SleepRecordPage: React.FC = () => {
   const navigation2 =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isRecordSaved, setIsRecordSaved] = useState(false);
-  const [savedRecordData, setSavedRecordData] =
-    useState<SleepRecordData | null>(null);
+  const [savedRecordId, setSavedRecordId] = useState<number | null>(null); 
   const { openModal } = useUiStore();
 
   const saveSleepRecordMutation = useSaveSleepRecord();
@@ -39,7 +38,7 @@ export const SleepRecordPage: React.FC = () => {
         confirmText: '확인',
         onConfirm: () => {
           setTimeout(() => {
-            setSavedRecordData(recordData);
+            setSavedRecordId(result.id); 
             setIsRecordSaved(true);
           }, 100);
         },
@@ -64,7 +63,7 @@ export const SleepRecordPage: React.FC = () => {
 
   const startNewRecord = () => {
     setIsRecordSaved(false);
-    setSavedRecordData(null);
+    setSavedRecordId(null);
   };
 
   if (saveSleepRecordMutation.isPending) {
@@ -86,32 +85,8 @@ export const SleepRecordPage: React.FC = () => {
           <SleepRecordForm onSave={handleSaveRecord} />
         ) : (
           <View style={styles.resultSection}>
-            <View style={styles.scoreSection}>
-              <Text variant="headlineSmall" style={styles.scoreTitle}>
-                오늘의 수면 점수
-              </Text>
-              <Text variant="displayMedium" style={styles.totalScore}>
-                {savedRecordData?.totalScore}점
-              </Text>
-              <View style={styles.scoreBreakdown}>
-                <Text variant="bodySmall">
-                  수면시간: {savedRecordData?.scoreBreakdown.durationScore}/25
-                </Text>
-                <Text variant="bodySmall">
-                  수면질: {savedRecordData?.scoreBreakdown.qualityScore}/30
-                </Text>
-                <Text variant="bodySmall">
-                  수면환경: {savedRecordData?.scoreBreakdown.environmentScore}
-                  /20
-                </Text>
-              </View>
-            </View>
-
-            {savedRecordData && (
-              <ScoreFeedback
-                score={savedRecordData.totalScore}
-                scoreBreakdown={savedRecordData.scoreBreakdown}
-              />
+            {savedRecordId && (
+              <ScoreFeedback recordId={savedRecordId} />
             )}
 
             <View style={styles.actionButtons}>
@@ -151,28 +126,6 @@ const styles = StyleSheet.create({
   resultSection: {
     paddingBottom: 32,
   },
-  scoreSection: {
-    backgroundColor: colors.lightGray,
-    borderRadius: 8,
-    padding: 20,
-    marginBottom: 24,
-    alignItems: 'center',
-  },
-  scoreTitle: {
-    marginBottom: 8,
-    color: colors.textColor,
-  },
-  totalScore: {
-    color: colors.textColor,
-    fontWeight: 'bold',
-    marginBottom: 12,
-  },
-  scoreBreakdown: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    justifyContent: 'center',
-  },
   actionButtons: {
     gap: 12,
     marginBottom: 24,
@@ -184,20 +137,6 @@ const styles = StyleSheet.create({
   secondaryButton: {
     paddingVertical: 6,
     borderColor: colors.softBlue,
-  },
-  savedInfo: {
-    padding: 16,
-    backgroundColor: colors.lightGray,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  savedInfoText: {
-    color: colors.textColor,
-    fontWeight: '500',
-    marginBottom: 4,
-  },
-  savedDate: {
-    color: colors.mediumGray,
   },
   loadingContainer: {
     flex: 1,
