@@ -3,11 +3,18 @@
     "name": "FOCUZ",
     "slug": "focuz-app",
     "version": "1.0.0",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": ["**/*", "assets/_redirects"],
+    "assetBundlePatterns": [
+      "**/*",
+      "assets/_redirects"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.focuz.sleepapp"
@@ -33,11 +40,22 @@
       "output": "static",
       "build": {
         "babel": {
-          "include": ["node_modules/expo"]
+          "include": [
+            "node_modules/expo"
+          ]
         }
       }
     },
-    "plugins": ["expo-router"],
+    "fonts": [
+      "./assets/fonts/NanumSquareRoundL.ttf",
+      "./assets/fonts/NanumSquareRoundR.ttf",
+      "./assets/fonts/NanumSquareRoundB.ttf",
+      "./assets/fonts/NanumSquareRoundEB.ttf"
+    ],
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
     "scheme": "focuz-app",
     "experiments": {
       "typedRoutes": true
