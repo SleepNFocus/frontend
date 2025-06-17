@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { apiClient } from '@/config/axios';
+import { apiClient } from '@/services/axios';
 import Toast from 'react-native-toast-message';
 import { AxiosError } from 'axios';
 

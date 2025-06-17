@@ -66,7 +66,7 @@ export const Button: React.FC<ButtonProps> = ({
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={([styles.text, getTextStyle(), textStyle].filter(Boolean) as TextStyle[])}>{title}</Text>
+      <Text style={[styles.text, getTextStyle(), textStyle || {}]}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -78,6 +78,8 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
+    minWidth: 120,
+    height: 48,
   },
   text: {
     fontSize: 16,

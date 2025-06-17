@@ -1,5 +1,5 @@
-import { SleepRecordData } from '@/app/types/sleep';
-import { apiClient } from '@/config/axios';
+import { SleepRecordData } from '@/types/sleep';
+import { apiClient } from '@/services/axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const saveSleepRecord = async (recordData: SleepRecordData) => {
