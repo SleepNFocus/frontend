@@ -1,14 +1,14 @@
 import { View, Animated, StyleSheet, useWindowDimensions } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useStartGameSession } from '@/services/testApi';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@/components/common/Button';
+import { Text } from '@/components/common/Text';
+import { TestSession } from '@/types/cognitive';
 import { GlassCard } from '../common/Card';
 import { RootStackParamList } from '@/App';
 import { useEffect, useRef } from 'react';
 import { Layout } from '../common/Layout';
-import { Text } from '@/components/common/Text';
-import { useStartGameSession } from '@/services/testApi';
-import { TestSession } from '@/types/cognitive';
 
 const SQUARE = 4;
 

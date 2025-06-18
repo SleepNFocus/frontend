@@ -8,14 +8,14 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { calculateSleepTest2Score } from '@/utils/sleepTestScore';
+import { useStartGameSession } from '@/services/testApi';
 import { useNavigation } from '@react-navigation/native';
 import { useSleepTestStore } from '@/store/testStore';
 import { Button } from '@/components/common/Button';
+import { Text } from '@/components/common/Text';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Layout } from '../common/Layout';
-import { Text } from '@/components/common/Text';
-import { useStartGameSession } from '@/services/testApi';
 
 const MAX_NUM = 9;
 const TIMER_SECOND = 60000;
@@ -35,6 +35,7 @@ export default function SleepTest2() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const shuffledSymbols = useMemo(() => randomArray(RANDOM_SYMBOL), []);
+  const [sessionId, setSessionId] = useState<number | null>(null);
   const [currentSymbol, setCurrentSymbol] = useState<string>('');
   const [clickTimes, setClickTimes] = useState<number[]>([]);
   const [startTime, setStartTime] = useState<number>(0);
@@ -43,7 +44,6 @@ export default function SleepTest2() {
   const [gameOver, setGameOver] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
   const [start, setStart] = useState(false);
-  const [sessionId, setSessionId] = useState<number | null>(null);
 
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
@@ -64,7 +64,7 @@ export default function SleepTest2() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await startSession(2); // SRT의 format_id는 1
+        const res = await startSession(2);
         setSessionId(res.id);
       } catch (error) {
         console.error('세션 시작 실패:', error);
