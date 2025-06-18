@@ -8,7 +8,7 @@ import { useAuthStore, User } from '@/store/authStore';
 import { RootStackParamList } from '@/App';
 import { BackButton } from '@/components/common/BackButton';
 import { colors } from '@/constants/colors';
-import { KAKAO_JAVASCRIPT_KEY, DEV_API_URL } from '@env'
+import { KAKAO_JAVASCRIPT_KEY, DEV_API_URL } from '@env';
 
 export interface UserData {
   access: string;
@@ -25,33 +25,29 @@ export interface UserData {
 }
 
 const KakaoLoginWebView: React.FC = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { setLogin, setUser } = useAuthStore();
-
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [kakaoLoginUrl, setKakaoLoginUrl] = useState<string | null>(null);
   const webViewRef = useRef<WebView>(null);
 
-  const validateEnvironment = () => {
-    if (!KAKAO_JAVASCRIPT_KEY) throw new Error('KAKAO_JAVASCRIPT_KEY 누락');
-    if (!DEV_API_URL) throw new Error('DEV_API_URL 누락');
-  };
-
-  const getRedirectUri = () => 'http://localhost:8081/oauth/callback';
-
-  const getKakaoLoginUrl = () => {
+  useEffect(() => {
     try {
-      validateEnvironment();
-      return `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_JAVASCRIPT_KEY}&redirect_uri=${encodeURIComponent(
-        getRedirectUri(),
+      if (!KAKAO_JAVASCRIPT_KEY) throw new Error('KAKAO_JAVASCRIPT_KEY 누락');
+      if (!DEV_API_URL) throw new Error('DEV_API_URL 누락');
+
+      const redirectUri = 'http://localhost:8081/oauth/callback';
+      const url = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_JAVASCRIPT_KEY}&redirect_uri=${encodeURIComponent(
+        redirectUri
       )}&response_type=code`;
-    } catch (error) {
-      setError(error instanceof Error ? error.message : '알 수 없는 오류');
-      return null;
+
+      setKakaoLoginUrl(url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '알 수 없는 오류');
     }
-  };
+  }, []);
 
   const handleNavigationStateChange = async (navState: WebViewNavigation) => {
     if (isProcessing || !navState.url.includes('localhost:8081/oauth/callback')) return;
@@ -70,12 +66,11 @@ const KakaoLoginWebView: React.FC = () => {
       }
 
       if (code) {
-        setIsLoading(true);
         const userData = await exchangeCodeForToken(code);
         await handleLoginSuccess(userData);
         webViewRef.current?.stopLoading();
       }
-    } catch (err) {
+    } catch {
       setError('URL 파싱 오류 발생');
     } finally {
       setIsProcessing(false);
@@ -124,9 +119,11 @@ const KakaoLoginWebView: React.FC = () => {
     setError(`WebView 오류: ${nativeEvent.description || '알 수 없는 오류'}`);
   };
 
-  const kakaoLoginUrl = getKakaoLoginUrl();
-
-  useEffect(() => () => webViewRef.current?.stopLoading(), []);
+  useEffect(() => {
+    return () => {
+      webViewRef.current?.stopLoading();
+    };
+  }, []);
 
   if (error || !kakaoLoginUrl) {
     return (
@@ -165,6 +162,7 @@ const KakaoLoginWebView: React.FC = () => {
           startInLoadingState
           scalesPageToFit
           userAgent="Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1"
+          onLoadEnd={() => setIsLoading(false)}
         />
       </View>
     </View>
@@ -207,54 +205,3 @@ const styles = StyleSheet.create({
   errorText: { fontSize: 18, fontWeight: '600', color: colors.deepNavy, marginBottom: 8 },
   errorDescription: { fontSize: 14, color: colors.mediumGray, textAlign: 'center', lineHeight: 20 },
 });
-
-
-
-
-
-
-
-// import React from 'react';
-// import { WebView } from 'react-native-webview';
-// import type { WebViewNavigation } from 'react-native-webview';
-// import { useNavigation } from '@react-navigation/native';
-// import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-// import type { RootStackParamList } from '@/App';
-
-// const KakaoLoginWebView: React.FC = () => {
-//   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
-//   const REDIRECT_URI = 'https://www.dev.focusz.site/oauth/callback';
-//   const KAKAO_REST_API_KEY = '8629425abad5e70252adc18f2d0098a5';
-
-//   const onNavigationStateChange = (navState: WebViewNavigation) => {
-//     const { url } = navState;
-//     console.log(' 현재 URL:', url); 
-
-   
-//     if (url.includes('code=')) {
-//       try {
-//         const code = new URL(url).searchParams.get('code');
-//         if (code) {
-//           console.log('인가 코드 감지:', code);
-//           navigation.navigate('OAuthCallback', { code });
-//         }
-//       } catch (e) {
-//         console.error(' URL 파싱 실패:', e);
-//       }
-//     }
-//   };
-
-//   return (
-//     <WebView
-//       source={{
-//         uri: `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`,
-//       }}
-//       onNavigationStateChange={onNavigationStateChange}
-//       javaScriptEnabled={true}
-//       originWhitelist={['*']}
-//     />
-//   );
-// };
-
-// export default KakaoLoginWebView;

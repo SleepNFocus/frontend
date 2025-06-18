@@ -37,6 +37,7 @@ import LandingPage from './app/splash/LandingPage';
 // import MyRecord from './app/tabs/mypage/MyRecord';
 // import { Loading } from './app/tabs/Loading';
 import OAuthCallback from './app/auth/OAuthCallback';
+import KakaoLoginWebView from './app/auth/KakaoLoginWebView';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -72,6 +73,7 @@ export type RootStackParamList = {
   NotFound: undefined;
   AISleepTips: { date: string; score: number };
   OAuthCallback: { code: string };
+  KakaoLoginWebView: undefined;
 };
 
 export const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -170,6 +172,8 @@ export default function App() {
               <Stack.Screen name="OAuthCallback" component={OAuthCallback} />
               <Stack.Screen name="NotFound" component={NotFoundPage} />
               <Stack.Screen name="DailyCheckScreen" component={DailyCheckPage} />
+              <Stack.Screen name="KakaoLoginWebView" component={KakaoLoginWebView} />
+
             </Stack.Navigator>
             <Toast />
           </NavigationContainer>
