@@ -34,6 +34,7 @@ import { IntroCard } from '@/app/splash/IntroCard';
 import { SplashScreen } from 'expo-router';
 import { AISleepTipsScreen } from './components/sleep/AISleepTipsScreen';
 import { CognitiveResultType } from './types/cognitive';
+import { SurveyPage } from './app/splash/SurveyPage';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -91,6 +92,7 @@ export type RootStackParamList = {
   DailyCheckScreen: undefined;
   NotFound: undefined;
   AISleepTips: { date: string; score: number };
+  Survey: undefined;
 };
 
 export const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -178,6 +180,7 @@ export default function App() {
               <Stack.Screen name="PrivacyNotice" component={PrivacyNotice} />
               <Stack.Screen name="DailyCheckScreen" component={DailyCheckPage} />
               <Stack.Screen name="NotFound" component={NotFoundPage} />
+              <Stack.Screen name="Survey" component={SurveyPage} />
             </Stack.Navigator>
 
             <Toast />

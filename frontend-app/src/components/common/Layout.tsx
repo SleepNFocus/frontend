@@ -11,12 +11,14 @@ import { ToastList } from '@/components/common/Toast';
 interface LayoutProps {
   children: React.ReactNode; // 레이아웃 내부에 들어갈 자식 요소
   showLogo?: boolean;
+  showNavbar?: boolean;
 }
 
 // Layout: 화면 전체를 감싸는 공통 레이아웃 컴포넌트
 export const Layout: React.FC<LayoutProps> = ({
   children,
   showLogo = true,
+  showNavbar = true,
 }) => {
   return (
     <LinearGradient
@@ -40,7 +42,7 @@ export const Layout: React.FC<LayoutProps> = ({
           </View>
         )}
         <View style={styles.content}>{children}</View>
-        <Navbar />
+        {showNavbar && <Navbar />}
         <ToastList />
       </SafeAreaView>
     </LinearGradient>
