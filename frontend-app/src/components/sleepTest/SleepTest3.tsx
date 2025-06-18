@@ -6,19 +6,19 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
+import { useSendAllResults, useStartGameSession } from '@/services/testApi';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { calculateSleepTest3Score } from '@/utils/sleepTestScore';
 import { useSleepTestStore } from '@/store/testStore';
+import { useAuthStore } from '@/store/authStore';
+import { Text } from '@/components/common/Text';
+import { TestSession } from '@/types/cognitive';
+import Toast from 'react-native-toast-message';
 import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
-import { useSendAllResults, useStartGameSession } from '@/services/testApi';
-import Toast from 'react-native-toast-message';
-import { Text } from '@/components/common/Text';
-import { useAuthStore } from '@/store/authStore';
-import { TestSession } from '@/types/cognitive';
 
 type RoundInfo = {
   gridSize: number;
@@ -58,13 +58,13 @@ export default function SleepTest3() {
 
   // 상태관리 객체로 수정해보기
   const [totalStart, setTotalStart] = useState<number | null>(null);
+  const [sessionId, setSessionId] = useState<number | null>(null);
   const [selected, setSelected] = useState<number[]>([]);
   const [showPattern, setShowPattern] = useState(true);
   const [pattern, setPattern] = useState<number[]>([]);
   const [totalCorrect, setTotalCorrect] = useState(0);
   const [gameEnded, setGameEnded] = useState(false);
   const [round, setRound] = useState(0);
-  const [sessionId, setSessionId] = useState<number | null>(null);
 
   const user = useAuthStore(state => state.user);
   const userId = user?.id;
@@ -72,7 +72,6 @@ export default function SleepTest3() {
   const [srtSessionId, setSrtSessionId] = useState<number | null>(null);
   const [symbolSessionId, setSymbolSessionId] = useState<number | null>(null);
   const [patternSessionId, setPatternSessionId] = useState<number | null>(null);
-  // const { mutateAsync: startSession } = useStartGameSession();
 
   function goToSleepTestResult() {
     const { test1, test2, test3 } = useSleepTestStore.getState();
@@ -120,7 +119,7 @@ export default function SleepTest3() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await startSession(3); // SRT의 format_id는 1
+        const res = await startSession(3);
         setSessionId(res.id);
       } catch (error) {
         console.error('세션 시작 실패:', error);

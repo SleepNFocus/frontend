@@ -5,17 +5,16 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import ResultChart from '@/components/common/ResultChart';
-// import { useSleepTestStore } from '@/store/testStore';
+import { CognitiveResultType } from '@/types/cognitive';
 import { GlassCard } from '@/components/common/Card';
 import { Button } from '@/components/common/Button';
 import { Layout } from '@/components/common/Layout';
+import { Text } from '@/components/common/Text';
 import { useNavigation } from 'expo-router';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { CognitiveResultType } from '@/types/cognitive';
-import { Text } from '@/components/common/Text'
 
 type SleepTestResultRouteProp = RouteProp<
   RootStackParamList,

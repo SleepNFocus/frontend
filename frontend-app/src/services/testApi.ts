@@ -8,10 +8,7 @@ import { PatternPayload, SRTPayload, SymbolPayload } from '@/types/test';
 export const startGameSession = async (formatId: number) => {
   const client = await getApiClient();
   const payload = { format_id: formatId };
-  const res = await client.post(
-    'api/cognitive-statistics/session/start/',
-    payload,
-  );
+  const res = await client.post('cognitive-statistics/session/start/', payload);
   return res.data;
 };
 
@@ -49,10 +46,7 @@ export const postSRTResult = async (data: {
     reaction_avg_ms: data.reactionAvgMs,
     reaction_list: data.reactionList.join(','),
   };
-  const res = await client.post(
-    'api/cognitive-statistics/result/srt/',
-    payload,
-  );
+  const res = await client.post('cognitive-statistics/result/srt/', payload);
   return res.data;
 };
 
@@ -87,10 +81,7 @@ export const postSymbolResult = async (data: {
     symbol_correct: data.symbolCorrect,
     symbol_accuracy: data.symbolAccuracy,
   };
-  const res = await client.post(
-    'api/cognitive-statistics/result/symbol/',
-    payload,
-  );
+  const res = await client.post('cognitive-statistics/result/symbol/', payload);
   return res.data;
 };
 
@@ -126,7 +117,7 @@ export const postPatternResult = async (data: {
     pattern_time_sec: data.patternTimeSec,
   };
   const res = await client.post(
-    'api/cognitive-statistics/result/pattern/',
+    'cognitive-statistics/result/pattern/',
     payload,
   );
   return res.data;
@@ -149,7 +140,7 @@ export const usePostPatternResult = () =>
     },
   });
 
-// ✅ 테스트 결과 전체 전송
+// 테스트 결과 전체 전송
 export const sendAllResults = async ({
   userId,
   test1,
@@ -186,8 +177,8 @@ export const sendAllResults = async ({
   });
 
   const client = await getApiClient();
-  const res = await client.get('api/cognitive-statistics/result/basic/');
-  console.log('✅ 기본 결과', res.data);
+  const res = await client.get('cognitive-statistics/result/basic/');
+  console.log('전체 테스트 기본 결과', res.data);
   return res.data;
 };
 
@@ -216,12 +207,10 @@ export const useSendAllResults = () =>
     },
   });
 
-// ✅ 일별 요약 조회
+// 일별 요약 조회
 export const getDailySummary = async () => {
   const client = await getApiClient();
-  const res = await client.get(
-    'api/cognitive-statistics/result/daily-summary/',
-  );
+  const res = await client.get('cognitive-statistics/result/daily-summary/');
   return res.data;
 };
 

@@ -47,6 +47,5 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     color: '#3F4F80',
     textAlign: 'center',
-    // textShadow 효과 제거 (deprecated 경고 해결)
   },
 });
