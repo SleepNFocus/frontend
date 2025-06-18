@@ -135,7 +135,7 @@ export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
                   resizeMode="contain"
                 />
               </View>
-              <Text style={styles.googleSignInText}>Google로 로그인</Text>
+              <Text style={styles.googleSignInText}>Google 로그인</Text>
             </View>
           </TouchableOpacity>
         </View>

@@ -14,27 +14,27 @@ import { SocialLogin } from './app/auth/SocialLogin';
 import { Layout } from '@/components/common/Layout';
 import { NotFoundPage } from '@/components/common/NotFoundPage';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
-import { SleepRecordPage } from './app/sleep/SleepRecordPage';
+import { SleepRecordPage } from './app/tabs/sleep/SleepRecordPage';
 import { NotificationSettingsPage } from './app/notifications/NotificationSettingsPage';
 import Settings from '@/app/tabs/mypage/Settings';
 import NicknameEdit from './app/tabs/mypage/NicknameEdit';
-import SleepTestMain from './app/test/SleepTestMain';
-import SleepTestDesc from './app/test/SleepTest';
+import SleepTestMain from './app/tabs/test/SleepTestMain';
+import SleepTestDesc from './app/tabs/test/SleepTest';
 import SleepTest1Desc from './components/sleepTest/SleepTest1Desc';
 import SleepTest1 from './components/sleepTest/SleepTest1';
 import SleepTest2Desc from './components/sleepTest/SleepTest2Desc';
 import SleepTest2 from './components/sleepTest/SleepTest2';
 import SleepTest3Desc from './components/sleepTest/SleepTest3Desc';
 import SleepTest3 from './components/sleepTest/SleepTest3';
-import SleepTestResult from './app/test/SleepTestResult';
+import SleepTestResult from './app/tabs/test/SleepTestResult';
 import { PrivacyNotice } from './app/splash/PrivacyNotice';
 import LandingPage from './app/splash/LandingPage';
-import MyRecord from './app/tabs/mypage/MyRecord';
 import { OnboardingSteps } from './app/splash/OnboardingSteps';
 import { IntroCard } from '@/app/splash/IntroCard';
 import { SplashScreen } from 'expo-router';
 import { AISleepTipsScreen } from './components/sleep/AISleepTipsScreen';
 import { KakaoWebView } from './app/auth/KakaoWebView';
+import { CognitiveResultType } from './types/cognitive';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -85,9 +85,11 @@ export type RootStackParamList = {
   SleepTest2: undefined;
   SleepTest3Desc: undefined;
   SleepTest3: undefined;
-  SleepTestResult: undefined;
+  SleepTestResult: {
+    basic: CognitiveResultType;
+  };
   PrivacyNotice: undefined;
-  MyRecord: undefined;
+  DailyCheckScreen: undefined;
   NotFound: undefined;
   AISleepTips: { date: string; score: number };
   KakaoWebView: undefined;
@@ -176,7 +178,10 @@ export default function App() {
                 component={SleepTestResult}
               />
               <Stack.Screen name="PrivacyNotice" component={PrivacyNotice} />
-              <Stack.Screen name="MyRecord" component={MyRecord} />
+              <Stack.Screen
+                name="DailyCheckScreen"
+                component={DailyCheckPage}
+              />
               <Stack.Screen name="NotFound" component={NotFoundPage} />
               <Stack.Screen name="KakaoWebView" component={KakaoWebView} />
             </Stack.Navigator>

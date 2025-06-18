@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   View,
-  Text,
   Image,
   Pressable,
   StyleSheet,
@@ -15,6 +14,7 @@ import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
+import { Text } from '@/components/common/Text';
 
 const MAX_STEP = 5;
 const MIN_WAIT_TIME = 1000;
@@ -92,7 +92,8 @@ export default function SleepTest1() {
   useEffect(() => {
     if (isFinished) {
       const result = calculateSleepTest1Score(clickTimes);
-      console.log('결과:', result);
+      // [정리 필요] console.log 등 디버깅 코드는 배포 전 반드시 제거해야 함
+      // 이유: 불필요한 콘솔 출력은 성능 저하, 보안 이슈, 로그 오염의 원인이 됨
       setTest1(result);
     }
   }, [isFinished]);
@@ -121,7 +122,7 @@ export default function SleepTest1() {
             <Button
               title="다음"
               variant="primary"
-              style={styles.button}
+              style={styles.nextButton}
               onPress={goToSleepTest2Desc}
             />
           </View>
@@ -291,14 +292,9 @@ const styles = StyleSheet.create({
     height: 100,
     opacity: 0.8,
   },
-  button: {
-    width: 70,
-    paddingVertical: 12,
-    borderRadius: 10,
-    alignItems: 'center',
-    shadowColor: '#909090',
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
+  nextButton: {
+    marginTop: 20,
+    width: '100%',
+    maxWidth: 320,
   },
 });

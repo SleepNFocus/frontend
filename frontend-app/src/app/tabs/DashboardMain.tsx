@@ -1,21 +1,20 @@
-import React, { memo, useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { memo, useEffect, useState } from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { Layout } from '@/components/common/Layout';
 import { GreetingCard } from '@/components/sleep/GreetingCard';
 import { Card } from '@/components/common/Card';
-import ResultChart from '@/components/chart/ResultChart';
-import { SummaryCard } from '@/components/test/SummaryCard';
+import { SummaryCard } from '@/components/sleep/SummaryCard';
 import { CheckinCard } from '@/components/sleep/CheckinCard';
 import { Text } from '@/components/common/Text';
 import { colors } from '@/constants/colors';
-import { fontSize, spacing, isSmallDevice, getResponsiveStyle } from '@/utils/responsive';
+import { fontSize, spacing } from '@/utils/responsive';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/App';
+import { useGetDailySummary } from '@/services/testApi';
+import ResultChart from '@/components/common/ResultChart';
 
-// 타입 정의
 interface ScoreDetail {
   label: string;
   value: string;
@@ -38,124 +37,136 @@ interface ScoreDetailCardProps {
   averageScore: number;
 }
 
-// 초기 데이터
-const initialCognitionData: CognitionData = {
-  data: [77, 54, 91, 60, 80, 70],
-  labels: [
-    '반응 속도',
-    '정보 처리',
-    '패턴 기억',
-    '시각 집중',
-    '지속 집중',
-    '유지력',
-  ],
-};
+// AbilityProfileCard
+const AbilityProfileCard: React.FC<AbilityProfileCardProps> = memo(
+  ({ data, labels, sleepScore }) => {
+    return (
+      <Card style={styles.abilityCard}>
+        <Text style={styles.sectionTitle}>나의 인지 능력 프로필</Text>
+        <Text style={styles.sectionLabel}>
+          오늘의 수면 점수: {sleepScore ?? '-'}점
+        </Text>
+        <View style={styles.chartContainer}>
+          <ResultChart data={data} labels={labels} />
+        </View>
+      </Card>
+    );
+  },
+);
 
-const initialScoreDetails: ScoreDetail[] = [
-  { label: '반응 속도', value: '344ms', score: 77 },
-  { label: '정보 처리', value: '12개 정답 (92.3%)', score: 54 },
-  { label: '패턴 기억', value: '패턴 길이: 8', score: 91 },
-];
-
-const cognitionData = [77, 54, 91, 60, 80, 70];
-const cognitionLabels = [
-  '반응 속도',
-  '정보 처리',
-  '패턴 기억',
-  '시각 집중',
-  '지속 집중',
-  '유지력',
-];
-const scoreDetails = [
-  { label: '반응 속도', value: '344ms', score: 77 },
-  { label: '정보 처리', value: '12개 정답 (92.3%)', score: 54 },
-  { label: '패턴 기억', value: '패턴 길이: undefined', score: 91 },
-];
-
-// AbilityProfileCard 컴포넌트
-const AbilityProfileCard: React.FC<AbilityProfileCardProps> = memo(({ data, labels, sleepScore }) => {
-  return (
-    <Card style={styles.abilityCard}>
-      <Text style={styles.sectionTitle}>나의 인지 능력 프로필</Text>
-      <Text style={styles.sectionLabel}>오늘의 수면 점수: {sleepScore ?? '-'}점</Text>
-      <View style={styles.chartContainer}>
-        <ResultChart />
-      </View>
-    </Card>
-  );
-});
-
-// ScoreDetailCard 컴포넌트
-const ScoreDetailCard: React.FC<ScoreDetailCardProps> = memo(({ details, averageScore }) => {
-  return (
-    <Card style={styles.detailCard}>
-      <Text style={styles.sectionTitle}>상세 결과</Text>
-      <Text style={styles.avgScore}>
-        전체 평균 점수:{' '}
-        <Text style={styles.avgScorePoint}>{averageScore}점</Text>
-      </Text>
-      <View style={styles.scoreCardList}>
-        {details.map((item) => (
-          <View key={item.label} style={styles.scoreCard}>
-            <View style={styles.scoreCardRow}>
-              <View style={styles.scoreCardLabelBox}>
-                <Text style={styles.scoreCardLabel}>{item.label}</Text>
-                <Text style={styles.scoreCardValue}>{item.value}</Text>
+// ScoreDetailCard
+const ScoreDetailCard: React.FC<ScoreDetailCardProps> = memo(
+  ({ details, averageScore }) => {
+    return (
+      <Card style={styles.detailCard}>
+        <Text style={styles.sectionTitle}>상세 결과</Text>
+        <Text style={styles.avgScore}>
+          전체 평균 점수:{' '}
+          <Text style={styles.avgScorePoint}>{averageScore}점</Text>
+        </Text>
+        <View style={styles.scoreCardList}>
+          {details.map(item => (
+            <View key={item.label} style={styles.scoreCard}>
+              <View style={styles.scoreCardRow}>
+                <View style={styles.scoreCardLabelBox}>
+                  <Text style={styles.scoreCardLabel}>{item.label}</Text>
+                  <Text style={styles.scoreCardValue}>{item.value}</Text>
+                </View>
+                <Text style={styles.scoreCardPoint}>{item.score}점</Text>
               </View>
-              <Text style={styles.scoreCardPoint}>{item.score}점</Text>
             </View>
-          </View>
-        ))}
-      </View>
-    </Card>
-  );
-});
+          ))}
+        </View>
+      </Card>
+    );
+  },
+);
 
-/**
- * 대시보드 메인 컴포넌트
- * 사용자의 인지 능력 프로필과 수면 점수를 보여주는 메인 화면
- */
+// DashboardMain
 export const DashboardMain: React.FC = memo(() => {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  const [cognitionData, setCognitionData] = useState<CognitionData>(initialCognitionData);
-  const [scoreDetails, setScoreDetails] = useState<ScoreDetail[]>(initialScoreDetails);
-  const [averageScore, setAverageScore] = useState(74);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [cognitionData, setCognitionData] = useState<CognitionData>({
+    data: [],
+    labels: [],
+  });
+  const [scoreDetails, setScoreDetails] = useState<ScoreDetail[]>([]);
+  const [averageScore, setAverageScore] = useState<number>(0);
+
+  const {
+    mutate: fetchSummary,
+    data,
+    isPending,
+    isError,
+    error,
+  } = useGetDailySummary();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        // TODO: API 호출로 대체
-        // const response = await fetchCognitionData();
-        // setCognitionData(response.data);
-        // setScoreDetails(response.details);
-        // setAverageScore(response.averageScore);
-      } catch (err) {
-        setError(err as Error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    fetchSummary(undefined, {
+      onSuccess: res => {
+        if (!res || res.length === 0) return;
 
-    fetchData();
+        const latest = res[res.length - 1];
+
+        const cognition = [
+          latest.raw_scores.srt.average_score,
+          latest.raw_scores.symbol.average_score,
+          latest.raw_scores.pattern.average_score,
+        ];
+
+        const labels = ['반응 속도', '정보 처리', '패턴 기억'];
+
+        const detail: ScoreDetail[] = [
+          {
+            label: '반응 속도',
+            value: `${latest.raw_scores.srt.avg_ms}ms`,
+            score: latest.raw_scores.srt.average_score,
+          },
+          {
+            label: '정보 처리',
+            value: `${latest.raw_scores.symbol.correct}개 정답 (${latest.raw_scores.symbol.symbol_accuracy}%)`,
+            score: latest.raw_scores.symbol.average_score,
+          },
+          {
+            label: '패턴 기억',
+            value: `정답 개수: ${latest.raw_scores.pattern.correct}`,
+            score: latest.raw_scores.pattern.average_score,
+          },
+        ];
+
+        setCognitionData({ data: cognition, labels });
+        setScoreDetails(detail);
+        setAverageScore(latest.average_score);
+      },
+    });
   }, []);
 
-  if (error) {
+  if (isPending) {
     return (
-      <ErrorBoundary>
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>데이터를 불러오는 중 오류가 발생했습니다.</Text>
+      <Layout>
+        <View style={{ padding: 20 }}>
+          <Text>데이터 불러오는 중...</Text>
         </View>
-      </ErrorBoundary>
+      </Layout>
     );
   }
+
+  // if (isError) {
+  //   return (
+  //     <ErrorBoundary>
+  //       <View style={styles.errorContainer}>
+  //         <Text style={styles.errorText}>
+  //           데이터 로딩 실패: {(error as Error).message}
+  //         </Text>
+  //       </View>
+  //     </ErrorBoundary>
+  //   );
+  // }
 
   return (
     <ErrorBoundary>
       <Layout>
-        <ScrollView 
+        <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
@@ -163,16 +174,13 @@ export const DashboardMain: React.FC = memo(() => {
           <Card style={styles.greetingWrap}>
             <GreetingCard userName="닉네임" />
           </Card>
-          
-          <AbilityProfileCard 
+
+          <AbilityProfileCard
             data={cognitionData.data}
             labels={cognitionData.labels}
           />
 
-          <ScoreDetailCard 
-            details={scoreDetails}
-            averageScore={averageScore}
-          />
+          <ScoreDetailCard details={scoreDetails} averageScore={averageScore} />
 
           <Card style={styles.summarySection}>
             <SummaryCard />
@@ -191,22 +199,13 @@ DashboardMain.displayName = 'DashboardMain';
 
 // 스타일 정의
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
-  gradient: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-  },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
     padding: 16,
-    gap: 12
+    gap: 12,
   },
   greetingWrap: {
     width: '100%',

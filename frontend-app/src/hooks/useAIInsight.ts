@@ -1,6 +1,6 @@
 // src/hooks/useAIInsight.ts
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '@/config/axios';
+import { apiClient } from '@/services/axios';
 
 interface AIRecommendationResponse {
   recommendation: string;
