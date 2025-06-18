@@ -43,88 +43,104 @@ export const SocialLogin: React.FC = () => {
   if (showKakaoWebView) {
     return (
       <View style={{ flex: 1 }}>
-        {/* ✅ 더 이상 props 안 넘겨도 됨 */}
         <KakaoLoginWebView />
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Text variant="headlineMedium" style={styles.title}>
+    <View style={styles.outer}>
+      <View style={styles.card}>
+        <Text variant="headlineSmall" style={styles.title}>
         소셜 로그인
-      </Text>
-
-      <Animated.View style={[styles.fadeContainer, { opacity: fadeAnim }]}>
-        <Button
-          mode="contained"
-          icon={() => (
-            <Image
-              source={{
-                uri: 'https://cdn.icon-icons.com/icons2/2699/PNG/512/kakaotalk_logo_icon_169195.png',
-              }}
-              style={styles.icon}
-            />
-          )}
-          onPress={() => setShowKakaoWebView(true)}
-          style={[styles.button, { backgroundColor: '#FEE500' }]}
-          labelStyle={{ color: '#3C1E1E', fontWeight: 'bold' }}
-          contentStyle={{ paddingVertical: 10 }}
-        >
-          카카오로 로그인
-        </Button>
-
-        <Button
-          mode="contained"
-          icon={() => (
-            <Image
-              source={{
-                uri: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
-              }}
-              style={styles.icon}
-            />
-          )}
-          onPress={() => handleSocialLogin('구글')}
-          style={[
-            styles.button,
-            { backgroundColor: '#fff', borderColor: '#ddd', borderWidth: 1 },
-          ]}
-          labelStyle={{ color: '#222', fontWeight: 'bold' }}
-          contentStyle={{ paddingVertical: 10 }}
-        >
-          구글로 로그인
-        </Button>
-      </Animated.View>
+        </Text>
+  
+        <Animated.View style={[styles.buttonGroup, { opacity: fadeAnim }]}>
+          <Button
+            mode="contained"
+            icon={() => (
+              <Image
+                source={{ uri: 'https://cdn.icon-icons.com/icons2/2699/PNG/512/kakaotalk_logo_icon_169195.png' }}
+                style={styles.icon}
+              />
+            )}
+            onPress={() => setShowKakaoWebView(true)}
+            style={[styles.socialButton, { backgroundColor: '#FEE500' }]}
+            labelStyle={{ color: '#3C1E1E', fontWeight: 'bold' }}
+            contentStyle={{ paddingVertical: 10 }}
+          >
+            카카오로 로그인
+          </Button>
+  
+          <Button
+            mode="contained"
+            icon={() => (
+              <Image
+                source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg' }}
+                style={styles.icon}
+              />
+            )}
+            onPress={() => handleSocialLogin('구글')}
+            style={[styles.socialButton, styles.googleButton]}
+            labelStyle={{ color: '#222', fontWeight: 'bold' }}
+            contentStyle={{ paddingVertical: 10 }}
+          >
+            구글로 로그인
+          </Button>
+        </Animated.View>
+      </View>
     </View>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    flex: 1,
-    justifyContent: 'center',
-    padding: 24,
-  },
-  fadeContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    marginBottom: 32,
-    textAlign: 'center',
-  },
-  button: {
-    borderRadius: 12,
-    marginBottom: 16,
-    width: 260,
-    elevation: 2,
-  },
-  icon: {
-    height: 24,
-    marginRight: 8,
-    resizeMode: 'contain',
-    width: 24,
-  },
-});
+  const styles = StyleSheet.create({
+    outer: {
+      flex: 1,
+      backgroundColor: '#F7F9FC',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 20,
+    },
+    card: {
+      backgroundColor: '#fff',
+      padding: 32,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: '#e5e7eb',
+      shadowColor: '#000',
+      shadowOpacity: 0.05,
+      shadowRadius: 10,
+      elevation: 6,
+      width: '100%',
+      maxWidth: 360,
+    },
+    title: {
+      marginBottom: 32,
+      textAlign: 'center',
+      fontWeight: 'bold',
+      color: '#1F2937',
+    },
+    buttonGroup: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    socialButton: {
+      flexDirection: 'row',
+      borderRadius: 12,
+      width: '100%',
+      marginBottom: 16,
+      elevation: 2,
+    },
+    googleButton: {
+      backgroundColor: '#fff',
+      borderWidth: 1,
+      borderColor: '#ddd',
+    },
+    icon: {
+      height: 24,
+      width: 24,
+      marginRight: 8,
+      resizeMode: 'contain',
+    },
+  });
+  

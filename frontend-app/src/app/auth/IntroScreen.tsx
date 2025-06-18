@@ -1,5 +1,4 @@
-import React, { useRef, useState, } from 'react';
-
+import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -12,9 +11,7 @@ import {
   NativeSyntheticEvent,
   useWindowDimensions,
   Platform,
-  Alert,
 } from 'react-native';
-
 
 type IntroScreenProps = {
   onNext: () => void;
@@ -37,23 +34,6 @@ const IntroScreen: React.FC<IntroScreenProps> = ({ onNext }) => {
       duration: 500,
       useNativeDriver: true,
     }).start(() => setIsStarted(true));
-  };
-
-  const handleSocialLogin = async (provider: string) => {
-    if (provider === '카카오') {
-      try {
-        const result = await login();
-        Alert.alert('카카오 로그인 성공', JSON.stringify(result));
-      
-      } catch (e) {
-        Alert.alert(
-          '카카오 로그인 실패',
-          e instanceof Error ? e.message : '알 수 없는 오류',
-        );
-      }
-    } else {
-      Alert.alert(`${provider} 로그인은 아직 구현되지 않았습니다.`);
-    }
   };
 
   return (
@@ -79,13 +59,12 @@ const IntroScreen: React.FC<IntroScreenProps> = ({ onNext }) => {
             >
               <View style={styles.overlay}>
                 {index === slides.length - 1 && isStarted ? (
-                 
                   <Animated.View
                     style={[styles.socialLoginContainer, { opacity: fadeAnim }]}
                   >
                     <TouchableOpacity
                       style={styles.startButton}
-                      onPress={onNext} 
+                      onPress={onNext}
                     >
                       <Text style={styles.startButtonText}>로그인하러 가기</Text>
                     </TouchableOpacity>
