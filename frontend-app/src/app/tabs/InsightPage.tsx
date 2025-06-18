@@ -37,7 +37,7 @@ export const InsightPage: React.FC = () => {
   if (loading) {
     return (
       <ErrorBoundary>
-        <Layout>
+        <Layout showNavbar={true}>
           <View style={styles.loadingContainer}>
             <Text variant="bodyLarge" style={styles.loadingText}>
               AI 인사이트를 생성하는 중...

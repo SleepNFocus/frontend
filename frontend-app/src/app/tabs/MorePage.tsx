@@ -30,7 +30,7 @@ export const MorePage: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <Layout showNavbar={true}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
