@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,8 +15,25 @@ import { Layout } from '@/components/common/Layout';
 import useUiStore from '@/store/uiStore';
 import * as ImagePicker from 'expo-image-picker';
 import { logoutUser } from '@/app/auth/logout';
+import { withdrawUser } from '@/app/auth/withdraw';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Settings = () => {
+   useEffect(() => {
+    const checkAccessToken = async () => {
+      const token = await AsyncStorage.getItem('accessToken');
+      console.log('🧪 useEffect 내부 accessToken:', token);
+
+      const allKeys = await AsyncStorage.getAllKeys();
+      console.log('📦 저장된 키 목록:', allKeys);
+
+      const allValues = await AsyncStorage.multiGet(allKeys);
+      console.log('🔍 저장된 값:', allValues);
+    };
+
+    checkAccessToken();
+  }, []);
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { openModal, openToast } = useUiStore();
@@ -70,12 +87,20 @@ const Settings = () => {
     }
   };
 
-  const handleWithdrawal = () => {
-    openToast('error', '탈퇴 완료', '탈퇴되었습니다.');
-    setTimeout(() => {
-      resetAuth();
-      navigation.navigate('LandingPage');
-    }, 3000);
+  const handleWithdrawal = async () => {
+    try {
+      await withdrawUser();
+      openToast('success', '탈퇴 완료', '계정이 삭제되었습니다.');
+  
+      setTimeout(() => {
+        resetAuth();
+        navigation.reset({
+          index: 0, routes: [{ name: 'LandingPage' }],
+        });
+      }, 1500);
+    } catch (error) {
+      openToast('error', '탈퇴 실패', '다시 시도해주세요.');
+    }
   };
 
   return (
