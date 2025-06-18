@@ -10,7 +10,7 @@ import { DailyCheckPage } from './app/tabs/DailyCheckPage';
 import { HistoryPage } from './app/tabs/HistoryPage';
 import { InsightPage } from './app/tabs/InsightPage';
 import { MorePage } from './app/tabs/MorePage';
-import { SocialLogin } from './app/auth/SocialLogin';
+// import { SocialLogin } from './app/auth/SocialLogin';
 import { Layout } from '@/components/common/Layout';
 import { NotFoundPage } from '@/components/common/NotFoundPage';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
@@ -34,6 +34,7 @@ import { IntroCard } from '@/app/splash/IntroCard';
 import { SplashScreen } from 'expo-router';
 import { AISleepTipsScreen } from './components/sleep/AISleepTipsScreen';
 import { CognitiveResultType } from './types/cognitive';
+import KakaoWebView from './app/auth/KakaoWebView';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -71,7 +72,7 @@ export type RootStackParamList = {
   More: undefined;
   SurveyStep1: undefined;
   TestSurvey: undefined;
-  SocialLogin: undefined;
+  // SocialLogin: undefined;
   SleepRecord: undefined;
   NotificationSettings: undefined;
   Settings: undefined;
@@ -91,6 +92,7 @@ export type RootStackParamList = {
   DailyCheckScreen: undefined;
   NotFound: undefined;
   AISleepTips: { date: string; score: number };
+  KakaoWebView: undefined;
 };
 
 export const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -150,7 +152,7 @@ export default function App() {
               <Stack.Screen name="History" component={HistoryPage} />
               <Stack.Screen name="Insight" component={InsightPage} />
               <Stack.Screen name="More" component={MorePage} />
-              <Stack.Screen name="SocialLogin" component={SocialLogin} />
+              {/* <Stack.Screen name="SocialLogin" component={SocialLogin} /> */}
               <Stack.Screen name="SleepRecord" component={SleepRecordPage} />
               <Stack.Screen
                 name="AISleepTips"
@@ -176,8 +178,12 @@ export default function App() {
                 component={SleepTestResult}
               />
               <Stack.Screen name="PrivacyNotice" component={PrivacyNotice} />
-              <Stack.Screen name="DailyCheckScreen" component={DailyCheckPage} />
+              <Stack.Screen
+                name="DailyCheckScreen"
+                component={DailyCheckPage}
+              />
               <Stack.Screen name="NotFound" component={NotFoundPage} />
+              <Stack.Screen name="KakaoWebView" component={KakaoWebView} />
             </Stack.Navigator>
 
             <Toast />

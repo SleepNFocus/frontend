@@ -6,6 +6,7 @@ import { colors } from '@/constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { spacing } from '@/utils/responsive';
 import { ToastList } from '@/components/common/Toast';
+import { useNavigation } from '@react-navigation/native';
 
 // Layout 컴포넌트의 props 타입 정의
 interface LayoutProps {
@@ -18,6 +19,15 @@ export const Layout: React.FC<LayoutProps> = ({
   children,
   showLogo = true,
 }) => {
+  let canShowNavbar = false;
+  try {
+    // navigation 객체가 있으면 true
+    useNavigation();
+    canShowNavbar = true;
+  } catch {
+    canShowNavbar = false;
+  }
+
   return (
     <LinearGradient
       colors={[colors.bgColor, colors.white]}
@@ -40,7 +50,7 @@ export const Layout: React.FC<LayoutProps> = ({
           </View>
         )}
         <View style={styles.content}>{children}</View>
-        <Navbar />
+        {canShowNavbar && <Navbar />}
         <ToastList />
       </SafeAreaView>
     </LinearGradient>
