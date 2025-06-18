@@ -13,8 +13,17 @@ const NAV_ITEMS = [
 ];
 
 export const Navbar: React.FC = () => {
-  const navigation = useNavigation();
-  const route = useRoute();
+  let navigation;
+  let route;
+
+  try {
+    navigation = useNavigation();
+    route = useRoute();
+  } catch (e) {
+    console.warn('❗ Navigation 객체 없음 (Navbar NavigationContainer 외부)');
+    return null;
+  }
+
   const currentRoute = route.name;
 
   const handleNavigation = (route: string) => {
