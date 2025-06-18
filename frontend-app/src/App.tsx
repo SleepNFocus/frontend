@@ -33,7 +33,7 @@ import { OnboardingSteps } from './app/splash/OnboardingSteps';
 import { IntroCard } from '@/app/splash/IntroCard';
 import { SplashScreen } from 'expo-router';
 import { AISleepTipsScreen } from './components/sleep/AISleepTipsScreen';
-import { KakaoWebView } from './app/auth/KakaoWebView';
+import KakaoWebView from './app/auth/KakaoWebView';
 import { CognitiveResultType } from './types/cognitive';
 
 SplashScreen.preventAutoHideAsync();

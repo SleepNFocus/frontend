@@ -8,7 +8,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { useAuthStore } from '@/store/authStore';
-import { KakaoWebView } from '@/app/auth/KakaoWebView';
+// import KakaoWebView from '@/app/auth/KakaoWebView';
 // Intro: Focuz 전체화면 인트로/랜딩 페이지
 export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
   const navigation =
