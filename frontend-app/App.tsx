@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+
+
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { SocialLogin } from '@/app/auth/SocialLogin';
@@ -11,6 +13,7 @@ export default function App() {
   const [tab, setTab] = useState<
     'intro' | 'onboarding' | 'privacy' | 'login'
   >('intro');
+
 
   return (
     <View style={styles.root}>

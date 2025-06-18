@@ -9,6 +9,7 @@ import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { useAuthStore } from '@/store/authStore';
 
+
 // Intro: Focuz 전체화면 인트로/랜딩 페이지
 export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -49,17 +50,7 @@ export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
   };
 
   const handleKakaoLogin = () => {
-    // 카카오 로그인 구현 예정
-    Alert.alert(
-      '카카오 로그인',
-      '카카오 로그인이 구현될 예정입니다.',
-      [
-        {
-          text: '확인',
-          style: 'default',
-        },
-      ]
-    );
+    navigation.navigate('KakaoLoginWebView');
   };
 
   const handleGoogleLogin = async () => {

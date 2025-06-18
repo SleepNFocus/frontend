@@ -11,15 +11,13 @@ import {
   NativeSyntheticEvent,
   useWindowDimensions,
   Platform,
-  Alert,
 } from 'react-native';
 
-// type IntroScreenProps = {
-//   onNext: () => void;
-// };
+type IntroScreenProps = {
+  onNext: () => void;
+};
 
-// (const IntroScreen: React.FC<IntroScreenProps> = ({ onNext }) => {  아래부분 나중에 소셜 연동할때 이렇게 변경 및 소셜로그인에서 추가해줘야댐댐
-const IntroScreen: React.FC = () => {
+const IntroScreen: React.FC<IntroScreenProps> = ({ onNext }) => {
   const { width, height } = useWindowDimensions();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isStarted, setIsStarted] = useState(false);
@@ -36,10 +34,6 @@ const IntroScreen: React.FC = () => {
       duration: 500,
       useNativeDriver: true,
     }).start(() => setIsStarted(true));
-  };
-
-  const handleSocialLogin = (provider: string) => {
-    Alert.alert(`${provider} 로그인은 아직 구현되지 않았습니다.`);
   };
 
   return (
@@ -68,20 +62,11 @@ const IntroScreen: React.FC = () => {
                   <Animated.View
                     style={[styles.socialLoginContainer, { opacity: fadeAnim }]}
                   >
-                    <Text style={styles.socialTitle}>소셜 로그인</Text>
-
                     <TouchableOpacity
-                      style={[styles.socialButton, styles.kakaoButton]}
-                      onPress={() => handleSocialLogin('카카오')}
+                      style={styles.startButton}
+                      onPress={onNext}
                     >
-                      <Text style={styles.kakaoText}>카카오로 로그인</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={[styles.socialButton, styles.googleButton]}
-                      onPress={() => handleSocialLogin('구글')}
-                    >
-                      <Text style={styles.googleText}>구글로 로그인</Text>
+                      <Text style={styles.startButtonText}>로그인하러 가기</Text>
                     </TouchableOpacity>
                   </Animated.View>
                 ) : (
@@ -94,10 +79,7 @@ const IntroScreen: React.FC = () => {
                     {index === slides.length - 1 && (
                       <TouchableOpacity
                         style={styles.startButton}
-                        onPress={() => {
-                          handleStart();
-                          // onNext(); 주석 지우면 소셜 페이지로 넘어가게 만듬
-                        }}
+                        onPress={handleStart}
                       >
                         <Text style={styles.startButtonText}>시작하기</Text>
                       </TouchableOpacity>
@@ -171,50 +153,20 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   startButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    backgroundColor: '#fff',
     paddingHorizontal: 36,
     paddingVertical: 12,
     borderRadius: 24,
     marginTop: 24,
   },
   startButtonText: {
-    color: '#fff',
+    color: '#3C1E1E',
     fontWeight: 'bold',
     fontSize: 16,
   },
   socialLoginContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  socialButton: {
-    width: 240,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    marginBottom: 16,
-    alignItems: 'center',
-  },
-  kakaoButton: {
-    backgroundColor: '#FEE500',
-  },
-  googleButton: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  kakaoText: {
-    color: '#3C1E1E',
-    fontWeight: 'bold',
-  },
-  googleText: {
-    color: '#222',
-    fontWeight: 'bold',
-  },
-  socialTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 24,
-    color: '#fff',
   },
   dotsContainer: {
     position: 'absolute',
