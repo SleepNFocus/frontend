@@ -1,5 +1,6 @@
-import { SleepRecordData } from '@/app/types/sleep';
-import { apiClient } from '@/config/axios';
+import { SleepRecordData } from '@/types/sleep';
+import { apiClient } from '@/services/axios';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const saveSleepRecord = async (recordData: SleepRecordData) => {
   try {
@@ -72,4 +73,80 @@ export const updateSleepRecord = async (recordId: number, updateData: Partial<Sl
       error: error.response?.data?.detail || '기록 수정에 실패했습니다.'
     };
   }
+};
+
+export const useSaveSleepRecord = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (recordData: SleepRecordData) => {
+      const response = await apiClient.post('/sleepRecord/', {
+        date: recordData.selectedDate,
+        sleep_duration: parseInt(recordData.sleepDuration),
+        subjective_quality: parseInt(recordData.sleepQuality),
+        sleep_latency: parseInt(recordData.fallAsleepTime),
+        wake_count: parseInt(recordData.nightWakeCount),
+        disturb_factors: recordData.sleepDisruptors,
+        memo: "앱에서 기록됨"
+      });
+      
+      if (response.status !== 200 && response.status !== 201) {
+        throw new Error(response.data?.message || '저장에 실패했습니다.');
+      }
+      
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log('수면 기록 저장 성공:', data);
+      queryClient.invalidateQueries({ queryKey: ['sleepRecords'] });
+    },
+    onError: (error) => {
+      console.error('수면 기록 저장 실패:', error);
+    },
+  });
+};
+
+export const useSleepRecord = (recordId: number) => {
+  return useQuery({
+    queryKey: ['sleepRecord', recordId],
+    queryFn: async () => {
+      const response = await apiClient.get(`/sleepRecord/${recordId}/`);
+      return response.data;
+    },
+    enabled: !!recordId, 
+    staleTime: 10 * 60 * 1000, 
+  });
+};
+
+export const useUpdateSleepRecord = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ recordId, updateData }: { 
+      recordId: number; 
+      updateData: Partial<SleepRecordData> 
+    }) => {
+      const requestData: any = {};
+      
+      if (updateData.selectedDate) requestData.date = updateData.selectedDate;
+      if (updateData.sleepDuration) requestData.sleep_duration = parseInt(updateData.sleepDuration);
+      if (updateData.sleepQuality) requestData.subjective_quality = parseInt(updateData.sleepQuality);
+      if (updateData.fallAsleepTime) requestData.sleep_latency = parseInt(updateData.fallAsleepTime);
+      if (updateData.nightWakeCount) requestData.wake_count = parseInt(updateData.nightWakeCount);
+      if (updateData.sleepDisruptors) requestData.disturb_factors = updateData.sleepDisruptors;
+      
+      requestData.memo = "앱에서 수정됨";
+
+      const response = await apiClient.patch(`/sleepRecord/${recordId}/`, requestData);
+      return response.data;
+    },
+    onSuccess: (data, variables) => {
+      console.log('✅ 수면 기록 수정 성공:', data);
+      queryClient.invalidateQueries({ queryKey: ['sleepRecord', variables.recordId] });
+      queryClient.invalidateQueries({ queryKey: ['sleepRecords'] });
+    },
+    onError: (error) => {
+      console.error('수면 기록 수정 실패:', error);
+    },
+  });
 };

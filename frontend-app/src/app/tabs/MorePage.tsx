@@ -11,27 +11,15 @@ import { useAuthStore } from '@/store/authStore';
 
 export const MorePage: React.FC = () => {
   const navigation = useNavigation();
-  const { openModal } = useUiStore();
+  const { openModal, openToast } = useUiStore();
   const { resetAuth } = useAuthStore();
 
   const handleLogout = () => {
-    openModal('info', {
-      isOpen: true,
-      title: '로그아웃',
-      content: '로그아웃 하시겠습니까?',
-      confirmText: '확인',
-      cancelText: '취소',
-      onConfirm: () => {
-        resetAuth();
-        openModal('success', {
-          isOpen: true,
-          title: '로그아웃 완료',
-          content: '로그아웃 되었습니다.',
-          confirmText: '확인',
-        });
-        navigation.navigate('SocialLogin' as never);
-      },
-    });
+    openToast('success', '로그아웃 완료', '로그아웃 되었습니다.');
+    setTimeout(() => {
+      resetAuth();
+      navigation.navigate('LandingPage' as never);
+    }, 3000);
   };
 
   return (

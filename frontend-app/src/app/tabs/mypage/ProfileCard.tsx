@@ -1,130 +1,93 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity, Image, ViewStyle, TextStyle } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { RootStackParamList } from '@/App';
 import { Text } from '@/components/common/Text';
 import { Card } from '@/components/common/Card';
 import { colors } from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/store/authStore';
-import NicknameChangeModal from './NicknameChangeModal';
-import Toast from 'react-native-toast-message';
+import { Button } from '@/components/common/Button';
 
 const ProfileCard = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const tabNavigation = useNavigation<BottomTabNavigationProp<any>>();
   const user = useAuthStore(state => state.user);
-  // const setUser = useAuthStore(state => state.setUser); // 추후 사용 예정
-
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const handleNicknameChange = (_newNickname: string) => {
-    void _newNickname; // API 연결 전이라 저장 X
-    Toast.show({
-      type: 'error',
-      text1: '닉네임 변경 실패',
-      text2: '해당 기능은 MOCKUP기능만 구현되었습니다',
-    });
-    setModalVisible(false);
-  };
-
-  // const handleNicknameChange = (newNickname: string) => {
-  //   if (!user) return;
-
-  //   setUser({
-  //     ...user,
-  //     nickname: newNickname,
-  //   });
-
-  //   Toast.show({
-  //     type: 'success',
-  //     text1: '닉네임이 변경되었어요!',
-  //   });
-
-  //   setModalVisible(false);
-  // };
 
   return (
-    <>
-      <Card style={styles.wrapper}>
-        <View style={styles.headerRow}>
-          <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-            <Ionicons
-              name="settings-outline"
-              size={22}
-              color={colors.mediumGray}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <Image
-          source={{ uri: user?.image_url ?? 'https://via.placeholder.com/100' }}
-          style={styles.profileImage}
-        />
-
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Text variant="titleMedium" style={styles.welcomeText}>
-            <Text variant="titleMedium" style={styles.highlight}>
-              반가워요!
-            </Text>{' '}
-            {user?.nickname ?? '-'} 님
-          </Text>
+    <Card style={styles.wrapper}>
+      <View style={styles.headerRow}>
+        <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+          <Ionicons
+            name="settings-outline"
+            size={22}
+            color={colors.mediumGray}
+          />
         </TouchableOpacity>
+      </View>
 
-        <Text variant="bodyMedium" style={styles.trackingText}>
-          수면과 집중력을 추적한지 벌써{' '}
-          <Text variant="bodyMedium" style={styles.days}>
-            __일째
-          </Text>
+      <Image
+        source={{ uri: user?.image_url ?? 'https://via.placeholder.com/100' }}
+        style={styles.profileImage}
+      />
+
+      <Text variant="titleMedium" style={styles.welcomeText}>
+        <Text variant="titleMedium" style={styles.highlight}>
+          반가워요!
+        </Text>{' '}
+        {user?.nickname ?? '-'} 님
+      </Text>
+
+      <Text variant="bodyMedium" style={styles.trackingText}>
+        수면과 집중력을 추적한지 벌써{' '}
+        <Text variant="bodyMedium" style={styles.days}>
+          __일째
         </Text>
+      </Text>
 
-        <Card style={styles.announceBox}>
+      <Card style={styles.announceBox}>
+        <TouchableOpacity onPress={() => navigation.replace('DailyCheck')}>
           <Text variant="titleSmall" style={styles.announceText}>
             인지테스트 하러가기
           </Text>
-          <Text variant="bodySmall" style={styles.announceSubText}>
-            (매일 달라지는 유도문구)
-          </Text>
-          <Text variant="bodySmall" style={styles.announceSubText}>
-            게임 완료 시 이 칸이 없어지거나, 그날의 응원문구로 변경됨
-          </Text>
-        </Card>
-
-        <Card style={styles.sleepSummary}>
-          <View style={styles.averageBox}>
-            <Text variant="bodyMedium" style={styles.averageLabel}>
-              총 수면시간
-            </Text>
-            <Text variant="titleMedium" style={styles.averageValue}>
-              6시간 40분
-            </Text>
-          </View>
-          <View style={styles.averageBox}>
-            <Text variant="bodyMedium" style={styles.averageLabel}>
-              평균 점수
-            </Text>
-            <Text variant="titleMedium" style={styles.averageValue}>
-              84점
-            </Text>
-          </View>
-        </Card>
-
-        <TouchableOpacity onPress={() => navigation.navigate('MyRecord')}>
-          <Card style={styles.recordLinkBox}>
-            <Text variant="bodyMedium" style={styles.recordLinkText}>
-              나의 기록 보기
-            </Text>
-          </Card>
         </TouchableOpacity>
+        <Text variant="bodySmall" style={styles.announceSubText}>
+          (매일 달라지는 유도문구)
+        </Text>
+        <Text variant="bodySmall" style={styles.announceSubText}>
+          게임 완료 시 이 칸이 없어지거나, 그날의 응원문구로 변경됨
+        </Text>
       </Card>
 
-      <NicknameChangeModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onConfirm={handleNicknameChange}
+      <Card style={styles.sleepSummary}>
+        <View style={styles.averageBox}>
+          <Text variant="bodyMedium" style={styles.averageLabel}>
+            총 수면시간
+          </Text>
+          <Text variant="titleMedium" style={styles.averageValue}>
+            6시간 40분
+          </Text>
+        </View>
+        <View style={styles.averageBox}>
+          <Text variant="bodyMedium" style={styles.averageLabel}>
+            평균 점수
+          </Text>
+          <Text variant="titleMedium" style={styles.averageValue}>
+            84점
+          </Text>
+        </View>
+      </Card>
+
+      <Button
+        title="나의 기록 보기"
+        onPress={() => navigation.navigate('History')}
+        variant="outline"
+        style={styles.recordButton}
       />
-    </>
+    </Card>
   );
 };
 
@@ -150,9 +113,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     backgroundColor: colors.white,
     marginBottom: 20,
     borderWidth: 2,
@@ -181,7 +144,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderColor: colors.softBlue,
     borderWidth: 1,
-    marginBottom: 24,
+    marginBottom: 10,
     width: '100%',
     shadowColor: colors.midnightBlue,
     shadowOffset: { width: 0, height: 10 },
@@ -204,10 +167,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    marginBottom: 16,
+    marginBottom: 10,
     backgroundColor: colors.white,
     padding: 16,
-    borderColor: colors.mediumLightGray,
+    borderColor: colors.softBlue,
     borderWidth: 1,
     shadowColor: colors.midnightBlue,
     shadowOffset: { width: 0, height: 10 },
@@ -220,30 +183,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   averageLabel: {
-    color: colors.mediumGray,
-    marginBottom: 8,
+    color: colors.softBlue,
+    marginBottom: 10,
     fontSize: 14,
   },
   averageValue: {
     color: colors.textColor,
     fontWeight: 'bold',
   },
-
-  recordLinkBox: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.mediumLightGray,
-    padding: 16,
+  recordButton: {
     width: '100%',
-    alignItems: 'center',
-    shadowColor: colors.midnightBlue,
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 10,
-  },
-  recordLinkText: {
-    color: colors.softBlue,
-    fontWeight: 'bold',
+    marginTop: 8,
   },
 });

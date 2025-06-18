@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { calculateSleepTest3Score } from '@/utils/sleepTestScore';
+import { useSleepTestStore } from '@/store/testStore';
 import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
+import { useSendAllResults } from '@/services/testApi';
+import Toast from 'react-native-toast-message';
+import { Text } from '@/components/common/Text';
 
 type RoundInfo = {
   gridSize: number;
@@ -37,6 +41,8 @@ const getRandomIdx = (gridSize: number, clickPattern: number): number[] => {
 };
 
 export default function SleepTest3() {
+  const { mutate: sendAllResults } = useSendAllResults();
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -58,8 +64,38 @@ export default function SleepTest3() {
   const [round, setRound] = useState(0);
 
   function goToSleepTestResult() {
-    navigation.navigate('SleepTestResult');
-    resetGame();
+    const { test1, test2, test3 } = useSleepTestStore.getState();
+    const userId = '1234'; // 나중에 실제 사용자 ID로 변경
+
+    if (!userId || !test1 || !test2 || !test3) {
+      Toast.show({
+        type: 'error',
+        text1: '결과 전송 실패',
+        text2: '유저 정보 또는 테스트 결과가 없습니다.',
+      });
+      return;
+    }
+
+    const requestBody = {
+      userId,
+      test1,
+      test2,
+      test3,
+    };
+
+    sendAllResults(requestBody, {
+      onSuccess: basicResult => {
+        navigation.navigate('SleepTestResult', { basic: basicResult });
+        resetGame();
+      },
+      onError: () => {
+        Toast.show({
+          type: 'error',
+          text1: '결과 전송 실패',
+          text2: '서버 오류가 발생했습니다.',
+        });
+      },
+    });
   }
 
   function finishShow() {
@@ -117,19 +153,26 @@ export default function SleepTest3() {
     }
   };
 
-  if (gameEnded) {
-    const totalTimeSec =
-      totalStart && Date.now() ? (Date.now() - totalStart) / 1000 : 0;
-    const baseScore = totalCorrect * 5;
-    const bonusScore =
-      totalTimeSec <= 10
-        ? 10
-        : totalTimeSec >= 20
-          ? 0
-          : Math.round((20 - totalTimeSec) * 1);
-    const finalScore = baseScore + bonusScore;
-    const answerPercent = ((totalCorrect / 18) * 100).toFixed(1);
+  const setTest3 = useSleepTestStore(state => state.setTest3);
 
+  const [finalResult, setFinalResult] = useState<{
+    finalScore: number;
+    accuracy: number;
+    totalCorrect: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (gameEnded && totalStart !== null) {
+      const result = calculateSleepTest3Score(totalCorrect, totalStart);
+      setFinalResult({
+        ...result,
+        totalCorrect,
+      });
+      setTest3(result);
+    }
+  }, [gameEnded, totalStart]);
+
+  if (gameEnded && totalStart !== null) {
     return (
       <Layout>
         <View style={styles.root}>
@@ -140,20 +183,30 @@ export default function SleepTest3() {
             />
             <View style={styles.resultBox2}>
               <Text style={styles.title}> 패턴 기억 결과 </Text>
-              <Text style={styles.scoreText}> {finalScore}점 </Text>
-              <View style={styles.resultContainer}>
-                <View style={styles.resultContainer2}>
-                  <Text style={styles.result}>총 정답 수: </Text>
-                  <Text style={styles.resultBold}>
+              {finalResult && (
+                <>
+                  <Text style={styles.scoreText}>
                     {' '}
-                    {totalCorrect}개 / 18개{' '}
+                    {finalResult.finalScore}점{' '}
                   </Text>
-                </View>
-                <View style={styles.resultContainer2}>
-                  <Text style={styles.result}>정확도: </Text>
-                  <Text style={styles.resultBold}> {answerPercent}% </Text>
-                </View>
-              </View>
+                  <View style={styles.resultContainer}>
+                    <View style={styles.resultContainer2}>
+                      <Text style={styles.result}>총 정답 수: </Text>
+                      <Text style={styles.resultBold}>
+                        {' '}
+                        {finalResult.totalCorrect}개 / 18개{' '}
+                      </Text>
+                    </View>
+                    <View style={styles.resultContainer2}>
+                      <Text style={styles.result}>정확도: </Text>
+                      <Text style={styles.resultBold}>
+                        {' '}
+                        {finalResult.accuracy}%{' '}
+                      </Text>
+                    </View>
+                  </View>
+                </>
+              )}
             </View>
 
             <Button
