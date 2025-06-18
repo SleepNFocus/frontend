@@ -14,9 +14,11 @@ import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
-import { useSendAllResults } from '@/services/testApi';
+import { useSendAllResults, useStartGameSession } from '@/services/testApi';
 import Toast from 'react-native-toast-message';
 import { Text } from '@/components/common/Text';
+import { useAuthStore } from '@/store/authStore';
+import { TestSession } from '@/types/cognitive';
 
 type RoundInfo = {
   gridSize: number;
@@ -62,10 +64,20 @@ export default function SleepTest3() {
   const [totalCorrect, setTotalCorrect] = useState(0);
   const [gameEnded, setGameEnded] = useState(false);
   const [round, setRound] = useState(0);
+  const [sessionId, setSessionId] = useState<number | null>(null);
+
+  const user = useAuthStore(state => state.user);
+  const userId = user?.id;
+
+  const [srtSessionId, setSrtSessionId] = useState<number | null>(null);
+  const [symbolSessionId, setSymbolSessionId] = useState<number | null>(null);
+  const [patternSessionId, setPatternSessionId] = useState<number | null>(null);
+  // const { mutateAsync: startSession } = useStartGameSession();
 
   function goToSleepTestResult() {
     const { test1, test2, test3 } = useSleepTestStore.getState();
-    const userId = '1234'; // 나중에 실제 사용자 ID로 변경
+
+    console.log('전송할 테스트 결과:', { test1, test2, test3 });
 
     if (!userId || !test1 || !test2 || !test3) {
       Toast.show({
@@ -78,6 +90,7 @@ export default function SleepTest3() {
 
     const requestBody = {
       userId,
+      cognitiveSession: sessionId,
       test1,
       test2,
       test3,
@@ -101,6 +114,19 @@ export default function SleepTest3() {
   function finishShow() {
     setShowPattern(false);
   }
+
+  const { mutateAsync: startSession } = useStartGameSession();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await startSession(3); // SRT의 format_id는 1
+        setSessionId(res.id);
+      } catch (error) {
+        console.error('세션 시작 실패:', error);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     if (round < rounds.length) {
@@ -162,13 +188,13 @@ export default function SleepTest3() {
   } | null>(null);
 
   useEffect(() => {
-    if (gameEnded && totalStart !== null) {
+    if (gameEnded && totalStart !== null && sessionId) {
       const result = calculateSleepTest3Score(totalCorrect, totalStart);
       setFinalResult({
         ...result,
         totalCorrect,
       });
-      setTest3(result);
+      setTest3({ ...result, sessionId });
     }
   }, [gameEnded, totalStart]);
 

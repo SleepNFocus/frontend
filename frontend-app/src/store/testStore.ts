@@ -5,6 +5,7 @@ interface SleepTest1Result {
   avgReactionTime: number;
   avgScore: number;
   reactionList: number[];
+  sessionId: number;
 }
 
 interface SleepTest2Result {
@@ -13,6 +14,7 @@ interface SleepTest2Result {
   wrongCount: number;
   avgReactionTime: number;
   totalScore: number;
+  sessionId: number;
 }
 
 interface SleepTest3Result {
@@ -20,6 +22,7 @@ interface SleepTest3Result {
   totalTimeSec: number;
   finalScore: number;
   accuracy: number;
+  sessionId: number;
 }
 
 interface SleepTestStore {

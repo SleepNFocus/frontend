@@ -1,23 +1,23 @@
 // src/types/api.ts
 export type SRTPayload = {
-  cognitiveSession: number;
-  score: number;
-  reactionAvgMs: number;
+  sessionId: number;
+  avgScore: number;
+  avgReactionTime: number;
   reactionList: number[];
 };
 
 export type SymbolPayload = {
-  cognitiveSession: number;
-  score: number;
-  symbolCorrect: number;
-  symbolAccuracy: number;
+  sessionId: number;
+  totalScore: number;
+  correctCount: number;
+  wrongCount: number;
 };
 
 export type PatternPayload = {
-  cognitiveSession: number;
-  score: number;
-  patternCorrect: number;
-  patternTimeSec: number;
+  sessionId: number;
+  finalScore: number;
+  totalCorrect: number;
+  totalTimeSec: number;
 };
 
 export type SendAllResultsPayload = {
