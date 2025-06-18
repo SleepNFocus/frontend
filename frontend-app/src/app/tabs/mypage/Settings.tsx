@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -13,6 +14,7 @@ import { colors } from '@/constants/colors';
 import { Layout } from '@/components/common/Layout';
 import useUiStore from '@/store/uiStore';
 import * as ImagePicker from 'expo-image-picker';
+import { logoutUser } from '@/app/auth/logout';
 
 const Settings = () => {
   const navigation =
@@ -20,10 +22,8 @@ const Settings = () => {
   const { openModal, openToast } = useUiStore();
   const { user, resetAuth, setUser } = useAuthStore();
 
-  // 프로필 이미지 상태
   const [profileImage, setProfileImage] = useState(user?.image_url ?? null);
 
-  // 프로필 이미지 변경 함수
   const handleProfileImageChange = async () => {
     try {
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -52,13 +52,22 @@ const Settings = () => {
     }
   };
 
-  const handleLogout = () => {
-    // 안내 토스트 띄우기
-    openToast('success', '로그아웃 완료', '로그아웃 되었습니다.');
-    setTimeout(() => {
-      resetAuth();
-      navigation.navigate('LandingPage');
-    }, 1000);
+  const handleLogout = async () => {
+    try {
+      await logoutUser(); 
+
+      openToast('success', '로그아웃 완료', '로그아웃 되었습니다.');
+
+      setTimeout(() => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'LandingPage' }],
+        });
+      }, 1000);
+    } catch (error) {
+      openToast('error', '로그아웃 실패', '잠시 후 다시 시도해주세요.');
+      console.error('로그아웃 실패:', error);
+    }
   };
 
   const handleWithdrawal = () => {
@@ -134,12 +143,13 @@ const Settings = () => {
         </Card>
 
         <View style={styles.buttonGroup}>
-          <Button
-            title="로그아웃"
-            variant="primary"
-            onPress={handleLogout}
-            style={styles.button}
-          />
+
+        <Button
+  title="로그아웃"
+  variant="primary"
+  onPress={handleLogout}
+  style={styles.button}
+/>
           <Button
             title="회원탈퇴"
             variant="primary"
