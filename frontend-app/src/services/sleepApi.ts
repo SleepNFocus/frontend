@@ -1,9 +1,10 @@
 import { SleepRecordData } from '@/types/sleep';
-import { apiClient } from '@/services/axios';
+import { getApiClient } from '@/services/axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const saveSleepRecord = async (recordData: SleepRecordData) => {
   try {
+    const apiClient = await getApiClient();
     const response = await apiClient.post('/sleepRecord/', {
       date: recordData.selectedDate,
       sleep_duration: parseInt(recordData.sleepDuration),
@@ -18,8 +19,13 @@ export const saveSleepRecord = async (recordData: SleepRecordData) => {
 
   } catch (error: any) {
     console.error('수면 기록 저장 실패:', error);
-    
     if (error.response) {
+      if (error.response.status === 404) {
+        return {
+          success: false,
+          error: '서버에 요청한 API 경로가 존재하지 않습니다. (404 Not Found)'
+        };
+      }
       return {
         success: false,
         error: error.response.data?.message || error.response.data?.detail || '서버 오류가 발생했습니다.'
@@ -40,14 +46,33 @@ export const saveSleepRecord = async (recordData: SleepRecordData) => {
 
 export const getSleepRecord = async (recordId: number) => {
   try {
+    const apiClient = await getApiClient();
     const response = await apiClient.get(`/sleepRecord/${recordId}/`);
     return { success: true, data: response.data };
   } catch (error: any) {
     console.error('수면 기록 조회 실패:', error);
-    return {
-      success: false,
-      error: error.response?.data?.detail || '기록을 불러오는데 실패했습니다.'
-    };
+    if (error.response) {
+      if (error.response.status === 404) {
+        return {
+          success: false,
+          error: '서버에 요청한 API 경로가 존재하지 않습니다. (404 Not Found)'
+        };
+      }
+      return {
+        success: false,
+        error: error.response.data?.detail || '기록을 불러오는데 실패했습니다.'
+      };
+    } else if (error.request) {
+      return {
+        success: false,
+        error: '네트워크 연결을 확인해주세요.'
+      };
+    } else {
+      return {
+        success: false,
+        error: '알 수 없는 오류가 발생했습니다.'
+      };
+    }
   }
 };
 
@@ -64,14 +89,33 @@ export const updateSleepRecord = async (recordId: number, updateData: Partial<Sl
     
     requestData.memo = "앱에서 수정됨";
 
+    const apiClient = await getApiClient();
     const response = await apiClient.patch(`/sleepRecord/${recordId}/`, requestData);
     return { success: true, data: response.data };
   } catch (error: any) {
     console.error('수면 기록 수정 실패:', error);
-    return {
-      success: false,
-      error: error.response?.data?.detail || '기록 수정에 실패했습니다.'
-    };
+    if (error.response) {
+      if (error.response.status === 404) {
+        return {
+          success: false,
+          error: '서버에 요청한 API 경로가 존재하지 않습니다. (404 Not Found)'
+        };
+      }
+      return {
+        success: false,
+        error: error.response.data?.detail || '기록 수정에 실패했습니다.'
+      };
+    } else if (error.request) {
+      return {
+        success: false,
+        error: '네트워크 연결을 확인해주세요.'
+      };
+    } else {
+      return {
+        success: false,
+        error: '알 수 없는 오류가 발생했습니다.'
+      };
+    }
   }
 };
 
@@ -80,6 +124,7 @@ export const useSaveSleepRecord = () => {
   
   return useMutation({
     mutationFn: async (recordData: SleepRecordData) => {
+      const apiClient = await getApiClient();
       const response = await apiClient.post('/sleepRecord/', {
         date: recordData.selectedDate,
         sleep_duration: parseInt(recordData.sleepDuration),
@@ -110,6 +155,7 @@ export const useSleepRecord = (recordId: number) => {
   return useQuery({
     queryKey: ['sleepRecord', recordId],
     queryFn: async () => {
+      const apiClient = await getApiClient();
       const response = await apiClient.get(`/sleepRecord/${recordId}/`);
       return response.data;
     },
@@ -137,6 +183,7 @@ export const useUpdateSleepRecord = () => {
       
       requestData.memo = "앱에서 수정됨";
 
+      const apiClient = await getApiClient();
       const response = await apiClient.patch(`/sleepRecord/${recordId}/`, requestData);
       return response.data;
     },
