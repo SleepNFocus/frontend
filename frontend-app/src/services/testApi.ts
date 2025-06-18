@@ -1,13 +1,18 @@
 import { useMutation } from '@tanstack/react-query';
-import { apiClient } from '@/services/axios';
+import { getApiClient } from '@/services/axios';
 import Toast from 'react-native-toast-message';
 import { AxiosError } from 'axios';
+import { PatternPayload, SRTPayload, SymbolPayload } from '@/types/test';
 
 // 게임 세션 시작 API
 export const startGameSession = async (formatId: number) => {
+  const client = await getApiClient();
   const payload = { format_id: formatId };
-  return (await apiClient.post('/cognitive_statistics/session/start/', payload))
-    .data;
+  const res = await client.post(
+    'api/cognitive-statistics/session/start/',
+    payload,
+  );
+  return res.data;
 };
 
 export const useStartGameSession = () =>
@@ -30,21 +35,25 @@ export const useStartGameSession = () =>
     },
   });
 
-// SRT 결과 전송 API
+// SRT 결과 전송
 export const postSRTResult = async (data: {
   cognitiveSession: number;
   score: number;
   reactionAvgMs: number;
   reactionList: number[];
 }) => {
+  const client = await getApiClient();
   const payload = {
     cognitive_session: data.cognitiveSession,
     score: data.score,
     reaction_avg_ms: data.reactionAvgMs,
     reaction_list: data.reactionList.join(','),
   };
-  return (await apiClient.post('api/cognitive-statistics/result/srt/', payload))
-    .data;
+  const res = await client.post(
+    'api/cognitive-statistics/result/srt/',
+    payload,
+  );
+  return res.data;
 };
 
 export const usePostSRTResult = () =>
@@ -64,22 +73,25 @@ export const usePostSRTResult = () =>
     },
   });
 
-// Symbol 결과 전송 API
+// Symbol 결과 전송
 export const postSymbolResult = async (data: {
   cognitiveSession: number;
   score: number;
   symbolCorrect: number;
   symbolAccuracy: number;
 }) => {
+  const client = await getApiClient();
   const payload = {
     cognitive_session: data.cognitiveSession,
     score: data.score,
     symbol_correct: data.symbolCorrect,
     symbol_accuracy: data.symbolAccuracy,
   };
-  return (
-    await apiClient.post('api/cognitive-statistics/result/symbol/', payload)
-  ).data;
+  const res = await client.post(
+    'api/cognitive-statistics/result/symbol/',
+    payload,
+  );
+  return res.data;
 };
 
 export const usePostSymbolResult = () =>
@@ -99,22 +111,25 @@ export const usePostSymbolResult = () =>
     },
   });
 
-// Pattern 결과 전송 API
+// Pattern 결과 전송
 export const postPatternResult = async (data: {
   cognitiveSession: number;
   score: number;
   patternCorrect: number;
   patternTimeSec: number;
 }) => {
+  const client = await getApiClient();
   const payload = {
     cognitive_session: data.cognitiveSession,
     score: data.score,
     pattern_correct: data.patternCorrect,
     pattern_time_sec: data.patternTimeSec,
   };
-  return (
-    await apiClient.post('api/cognitive-statistics/result/pattern/', payload)
-  ).data;
+  const res = await client.post(
+    'api/cognitive-statistics/result/pattern/',
+    payload,
+  );
+  return res.data;
 };
 
 export const usePostPatternResult = () =>
@@ -134,13 +149,21 @@ export const usePostPatternResult = () =>
     },
   });
 
-// 테스트 결과 전체 병렬 전송 (3개 테스트 결과 전송 + 결과 조회)
-export const sendAllResults = async ({ userId, test1, test2, test3 }: any) => {
-  const cognitiveSession = Number(userId);
-
+// ✅ 테스트 결과 전체 전송
+export const sendAllResults = async ({
+  userId,
+  test1,
+  test2,
+  test3,
+}: {
+  userId: number;
+  test1: SRTPayload;
+  test2: SymbolPayload;
+  test3: PatternPayload;
+}) => {
   await postSRTResult({
-    cognitiveSession,
-    score: test1.avgScore,
+    cognitiveSession: test1.sessionId,
+    score: Math.round(test1.avgScore),
     reactionAvgMs: test1.avgReactionTime,
     reactionList: test1.reactionList,
   });
@@ -149,20 +172,22 @@ export const sendAllResults = async ({ userId, test1, test2, test3 }: any) => {
   const symbolAccuracy = Math.round((test2.correctCount / total) * 100);
 
   await postSymbolResult({
-    cognitiveSession,
+    cognitiveSession: test2.sessionId,
     score: test2.totalScore,
     symbolCorrect: test2.correctCount,
     symbolAccuracy,
   });
 
   await postPatternResult({
-    cognitiveSession,
+    cognitiveSession: test3.sessionId,
     score: test3.finalScore,
     patternCorrect: test3.totalCorrect,
     patternTimeSec: test3.totalTimeSec,
   });
 
-  const res = await apiClient.get('/api/cognitive-statistics/result/basic/');
+  const client = await getApiClient();
+  const res = await client.get('api/cognitive-statistics/result/basic/');
+  console.log('✅ 기본 결과', res.data);
   return res.data;
 };
 
@@ -191,9 +216,10 @@ export const useSendAllResults = () =>
     },
   });
 
-// 일별 누적 결과 데이터 조회
+// ✅ 일별 요약 조회
 export const getDailySummary = async () => {
-  const res = await apiClient.get(
+  const client = await getApiClient();
+  const res = await client.get(
     'api/cognitive-statistics/result/daily-summary/',
   );
   return res.data;

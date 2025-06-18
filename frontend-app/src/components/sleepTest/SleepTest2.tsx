@@ -15,6 +15,7 @@ import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Layout } from '../common/Layout';
 import { Text } from '@/components/common/Text';
+import { useStartGameSession } from '@/services/testApi';
 
 const MAX_NUM = 9;
 const TIMER_SECOND = 60000;
@@ -42,6 +43,7 @@ export default function SleepTest2() {
   const [gameOver, setGameOver] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
   const [start, setStart] = useState(false);
+  const [sessionId, setSessionId] = useState<number | null>(null);
 
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
@@ -57,8 +59,21 @@ export default function SleepTest2() {
     navigation.navigate('SleepTest3Desc');
   }
 
+  const { mutateAsync: startSession } = useStartGameSession();
+
   useEffect(() => {
-    if (gameOver) {
+    (async () => {
+      try {
+        const res = await startSession(2); // SRT의 format_id는 1
+        setSessionId(res.id);
+      } catch (error) {
+        console.error('세션 시작 실패:', error);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (gameOver && sessionId) {
       const result = calculateSleepTest2Score(
         clickTimes,
         correctCount,
@@ -67,9 +82,9 @@ export default function SleepTest2() {
       // [정리 필요] console.log 등 디버깅 코드는 배포 전 반드시 제거해야 함
       // 이유: 불필요한 콘솔 출력은 성능 저하, 보안 이슈, 로그 오염의 원인이 됨
       // console.log('결과:', result);
-      setTest2(result);
+      setTest2({ ...result, sessionId });
     }
-  }, [gameOver]);
+  }, [gameOver, sessionId]);
 
   useEffect(() => {
     setStart(true);

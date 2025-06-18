@@ -29,6 +29,7 @@ export default function SleepTest1Desc() {
         navigation.navigate('SleepTest1');
       },
     });
+    // navigation.navigate('SleepTest1');
   }
 
   const colorAnim = useRef(new Animated.Value(0)).current;

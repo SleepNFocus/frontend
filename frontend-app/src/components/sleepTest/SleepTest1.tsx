@@ -15,6 +15,7 @@ import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
 import { Text } from '@/components/common/Text';
+import { useStartGameSession } from '@/services/testApi';
 
 const MAX_STEP = 5;
 const MIN_WAIT_TIME = 1000;
@@ -28,14 +29,28 @@ export default function SleepTest1() {
   const [isFinished, setIsFinished] = useState<boolean>(false);
   const [clickTimes, setClickTimes] = useState<number[]>([]);
   const [isWaiting, setIsWaiting] = useState<boolean>(true);
-  const timeout = useRef<number | null>(null);
+  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [step, setStep] = useState<number>(0);
+  const [sessionId, setSessionId] = useState<number | null>(null);
 
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
 
   const containerHeight = Math.min(windowHeight * 0.75, 1000);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const circlerWidth = Math.min(windowWidth * 0.3, 180);
+
+  const { mutateAsync: startSession } = useStartGameSession();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await startSession(1); // SRT의 format_id는 1
+        setSessionId(res.id);
+      } catch (error) {
+        console.error('세션 시작 실패:', error);
+      }
+    })();
+  }, []);
 
   const showGreenLight = useCallback(() => {
     if (step < MAX_STEP && isWaiting) {
@@ -90,13 +105,13 @@ export default function SleepTest1() {
   const setTest1 = useSleepTestStore(state => state.setTest1);
 
   useEffect(() => {
-    if (isFinished) {
+    if (isFinished && sessionId) {
       const result = calculateSleepTest1Score(clickTimes);
       // [정리 필요] console.log 등 디버깅 코드는 배포 전 반드시 제거해야 함
       // 이유: 불필요한 콘솔 출력은 성능 저하, 보안 이슈, 로그 오염의 원인이 됨
-      setTest1(result);
+      setTest1({ ...result, sessionId });
     }
-  }, [isFinished]);
+  }, [isFinished, sessionId]);
 
   const goToSleepTest2Desc = () => {
     navigation.navigate('SleepTest2Desc');
