@@ -146,9 +146,7 @@ export default function App() {
             <Stack.Screen name="Dashboard" component={DashboardMain} />
             <Stack.Screen name="DailyCheck">
               {() => (
-                <Layout>
                   <DailyCheckPage />
-                </Layout>
               )}
             </Stack.Screen>
             <Stack.Screen name="History" component={HistoryPage} />
