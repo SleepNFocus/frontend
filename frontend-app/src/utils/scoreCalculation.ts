@@ -1,4 +1,4 @@
-import { SleepRecord } from '@/app/types/sleep';
+import { SleepRecord } from '@/types/sleep';
 
 export interface ScoreBreakdown {
   durationScore: number; 

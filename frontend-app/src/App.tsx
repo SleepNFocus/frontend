@@ -31,6 +31,7 @@ import { IntroCard } from '@/app/splash/IntroCard';
 import { SplashScreen } from 'expo-router';
 import { AISleepTipsScreen } from './components/sleep/AISleepTipsScreen';
 import { CognitiveResultType } from './types/cognitive';
+import { SurveyPage } from './app/splash/SurveyPage';
 import SleepTestResult from './app/tabs/test/SleepTestResult';
 import { PrivacyNotice } from './app/splash/PrivacyNotice';
 import LandingPage from './app/splash/LandingPage';
@@ -38,6 +39,7 @@ import LandingPage from './app/splash/LandingPage';
 // import { Loading } from './app/tabs/Loading';
 import OAuthCallback from './app/auth/OAuthCallback';
 import KakaoLoginWebView from './app/auth/KakaoLoginWebView';
+
 
 SplashScreen.preventAutoHideAsync();
 
@@ -72,6 +74,7 @@ export type RootStackParamList = {
   DailyCheckScreen: undefined;
   NotFound: undefined;
   AISleepTips: { date: string; score: number };
+  Survey: undefined;
   OAuthCallback: { code: string };
   KakaoLoginWebView: undefined;
 };
@@ -171,6 +174,8 @@ export default function App() {
               <Stack.Screen name="Loading" component={Loading} /> */}
               <Stack.Screen name="OAuthCallback" component={OAuthCallback} />
               <Stack.Screen name="NotFound" component={NotFoundPage} />
+              <Stack.Screen name="Survey" component={SurveyPage} />
+            </Stack.Navigator>
               <Stack.Screen name="DailyCheckScreen" component={DailyCheckPage} />
               <Stack.Screen name="KakaoLoginWebView" component={KakaoLoginWebView} />
 

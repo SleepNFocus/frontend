@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   button: {
-    width: '100%',
+    width: '70%',
     backgroundColor: colors.softBlue,
   },
   dividerContainer: {
