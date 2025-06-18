@@ -146,9 +146,7 @@ export default function App() {
             <Stack.Screen name="Dashboard" component={DashboardMain} />
             <Stack.Screen name="DailyCheck">
               {() => (
-                <Layout>
                   <DailyCheckPage />
-                </Layout>
               )}
             </Stack.Screen>
             <Stack.Screen name="History" component={HistoryPage} />
@@ -171,7 +169,7 @@ export default function App() {
             <Stack.Screen name="SleepTestResult" component={SleepTestResult} />
             <Stack.Screen name="PrivacyNotice" component={PrivacyNotice} />
             {/* <Stack.Screen name="MyRecord" component={MyRecord} />
-            <Stack.Screen name="Loading" component={Loading} /> */}
+            <Stack.Screen name="Loading" component={Loading} />  */}
             <Stack.Screen name="OAuthCallback" component={OAuthCallback} />
             <Stack.Screen name="NotFound" component={NotFoundPage} />
             <Stack.Screen name="Survey" component={SurveyPage} />

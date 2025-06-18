@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect  } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,17 +14,33 @@ import { colors } from '@/constants/colors';
 import { Layout } from '@/components/common/Layout';
 import useUiStore from '@/store/uiStore';
 import * as ImagePicker from 'expo-image-picker';
+import { logoutUser } from '@/app/auth/logout';
+import { withdrawUser } from '@/app/auth/withdraw';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Settings = () => {
+   useEffect(() => {
+    const checkAccessToken = async () => {
+      const token = await AsyncStorage.getItem('accessToken');
+      console.log('🧪 useEffect 내부 accessToken:', token);
+
+      const allKeys = await AsyncStorage.getAllKeys();
+      console.log('📦 저장된 키 목록:', allKeys);
+
+      const allValues = await AsyncStorage.multiGet(allKeys);
+      console.log('🔍 저장된 값:', allValues);
+    };
+
+    checkAccessToken();
+  }, []);
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { openModal, openToast } = useUiStore();
   const { user, resetAuth, setUser } = useAuthStore();
 
-  // 프로필 이미지 상태
   const [profileImage, setProfileImage] = useState(user?.image_url ?? null);
 
-  // 프로필 이미지 변경 함수
   const handleProfileImageChange = async () => {
     try {
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -52,21 +69,38 @@ const Settings = () => {
     }
   };
 
-  const handleLogout = () => {
-    // 안내 토스트 띄우기
-    openToast('success', '로그아웃 완료', '로그아웃 되었습니다.');
-    setTimeout(() => {
-      resetAuth();
-      navigation.navigate('LandingPage');
-    }, 1000);
+  const handleLogout = async () => {
+    try {
+      await logoutUser(); 
+
+      openToast('success', '로그아웃 완료', '로그아웃 되었습니다.');
+
+      setTimeout(() => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'LandingPage' }],
+        });
+      }, 1000);
+    } catch (error) {
+      openToast('error', '로그아웃 실패', '잠시 후 다시 시도해주세요.');
+      console.error('로그아웃 실패:', error);
+    }
   };
 
-  const handleWithdrawal = () => {
-    openToast('error', '탈퇴 완료', '탈퇴되었습니다.');
-    setTimeout(() => {
-      resetAuth();
-      navigation.navigate('LandingPage');
-    }, 3000);
+  const handleWithdrawal = async () => {
+    try {
+      await withdrawUser();
+      openToast('success', '탈퇴 완료', '계정이 삭제되었습니다.');
+  
+      setTimeout(() => {
+        resetAuth();
+        navigation.reset({
+          index: 0, routes: [{ name: 'LandingPage' }],
+        });
+      }, 1500);
+    } catch (error) {
+      openToast('error', '탈퇴 실패', '다시 시도해주세요.');
+    }
   };
 
   return (
@@ -134,12 +168,13 @@ const Settings = () => {
         </Card>
 
         <View style={styles.buttonGroup}>
-          <Button
-            title="로그아웃"
-            variant="primary"
-            onPress={handleLogout}
-            style={styles.button}
-          />
+
+        <Button
+  title="로그아웃"
+  variant="primary"
+  onPress={handleLogout}
+  style={styles.button}
+/>
           <Button
             title="회원탈퇴"
             variant="primary"

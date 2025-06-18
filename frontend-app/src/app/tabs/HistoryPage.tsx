@@ -12,8 +12,7 @@ export const HistoryPage: React.FC = () => {
   const [viewMode, setViewMode] = useState<'list' | 'gallery'>('list');
 
   return (
-    <Layout>
-      <Navbar />
+  <Layout showNavbar={true}>
       <ScrollView contentContainerStyle={styles.content}>
         <Card style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>수면 기록</Text>

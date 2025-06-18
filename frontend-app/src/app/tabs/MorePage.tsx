@@ -8,22 +8,29 @@ import ProfileCard from './mypage/ProfileCard';
 import { Button } from '@/components/common/Button';
 import useUiStore from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
+import { logoutUser } from '../auth/logout';
 
 export const MorePage: React.FC = () => {
   const navigation = useNavigation();
   const { openModal, openToast } = useUiStore();
   const { resetAuth } = useAuthStore();
 
-  const handleLogout = () => {
-    openToast('success', '로그아웃 완료', '로그아웃 되었습니다.');
-    setTimeout(() => {
-      resetAuth();
-      navigation.navigate('LandingPage' as never);
-    }, 3000);
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      openToast('success', '로그아웃 완료', '로그아웃 되었습니다.');
+  
+      setTimeout(() => {
+        navigation.navigate('LandingPage' as never);
+      }, 3000);
+    } catch (error) {
+      openToast('error', '로그아웃 실패', '다시 시도해주세요.');
+      console.error('로그아웃 처리 중 오류:', error);
+    }
   };
 
   return (
-    <Layout>
+    <Layout showNavbar={true}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}

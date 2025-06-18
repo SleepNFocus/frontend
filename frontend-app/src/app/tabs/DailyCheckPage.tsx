@@ -4,7 +4,7 @@ import { Layout } from '@/components/common/Layout';
 
 export const DailyCheckPage: React.FC = () => {
   return (
-    <Layout>
+    <Layout showNavbar={true}>
       <View style={styles.content}>
       </View>
     </Layout>
