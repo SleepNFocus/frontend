@@ -4,9 +4,9 @@
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-native",
     "strict": true,
-    "baseUrl": "src",
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["src/*"]
     },
     "moduleResolution": "bundler",
     "resolveJsonModule": true,

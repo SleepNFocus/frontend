@@ -1,7 +1,5 @@
 import axios from 'axios';
-
-const KAKAO_REST_API_KEY = '8629425abad5e70252adc18f2d0098a5';
-const REDIRECT_URI = 'https://dev.focuz.site/oauth/callback';
+import { KAKAO_REST_API_KEY, REDIRECT_URI } from '@env';
 
 interface KakaoTokenResponse {
   access_token: string;

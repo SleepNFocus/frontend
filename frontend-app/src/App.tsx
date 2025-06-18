@@ -136,54 +136,52 @@ export default function App() {
 
   return (
     <PaperProvider theme={paperTheme}>
-      <QueryClientProvider client={queryClient}>
-        <ErrorBoundary>
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName="LandingPage" screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="LandingPage" component={LandingPage} />
-              <Stack.Screen name="IntroCard" component={IntroCard} />
-              <Stack.Screen name="Onboarding" component={OnboardingSteps} />
-              <Stack.Screen name="Dashboard" component={DashboardMain} />
-              <Stack.Screen name="DailyCheck">
-                {() => (
-                  <Layout>
-                    <DailyCheckPage />
-                  </Layout>
-                )}
-              </Stack.Screen>
-              <Stack.Screen name="History" component={HistoryPage} />
-              <Stack.Screen name="Insight" component={InsightPage} />
-              <Stack.Screen name="More" component={MorePage} />
-              <Stack.Screen name="SocialLogin" component={SocialLogin} />
-              <Stack.Screen name="SleepRecord" component={SleepRecordPage} />
-              <Stack.Screen name="AISleepTips" component={AISleepTipsScreen} options={{ headerShown: true, title: 'AI 수면 분석' }} />
-              <Stack.Screen name="NotificationSettings" component={NotificationSettingsPage} />
-              <Stack.Screen name="Settings" component={Settings} />
-              <Stack.Screen name="NicknameEdit" component={NicknameEdit} />
-              <Stack.Screen name="SleepTestMain" component={SleepTestMain} />
-              <Stack.Screen name="SleepTestDesc" component={SleepTestDesc} />
-              <Stack.Screen name="SleepTest1Desc" component={SleepTest1Desc} />
-              <Stack.Screen name="SleepTest1" component={SleepTest1} />
-              <Stack.Screen name="SleepTest2Desc" component={SleepTest2Desc} />
-              <Stack.Screen name="SleepTest2" component={SleepTest2} />
-              <Stack.Screen name="SleepTest3Desc" component={SleepTest3Desc} />
-              <Stack.Screen name="SleepTest3" component={SleepTest3} />
-              <Stack.Screen name="SleepTestResult" component={SleepTestResult} />
-              <Stack.Screen name="PrivacyNotice" component={PrivacyNotice} />
-              {/* <Stack.Screen name="MyRecord" component={MyRecord} />
-              <Stack.Screen name="Loading" component={Loading} /> */}
-              <Stack.Screen name="OAuthCallback" component={OAuthCallback} />
-              <Stack.Screen name="NotFound" component={NotFoundPage} />
-              <Stack.Screen name="Survey" component={SurveyPage} />
-            </Stack.Navigator>
-              <Stack.Screen name="DailyCheckScreen" component={DailyCheckPage} />
-              <Stack.Screen name="KakaoLoginWebView" component={KakaoLoginWebView} />
-
-            </Stack.Navigator>
-            <Toast />
-          </NavigationContainer>
-        </ErrorBoundary>
-      </QueryClientProvider>
-    </PaperProvider>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="LandingPage" screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="LandingPage" component={LandingPage} />
+            <Stack.Screen name="IntroCard" component={IntroCard} />
+            <Stack.Screen name="Onboarding" component={OnboardingSteps} />
+            <Stack.Screen name="Dashboard" component={DashboardMain} />
+            <Stack.Screen name="DailyCheck">
+              {() => (
+                <Layout>
+                  <DailyCheckPage />
+                </Layout>
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="History" component={HistoryPage} />
+            <Stack.Screen name="Insight" component={InsightPage} />
+            <Stack.Screen name="More" component={MorePage} />
+            <Stack.Screen name="SocialLogin" component={SocialLogin} />
+            <Stack.Screen name="SleepRecord" component={SleepRecordPage} />
+            <Stack.Screen name="AISleepTips" component={AISleepTipsScreen} options={{ headerShown: true, title: 'AI 수면 분석' }} />
+            <Stack.Screen name="NotificationSettings" component={NotificationSettingsPage} />
+            <Stack.Screen name="Settings" component={Settings} />
+            <Stack.Screen name="NicknameEdit" component={NicknameEdit} />
+            <Stack.Screen name="SleepTestMain" component={SleepTestMain} />
+            <Stack.Screen name="SleepTestDesc" component={SleepTestDesc} />
+            <Stack.Screen name="SleepTest1Desc" component={SleepTest1Desc} />
+            <Stack.Screen name="SleepTest1" component={SleepTest1} />
+            <Stack.Screen name="SleepTest2Desc" component={SleepTest2Desc} />
+            <Stack.Screen name="SleepTest2" component={SleepTest2} />
+            <Stack.Screen name="SleepTest3Desc" component={SleepTest3Desc} />
+            <Stack.Screen name="SleepTest3" component={SleepTest3} />
+            <Stack.Screen name="SleepTestResult" component={SleepTestResult} />
+            <Stack.Screen name="PrivacyNotice" component={PrivacyNotice} />
+            {/* <Stack.Screen name="MyRecord" component={MyRecord} />
+            <Stack.Screen name="Loading" component={Loading} /> */}
+            <Stack.Screen name="OAuthCallback" component={OAuthCallback} />
+            <Stack.Screen name="NotFound" component={NotFoundPage} />
+            <Stack.Screen name="Survey" component={SurveyPage} />
+            <Stack.Screen name="DailyCheckScreen" component={DailyCheckPage} />
+            <Stack.Screen name="KakaoLoginWebView" component={KakaoLoginWebView} />
+          </Stack.Navigator>
+          <Toast />
+        </NavigationContainer>
+      </ErrorBoundary>
+    </QueryClientProvider>
+  </PaperProvider>
   );
 }
