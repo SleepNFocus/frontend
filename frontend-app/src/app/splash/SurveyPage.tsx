@@ -119,7 +119,7 @@ export const SurveyPage: React.FC = () => {
     setSubmitting(true);
     try {
       const token = await AsyncStorage.getItem('userToken');
-      console.log('🟡 accessToken:', token);
+      console.log('accessToken:', token);
 
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -137,19 +137,19 @@ export const SurveyPage: React.FC = () => {
         work_time_pattern: workTimePattern,
       };
 
-      console.log('🟣 basic payload:', basicPayload);
-      console.log('🟣 job payload:', jobPayload);
+      console.log('basic payload:', basicPayload);
+      console.log('job payload:', jobPayload);
 
       await axios.post(`${BASE_URL}/users/onboarding/basic/`, basicPayload, { headers });
       await axios.post(`${BASE_URL}/users/onboarding/job/`, jobPayload, { headers });
 
-      console.log('✅ 온보딩 성공!');
+      console.log('온보딩 성공!');
       navigation.navigate('SleepRecord');
     } catch (err) {
       if (axiosLib.isAxiosError(err)) {
-        console.error('🛑 온보딩 전송 실패 (AxiosError):', err.response?.data || err.message);
+        console.error('온보딩 전송 실패 (AxiosError):', err.response?.data || err.message);
       } else {
-        console.error('🛑 온보딩 전송 실패 (Unknown):', err);
+        console.error('온보딩 전송 실패 (Unknown):', err);
       }
     } finally {
       setSubmitting(false);

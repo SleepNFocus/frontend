@@ -1,8 +1,9 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuthStore } from '@/store/authStore';
+import { BASE_URL } from '@/constants/api';
 
-const BASE_URL = 'https://www.dev.focusz.site';
+
 
 export const logoutUser = async (): Promise<void> => {
   const resetAuth = useAuthStore.getState().resetAuth;
@@ -30,7 +31,7 @@ export const logoutUser = async (): Promise<void> => {
     console.log('요청 헤더:', headers);
 
     const response = await axios.post(
-      `${BASE_URL}/api/users/logout/`,
+      `${BASE_URL}/users/logout/`,
       {refresh: refreshToken,},
       {
         headers,

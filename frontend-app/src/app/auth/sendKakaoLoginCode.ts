@@ -32,7 +32,7 @@ interface LoginResponse {
   user: User;
 }
 
-// 변환 함수
+
 const adaptUserInfoToUser = (userInfo: UserInfo): User => ({
   id: userInfo.user_id,
   social_type: userInfo.social_type,
@@ -72,13 +72,13 @@ export const sendKakaoLoginCode = async (code: string): Promise<LoginResponse> =
       ['userInfo', JSON.stringify(user)],
     ]);
 
-    console.log('✅ 로그인 성공:', user);
+    console.log('로그인 성공:', user);
     return { access, refresh, user };
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      console.error('❌ 로그인 실패:', err.response?.data || err.message);
+      console.error('로그인 실패:', err.response?.data || err.message);
     } else {
-      console.error('❌ 알 수 없는 에러:', err);
+      console.error('알 수 없는 에러:', err);
     }
     throw err;
   }

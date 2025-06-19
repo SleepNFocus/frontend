@@ -23,13 +23,13 @@ const Settings = () => {
    useEffect(() => {
     const checkAccessToken = async () => {
       const token = await AsyncStorage.getItem('accessToken');
-      console.log('🧪 useEffect 내부 accessToken:', token);
+      console.log('useEffect 내부 accessToken:', token);
 
       const allKeys = await AsyncStorage.getAllKeys();
-      console.log('📦 저장된 키 목록:', allKeys);
+      console.log('저장된 키 목록:', allKeys);
 
       const allValues = await AsyncStorage.multiGet(allKeys);
-      console.log('🔍 저장된 값:', allValues);
+      console.log('저장된 값:', allValues);
     };
 
     checkAccessToken();
