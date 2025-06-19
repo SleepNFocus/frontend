@@ -9,6 +9,7 @@ import {
 } from '@/types/mypage';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
 // 프로필 조회
 export const getProfile = async (): Promise<Profile> => {
@@ -42,6 +43,33 @@ export const getRecords = async (period: 'day' | 'week' | 'month'): Promise<Reco
 export const getRecordDetail = async (date: string): Promise<RecordDetail> => {
   const apiClient = await getApiClient();
   const response = await apiClient.get<RecordDetail>(`/users/mypage/records/${date}/detail/`);
+  return response.data;
+};
+
+// 프로필 이미지 업로드
+export const uploadProfileImage = async (imageUri: string): Promise<{ profile_image: string }> => {
+  const apiClient = await getApiClient();
+  
+  // FormData 생성
+  const formData = new FormData();
+  
+  // 파일명 생성 (확장자 추출)
+  const uriParts = imageUri.split('.');
+  const fileType = uriParts[uriParts.length - 1];
+  
+  formData.append('profile_image', {
+    uri: imageUri,
+    type: `image/${fileType}`,
+    name: `profile_image.${fileType}`,
+  } as any);
+  
+  // Content-Type을 multipart/form-data로 설정
+  const response = await apiClient.post('/users/mypage/profile/image/', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  
   return response.data;
 };
 
@@ -84,5 +112,17 @@ export const useRecordDetail = (date: string) => {
     queryKey: ['recordDetail', date],
     queryFn: () => getRecordDetail(date),
     enabled: !!date,
+  });
+};
+
+export const useUploadProfileImage = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: uploadProfileImage,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: ['mypageMain'] });
+    },
   });
 }; 
