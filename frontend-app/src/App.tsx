@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Toast from 'react-native-toast-message';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
@@ -38,6 +38,7 @@ import LandingPage from './app/splash/LandingPage';
 // import { Loading } from './app/tabs/Loading';
 import OAuthCallback from './app/auth/OAuthCallback';
 import KakaoLoginWebView from './app/auth/KakaoLoginWebView';
+import { useAuthStore } from '@/store/authStore';
 
 
 SplashScreen.preventAutoHideAsync();
@@ -125,6 +126,25 @@ export default function App() {
     NanumSquareRoundEB: require('./assets/fonts/NanumSquareRoundEB.ttf'),
   });
 
+  // navigation ref 선언
+  const navigationRef = useRef<NavigationContainerRef<any>>(null);
+
+  // forceLogoutEvent 등록
+  useEffect(() => {
+    globalThis.forceLogoutEvent = async () => {
+      // Zustand store에서 resetAuth 직접 호출
+      await useAuthStore.getState().resetAuth();
+      // navigation으로 로그인(랜딩) 페이지로 이동
+      navigationRef.current?.reset({
+        index: 0,
+        routes: [{ name: 'LandingPage' }],
+      });
+    };
+    return () => {
+      globalThis.forceLogoutEvent = undefined;
+    };
+  }, []);
+
   useEffect(() => {
     if (fontsLoaded) {
       SplashScreen.hideAsync();
@@ -137,7 +157,7 @@ export default function App() {
     <PaperProvider theme={paperTheme}>
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary>
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
           <Stack.Navigator initialRouteName="LandingPage" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="LandingPage" component={LandingPage} />
             <Stack.Screen name="IntroCard" component={IntroCard} />
