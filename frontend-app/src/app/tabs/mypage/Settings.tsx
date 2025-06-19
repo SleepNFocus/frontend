@@ -16,40 +16,31 @@ import * as ImagePicker from 'expo-image-picker';
 import { logoutUser } from '@/app/auth/logout';
 import { withdrawUser } from '@/app/auth/withdraw';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useProfile } from '@/services/mypageApi';
-import { NotFoundPage } from '@/components/common/NotFoundPage';
+import { useProfile, useUpdateProfile, useUploadProfileImage } from '@/services/mypageApi';
+import { NotFoundPage } from '@/components/common/NotFoundPage'
+import { ActivityIndicator } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Settings = () => {
-   useEffect(() => {
-    const checkAccessToken = async () => {
-      const token = await AsyncStorage.getItem('accessToken');
-      console.log('🧪 useEffect 내부 accessToken:', token);
-
-      const allKeys = await AsyncStorage.getAllKeys();
-      console.log('📦 저장된 키 목록:', allKeys);
-
-      const allValues = await AsyncStorage.multiGet(allKeys);
-      console.log('🔍 저장된 값:', allValues);
-    };
-
-    checkAccessToken();
-  }, []);
-
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { openModal, openToast } = useUiStore();
   const { user, resetAuth, setUser } = useAuthStore();
 
   // 프로필 이미지 상태
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(user?.image_url || null);
 
   // API에서 받아온 프로필 이미지로 동기화
   const { data: profile, isLoading, error, refetch } = useProfile();
+  const { mutateAsync: updateProfile } = useUpdateProfile();
+  const { mutateAsync: uploadProfileImage } = useUploadProfileImage();
   useEffect(() => {
     if (profile?.profile_image) {
       setProfileImage(profile.profile_image);
+    } else if (user?.image_url) {
+      setProfileImage(user.image_url);
     }
-  }, [profile?.profile_image]);
+  }, [profile?.profile_image, user?.image_url]);
 
   const handleProfileImageChange = async () => {
     try {
@@ -65,8 +56,31 @@ const Settings = () => {
         quality: 0.8,
       });
       if (!result.canceled && result.assets && result.assets.length > 0) {
-        setProfileImage(result.assets[0].uri);
-        openToast('success', '프로필 변경', '프로필이 변경되었습니다.');
+        const selectedImageUri = result.assets[0].uri;
+        const uriParts = selectedImageUri.split('.');
+        const fileType = uriParts[uriParts.length - 1];
+        type RNFile = {
+          uri: string;
+          type: string;
+          name: string;
+        };
+        const file: RNFile = {
+          uri: selectedImageUri,
+          type: `image/${fileType}`,
+          name: `profile_image.${fileType}`,
+        };
+        const formData = new FormData();
+        formData.append('profile_image', file as any);
+        console.log('이미지 FormData:', formData);
+        // 아래는 실제 업로드 로직(주석처리)
+        // try {
+        //   const uploadResult = await uploadProfileImage(selectedImageUri);
+        //   setProfileImage(uploadResult.profile_image);
+        //   openToast('success', '프로필 변경', '프로필이 변경되었습니다.');
+        // } catch (e) {
+        //   openToast('error', '변경 실패', '프로필 변경에 실패했어요');
+        //   console.error('이미지 업로드 실패:', e);
+        // }
       }
     } catch (e) {
       openToast('error', '변경 실패', '프로필 변경에 실패했어요');
@@ -116,9 +130,9 @@ const Settings = () => {
     );
   }
   if (error) {
+    console.log('프로필 에러:', error);
     return <NotFoundPage onRetry={() => refetch()} />;
   }
-
   return (
     <Layout>
       <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -205,49 +219,6 @@ const Settings = () => {
               </View>
             </View>
           </Card>
-          {/* 통계 정보 카드(통계 데이터는 Profile 타입에 없으므로 주석 처리) */}
-          {/**
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>가입일</Text>
-              <View style={styles.valueRow}>
-                <Text style={styles.value}>{profile?.joined_at ? profile.joined_at.replace(/-/g, '.') : '-'}</Text>
-              </View>
-            </View>
-          </Card>
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>총 기록 일수</Text>
-              <View style={styles.valueRow}>
-                <Text style={styles.value}>{profile?.tracking_days ?? '-'}</Text>
-              </View>
-            </View>
-          </Card>
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>총 수면 시간</Text>
-              <View style={styles.valueRow}>
-                <Text style={styles.value}>{profile?.total_sleep_hours ? `${profile.total_sleep_hours}시간` : '-'}</Text>
-              </View>
-            </View>
-          </Card>
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>평균 수면 점수</Text>
-              <View style={styles.valueRow}>
-                <Text style={styles.value}>{profile?.average_sleep_score ?? '-'}</Text>
-              </View>
-            </View>
-          </Card>
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>평균 인지 점수</Text>
-              <View style={styles.valueRow}>
-                <Text style={styles.value}>{profile?.average_cognitive_score ?? '-'}</Text>
-              </View>
-            </View>
-          </Card>
-          */}
         </Card>
 
         <View style={styles.buttonGroup}>
