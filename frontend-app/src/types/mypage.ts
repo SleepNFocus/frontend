@@ -1,6 +1,6 @@
 export interface Profile {
   nickname: string;
-  profile_image: string;
+  profile_image: string | null;
   gender: string;
   birth_year: number;
   mbti: string;
@@ -13,7 +13,7 @@ export interface Profile {
 
 export interface ProfileUpdateRequest {
   nickname?: string;
-  profile_image?: string;
+  profile_image?: string | null;
   gender?: string;
   birth_year?: number;
   mbti?: string;
