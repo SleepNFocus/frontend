@@ -77,6 +77,7 @@ export const SleepRecordPage: React.FC = () => {
         ) : (
           <View style={styles.resultSection}>
             {savedRecordId && <ScoreFeedback recordId={savedRecordId} />}
+
             <View style={styles.actionButtons}>
               <Button
                 onPress={() => navigation2.navigate('SleepTestMain')}

@@ -92,15 +92,16 @@ export default function SleepTest1() {
   const { avgScore, avgReactionTime } = calculateSleepTest1Score(clickTimes);
   const commaAllClickTimeAvg = avgReactionTime.toLocaleString();
 
+  // 최근 반응 속도
   const recentClickTime = clickTimes[clickTimes.length - 1];
   const commaRecentClickTime =
     recentClickTime !== undefined ? recentClickTime.toLocaleString() : '';
 
+  // 평균 반응 속도
   const recentClickTimeAvg =
     clickTimes.length > 0
       ? Math.round(clickTimes.reduce((a, b) => a + b, 0) / clickTimes.length)
       : 0;
-
   const commaRecentStepClickTimesAvg = recentClickTimeAvg.toLocaleString();
 
   useEffect(() => {

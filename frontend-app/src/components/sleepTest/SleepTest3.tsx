@@ -6,15 +6,14 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import { useSendAllResults, useStartGameSession } from '@/services/testApi';
+import { useSendAllResults } from '@/services/testApi';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { calculateSleepTest3Score } from '@/utils/sleepTestScore';
 import { useSleepTestStore } from '@/store/testStore';
 import { useAuthStore } from '@/store/authStore';
 import { Text } from '@/components/common/Text';
-import { TestSession } from '@/types/cognitive';
 import Toast from 'react-native-toast-message';
-import { useNavigation, useRouter } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';

@@ -1,24 +1,19 @@
 import { View, Animated, StyleSheet, useWindowDimensions } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { useStartGameSession } from '@/services/testApi';
-import { useSleepTestStore } from '@/store/testStore';
 import { Button } from '@/components/common/Button';
 import { Text } from '@/components/common/Text';
-import { TestSession } from '@/types/cognitive';
 import { GlassCard } from '../common/Card';
 import { RootStackParamList } from '@/App';
 import { useEffect, useRef } from 'react';
 import { Layout } from '../common/Layout';
 
 export default function SleepTest2Desc() {
-  const { mutate: startSession } = useStartGameSession();
-  const { setSessionId } = useSleepTestStore();
-  const { height: windowHeight } = useWindowDimensions();
-  const { width: windowWidth } = useWindowDimensions();
-
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const { height: windowHeight } = useWindowDimensions();
+  const { width: windowWidth } = useWindowDimensions();
 
   const containerHeight = Math.min(windowHeight * 0.6, 600);
   const containerWidth = Math.min(windowWidth * 0.9, 700);

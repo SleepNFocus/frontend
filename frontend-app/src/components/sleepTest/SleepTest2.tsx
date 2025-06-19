@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { calculateSleepTest2Score } from '@/utils/sleepTestScore';
-import { useStartGameSession } from '@/services/testApi';
 import { useNavigation } from '@react-navigation/native';
 import { useSleepTestStore } from '@/store/testStore';
 import { Button } from '@/components/common/Button';
@@ -18,7 +17,7 @@ import { GlassCard } from '../common/Card';
 import { Layout } from '../common/Layout';
 
 const MAX_NUM = 9;
-const TIMER_SECOND = 60000;
+const TIMER_SECOND = 6000;
 const RANDOM_SYMBOL = ['♥︎', '✦', '♠︎', '▲', '◉', '★', '▼', '☗', '◆'];
 
 function randomArray(array: string[]) {
@@ -125,16 +124,10 @@ export default function SleepTest2() {
     setOneRandomSymbol();
   };
 
-  const avgReactionTime =
-    clickTimes.length === 0
-      ? 0
-      : Math.round(clickTimes.reduce((a, b) => a + b, 0) / clickTimes.length);
-
-  const totalScore = calculateSleepTest2Score(
-    clickTimes,
-    correctCount,
-    wrongCount,
-  ).totalScore;
+  const { avgReactionTime, totalScore } = useMemo(
+    () => calculateSleepTest2Score(clickTimes, correctCount, wrongCount),
+    [clickTimes, correctCount, wrongCount],
+  );
 
   const commaNum = avgReactionTime.toLocaleString();
 

@@ -7,7 +7,6 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import ResultChart from '@/components/common/ResultChart';
-import { CognitiveResultType } from '@/types/cognitive';
 import { GlassCard } from '@/components/common/Card';
 import { Button } from '@/components/common/Button';
 import { Layout } from '@/components/common/Layout';
