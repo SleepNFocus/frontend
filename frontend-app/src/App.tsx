@@ -16,6 +16,7 @@ import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { SleepRecordPage } from './app/tabs/sleep/SleepRecordPage';
 import { NotificationSettingsPage } from './app/notifications/NotificationSettingsPage';
 import Settings from '@/app/tabs/mypage/Settings';
+import ProfileDetail from '@/app/tabs/mypage/ProfileDetail';
 import NicknameEdit from './app/tabs/mypage/NicknameEdit';
 import SleepTestMain from './app/tabs/test/SleepTestMain';
 import SleepTestDesc from './app/tabs/test/SleepTest';
@@ -40,6 +41,13 @@ import OAuthCallback from './app/auth/OAuthCallback';
 import KakaoLoginWebView from './app/auth/KakaoLoginWebView';
 import { useAuthStore } from '@/store/authStore';
 
+// 디버거 설정 추가
+if (__DEV__) {
+  const DevSettings = require('react-native').DevSettings;
+  DevSettings.addMenuItem('Show React Native Debugger', () => {
+    DevSettings.reload();
+  });
+}
 
 SplashScreen.preventAutoHideAsync();
 
@@ -58,6 +66,7 @@ export type RootStackParamList = {
   SleepRecord: undefined;
   NotificationSettings: undefined;
   Settings: undefined;
+  ProfileDetail: undefined;
   NicknameEdit: undefined;
   SleepTestMain: undefined;
   SleepTestDesc: undefined;
@@ -176,6 +185,7 @@ export default function App() {
             <Stack.Screen name="AISleepTips" component={AISleepTipsScreen} options={{ headerShown: true, title: 'AI 수면 분석' }} />
             <Stack.Screen name="NotificationSettings" component={NotificationSettingsPage} />
             <Stack.Screen name="Settings" component={Settings} />
+            <Stack.Screen name="ProfileDetail" component={ProfileDetail} />
             <Stack.Screen name="NicknameEdit" component={NicknameEdit} />
             <Stack.Screen name="SleepTestMain" component={SleepTestMain} />
             <Stack.Screen name="SleepTestDesc" component={SleepTestDesc} />
