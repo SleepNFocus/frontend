@@ -323,17 +323,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#0F1C36',
   },
-  startBtn: {
-    backgroundColor: '#4CAF50',
-    paddingHorizontal: 30,
-    paddingVertical: 10,
-    borderRadius: 10,
-  },
-  startText: {
-    fontSize: 20,
-    color: 'white',
-    fontWeight: 'bold',
-  },
   scoreText: {
     fontSize: 40,
     fontWeight: 'bold',
