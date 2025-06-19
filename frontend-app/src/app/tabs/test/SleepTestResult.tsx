@@ -54,7 +54,9 @@ export default function SleepTestResult() {
                 <Text style={styles.boldText}>반응 속도 </Text>
                 <Text style={styles.mainText}>
                   평균 반응 시간 :{' '}
-                  {Math.floor(basic.results[0].detailed_raw_scores.srt.avg_ms)}
+                  {Math.floor(
+                    basic.results[0].detailed_raw_scores.srt.avg_ms,
+                  ).toLocaleString()}
                   ms
                 </Text>
               </View>

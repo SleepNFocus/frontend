@@ -5,7 +5,8 @@ export function calculateSleepTest1Score(clickTimes: number[]): SRTPayload {
   const count = clickTimes.length;
 
   const avgReactionTime = count === 0 ? 0 : Math.round(total / count);
-  const avgScore = count === 0 ? 0 : Math.round(100 - avgReactionTime / 10);
+  const avgScore =
+    count === 0 ? 0 : Math.max(0, Math.round(100 - avgReactionTime / 10));
 
   return {
     avgScore,
