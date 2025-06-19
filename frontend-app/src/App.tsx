@@ -41,14 +41,6 @@ import OAuthCallback from './app/auth/OAuthCallback';
 import KakaoLoginWebView from './app/auth/KakaoLoginWebView';
 import { useAuthStore } from '@/store/authStore';
 
-// 디버거 설정 추가
-if (__DEV__) {
-  const DevSettings = require('react-native').DevSettings;
-  DevSettings.addMenuItem('Show React Native Debugger', () => {
-    DevSettings.reload();
-  });
-}
-
 SplashScreen.preventAutoHideAsync();
 
 export type RootStackParamList = {

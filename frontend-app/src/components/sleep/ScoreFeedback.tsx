@@ -7,12 +7,11 @@ import { Button } from '@/components/common/Button';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useSleepRecord } from '@/services/sleepApi';
-import { calculateScoreBreakdown, formatSleepDuration, formatSleepLatency } from '@/utils/scoreCalculation';
 
 type RootStackParamList = {
   SleepRecord: undefined;
   SleepTest: undefined;
-  AISleepTips: { date: string; score: number }; // AI 팁 페이지에 날짜와 점수 전달
+  AISleepTips: { date: string; score: number };
 };
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -25,13 +24,19 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ recordId }) => {
   const navigation = useNavigation<NavigationProp>();
   const { data: sleepData, isLoading, error, refetch } = useSleepRecord(recordId);
 
+  // 디버깅 로그 추가
+  console.log('🔍 ScoreFeedback - recordId:', recordId);
+  console.log('🔍 ScoreFeedback - isLoading:', isLoading);
+  console.log('🔍 ScoreFeedback - error:', error);
+  console.log('🔍 ScoreFeedback - sleepData:', sleepData);
+
   const getFeedback = (score: number) => {
     if (score >= 90) {
       return {
         emoji: '🌟',
         title: '최고의 수면!',
         message: '완벽한 수면 습관을 가지고 계시는군요! 오늘 하루도 활기차게 시작하세요!',
-        color: colors.scoreExcellent || colors.softBlue,
+        color: colors.softBlue,
       };
     }
     if (score >= 70) {
@@ -39,7 +44,7 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ recordId }) => {
         emoji: '😊',
         title: '좋은 수면!',
         message: '건강한 수면 패턴을 잘 유지하고 계세요. 작은 개선으로 더 완벽해질 수 있어요.',
-        color: colors.scoreGood || colors.softBlue,
+        color: colors.softBlue,
       };
     }
     if (score >= 50) {
@@ -47,48 +52,44 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ recordId }) => {
         emoji: '🤔',
         title: '보통 수면.',
         message: '괜찮지만, 조금 더 신경 쓰면 수면의 질을 높일 수 있어요.',
-        color: colors.scoreNormal || colors.softBlue,
+        color: colors.softBlue,
       };
     }
     return {
       emoji: '🛌',
       title: '개선이 필요한 수면.',
-      message: '수면 습관을 점검하고 개선해 보세요. 가장 점수가 낮은 부분부터 시작해보세요.',
-      color: colors.scorePoor || colors.red,
+      message: '수면 습관을 점검하고 개선해 보세요.',
+      color: colors.red || '#ff6b6b',
     };
   };
 
-  const getImprovementSuggestions = (sleepData: any) => {
-    const suggestions = [];
-    const scoreBreakdown = calculateScoreBreakdown(sleepData);
+  // 수면 시간을 시간:분 형식으로 변환
+  const formatSleepDuration = (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours}시간 ${mins}분`;
+  };
 
-    if (scoreBreakdown.durationScore < 20) {
-      const hours = sleepData.sleep_duration / 60;
-      if (hours < 7) {
-        suggestions.push('🕐 수면 시간을 늘려서 7-9시간 사이로 조절해보세요');
-      } else {
-        suggestions.push('🕐 수면 시간을 줄여서 7-9시간 사이로 조절해보세요');
-      }
+  // 잠들기까지 걸린 시간 변환
+  const formatSleepLatency = (latency: number) => {
+    switch(latency) {
+      case 1: return '15분 이하';
+      case 2: return '15-30분';
+      case 3: return '30분 초과';
+      default: return '알 수 없음';
     }
-    
-    if (scoreBreakdown.qualityScore < 25) {
-      suggestions.push('😴 수면 환경을 더 편안하게 만들어보세요');
-    }
-    
-    if (scoreBreakdown.sleepEfficiencyScore < 20) {
-      if (sleepData.sleep_latency > 15) {
-        suggestions.push('⏰ 잠들기까지 시간을 단축하는 루틴을 만들어보세요');
-      }
-      if (sleepData.wake_count >= 2) {
-        suggestions.push('🌙 야간 각성을 줄이는 방법을 찾아보세요');
-      }
-    }
-    
-    if (scoreBreakdown.environmentScore < 15) {
-      suggestions.push('📱 수면 방해요소를 제거해보세요');
-    }
+  };
 
-    return suggestions;
+  // 주관적 수면 질 변환
+  const formatSubjectiveQuality = (quality: number) => {
+    switch(quality) {
+      case 5: return '매우 개운함';
+      case 4: return '개운함';
+      case 3: return '보통';
+      case 2: return '약간 피곤함';
+      case 1: return '매우 피곤함';
+      default: return '알 수 없음';
+    }
   };
 
   if (isLoading) {
@@ -98,7 +99,7 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ recordId }) => {
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.softBlue} />
             <Text variant="bodyMedium" style={styles.loadingText}>
-              수면 점수를 계산하고 있습니다...
+              수면 점수를 불러오고 있습니다...
             </Text>
           </View>
         </Card.Content>
@@ -115,7 +116,7 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ recordId }) => {
               수면 기록을 불러올 수 없습니다
             </Text>
             <Text variant="bodyMedium" style={styles.errorMessage}>
-              수면 기록이 없거나 데이터를 가져오는 중 오류가 발생했습니다.
+              오류: {error?.message || '알 수 없는 오류'}
             </Text>
             <Button 
               title="다시 시도" 
@@ -128,10 +129,9 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ recordId }) => {
     );
   }
 
+  // 서버에서 받은 점수 사용
   const score = sleepData.score || 0;
-  const scoreBreakdown = calculateScoreBreakdown(sleepData);
   const feedback = getFeedback(score);
-  const suggestions = getImprovementSuggestions(sleepData);
 
   return (
     <Card style={[styles.card, { borderLeftColor: feedback.color }]}>
@@ -161,7 +161,7 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ recordId }) => {
             • 수면시간: {formatSleepDuration(sleepData.sleep_duration)}
           </Text>
           <Text variant="bodySmall" style={styles.summaryItem}>
-            • 수면 만족도: {sleepData.subjective_quality}/5점
+            • 수면 만족도: {formatSubjectiveQuality(sleepData.subjective_quality)}
           </Text>
           <Text variant="bodySmall" style={styles.summaryItem}>
             • 잠들기까지: {formatSleepLatency(sleepData.sleep_latency)}
@@ -169,51 +169,11 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ recordId }) => {
           <Text variant="bodySmall" style={styles.summaryItem}>
             • 야간 각성: {sleepData.wake_count}회
           </Text>
-        </View>
-
-        {suggestions.length > 0 && (
-          <View style={styles.suggestionsSection}>
-            <Text variant="titleMedium" style={styles.suggestionsTitle}>
-              개선 제안:
+          {sleepData.disturb_factors && sleepData.disturb_factors.length > 0 && (
+            <Text variant="bodySmall" style={styles.summaryItem}>
+              • 방해요인: {sleepData.disturb_factors.join(', ')}
             </Text>
-            {suggestions.map((suggestion, index) => (
-              <Text key={index} variant="bodyMedium" style={styles.suggestion}>
-                • {suggestion}
-              </Text>
-            ))}
-          </View>
-        )}
-
-        <View style={styles.scoreDetails}>
-          <Text variant="titleSmall" style={styles.detailsTitle}>
-            세부 점수:
-          </Text>
-          <View style={styles.scoreGrid}>
-            <View style={styles.scoreItem}>
-              <Text variant="bodySmall">수면시간</Text>
-              <Text variant="bodyMedium" style={styles.scoreValue}>
-                {scoreBreakdown.durationScore}/25
-              </Text>
-            </View>
-            <View style={styles.scoreItem}>
-              <Text variant="bodySmall">수면질</Text>
-              <Text variant="bodyMedium" style={styles.scoreValue}>
-                {scoreBreakdown.qualityScore}/30
-              </Text>
-            </View>
-            <View style={styles.scoreItem}>
-              <Text variant="bodySmall">수면효율</Text>
-              <Text variant="bodyMedium" style={styles.scoreValue}>
-                {scoreBreakdown.sleepEfficiencyScore}/25
-              </Text>
-            </View>
-            <View style={styles.scoreItem}>
-              <Text variant="bodySmall">수면환경</Text>
-              <Text variant="bodyMedium" style={styles.scoreValue}>
-                {scoreBreakdown.environmentScore}/20
-              </Text>
-            </View>
-          </View>
+          )}
         </View>
 
         {/* 액션 버튼들 */}
@@ -224,10 +184,7 @@ export const ScoreFeedback: React.FC<ScoreFeedbackProps> = ({ recordId }) => {
               date: sleepData.date, 
               score: score 
             })}
-            style={{ 
-              marginTop: 8, 
-              backgroundColor: colors.softBlue 
-            }}
+            style={styles.aiButton}
           />
           <Button
             title="새 수면 기록 추가"
@@ -268,56 +225,17 @@ const styles = StyleSheet.create({
   summarySection: {
     marginBottom: 16,
     padding: 12,
-    backgroundColor: colors.lightGray,
+    backgroundColor: colors.lightGray || '#f5f5f5',
     borderRadius: 8,
   },
   summaryTitle: {
     marginBottom: 8,
     fontWeight: 'bold',
-    color: colors.deepNavy,
+    color: colors.deepNavy || '#2c3e50',
   },
   summaryItem: {
     marginBottom: 2,
-    color: colors.textColor,
-  },
-  suggestionsSection: {
-    marginBottom: 16,
-    padding: 12,
-    backgroundColor: colors.lightGray,
-    borderRadius: 8,
-  },
-  suggestionsTitle: {
-    marginBottom: 8,
-    fontWeight: 'bold',
-    color: colors.softBlue,
-  },
-  suggestion: {
-    marginBottom: 4,
-    lineHeight: 20,
-  },
-  scoreDetails: {
-    marginTop: 8,
-  },
-  detailsTitle: {
-    marginBottom: 8,
-    fontWeight: 'bold',
-  },
-  scoreGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  scoreItem: {
-    flex: 1,
-    minWidth: 80,
-    alignItems: 'center',
-    padding: 8,
-    backgroundColor: colors.lightGray,
-    borderRadius: 6,
-  },
-  scoreValue: {
-    fontWeight: 'bold',
-    color: colors.softBlue,
+    color: colors.textColor || '#333',
   },
   buttonContainer: {
     marginTop: 24,
@@ -327,6 +245,7 @@ const styles = StyleSheet.create({
   },
   aiButton: {
     backgroundColor: colors.softBlue,
+    marginTop: 8,
   },
   loadingContainer: {
     alignItems: 'center',
@@ -334,18 +253,18 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     marginTop: 16,
-    color: colors.midnightBlue,
+    color: colors.midnightBlue || '#34495e',
   },
   errorContainer: {
     alignItems: 'center',
     paddingVertical: 40,
   },
   errorTitle: {
-    color: colors.red,
+    color: colors.red || '#e74c3c',
     marginBottom: 8,
   },
   errorMessage: {
-    color: colors.midnightBlue,
+    color: colors.midnightBlue || '#34495e',
     textAlign: 'center',
     marginBottom: 16,
   },
