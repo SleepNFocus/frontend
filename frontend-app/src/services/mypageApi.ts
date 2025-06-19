@@ -21,8 +21,25 @@ export const getProfile = async (): Promise<Profile> => {
 // 프로필 수정
 export const updateProfile = async (data: ProfileUpdateRequest): Promise<Profile> => {
   const apiClient = await getApiClient();
-  const response = await apiClient.patch<Profile>('/users/mypage/profile/', data);
-  return response.data;
+  
+  console.log('=== updateProfile API 디버깅 ===');
+  console.log('요청 데이터:', data);
+  console.log('요청 데이터 타입:', typeof data);
+  console.log('요청 데이터 JSON:', JSON.stringify(data, null, 2));
+  
+  try {
+    const response = await apiClient.patch<Profile>('/users/mypage/profile/', data);
+    console.log('프로필 업데이트 성공:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('프로필 업데이트 실패 상세:', {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      message: error.message,
+    });
+    throw error;
+  }
 };
 
 // 마이페이지 메인 정보 조회
@@ -47,7 +64,7 @@ export const getRecordDetail = async (date: string): Promise<RecordDetail> => {
 };
 
 // 프로필 이미지 업로드
-export const uploadProfileImage = async (imageUri: string): Promise<{ profile_image: string }> => {
+export const uploadProfileImage = async (imageUri: string): Promise<Profile> => {
   const apiClient = await getApiClient();
   
   // FormData 생성
@@ -63,13 +80,17 @@ export const uploadProfileImage = async (imageUri: string): Promise<{ profile_im
     name: `profile_image.${fileType}`,
   } as any);
   
-  // Content-Type을 multipart/form-data로 설정
-  const response = await apiClient.post('/users/mypage/profile/image/', formData, {
+  console.log('업로드할 이미지 URI:', imageUri);
+  console.log('업로드할 파일 타입:', fileType);
+  
+  // PATCH 메서드로 프로필 수정 API 사용
+  const response = await apiClient.patch<Profile>('/users/mypage/profile/', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
   
+  console.log('이미지 업로드 API 응답:', response.data);
   return response.data;
 };
 

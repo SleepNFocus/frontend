@@ -34,6 +34,61 @@ const ProfileDetail = () => {
     }, [refetch])
   );
 
+  // 디버깅용 로그 - 프로필 상세 정보
+  console.log('=== ProfileDetail 디버깅 ===');
+  console.log('profile 데이터:', profile);
+  console.log('isLoading:', isLoading);
+  console.log('error:', error);
+  console.log('profile?.nickname:', profile?.nickname);
+  console.log('profile?.email:', profile?.email);
+  console.log('profile?.gender:', profile?.gender);
+  console.log('profile?.birth_year:', profile?.birth_year);
+  console.log('profile?.mbti:', profile?.mbti);
+  console.log('profile?.profile_img:', profile?.profile_img);
+
+  // 이미지 URL 처리: ProfileCard와 동일한 로직
+  const processImageUrl = (url: string | null | undefined): any => {
+    if (!url) return require('@/assets/profile.png');
+    
+    try {
+      // URL 디코딩
+      const decodedUrl = decodeURIComponent(url);
+      
+      // 카카오 이미지 URL이 포함되어 있는지 확인
+      if (decodedUrl.includes('k.kakaocdn.net')) {
+        // 잘못 디코딩된 http:/ 부분을 http://로 수정
+        let fixedUrl = decodedUrl.replace('http:/', 'http://');
+        
+        // URL에서 k.kakaocdn.net 부분 찾기
+        const kakaoDomainIndex = fixedUrl.indexOf('k.kakaocdn.net');
+        
+        if (kakaoDomainIndex !== -1) {
+          // k.kakaocdn.net부터 시작하는 부분 추출
+          const kakaoUrl = fixedUrl.substring(kakaoDomainIndex - 8); // 'https://' 부분 포함
+          
+          // URL이 올바른 형식인지 확인하고 수정
+          if (kakaoUrl.startsWith('/http://')) {
+            const correctedUrl = kakaoUrl.substring(1); // 앞의 '/' 제거
+            return { uri: correctedUrl };
+          } else if (kakaoUrl.startsWith('https://')) {
+            return { uri: kakaoUrl };
+          } else {
+            return require('@/assets/profile.png');
+          }
+        }
+      }
+      
+      // 일반적인 이미지 URL인 경우 그대로 사용
+      if (decodedUrl.startsWith('http')) {
+        return { uri: decodedUrl };
+      }
+      
+      return require('@/assets/profile.png');
+    } catch (error) {
+      return require('@/assets/profile.png');
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await logoutUser(); 
@@ -101,7 +156,7 @@ const ProfileDetail = () => {
             <View style={styles.profileImageBox}>
               <View style={styles.profileImageWrapper}>
                 <Image
-                  source={profile?.profile_image ? { uri: profile.profile_image } : require('@/assets/profile.png')}
+                  source={processImageUrl(profile?.profile_img)}
                   style={styles.profileImage}
                 />
               </View>

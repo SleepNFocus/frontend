@@ -1,7 +1,7 @@
 export const GENDER_OPTIONS = [
-  { label: '남성', value: 'male' },
-  { label: '여성', value: 'female' },
-  { label: '기타/선택안함', value: 'other' },
+  { label: '남성', value: '남' },
+  { label: '여성', value: '여' },
+  { label: '기타/선택안함', value: '선택안함' },
 ];
 
 export const AGE_OPTIONS = [
