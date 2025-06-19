@@ -33,25 +33,11 @@ export default function SleepTest1() {
   const [step, setStep] = useState<number>(0);
 
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
-  const { sessionId, setSessionId, setTest1 } = useSleepTestStore();
-  const { mutateAsync: startSession } = useStartGameSession();
+  const { sessionId, setTest1 } = useSleepTestStore();
 
   const containerHeight = Math.min(windowHeight * 0.75, 1000);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const circlerWidth = Math.min(windowWidth * 0.3, 180);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        if (!sessionId) {
-          const res = await startSession(1);
-          setSessionId(res.session.id);
-        }
-      } catch (error) {
-        console.error('세션 시작 실패:', error);
-      }
-    })();
-  }, []);
 
   const showGreenLight = useCallback(() => {
     if (step < MAX_STEP && isWaiting) {

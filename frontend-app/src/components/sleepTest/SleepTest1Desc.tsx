@@ -1,6 +1,8 @@
 import { View, Animated, StyleSheet, useWindowDimensions } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useStartGameSession } from '@/services/testApi';
 import { useNavigation } from '@react-navigation/native';
+import { useSleepTestStore } from '@/store/testStore';
 import { Button } from '@/components/common/Button';
 import { Text } from '@/components/common/Text';
 import { GlassCard } from '../common/Card';
@@ -12,12 +14,28 @@ export default function SleepTest1Desc() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const { sessionId, setSessionId } = useSleepTestStore();
+  const { mutateAsync: startSession } = useStartGameSession();
+
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
 
   const containerHeight = Math.min(windowHeight * 0.6, 600);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!sessionId) {
+          const res = await startSession(1);
+          setSessionId(res.session.id);
+        }
+      } catch (error) {
+        console.error('세션 시작 실패:', error);
+      }
+    })();
+  }, []);
 
   function goToSleepTest1() {
     navigation.navigate('SleepTest1');
