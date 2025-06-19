@@ -10,12 +10,30 @@ import { colors } from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/common/Button';
+import { useProfile, useMypageMain } from '@/services/mypageApi';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ProfileCard = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const tabNavigation = useNavigation<BottomTabNavigationProp<any>>();
   const user = useAuthStore(state => state.user);
+  const { data: profile, refetch } = useProfile();
+  const { data: mypageMain } = useMypageMain();
+
+  // 화면이 포커스될 때마다 프로필 데이터 새로 가져오기
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
+
+  // API 데이터를 우선 사용하고, 없으면 로컬 user 데이터 사용
+  const displayName = profile?.nickname || user?.nickname || '-';
+  const displayImage = profile?.profile_image || user?.image_url || 'https://via.placeholder.com/100';
+
+  // tracking_days가 0이면 1로 표시
+  const trackingDays = mypageMain?.tracking_days ? Math.max(1, mypageMain.tracking_days) : 1;
 
   return (
     <Card style={styles.wrapper}>
@@ -30,7 +48,7 @@ const ProfileCard = () => {
       </View>
 
       <Image
-        source={{ uri: user?.image_url ?? 'https://via.placeholder.com/100' }}
+        source={{ uri: displayImage }}
         style={styles.profileImage}
       />
 
@@ -38,18 +56,18 @@ const ProfileCard = () => {
         <Text variant="titleMedium" style={styles.highlight}>
           반가워요!
         </Text>{' '}
-        {user?.nickname ?? '-'} 님
+        {displayName} 님
       </Text>
 
       <Text variant="bodyMedium" style={styles.trackingText}>
         수면과 집중력을 추적한지 벌써{' '}
         <Text variant="bodyMedium" style={styles.days}>
-          __일째
+          {trackingDays}일째
         </Text>
       </Text>
 
       <Card style={styles.announceBox}>
-        <TouchableOpacity onPress={() => navigation.replace('DailyCheck')}>
+        <TouchableOpacity onPress={() => tabNavigation.navigate('SleepRecord')}>
           <Text variant="titleSmall" style={styles.announceText}>
             인지테스트 하러가기
           </Text>
@@ -68,7 +86,7 @@ const ProfileCard = () => {
             총 수면시간
           </Text>
           <Text variant="titleMedium" style={styles.averageValue}>
-            6시간 40분
+            {mypageMain?.total_sleep_hours ?? '-'}시간
           </Text>
         </View>
         <View style={styles.averageBox}>
@@ -76,7 +94,7 @@ const ProfileCard = () => {
             평균 점수
           </Text>
           <Text variant="titleMedium" style={styles.averageValue}>
-            84점
+            {mypageMain?.average_sleep_score ?? '-'}점
           </Text>
         </View>
       </Card>

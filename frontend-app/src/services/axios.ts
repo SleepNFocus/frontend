@@ -1,6 +1,11 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// 타입 선언: globalThis.forceLogoutEvent
+declare global {
+  var forceLogoutEvent: (() => void) | undefined;
+}
+
 export const getApiClient = async () => {
   const AUTH_TOKEN = await AsyncStorage.getItem('userToken');
 
@@ -31,12 +36,21 @@ export const getApiClient = async () => {
           });
           const newAccessToken = refreshRes.data.access;
           await AsyncStorage.setItem('userToken', newAccessToken);
-          // Authorization 헤더 갱신
           client.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
           originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
           return client(originalRequest);
         } catch (refreshError) {
-          // refreshToken도 만료되면 에러 반환
+          // refreshToken도 만료되면 강제 로그아웃 및 이동
+          await AsyncStorage.multiRemove([
+            'userInfo',
+            'accessToken',
+            'refreshToken',
+            'hasLoggedInBefore',
+          ]);
+          // 전역 이벤트로 앱에서 로그인 페이지로 이동하도록 알림
+          if (globalThis && typeof globalThis.forceLogoutEvent === 'function') {
+            globalThis.forceLogoutEvent();
+          }
           return Promise.reject(new Error('로그인 세션이 만료되었습니다. 다시 로그인 해주세요.'));
         }
       }
