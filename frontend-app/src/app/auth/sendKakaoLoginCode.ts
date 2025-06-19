@@ -1,7 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const BASE_URL = 'https://www.dev.focusz.site'; 
+import { BASE_URL } from '@/constants/api';
 
 
 interface UserInfo {
@@ -12,6 +11,7 @@ interface UserInfo {
   email: string;
   profile_img: string | null;
   status: string;
+  has_completed_onboarding: boolean;
 }
 
 
@@ -23,6 +23,7 @@ export interface User {
   email: string;
   profile_img: string | null;
   status: string;
+  has_completed_onboarding: boolean;
 }
 
 interface LoginResponse {
@@ -40,6 +41,7 @@ const adaptUserInfoToUser = (userInfo: UserInfo): User => ({
   email: userInfo.email,
   profile_img: userInfo.profile_img,
   status: userInfo.status,
+  has_completed_onboarding: userInfo.has_completed_onboarding ?? false,
 });
 
 export const sendKakaoLoginCode = async (code: string): Promise<LoginResponse> => {
@@ -49,7 +51,7 @@ export const sendKakaoLoginCode = async (code: string): Promise<LoginResponse> =
       refresh: string;
       user: UserInfo;
     }>(
-      `${BASE_URL}/api/users/social-login/`,
+      `${BASE_URL}/users/social-login/`,
       {
         provider: 'kakao',
         code,

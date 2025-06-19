@@ -40,6 +40,7 @@ import OAuthCallback from './app/auth/OAuthCallback';
 import KakaoLoginWebView from './app/auth/KakaoLoginWebView';
 
 
+
 SplashScreen.preventAutoHideAsync();
 
 export type RootStackParamList = {
@@ -47,6 +48,7 @@ export type RootStackParamList = {
   IntroCard: undefined;
   Onboarding: undefined;
   Dashboard: undefined;
+  SurveyPage: undefined;
   DailyCheck: undefined;
   History: undefined;
   Insight: undefined;
@@ -171,7 +173,7 @@ export default function App() {
             <Stack.Screen name="Loading" component={Loading} />  */}
             <Stack.Screen name="OAuthCallback" component={OAuthCallback} />
             <Stack.Screen name="NotFound" component={NotFoundPage} />
-            <Stack.Screen name="Survey" component={SurveyPage} />
+            <Stack.Screen name="SurveyPage" component={SurveyPage} />
             <Stack.Screen name="DailyCheckScreen" component={DailyCheckPage} />
             <Stack.Screen name="KakaoLoginWebView" component={KakaoLoginWebView} />
           </Stack.Navigator>

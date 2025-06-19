@@ -9,6 +9,7 @@ import { RootStackParamList } from '@/App';
 import { BackButton } from '@/components/common/BackButton';
 import { colors } from '@/constants/colors';
 import { KAKAO_JAVASCRIPT_KEY, DEV_API_URL } from '@env';
+import type { WebViewErrorEvent } from 'react-native-webview/lib/WebViewTypes';
 
 export interface UserData {
   access: string;
@@ -21,6 +22,7 @@ export interface UserData {
     social_type: 'KAKAO' | 'GOOGLE' | 'NAVER';
     status: 'active' | 'inactive';
     user_id: number;
+    has_completed_onboarding: boolean; 
   };
 }
 
@@ -106,16 +108,20 @@ const KakaoLoginWebView: React.FC = () => {
 
     await AsyncStorage.multiSet([
       ['hasLoggedInBefore', 'true'],
-      ['onboardingComplete', 'true'],
       ['userToken', userData.access],
       ['refreshToken', userData.refresh],
     ]);
 
-    navigation.navigate('Dashboard');
+  
+    if (userData.user.has_completed_onboarding) {
+      navigation.navigate('Dashboard');
+    } else {
+      navigation.navigate('SurveyPage'); 
+    }
   };
 
-  const handleWebViewError = (syntheticEvent: any) => {
-    const { nativeEvent } = syntheticEvent;
+  const handleWebViewError = (event: WebViewErrorEvent) => {
+    const { nativeEvent } = event;
     setError(`WebView 오류: ${nativeEvent.description || '알 수 없는 오류'}`);
   };
 

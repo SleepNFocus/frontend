@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, ViewStyle, TextStyle } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, 
+  // ViewStyle, TextStyle
+ } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
@@ -15,6 +17,7 @@ const ProfileCard = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const tabNavigation = useNavigation<BottomTabNavigationProp<any>>();
+  console.log(tabNavigation);
   const user = useAuthStore(state => state.user);
 
   return (
