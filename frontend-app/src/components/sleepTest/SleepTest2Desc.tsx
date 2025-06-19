@@ -2,6 +2,7 @@ import { View, Animated, StyleSheet, useWindowDimensions } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { useStartGameSession } from '@/services/testApi';
+import { useSleepTestStore } from '@/store/testStore';
 import { Button } from '@/components/common/Button';
 import { Text } from '@/components/common/Text';
 import { TestSession } from '@/types/cognitive';
@@ -11,24 +12,20 @@ import { useEffect, useRef } from 'react';
 import { Layout } from '../common/Layout';
 
 export default function SleepTest2Desc() {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
   const { mutate: startSession } = useStartGameSession();
-
+  const { setSessionId } = useSleepTestStore();
   const { height: windowHeight } = useWindowDimensions();
   const { width: windowWidth } = useWindowDimensions();
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const containerHeight = Math.min(windowHeight * 0.6, 600);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
   function goToSleepTest2() {
-    startSession(TestSession.SYMBOL, {
-      onSuccess: () => {
-        navigation.navigate('SleepTest2');
-      },
-    });
+    navigation.navigate('SleepTest2');
   }
 
   const colorAnim = useRef(new Animated.Value(0)).current;

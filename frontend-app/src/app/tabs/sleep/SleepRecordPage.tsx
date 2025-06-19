@@ -15,9 +15,10 @@ import { useSaveSleepRecord } from '@/services/sleepApi';
 
 export const SleepRecordPage: React.FC = () => {
   const navigation = useNavigation();
-  const navigation2 = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation2 =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isRecordSaved, setIsRecordSaved] = useState(false);
-  const [savedRecordId, setSavedRecordId] = useState<number | null>(null); 
+  const [savedRecordId, setSavedRecordId] = useState<number | null>(null);
   const { openToast } = useUiStore();
 
   const saveSleepRecordMutation = useSaveSleepRecord();
@@ -30,10 +31,13 @@ export const SleepRecordPage: React.FC = () => {
 
       console.log('저장 성공:', result);
 
-      openToast('success', `수면 기록이 성공적으로 저장되었습니다. (ID: ${result.id || 'Unknown'})`);
+      openToast(
+        'success',
+        `수면 기록이 성공적으로 저장되었습니다. (ID: ${result.id || 'Unknown'})`,
+      );
 
       setTimeout(() => {
-        setSavedRecordId(result.id); 
+        setSavedRecordId(result.id);
         setIsRecordSaved(true);
       }, 100);
     } catch (error) {
@@ -72,10 +76,7 @@ export const SleepRecordPage: React.FC = () => {
           <SleepRecordForm onSave={handleSaveRecord} />
         ) : (
           <View style={styles.resultSection}>
-            {savedRecordId && (
-              <ScoreFeedback recordId={savedRecordId} />
-            )}
-
+            {savedRecordId && <ScoreFeedback recordId={savedRecordId} />}
             <View style={styles.actionButtons}>
               <Button
                 onPress={() => navigation2.navigate('SleepTestMain')}
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
   actionButtons: {
     gap: 12,
     marginBottom: 24,
-    marginTop: 16, 
+    marginTop: 16,
   },
   primaryButton: {
     paddingVertical: 12,

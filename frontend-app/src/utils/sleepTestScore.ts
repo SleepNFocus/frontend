@@ -1,22 +1,17 @@
-export function calculateSleepTest1Score(times: number[]) {
-  const REACTION_TIME_MIN = 150;
-  const REACTION_TIME_MAX = 800;
+import { SRTPayload } from '@/types/test';
 
-  const scores = times.map(t => {
-    if (t <= REACTION_TIME_MIN) return 100;
-    if (t >= REACTION_TIME_MAX) return 0;
-    return (
-      ((REACTION_TIME_MAX - t) / (REACTION_TIME_MAX - REACTION_TIME_MIN)) * 100
-    );
-  });
+export function calculateSleepTest1Score(clickTimes: number[]): SRTPayload {
+  const total = clickTimes.reduce((sum, time) => sum + time, 0);
+  const count = clickTimes.length;
 
-  const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
-  const avgReactionTime = times.reduce((a, b) => a + b, 0) / times.length;
+  const avgReactionTime = count === 0 ? 0 : Math.round(total / count);
+  const avgScore = count === 0 ? 0 : Math.round(100 - avgReactionTime / 10);
 
   return {
-    avgScore: Math.round(avgScore * 10) / 10,
-    avgReactionTime: Math.round(avgReactionTime),
-    reactionList: times,
+    avgScore,
+    avgReactionTime,
+    reactionList: clickTimes,
+    sessionId: 0, // 외부에서 override
   };
 }
 

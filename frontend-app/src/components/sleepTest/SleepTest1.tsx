@@ -26,7 +26,6 @@ export default function SleepTest1() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [sessionId, setSessionId] = useState<number | null>(null);
   const [startTime, setStartTime] = useState<number | null>(null);
   const [isFinished, setIsFinished] = useState<boolean>(false);
   const [clickTimes, setClickTimes] = useState<number[]>([]);
@@ -34,18 +33,20 @@ export default function SleepTest1() {
   const [step, setStep] = useState<number>(0);
 
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
+  const { sessionId, setSessionId, setTest1 } = useSleepTestStore();
+  const { mutateAsync: startSession } = useStartGameSession();
 
   const containerHeight = Math.min(windowHeight * 0.75, 1000);
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const circlerWidth = Math.min(windowWidth * 0.3, 180);
 
-  const { mutateAsync: startSession } = useStartGameSession();
-
   useEffect(() => {
     (async () => {
       try {
-        const res = await startSession(1);
-        setSessionId(res.id);
+        if (!sessionId) {
+          const res = await startSession(1);
+          setSessionId(res.session.id);
+        }
       } catch (error) {
         console.error('세션 시작 실패:', error);
       }
@@ -102,16 +103,15 @@ export default function SleepTest1() {
 
   const commaRecentStepClickTimesAvg = recentClickTimeAvg.toLocaleString();
 
-  const setTest1 = useSleepTestStore(state => state.setTest1);
-
   useEffect(() => {
-    if (isFinished && sessionId) {
-      const result = calculateSleepTest1Score(clickTimes);
-      // [정리 필요] console.log 등 디버깅 코드는 배포 전 반드시 제거해야 함
-      // 이유: 불필요한 콘솔 출력은 성능 저하, 보안 이슈, 로그 오염의 원인이 됨
-      setTest1({ ...result, sessionId });
-    }
-  }, [isFinished, sessionId]);
+    if (!isFinished || !sessionId) return;
+
+    const result = calculateSleepTest1Score(clickTimes);
+    setTest1({
+      ...result,
+      sessionId,
+    });
+  }, [isFinished]);
 
   const goToSleepTest2Desc = () => {
     navigation.navigate('SleepTest2Desc');
@@ -287,7 +287,6 @@ const styles = StyleSheet.create({
   },
   resultTextBox: {
     flexDirection: 'row',
-    fontWeight: 'bold',
   },
   waitBox: {
     alignItems: 'center',

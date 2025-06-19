@@ -41,10 +41,10 @@ export const postSRTResult = async (data: {
 }) => {
   const client = await getApiClient();
   const payload = {
-    cognitive_session: data.cognitiveSession,
+    cognitiveSession: data.cognitiveSession,
     score: data.score,
-    reaction_avg_ms: data.reactionAvgMs,
-    reaction_list: data.reactionList.join(','),
+    reactionAvgMs: data.reactionAvgMs,
+    reactionList: data.reactionList.join(','),
   };
   const res = await client.post('cognitive-statistics/result/srt/', payload);
   return res.data;
@@ -76,10 +76,10 @@ export const postSymbolResult = async (data: {
 }) => {
   const client = await getApiClient();
   const payload = {
-    cognitive_session: data.cognitiveSession,
+    cognitiveSession: data.cognitiveSession,
     score: data.score,
-    symbol_correct: data.symbolCorrect,
-    symbol_accuracy: data.symbolAccuracy,
+    symbolCorrect: data.symbolCorrect,
+    symbolAccuracy: data.symbolAccuracy,
   };
   const res = await client.post('cognitive-statistics/result/symbol/', payload);
   return res.data;
@@ -111,10 +111,10 @@ export const postPatternResult = async (data: {
 }) => {
   const client = await getApiClient();
   const payload = {
-    cognitive_session: data.cognitiveSession,
+    cognitiveSession: data.cognitiveSession,
     score: data.score,
-    pattern_correct: data.patternCorrect,
-    pattern_time_sec: data.patternTimeSec,
+    patternCorrect: data.patternCorrect,
+    patternTimeSec: data.patternTimeSec,
   };
   const res = await client.post(
     'cognitive-statistics/result/pattern/',
@@ -178,7 +178,6 @@ export const sendAllResults = async ({
 
   const client = await getApiClient();
   const res = await client.get('cognitive-statistics/result/basic/');
-  console.log('전체 테스트 기본 결과', res.data);
   return res.data;
 };
 
@@ -190,7 +189,6 @@ export const useSendAllResults = () =>
         type: 'success',
         text1: '모든 점수가 저장되고 결과가 조회되었습니다!',
       });
-      console.log('기본 통계 결과:', data);
     },
     onError: error => {
       const axiosError = error as AxiosError<{

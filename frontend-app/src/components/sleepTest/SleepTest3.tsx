@@ -14,7 +14,7 @@ import { useAuthStore } from '@/store/authStore';
 import { Text } from '@/components/common/Text';
 import { TestSession } from '@/types/cognitive';
 import Toast from 'react-native-toast-message';
-import { useNavigation } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
@@ -56,7 +56,6 @@ export default function SleepTest3() {
   const squareWidth = Math.min(windowWidth * 0.118, 80);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
-  // 상태관리 객체로 수정해보기
   const [totalStart, setTotalStart] = useState<number | null>(null);
   const [sessionId, setSessionId] = useState<number | null>(null);
   const [selected, setSelected] = useState<number[]>([]);
@@ -75,8 +74,7 @@ export default function SleepTest3() {
 
   function goToSleepTestResult() {
     const { test1, test2, test3 } = useSleepTestStore.getState();
-
-    console.log('전송할 테스트 결과:', { test1, test2, test3 });
+    const sessionId = useSleepTestStore.getState().sessionId;
 
     if (!userId || !test1 || !test2 || !test3) {
       Toast.show({
@@ -89,15 +87,25 @@ export default function SleepTest3() {
 
     const requestBody = {
       userId,
-      cognitiveSession: sessionId,
-      test1,
-      test2,
-      test3,
+      test1: {
+        ...test1,
+        sessionId: sessionId!,
+      },
+      test2: {
+        ...test2,
+        sessionId: sessionId!,
+      },
+      test3: {
+        ...test3,
+        sessionId: sessionId!,
+      },
     };
 
     sendAllResults(requestBody, {
       onSuccess: basicResult => {
-        navigation.navigate('SleepTestResult', { basic: basicResult });
+        navigation.navigate('SleepTestResult', {
+          basic: JSON.stringify(basicResult),
+        });
         resetGame();
       },
       onError: () => {
@@ -113,19 +121,6 @@ export default function SleepTest3() {
   function finishShow() {
     setShowPattern(false);
   }
-
-  const { mutateAsync: startSession } = useStartGameSession();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await startSession(3);
-        setSessionId(res.id);
-      } catch (error) {
-        console.error('세션 시작 실패:', error);
-      }
-    })();
-  }, []);
 
   useEffect(() => {
     if (round < rounds.length) {
@@ -187,13 +182,13 @@ export default function SleepTest3() {
   } | null>(null);
 
   useEffect(() => {
-    if (gameEnded && totalStart !== null && sessionId) {
+    if (gameEnded && totalStart !== null) {
       const result = calculateSleepTest3Score(totalCorrect, totalStart);
       setFinalResult({
         ...result,
         totalCorrect,
       });
-      setTest3({ ...result, sessionId });
+      setTest3({ ...result, sessionId: sessionId! });
     }
   }, [gameEnded, totalStart]);
 
