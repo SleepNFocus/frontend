@@ -14,6 +14,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/App';
 import { useGetDailySummary } from '@/services/testApi';
 import ResultChart from '@/components/common/ResultChart';
+import { useAuthStore } from '@/store/authStore';
 
 interface ScoreDetail {
   label: string;
@@ -44,6 +45,7 @@ const AbilityProfileCard: React.FC<AbilityProfileCardProps> = memo(
       <Card style={styles.abilityCard}>
         <Text style={styles.sectionTitle}>나의 인지 능력 프로필</Text>
         <Text style={styles.sectionLabel}>
+          {/* 봉석님 -  수면 점수 추가 */}
           오늘의 수면 점수: {sleepScore ?? '-'}점
         </Text>
         <View style={styles.chartContainer}>
@@ -62,7 +64,7 @@ const ScoreDetailCard: React.FC<ScoreDetailCardProps> = memo(
         <Text style={styles.sectionTitle}>상세 결과</Text>
         <Text style={styles.avgScore}>
           전체 평균 점수:{' '}
-          <Text style={styles.avgScorePoint}>{averageScore}점</Text>
+          <Text style={styles.avgScorePoint}>{Math.floor(averageScore)}점</Text>
         </Text>
         <View style={styles.scoreCardList}>
           {details.map(item => (
@@ -93,6 +95,8 @@ export const DashboardMain: React.FC = memo(() => {
   const [scoreDetails, setScoreDetails] = useState<ScoreDetail[]>([]);
   const [averageScore, setAverageScore] = useState<number>(0);
 
+  const { user } = useAuthStore();
+
   const {
     mutate: fetchSummary,
     data,
@@ -120,17 +124,17 @@ export const DashboardMain: React.FC = memo(() => {
           {
             label: '반응 속도',
             value: `${latest.raw_scores.srt.avg_ms}ms`,
-            score: latest.raw_scores.srt.average_score,
+            score: Math.floor(latest.raw_scores.srt.average_score),
           },
           {
             label: '정보 처리',
-            value: `${latest.raw_scores.symbol.correct}개 정답 (${latest.raw_scores.symbol.symbol_accuracy}%)`,
-            score: latest.raw_scores.symbol.average_score,
+            value: `정답 개수: ${latest.raw_scores.symbol.correct}개 / 정확도: ${latest.raw_scores.symbol.symbol_accuracy}%`,
+            score: Math.floor(latest.raw_scores.symbol.average_score),
           },
           {
             label: '패턴 기억',
-            value: `정답 개수: ${latest.raw_scores.pattern.correct}`,
-            score: latest.raw_scores.pattern.average_score,
+            value: `정답 개수: ${latest.raw_scores.pattern.correct}개`,
+            score: Math.floor(latest.raw_scores.pattern.average_score),
           },
         ];
 
@@ -151,17 +155,17 @@ export const DashboardMain: React.FC = memo(() => {
     );
   }
 
-  // if (isError) {
-  //   return (
-  //     <ErrorBoundary>
-  //       <View style={styles.errorContainer}>
-  //         <Text style={styles.errorText}>
-  //           데이터 로딩 실패: {(error as Error).message}
-  //         </Text>
-  //       </View>
-  //     </ErrorBoundary>
-  //   );
-  // }
+  if (isError) {
+    return (
+      <ErrorBoundary>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>
+            데이터 로딩 실패: {(error as Error).message}
+          </Text>
+        </View>
+      </ErrorBoundary>
+    );
+  }
 
   return (
     <ErrorBoundary>
@@ -172,7 +176,7 @@ export const DashboardMain: React.FC = memo(() => {
           showsVerticalScrollIndicator={false}
         >
           <Card style={styles.greetingWrap}>
-            <GreetingCard userName="닉네임" />
+            <GreetingCard userName={user?.nickname} />
           </Card>
 
           <AbilityProfileCard

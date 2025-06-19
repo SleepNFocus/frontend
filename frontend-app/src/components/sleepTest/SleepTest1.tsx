@@ -162,7 +162,7 @@ export default function SleepTest1() {
                     <View style={styles.waitBox}>
                       <Text style={styles.plus}> + </Text>
                       <Text style={styles.text}>
-                        자극이 나타날 때까지 기다려주세요
+                        자극이 나타날 때까지 기다려주세요.
                       </Text>
                     </View>
                   ) : (

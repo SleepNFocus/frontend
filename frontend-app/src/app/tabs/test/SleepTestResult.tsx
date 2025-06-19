@@ -53,8 +53,9 @@ export default function SleepTestResult() {
               <View style={styles.textBox}>
                 <Text style={styles.boldText}>반응 속도 </Text>
                 <Text style={styles.mainText}>
-                  평균 반응 시간 :
-                  {basic.results[0].detailed_raw_scores.srt.avg_ms}
+                  평균 반응 시간 :{' '}
+                  {Math.floor(basic.results[0].detailed_raw_scores.srt.avg_ms)}
+                  ms
                 </Text>
               </View>
               <View style={styles.roundScore}>
@@ -68,15 +69,18 @@ export default function SleepTestResult() {
               <View style={styles.textBox}>
                 <Text style={styles.boldText}>처리 속도 </Text>
                 <Text style={styles.mainText}>
-                  맞춘 개수 :
+                  맞춘 개수 :{' '}
                   {basic.results[0].detailed_raw_scores.symbol.correct}개
                 </Text>
                 <Text style={styles.mainText}>
-                  평균 반응 속도 :
-                  {basic.results[0].detailed_raw_scores.symbol.avg_ms}ms
+                  평균 반응 속도 :{' '}
+                  {Math.floor(
+                    basic.results[0].detailed_raw_scores.symbol.avg_ms,
+                  ).toLocaleString()}
+                  ms
                 </Text>
                 <Text style={styles.mainText}>
-                  정확도 :
+                  정확도 :{' '}
                   {basic.results[0].detailed_raw_scores.symbol.symbol_accuracy}%
                 </Text>
               </View>
@@ -91,8 +95,8 @@ export default function SleepTestResult() {
               <View style={styles.textBox}>
                 <Text style={styles.boldText}>패턴 기억 </Text>
                 <Text style={styles.mainText}>
-                  맞춘 개수 :
-                  {basic.results[0].detailed_raw_scores.pattern.correct}/ 18개
+                  맞춘 개수 :{' '}
+                  {basic.results[0].detailed_raw_scores.pattern.correct} / 18개
                 </Text>
               </View>
               <View style={styles.roundScore}>
@@ -102,7 +106,7 @@ export default function SleepTestResult() {
               </View>
             </View>
             <Text style={styles.mainScore}>
-              {basic.results[0].average_score}점
+              {Math.floor(basic.results[0].average_score)}점
             </Text>
             <View style={styles.descriptionBox}>
               <Text style={styles.description}>
@@ -114,7 +118,7 @@ export default function SleepTestResult() {
               </Text>
             </View>
             <Button
-              title="결과 보기"
+              title="오늘의 결과 보기"
               variant="primary"
               style={styles.resultButton}
               onPress={goToDashboard}
@@ -198,7 +202,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     width: '100%',
-    height: 100,
+    height: 110,
     gap: 40,
     paddingHorizontal: 20,
   },
