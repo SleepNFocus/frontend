@@ -6,8 +6,6 @@ const AdminNavigator = () => {
   const navItems = [
     { to: '/admin', label: '대시보드' },
     { to: '/admin/users', label: '사용자 관리' },
-    { to: '/admin/tests', label: '테스트 관리' },
-    { to: '/admin/analytics', label: '통계' },
   ];
 
   return (

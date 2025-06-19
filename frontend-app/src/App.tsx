@@ -11,7 +11,6 @@ import { HistoryPage } from './app/tabs/HistoryPage';
 import { InsightPage } from './app/tabs/InsightPage';
 import { MorePage } from './app/tabs/MorePage';
 import { SocialLogin } from './app/auth/SocialLogin';
-import { Layout } from '@/components/common/Layout';
 import { NotFoundPage } from '@/components/common/NotFoundPage';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { SleepRecordPage } from './app/tabs/sleep/SleepRecordPage';

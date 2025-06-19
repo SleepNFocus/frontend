@@ -11,6 +11,9 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
+env.d.ts
+vite-env.d.ts
 
 # typescript
 *.tsbuildinfo

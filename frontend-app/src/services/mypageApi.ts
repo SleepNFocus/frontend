@@ -1,4 +1,4 @@
-import { apiClient } from '@/services/axios';
+import { getApiClient } from '@/services/axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Profile,
@@ -10,30 +10,35 @@ import {
 
 // 프로필 조회
 export const getProfile = async (): Promise<Profile> => {
+  const apiClient = await getApiClient();
   const response = await apiClient.get<Profile>('/api/mypage/profile/');
   return response.data;
 };
 
 // 프로필 수정
 export const updateProfile = async (data: ProfileUpdateRequest): Promise<Profile> => {
+  const apiClient = await getApiClient();
   const response = await apiClient.patch<Profile>('/api/mypage/profile/', data);
   return response.data;
 };
 
 // 마이페이지 메인 정보 조회
 export const getMypageMain = async (): Promise<MypageMain> => {
+  const apiClient = await getApiClient();
   const response = await apiClient.get<MypageMain>('/api/mypage/main/');
   return response.data;
 };
 
 // 일/주/월별 기록 조회
 export const getRecords = async (period: 'day' | 'week' | 'month'): Promise<RecordsResponse> => {
+  const apiClient = await getApiClient();
   const response = await apiClient.get<RecordsResponse>(`/api/mypage/records/list/?period=${period}`);
   return response.data;
 };
 
 // 선택 날짜 상세 조회
 export const getRecordDetail = async (date: string): Promise<RecordDetail> => {
+  const apiClient = await getApiClient();
   const response = await apiClient.get<RecordDetail>(`/api/mypage/records/${date}/detail/`);
   return response.data;
 };

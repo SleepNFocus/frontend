@@ -1,6 +1,5 @@
 // 관리자 및 시스템 로그 관련 API 서비스
-
-import { apiClient } from '@/services/axios';
+import { getApiClient } from '@/services/axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   User,
@@ -12,35 +11,41 @@ import {
 
 // 관리자 메인 정보 조회
 export const getAdminMain = async (): Promise<AdminMain> => {
+  const apiClient = getApiClient();
   const response = await apiClient.get<AdminMain>('/api/admin/');
   return response.data;
 };
 
 // 모든 사용자 조회
 export const getAllUsers = async (): Promise<UsersResponse> => {
+  const apiClient = getApiClient();
   const response = await apiClient.get<UsersResponse>('/api/admin/users');
   return response.data;
 };
 
 // 특정 사용자 조회
 export const getUser = async (userId: number): Promise<User> => {
+  const apiClient = getApiClient();
   const response = await apiClient.get<User>(`/api/admin/users/${userId}`);
   return response.data;
 };
 
 // 사용자 정보 수정
 export const updateUser = async ({ userId, updateData }: { userId: number; updateData: UserUpdateRequest }): Promise<User> => {
+  const apiClient = getApiClient();
   const response = await apiClient.put<User>(`/api/admin/users/${userId}`, updateData);
   return response.data;
 };
 
 // 사용자 삭제
 export const deleteUser = async (userId: number): Promise<void> => {
+  const apiClient = getApiClient();
   await apiClient.delete(`/api/admin/users/${userId}`);
 };
 
 // 관리자 로그 조회
 export const getAdminLogs = async (): Promise<LogsResponse> => {
+  const apiClient = getApiClient();
   const response = await apiClient.get<LogsResponse>('/api/admin/logs');
   return response.data;
 };

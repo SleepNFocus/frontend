@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,6 +16,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { logoutUser } from '@/app/auth/logout';
 import { withdrawUser } from '@/app/auth/withdraw';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useProfile } from '@/services/mypageApi';
+import { NotFoundPage } from '@/components/common/NotFoundPage';
 
 const Settings = () => {
    useEffect(() => {
@@ -39,7 +40,16 @@ const Settings = () => {
   const { openModal, openToast } = useUiStore();
   const { user, resetAuth, setUser } = useAuthStore();
 
-  const [profileImage, setProfileImage] = useState(user?.image_url ?? null);
+  // 프로필 이미지 상태
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+
+  // API에서 받아온 프로필 이미지로 동기화
+  const { data: profile, isLoading, error, refetch } = useProfile();
+  useEffect(() => {
+    if (profile?.profile_image) {
+      setProfileImage(profile.profile_image);
+    }
+  }, [profile?.profile_image]);
 
   const handleProfileImageChange = async () => {
     try {
@@ -56,12 +66,6 @@ const Settings = () => {
       });
       if (!result.canceled && result.assets && result.assets.length > 0) {
         setProfileImage(result.assets[0].uri);
-        setUser({
-          id: user?.id ?? 0,
-          email: user?.email ?? '',
-          nickname: user?.nickname ?? '',
-          image_url: result.assets[0].uri,
-        });
         openToast('success', '프로필 변경', '프로필이 변경되었습니다.');
       }
     } catch (e) {
@@ -103,6 +107,18 @@ const Settings = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={colors.softBlue} />
+        <Text style={{ marginTop: 12 }}>불러오는 중입니다...</Text>
+      </View>
+    );
+  }
+  if (error) {
+    return <NotFoundPage onRetry={() => refetch()} />;
+  }
+
   return (
     <Layout>
       <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -136,35 +152,102 @@ const Settings = () => {
               <View style={styles.infoRow}>
                 <Text style={styles.label}>닉네임</Text>
                 <View style={styles.valueRow}>
-                  <Text style={styles.value}>{user?.nickname ?? '-'}</Text>
+                  <Text style={styles.value}>{profile?.nickname ?? '-'}</Text>
                 </View>
               </View>
             </Card>
           </TouchableOpacity>
           <Card style={styles.infoCard}>
             <View style={styles.infoRow}>
-              <Text style={styles.label}>아이디</Text>
+              <Text style={styles.label}>이메일</Text>
               <View style={styles.valueRow}>
-                <Text style={styles.value}>TES@TEST.COM</Text>
+                <Text style={styles.value}>{profile?.email ?? '-'}</Text>
               </View>
             </View>
           </Card>
+          <Card style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>성별</Text>
+              <View style={styles.valueRow}>
+                <Text style={styles.value}>{profile?.gender ?? '-'}</Text>
+              </View>
+            </View>
+          </Card>
+          <Card style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>출생년도</Text>
+              <View style={styles.valueRow}>
+                <Text style={styles.value}>{profile?.birth_year ?? '-'}</Text>
+              </View>
+            </View>
+          </Card>
+          <Card style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>MBTI</Text>
+              <View style={styles.valueRow}>
+                <Text style={styles.value}>{profile?.mbti ?? '-'}</Text>
+              </View>
+            </View>
+          </Card>
+          <Card style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>인지유형</Text>
+              <View style={styles.valueRow}>
+                <Text style={styles.value}>{profile?.cognitive_type_out_label ?? '-'}</Text>
+              </View>
+            </View>
+          </Card>
+          <Card style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>근무패턴</Text>
+              <View style={styles.valueRow}>
+                <Text style={styles.value}>{profile?.work_time_pattern_out_label ?? '-'}</Text>
+              </View>
+            </View>
+          </Card>
+          {/* 통계 정보 카드(통계 데이터는 Profile 타입에 없으므로 주석 처리) */}
+          {/**
           <Card style={styles.infoCard}>
             <View style={styles.infoRow}>
               <Text style={styles.label}>가입일</Text>
               <View style={styles.valueRow}>
-                <Text style={styles.value}>2024.01.01</Text>
+                <Text style={styles.value}>{profile?.joined_at ? profile.joined_at.replace(/-/g, '.') : '-'}</Text>
               </View>
             </View>
           </Card>
           <Card style={styles.infoCard}>
             <View style={styles.infoRow}>
-              <Text style={styles.label}>연동된 계정</Text>
+              <Text style={styles.label}>총 기록 일수</Text>
               <View style={styles.valueRow}>
-                <Text style={styles.googleText}>Google</Text>
+                <Text style={styles.value}>{profile?.tracking_days ?? '-'}</Text>
               </View>
             </View>
           </Card>
+          <Card style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>총 수면 시간</Text>
+              <View style={styles.valueRow}>
+                <Text style={styles.value}>{profile?.total_sleep_hours ? `${profile.total_sleep_hours}시간` : '-'}</Text>
+              </View>
+            </View>
+          </Card>
+          <Card style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>평균 수면 점수</Text>
+              <View style={styles.valueRow}>
+                <Text style={styles.value}>{profile?.average_sleep_score ?? '-'}</Text>
+              </View>
+            </View>
+          </Card>
+          <Card style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>평균 인지 점수</Text>
+              <View style={styles.valueRow}>
+                <Text style={styles.value}>{profile?.average_cognitive_score ?? '-'}</Text>
+              </View>
+            </View>
+          </Card>
+          */}
         </Card>
 
         <View style={styles.buttonGroup}>

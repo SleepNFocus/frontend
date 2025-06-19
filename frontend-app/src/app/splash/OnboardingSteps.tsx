@@ -21,7 +21,7 @@ export const OnboardingSteps: React.FC<{ onNext?: () => void }> = ({
       onNext();
     } else {
       if (step.current === 0) {
-        navigation.navigate('PrivacyNotice');
+      navigation.navigate('PrivacyNotice');
         step.current = 1;
       } else if (step.current === 1) {
         navigation.navigate('Survey');
@@ -34,50 +34,50 @@ export const OnboardingSteps: React.FC<{ onNext?: () => void }> = ({
 
   return (
     <Layout showNavbar={false}>
-      <View style={styles.root}>
-        <View style={styles.centerBox}>
+    <View style={styles.root}>
+      <View style={styles.centerBox}>
           <Text style={styles.title}>
             잠과 퍼포먼스의 연결고리 찾기
           </Text>
-          {/* 1단계 */}
-          <View style={styles.stepCard}>
-            <Text style={styles.stepNum}>1</Text>
-            <Text style={styles.stepTitle}>
-              먼저, 당신의 평소 수면 습관과 현재 인지 능력을 측정해요.
-            </Text>
-            <Text style={styles.stepDesc}>
-              초기 설정을 통해 기준점을 만들어요
-            </Text>
-          </View>
-          {/* 2단계 */}
-          <View style={styles.stepCard}>
-            <Text style={styles.stepNum}>2</Text>
-            <Text style={styles.stepTitle}>
-              매일 간단한 수면 체크 후, 미니 게임을 플레이해요.
-            </Text>
-            <Text style={styles.stepDesc}>
-              단 2분만에 수면과 인지 능력을 기록해요
-            </Text>
-          </View>
-          {/* 3단계 */}
-          <View style={styles.stepCard}>
-            <Text style={styles.stepNum}>3</Text>
-            <Text style={styles.stepTitle}>
-              수면과 게임 결과의 관계를 확인하고 맞춤 조언을 받으세요.
-            </Text>
+        {/* 1단계 */}
+        <View style={styles.stepCard}>
+          <Text style={styles.stepNum}>1</Text>
+          <Text style={styles.stepTitle}>
+            먼저, 당신의 평소 수면 습관과 현재 인지 능력을 측정해요.
+          </Text>
+          <Text style={styles.stepDesc}>
+            초기 설정을 통해 기준점을 만들어요
+          </Text>
+        </View>
+        {/* 2단계 */}
+        <View style={styles.stepCard}>
+          <Text style={styles.stepNum}>2</Text>
+          <Text style={styles.stepTitle}>
+            매일 간단한 수면 체크 후, 미니 게임을 플레이해요.
+          </Text>
+          <Text style={styles.stepDesc}>
+            단 2분만에 수면과 인지 능력을 기록해요
+          </Text>
+        </View>
+        {/* 3단계 */}
+        <View style={styles.stepCard}>
+          <Text style={styles.stepNum}>3</Text>
+          <Text style={styles.stepTitle}>
+            수면과 게임 결과의 관계를 확인하고 맞춤 조언을 받으세요.
+          </Text>
             <Text style={styles.stepDesc}>
               당신만의 패턴을 발견하고 개선해요
             </Text>
-          </View>
-          
-          <Button
-            title="다음"
-            onPress={handleNext}
-            variant="primary"
-            style={styles.nextButton}
-          />
         </View>
+        
+        <Button
+          title="다음"
+          onPress={handleNext}
+          variant="primary"
+          style={styles.nextButton}
+        />
       </View>
+    </View>
     </Layout>
   );
 };

@@ -127,23 +127,23 @@ export const SurveyPage: React.FC = () => {
     }
   };
 
-   const handleSkip = async () => {
+  const handleSkip = async () => {
      // await AsyncStorage.setItem('sleepSurvey', 'skipped');
-     navigation.navigate('SleepRecord');
-   };
+    navigation.navigate('SleepRecord');
+  };
 
   return (
     <Layout showNavbar={false}>
-      <View style={styles.container}>
-        <Text variant="headlineMedium" style={styles.title}>
-          간단한 설문에 참여해 주세요
-        </Text>
-        <Text variant="bodyLarge" style={styles.desc}>
+    <View style={styles.container}>
+      <Text variant="headlineMedium" style={styles.title}>
+        간단한 설문에 참여해 주세요
+      </Text>
+      <Text variant="bodyLarge" style={styles.desc}>
           {`아래 정보는 통계 및 서비스 개선 목적으로만
 사용됩니다.`}
-        </Text>
+      </Text>
 
-        <Text variant="titleMedium" style={styles.label}>성별</Text>
+      <Text variant="titleMedium" style={styles.label}>성별</Text>
         <CustomDropdown
           items={GENDER_OPTIONS}
           value={gender}
@@ -151,7 +151,7 @@ export const SurveyPage: React.FC = () => {
           placeholder="성별을 선택하세요"
         />
 
-        <Text variant="titleMedium" style={styles.label}>연령대</Text>
+      <Text variant="titleMedium" style={styles.label}>연령대</Text>
         <CustomDropdown
           items={AGE_OPTIONS}
           value={age}
@@ -166,13 +166,13 @@ export const SurveyPage: React.FC = () => {
             variant="outline"
             style={styles.skipBtn}
           />
-          <Button
-            title="제출"
-            onPress={handleSubmit}
-            disabled={!gender || !age || submitting}
-            variant="primary"
-            style={styles.submitBtn}
-          />
+        <Button
+          title="제출"
+          onPress={handleSubmit}
+          disabled={!gender || !age || submitting}
+          variant="primary"
+          style={styles.submitBtn}
+        />
         </View>
       </View>
     </Layout>
