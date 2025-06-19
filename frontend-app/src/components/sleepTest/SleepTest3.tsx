@@ -6,19 +6,18 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import { useSendAllResults, useStartGameSession } from '@/services/testApi';
+import { useSendAllResults } from '@/services/testApi';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { calculateSleepTest3Score } from '@/utils/sleepTestScore';
 import { useSleepTestStore } from '@/store/testStore';
 import { useAuthStore } from '@/store/authStore';
 import { Text } from '@/components/common/Text';
-import { TestSession } from '@/types/cognitive';
-import Toast from 'react-native-toast-message';
 import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
+import useUiStore from '@/store/uiStore';
 
 type RoundInfo = {
   gridSize: number;
@@ -56,7 +55,6 @@ export default function SleepTest3() {
   const squareWidth = Math.min(windowWidth * 0.118, 80);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
-  // 상태관리 객체로 수정해보기
   const [totalStart, setTotalStart] = useState<number | null>(null);
   const [sessionId, setSessionId] = useState<number | null>(null);
   const [selected, setSelected] = useState<number[]>([]);
@@ -68,6 +66,7 @@ export default function SleepTest3() {
 
   const user = useAuthStore(state => state.user);
   const userId = user?.id;
+  const openToast = useUiStore(state => state.openToast);
 
   const [srtSessionId, setSrtSessionId] = useState<number | null>(null);
   const [symbolSessionId, setSymbolSessionId] = useState<number | null>(null);
@@ -75,37 +74,42 @@ export default function SleepTest3() {
 
   function goToSleepTestResult() {
     const { test1, test2, test3 } = useSleepTestStore.getState();
-
-    console.log('전송할 테스트 결과:', { test1, test2, test3 });
+    const sessionId = useSleepTestStore.getState().sessionId;
 
     if (!userId || !test1 || !test2 || !test3) {
-      Toast.show({
-        type: 'error',
-        text1: '결과 전송 실패',
-        text2: '유저 정보 또는 테스트 결과가 없습니다.',
-      });
+      openToast(
+        'error',
+        '결과 전송 실패',
+        '유저 정보 또는 테스트 결과가 없습니다.',
+      );
       return;
     }
 
     const requestBody = {
       userId,
-      cognitiveSession: sessionId,
-      test1,
-      test2,
-      test3,
+      test1: {
+        ...test1,
+        sessionId: sessionId!,
+      },
+      test2: {
+        ...test2,
+        sessionId: sessionId!,
+      },
+      test3: {
+        ...test3,
+        sessionId: sessionId!,
+      },
     };
 
     sendAllResults(requestBody, {
       onSuccess: basicResult => {
-        navigation.navigate('SleepTestResult', { basic: basicResult });
+        navigation.navigate('SleepTestResult', {
+          basic: JSON.stringify(basicResult),
+        });
         resetGame();
       },
       onError: () => {
-        Toast.show({
-          type: 'error',
-          text1: '결과 전송 실패',
-          text2: '서버 오류가 발생했습니다.',
-        });
+        openToast('error', '결과 전송 실패', '서버 오류가 발생했습니다.');
       },
     });
   }
@@ -113,19 +117,6 @@ export default function SleepTest3() {
   function finishShow() {
     setShowPattern(false);
   }
-
-  const { mutateAsync: startSession } = useStartGameSession();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await startSession(3);
-        setSessionId(res.id);
-      } catch (error) {
-        console.error('세션 시작 실패:', error);
-      }
-    })();
-  }, []);
 
   useEffect(() => {
     if (round < rounds.length) {
@@ -187,13 +178,13 @@ export default function SleepTest3() {
   } | null>(null);
 
   useEffect(() => {
-    if (gameEnded && totalStart !== null && sessionId) {
+    if (gameEnded && totalStart !== null) {
       const result = calculateSleepTest3Score(totalCorrect, totalStart);
       setFinalResult({
         ...result,
         totalCorrect,
       });
-      setTest3({ ...result, sessionId });
+      setTest3({ ...result, sessionId: sessionId! });
     }
   }, [gameEnded, totalStart]);
 
@@ -346,6 +337,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
+    lineHeight: 32,
     fontWeight: 'bold',
     paddingBottom: 10,
     color: '#0F1C36',
@@ -384,6 +376,7 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     fontSize: 40,
+    lineHeight: 42,
     fontWeight: 'bold',
     color: '#5A6EA3',
     textShadowColor: '#70707050',

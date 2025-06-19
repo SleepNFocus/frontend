@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { calculateSleepTest2Score } from '@/utils/sleepTestScore';
-import { useStartGameSession } from '@/services/testApi';
 import { useNavigation } from '@react-navigation/native';
 import { useSleepTestStore } from '@/store/testStore';
 import { Button } from '@/components/common/Button';
@@ -35,7 +34,6 @@ export default function SleepTest2() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const shuffledSymbols = useMemo(() => randomArray(RANDOM_SYMBOL), []);
-  const [sessionId, setSessionId] = useState<number | null>(null);
   const [currentSymbol, setCurrentSymbol] = useState<string>('');
   const [clickTimes, setClickTimes] = useState<number[]>([]);
   const [startTime, setStartTime] = useState<number>(0);
@@ -54,37 +52,22 @@ export default function SleepTest2() {
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
   const setTest2 = useSleepTestStore(state => state.setTest2);
+  const sessionId = useSleepTestStore(state => state.sessionId);
 
   function goToSleepTest3Desc() {
     navigation.navigate('SleepTest3Desc');
   }
 
-  const { mutateAsync: startSession } = useStartGameSession();
-
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await startSession(2);
-        setSessionId(res.id);
-      } catch (error) {
-        console.error('세션 시작 실패:', error);
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (gameOver && sessionId) {
+    if (gameOver) {
       const result = calculateSleepTest2Score(
         clickTimes,
         correctCount,
         wrongCount,
       );
-      // [정리 필요] console.log 등 디버깅 코드는 배포 전 반드시 제거해야 함
-      // 이유: 불필요한 콘솔 출력은 성능 저하, 보안 이슈, 로그 오염의 원인이 됨
-      // console.log('결과:', result);
-      setTest2({ ...result, sessionId });
+      setTest2({ ...result, sessionId: sessionId! });
     }
-  }, [gameOver, sessionId]);
+  }, [gameOver]);
 
   useEffect(() => {
     setStart(true);
@@ -141,16 +124,10 @@ export default function SleepTest2() {
     setOneRandomSymbol();
   };
 
-  const avgReactionTime =
-    clickTimes.length === 0
-      ? 0
-      : Math.round(clickTimes.reduce((a, b) => a + b, 0) / clickTimes.length);
-
-  const totalScore = calculateSleepTest2Score(
-    clickTimes,
-    correctCount,
-    wrongCount,
-  ).totalScore;
+  const { avgReactionTime, totalScore } = useMemo(
+    () => calculateSleepTest2Score(clickTimes, correctCount, wrongCount),
+    [clickTimes, correctCount, wrongCount],
+  );
 
   const commaNum = avgReactionTime.toLocaleString();
 
@@ -264,6 +241,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
+    lineHeight: 32,
     fontWeight: 'bold',
     color: '#0F1C36',
     textShadowColor: '#70707050',
@@ -299,6 +277,7 @@ const styles = StyleSheet.create({
   },
   symbol: {
     fontSize: 20,
+    lineHeight: 22,
     textAlign: 'center',
     color: '#0F1C36',
   },
@@ -316,6 +295,7 @@ const styles = StyleSheet.create({
   },
   randomNum: {
     fontSize: 60,
+    lineHeight: 64,
     color: '#0F1C36',
   },
   numContainer: {
@@ -336,22 +316,13 @@ const styles = StyleSheet.create({
   },
   number: {
     fontSize: 22,
+    lineHeight: 24,
     fontWeight: 'bold',
     color: '#0F1C36',
   },
-  startBtn: {
-    backgroundColor: '#4CAF50',
-    paddingHorizontal: 30,
-    paddingVertical: 10,
-    borderRadius: 10,
-  },
-  startText: {
-    fontSize: 20,
-    color: 'white',
-    fontWeight: 'bold',
-  },
   scoreText: {
     fontSize: 40,
+    lineHeight: 42,
     fontWeight: 'bold',
     color: '#5A6EA3',
     textShadowColor: '#70707050',

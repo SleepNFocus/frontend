@@ -22,19 +22,7 @@ export type PatternPayload = {
 
 export type SendAllResultsPayload = {
   userId: string;
-  test1: {
-    avgReactionTime: number;
-    avgScore: number;
-    reactionList: number[];
-  };
-  test2: {
-    correctCount: number;
-    wrongCount: number;
-    totalScore: number;
-  };
-  test3: {
-    totalCorrect: number;
-    finalScore: number;
-    totalTimeSec: number;
-  };
+  test1: SRTPayload;
+  test2: SymbolPayload;
+  test3: PatternPayload;
 };

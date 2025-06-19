@@ -1,4 +1,5 @@
-import { Text } from '@/components/common/Text';import {
+import { Text } from '@/components/common/Text';
+import {
   View,
   Animated,
   StyleSheet,
@@ -106,8 +107,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-    fontSize: 23,
-    marginBottom: 24,
+    fontSize: 24,
+    lineHeight: 28,
     color: '#0F1C36',
     textAlign: 'center',
     textShadowColor: '#70707050',

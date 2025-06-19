@@ -1,50 +1,58 @@
-// src/store/testStore.ts
+import { PatternPayload, SRTPayload, SymbolPayload } from '@/types/test';
 import { create } from 'zustand';
 
 interface SleepTest1Result {
+  sessionId: number;
   avgReactionTime: number;
   avgScore: number;
   reactionList: number[];
-  sessionId: number;
 }
 
 interface SleepTest2Result {
+  sessionId: number;
   reactionTimes: number[];
   correctCount: number;
   wrongCount: number;
   avgReactionTime: number;
   totalScore: number;
-  sessionId: number;
 }
 
 interface SleepTest3Result {
+  sessionId: number;
   totalCorrect: number;
   totalTimeSec: number;
   finalScore: number;
   accuracy: number;
-  sessionId: number;
 }
 
 interface SleepTestStore {
-  test1: SleepTest1Result | null;
-  test2: SleepTest2Result | null;
-  test3: SleepTest3Result | null;
+  sessionId: number | null;
+  setSessionId: (id: number) => void;
 
-  setTest1: (data: SleepTest1Result) => void;
-  setTest2: (data: SleepTest2Result) => void;
-  setTest3: (data: SleepTest3Result) => void;
+  test1: SRTPayload | null;
+  test2: SymbolPayload | null;
+  test3: PatternPayload | null;
+
+  setTest1: (data: SRTPayload) => void;
+  setTest2: (data: SymbolPayload) => void;
+  setTest3: (data: PatternPayload) => void;
 
   resetAll: () => void;
 }
-
-export const useSleepTestStore = create<SleepTestStore>()(set => ({
+export const useSleepTestStore = create<SleepTestStore>(set => ({
+  sessionId: null,
+  setSessionId: (id: number) => set({ sessionId: id }),
   test1: null,
   test2: null,
   test3: null,
-
   setTest1: data => set({ test1: data }),
   setTest2: data => set({ test2: data }),
   setTest3: data => set({ test3: data }),
-
-  resetAll: () => set({ test1: null, test2: null, test3: null }),
+  resetAll: () =>
+    set({
+      sessionId: null,
+      test1: null,
+      test2: null,
+      test3: null,
+    }),
 }));

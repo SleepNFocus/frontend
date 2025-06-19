@@ -1,8 +1,10 @@
+import { PatternPayload, SRTPayload, SymbolPayload } from '@/types/test';
 import { useMutation } from '@tanstack/react-query';
 import { getApiClient } from '@/services/axios';
-import Toast from 'react-native-toast-message';
+import useUiStore from '@/store/uiStore';
 import { AxiosError } from 'axios';
-import { PatternPayload, SRTPayload, SymbolPayload } from '@/types/test';
+
+// const openToast = useUiStore(state => state.openToast);
 
 // 게임 세션 시작 API
 export const startGameSession = async (formatId: number) => {
@@ -16,19 +18,17 @@ export const useStartGameSession = () =>
   useMutation({
     mutationFn: startGameSession,
     onSuccess: () => {
-      Toast.show({
-        type: 'success',
-        text1: '게임 세션 시작 완료!',
-      });
+      const openToast = useUiStore.getState().openToast;
+      openToast('success', '게임 세션 시작 완료!');
     },
     onError: error => {
       const axiosError = error as AxiosError<{ message?: string }>;
-      Toast.show({
-        type: 'error',
-        text1: '게임 세션 시작 실패',
-        text2:
-          axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
-      });
+      const openToast = useUiStore.getState().openToast;
+      openToast(
+        'error',
+        '게임 세션 시작 실패',
+        axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
+      );
     },
   });
 
@@ -41,10 +41,10 @@ export const postSRTResult = async (data: {
 }) => {
   const client = await getApiClient();
   const payload = {
-    cognitive_session: data.cognitiveSession,
+    cognitiveSession: data.cognitiveSession,
     score: data.score,
-    reaction_avg_ms: data.reactionAvgMs,
-    reaction_list: data.reactionList.join(','),
+    reactionAvgMs: data.reactionAvgMs,
+    reactionList: data.reactionList.join(','),
   };
   const res = await client.post('cognitive-statistics/result/srt/', payload);
   return res.data;
@@ -54,16 +54,17 @@ export const usePostSRTResult = () =>
   useMutation({
     mutationFn: postSRTResult,
     onSuccess: () => {
-      Toast.show({ type: 'success', text1: 'SRT 점수 저장 완료!' });
+      const openToast = useUiStore.getState().openToast;
+      openToast('success', 'SRT 점수 저장 완료!');
     },
     onError: error => {
       const axiosError = error as AxiosError<{ message: string }>;
-      Toast.show({
-        type: 'error',
-        text1: 'SRT 점수 전송 실패',
-        text2:
-          axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
-      });
+      const openToast = useUiStore.getState().openToast;
+      openToast(
+        'error',
+        'SRT 점수 전송 실패',
+        axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
+      );
     },
   });
 
@@ -76,10 +77,10 @@ export const postSymbolResult = async (data: {
 }) => {
   const client = await getApiClient();
   const payload = {
-    cognitive_session: data.cognitiveSession,
+    cognitiveSession: data.cognitiveSession,
     score: data.score,
-    symbol_correct: data.symbolCorrect,
-    symbol_accuracy: data.symbolAccuracy,
+    symbolCorrect: data.symbolCorrect,
+    symbolAccuracy: data.symbolAccuracy,
   };
   const res = await client.post('cognitive-statistics/result/symbol/', payload);
   return res.data;
@@ -89,16 +90,18 @@ export const usePostSymbolResult = () =>
   useMutation({
     mutationFn: postSymbolResult,
     onSuccess: () => {
-      Toast.show({ type: 'success', text1: 'Symbol 점수 저장 완료!' });
+      const openToast = useUiStore.getState().openToast;
+      openToast('success', 'Symbol 점수 저장 완료!');
     },
     onError: error => {
       const axiosError = error as AxiosError<{ message: string }>;
-      Toast.show({
-        type: 'error',
-        text1: 'Symbol 점수 전송 실패',
-        text2:
-          axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
-      });
+      const openToast = useUiStore.getState().openToast;
+      openToast(
+        'error',
+        'Symbol 점수 전송 실패',
+
+        axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
+      );
     },
   });
 
@@ -111,10 +114,10 @@ export const postPatternResult = async (data: {
 }) => {
   const client = await getApiClient();
   const payload = {
-    cognitive_session: data.cognitiveSession,
+    cognitiveSession: data.cognitiveSession,
     score: data.score,
-    pattern_correct: data.patternCorrect,
-    pattern_time_sec: data.patternTimeSec,
+    patternCorrect: data.patternCorrect,
+    patternTimeSec: data.patternTimeSec,
   };
   const res = await client.post(
     'cognitive-statistics/result/pattern/',
@@ -127,16 +130,17 @@ export const usePostPatternResult = () =>
   useMutation({
     mutationFn: postPatternResult,
     onSuccess: () => {
-      Toast.show({ type: 'success', text1: 'Pattern 점수 저장 완료!' });
+      const openToast = useUiStore.getState().openToast;
+      openToast('success', 'Pattern 점수 저장 완료!');
     },
     onError: error => {
       const axiosError = error as AxiosError<{ message: string }>;
-      Toast.show({
-        type: 'error',
-        text1: 'Pattern 점수 전송 실패',
-        text2:
-          axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
-      });
+      const openToast = useUiStore.getState().openToast;
+      openToast(
+        'error',
+        'Pattern 점수 전송 실패',
+        axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
+      );
     },
   });
 
@@ -178,7 +182,6 @@ export const sendAllResults = async ({
 
   const client = await getApiClient();
   const res = await client.get('cognitive-statistics/result/basic/');
-  console.log('전체 테스트 기본 결과', res.data);
   return res.data;
 };
 
@@ -186,11 +189,8 @@ export const useSendAllResults = () =>
   useMutation({
     mutationFn: sendAllResults,
     onSuccess: data => {
-      Toast.show({
-        type: 'success',
-        text1: '모든 점수가 저장되고 결과가 조회되었습니다!',
-      });
-      console.log('기본 통계 결과:', data);
+      const openToast = useUiStore.getState().openToast;
+      openToast('success', '모든 점수가 저장되고 결과가 조회되었습니다!');
     },
     onError: error => {
       const axiosError = error as AxiosError<{
@@ -199,11 +199,12 @@ export const useSendAllResults = () =>
       }>;
       const errorMsg =
         axiosError.response?.data?.message || axiosError.response?.data?.detail;
-      Toast.show({
-        type: 'error',
-        text1: '점수 저장 실패',
-        text2: errorMsg || '서버 오류가 발생했습니다.',
-      });
+      const openToast = useUiStore.getState().openToast;
+      openToast(
+        'error',
+        '점수 저장 실패',
+        errorMsg || '서버 오류가 발생했습니다.',
+      );
     },
   });
 
@@ -218,15 +219,16 @@ export const useGetDailySummary = () =>
   useMutation({
     mutationFn: getDailySummary,
     onSuccess: () => {
-      Toast.show({ type: 'success', text1: '결과 요약 불러오기 성공!' });
+      const openToast = useUiStore.getState().openToast;
+      openToast('success', '결과 요약 불러오기 성공!');
     },
     onError: error => {
       const axiosError = error as AxiosError<{ message: string }>;
-      Toast.show({
-        type: 'error',
-        text1: '결과 요약 불러오기 실패',
-        text2:
-          axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
-      });
+      const openToast = useUiStore.getState().openToast;
+      openToast(
+        'error',
+        '결과 요약 불러오기 실패',
+        axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
+      );
     },
   });
