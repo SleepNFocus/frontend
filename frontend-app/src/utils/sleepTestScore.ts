@@ -45,6 +45,16 @@ export function calculateSleepTest3Score(
 ) {
   const totalTimeSec =
     totalStart !== null ? (Date.now() - totalStart) / 1000 : 0;
+
+  if (totalCorrect === 0) {
+    return {
+      totalCorrect,
+      totalTimeSec,
+      finalScore: 0,
+      accuracy: 0,
+    };
+  }
+
   const baseScore = totalCorrect * 5;
   const bonusScore =
     totalTimeSec <= 10
