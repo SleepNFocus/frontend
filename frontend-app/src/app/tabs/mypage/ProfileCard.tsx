@@ -30,7 +30,51 @@ const ProfileCard = () => {
 
   // API 데이터를 우선 사용하고, 없으면 로컬 user 데이터 사용
   const displayName = profile?.nickname || user?.nickname || '-';
-  const displayImage = profile?.profile_image || user?.image_url || 'https://via.placeholder.com/100';
+  
+  // 이미지 URL 처리: URL 디코딩 후 카카오 이미지 URL 추출
+  const processImageUrl = (url: string | null | undefined): string => {
+    if (!url) return 'https://via.placeholder.com/100';
+    
+    try {
+      // URL 디코딩
+      const decodedUrl = decodeURIComponent(url);
+      
+      // 카카오 이미지 URL이 포함되어 있는지 확인
+      if (decodedUrl.includes('k.kakaocdn.net')) {
+        // 잘못 디코딩된 http:/ 부분을 http://로 수정
+        let fixedUrl = decodedUrl.replace('http:/', 'http://');
+        
+        // URL에서 k.kakaocdn.net 부분 찾기
+        const kakaoDomainIndex = fixedUrl.indexOf('k.kakaocdn.net');
+        
+        if (kakaoDomainIndex !== -1) {
+          // k.kakaocdn.net부터 시작하는 부분 추출
+          const kakaoUrl = fixedUrl.substring(kakaoDomainIndex - 8); // 'https://' 부분 포함
+          
+          // URL이 올바른 형식인지 확인하고 수정
+          if (kakaoUrl.startsWith('/http://')) {
+            const correctedUrl = kakaoUrl.substring(1); // 앞의 '/' 제거
+            return correctedUrl;
+          } else if (kakaoUrl.startsWith('https://')) {
+            return kakaoUrl;
+          } else {
+            return 'https://via.placeholder.com/100';
+          }
+        }
+      }
+      
+      // 일반적인 이미지 URL인 경우 그대로 사용
+      if (decodedUrl.startsWith('http')) {
+        return decodedUrl;
+      }
+      
+      return 'https://via.placeholder.com/100';
+    } catch (error) {
+      return 'https://via.placeholder.com/100';
+    }
+  };
+  
+  const displayImage = processImageUrl(profile?.profile_img || user?.image_url);
 
   // tracking_days가 없거나 undefined면 1로 표시
   const trackingDays = mypageMain?.tracking_days || 1;
@@ -50,6 +94,7 @@ const ProfileCard = () => {
       <Image
         source={{ uri: displayImage }}
         style={styles.profileImage}
+        resizeMode="cover"
       />
 
       <Text variant="titleMedium" style={styles.welcomeText}>
