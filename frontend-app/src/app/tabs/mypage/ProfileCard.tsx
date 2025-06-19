@@ -7,7 +7,7 @@ import { RootStackParamList } from '@/App';
 import { Text } from '@/components/common/Text';
 import { Card } from '@/components/common/Card';
 import { colors } from '@/constants/colors';
-import { Ionicons } from '@expo/vector-icons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/common/Button';
 import { useProfile, useMypageMain } from '@/services/mypageApi';
@@ -32,17 +32,17 @@ const ProfileCard = () => {
   const displayName = profile?.nickname || user?.nickname || '-';
   const displayImage = profile?.profile_image || user?.image_url || 'https://via.placeholder.com/100';
 
-  // tracking_days가 0이면 1로 표시
-  const trackingDays = mypageMain?.tracking_days ? Math.max(1, mypageMain.tracking_days) : 1;
+  // tracking_days가 없거나 undefined면 1로 표시
+  const trackingDays = mypageMain?.tracking_days || 1;
 
   return (
     <Card style={styles.wrapper}>
       <View style={styles.headerRow}>
-        <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-          <Ionicons
-            name="settings-outline"
-            size={22}
-            color={colors.mediumGray}
+        <TouchableOpacity onPress={() => navigation.navigate('ProfileDetail')}>
+          <MaterialCommunityIcons
+            name="account-outline"
+            size={24}
+            color={colors.textColor}
           />
         </TouchableOpacity>
       </View>

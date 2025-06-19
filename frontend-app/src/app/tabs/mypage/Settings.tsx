@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, TextInput, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -20,6 +20,110 @@ import { useProfile, useUpdateProfile, useUploadProfileImage } from '@/services/
 import { NotFoundPage } from '@/components/common/NotFoundPage'
 import { ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { GENDER_OPTIONS, AGE_OPTIONS } from '@/constants/constants';
+
+// MBTI 옵션 직접 정의
+const MBTI_OPTIONS = [
+  { label: 'ISTJ', value: 'ISTJ' },
+  { label: 'ISFJ', value: 'ISFJ' },
+  { label: 'INFJ', value: 'INFJ' },
+  { label: 'INTJ', value: 'INTJ' },
+  { label: 'ISTP', value: 'ISTP' },
+  { label: 'ISFP', value: 'ISFP' },
+  { label: 'INFP', value: 'INFP' },
+  { label: 'INTP', value: 'INTP' },
+  { label: 'ESTP', value: 'ESTP' },
+  { label: 'ESFP', value: 'ESFP' },
+  { label: 'ENFP', value: 'ENFP' },
+  { label: 'ENTP', value: 'ENTP' },
+  { label: 'ESTJ', value: 'ESTJ' },
+  { label: 'ESFJ', value: 'ESFJ' },
+  { label: 'ENFJ', value: 'ENFJ' },
+  { label: 'ENTJ', value: 'ENTJ' },
+];
+
+// SurveyPage에서 복사한 CustomDropdown
+interface DropdownItem {
+  label: string;
+  value: string;
+}
+
+interface DropdownProps {
+  items: DropdownItem[];
+  value: string | null;
+  onSelect: (value: string) => void;
+  placeholder: string;
+}
+
+const CustomDropdown: React.FC<DropdownProps> = ({ items, value, onSelect, placeholder }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const selectedItem = items.find(item => item.value === value);
+
+  return (
+    <View style={styles.dropdownContainer}>
+      <TouchableOpacity 
+        style={styles.dropdownButton}
+        onPress={() => setIsVisible(true)}
+      >
+        <Text 
+          style={!selectedItem 
+            ? { ...styles.dropdownButtonText, ...styles.placeholderText, textAlign: 'right' }
+            : { ...styles.dropdownButtonText, textAlign: 'right' }
+          }
+        >
+          {selectedItem ? selectedItem.label : placeholder}
+        </Text>
+        <Text style={styles.dropdownArrow}>▼</Text>
+      </TouchableOpacity>
+
+      <Modal
+        visible={isVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsVisible(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setIsVisible(false)}
+        >
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{placeholder}</Text>
+              <TouchableOpacity onPress={() => setIsVisible(false)}>
+                <Text style={styles.closeButton}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={styles.modalScrollView}>
+              {items.map((item) => (
+                <TouchableOpacity
+                  key={item.value}
+                  style={[
+                    styles.modalItem,
+                    value === item.value && styles.selectedItem
+                  ]}
+                  onPress={() => {
+                    onSelect(item.value);
+                    setIsVisible(false);
+                  }}
+                >
+                  <Text 
+                    style={value === item.value 
+                      ? { ...styles.modalItemText, ...styles.selectedItemText }
+                      : styles.modalItemText
+                    }
+                  >
+                    {item.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </View>
+  );
+};
 
 const Settings = () => {
   const navigation =
@@ -41,6 +145,32 @@ const Settings = () => {
       setProfileImage(user.image_url);
     }
   }, [profile?.profile_image, user?.image_url]);
+
+  // 상태 추가
+  const [nickname, setNickname] = useState(profile?.nickname || '');
+  const [gender, setGender] = useState<string | null>(profile?.gender ?? null);
+  const [age, setAge] = useState<string | null>(profile?.birth_year ? String(profile.birth_year) : null);
+  const [mbti, setMbti] = useState<string | null>(profile?.mbti ?? null);
+
+  // 닉네임 유효성 검사
+  const nicknamevalidity = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{2,20}$/;
+  const isNicknameValid = nicknamevalidity.test(nickname);
+  const isLengthValid = nickname.length >= 2 && nickname.length <= 20;
+  const isCharsetValid = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/.test(nickname);
+
+  let errorMsg = '';
+  if (!isLengthValid && nickname.length > 0) {
+    errorMsg = '닉네임은 2~20자여야 합니다.';
+  } else if (!isCharsetValid && nickname.length > 0) {
+    errorMsg = '닉네임은 한글, 영문, 숫자만 입력 가능합니다.';
+  }
+
+  useEffect(() => {
+    setNickname(profile?.nickname || '');
+    setGender(profile?.gender ?? null);
+    setAge(profile?.birth_year ? String(profile.birth_year) : null);
+    setMbti(profile?.mbti ?? null);
+  }, [profile]);
 
   const handleProfileImageChange = async () => {
     try {
@@ -121,6 +251,28 @@ const Settings = () => {
     }
   };
 
+  // 저장 핸들러
+  const handleSave = async () => {
+    // 닉네임이 입력되어 있고 유효하지 않은 경우에만 에러 표시
+    if (nickname.length > 0 && !isNicknameValid) {
+      openToast('error', errorMsg || '닉네임이 너무 짧거나 잘못된 형식이에요!', '한글, 영문, 숫자 2~20자만 입력 가능해요.');
+      return;
+    }
+
+    try {
+      await updateProfile({
+        nickname,
+        gender: gender || undefined,
+        birth_year: age ? Number(age) : undefined,
+        mbti: mbti || undefined,
+      });
+      openToast('success', '저장 완료', '프로필이 저장되었습니다.');
+      navigation.goBack();
+    } catch (e) {
+      openToast('error', '저장 실패', '프로필 저장에 실패했습니다.');
+    }
+  };
+
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -138,7 +290,7 @@ const Settings = () => {
       <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <BackButton color={colors.deepNavy} />
-          <Text variant="titleMedium" style={styles.headerTitle}>내 정보 수정</Text>
+          <Text variant="titleMedium" style={styles.headerTitle}>프로필 수정</Text>
         </View>
 
         <Card style={styles.profileContainer}>
@@ -157,82 +309,69 @@ const Settings = () => {
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => navigation.navigate('NicknameEdit')}
-            style={{ width: '100%' }}
-          >
-            <Card style={styles.infoCard}>
-              <View style={styles.infoRow}>
-                <Text style={styles.label}>닉네임</Text>
-                <View style={styles.valueRow}>
-                  <Text style={styles.value}>{profile?.nickname ?? '-'}</Text>
-                </View>
-              </View>
-            </Card>
-          </TouchableOpacity>
+          <Card style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>닉네임</Text>
+              <TextInput
+                style={styles.input}
+                value={nickname}
+                onChangeText={setNickname}
+                placeholder="닉네임을 입력하세요"
+                placeholderTextColor={colors.mediumGray}
+              />
+            </View>
+          </Card>
+          {!isNicknameValid && nickname.length > 0 && (
+            <Text style={styles.errorText}>
+              {errorMsg || '닉네임은 한글, 영문, 숫자만 입력 가능합니다.'}
+            </Text>
+          )}
           <Card style={styles.infoCard}>
             <View style={styles.infoRow}>
               <Text style={styles.label}>이메일</Text>
-              <View style={styles.valueRow}>
-                <Text style={styles.value}>{profile?.email ?? '-'}</Text>
-              </View>
+              <Text style={styles.emailTextOnly}>{profile?.email || '-'}</Text>
             </View>
           </Card>
           <Card style={styles.infoCard}>
             <View style={styles.infoRow}>
               <Text style={styles.label}>성별</Text>
-              <View style={styles.valueRow}>
-                <Text style={styles.value}>{profile?.gender ?? '-'}</Text>
-              </View>
+              <CustomDropdown
+                items={GENDER_OPTIONS}
+                value={gender}
+                onSelect={setGender}
+                placeholder="성별"
+              />
             </View>
           </Card>
           <Card style={styles.infoCard}>
             <View style={styles.infoRow}>
-              <Text style={styles.label}>출생년도</Text>
-              <View style={styles.valueRow}>
-                <Text style={styles.value}>{profile?.birth_year ?? '-'}</Text>
-              </View>
+              <Text style={styles.label}>연령대</Text>
+              <CustomDropdown
+                items={AGE_OPTIONS}
+                value={age}
+                onSelect={setAge}
+                placeholder="연령"
+              />
             </View>
           </Card>
           <Card style={styles.infoCard}>
             <View style={styles.infoRow}>
               <Text style={styles.label}>MBTI</Text>
-              <View style={styles.valueRow}>
-                <Text style={styles.value}>{profile?.mbti ?? '-'}</Text>
-              </View>
-            </View>
-          </Card>
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>인지유형</Text>
-              <View style={styles.valueRow}>
-                <Text style={styles.value}>{profile?.cognitive_type_out_label ?? '-'}</Text>
-              </View>
-            </View>
-          </Card>
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>근무패턴</Text>
-              <View style={styles.valueRow}>
-                <Text style={styles.value}>{profile?.work_time_pattern_out_label ?? '-'}</Text>
-              </View>
+              <CustomDropdown
+                items={MBTI_OPTIONS}
+                value={mbti}
+                onSelect={setMbti}
+                placeholder="MBTI"
+              />
             </View>
           </Card>
         </Card>
 
         <View style={styles.buttonGroup}>
-
-        <Button
-  title="로그아웃"
-  variant="primary"
-  onPress={handleLogout}
-  style={styles.button}
-/>
           <Button
-            title="회원탈퇴"
+            title="저장"
             variant="primary"
-            onPress={handleWithdrawal}
+            onPress={handleSave}
             style={styles.button}
           />
         </View>
@@ -362,8 +501,103 @@ const styles = StyleSheet.create({
   buttonGroup: {
     gap: 12,
     marginTop: 12,
+    marginBottom: 24,
   },
   button: {
     width: '100%',
+  },
+  dropdownContainer: {
+    width: '30%',
+    alignSelf: 'flex-end',
+  },
+  dropdownButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: 2,
+    borderWidth: 1,
+    borderColor: colors.mediumLightGray,
+    borderRadius: 8,
+  },
+  dropdownButtonText: {
+    color: colors.textColor,
+    fontSize: 12,
+    flex: 1,
+    textAlign: 'right',
+  },
+  placeholderText: {
+    color: colors.mediumGray,
+  },
+  dropdownArrow: {
+    color: colors.mediumGray,
+    fontSize: 16,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '70%',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.mediumLightGray,
+  },
+  modalTitle: {
+    color: colors.textColor,
+    fontWeight: 'bold',
+  },
+  closeButton: {
+    fontSize: 18,
+    color: colors.mediumGray,
+    padding: 4,
+  },
+  modalScrollView: {
+    maxHeight: 400,
+  },
+  modalItem: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lightGray,
+  },
+  selectedItem: {
+    backgroundColor: colors.lightGray,
+  },
+  modalItemText: {
+    color: colors.textColor,
+  },
+  selectedItemText: {
+    color: colors.softBlue,
+    fontWeight: 'bold',
+  },
+  input: {
+    width: '30%',
+    padding: 4,
+    borderWidth: 1,
+    borderColor: colors.mediumLightGray,
+    borderRadius: 8,
+    textAlign: 'right',
+  },
+  emailTextOnly: {
+    color: colors.mediumGray,
+    fontSize: 16,
+    textAlign: 'right',
+    flexShrink: 1,
+  },
+  errorText: {
+    color: colors.softOrange,
+    fontSize: 12,
+    marginTop: 4,
   },
 });
