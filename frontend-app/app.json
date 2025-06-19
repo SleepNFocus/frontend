@@ -62,11 +62,7 @@
       "typedRoutes": true
     },
     "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "dc3c3756-3fbf-494c-ad5f-6c732ce3f417"
-      }
-    },
-    "owner": "parkjinjin"
+      "router": {}
+    }
   }
 }

@@ -49,76 +49,76 @@ export const PrivacyNotice: React.FC<{ onAgree?: () => void }> = ({
 
   return (
     <Layout showNavbar={false}>
-      <ErrorBoundary>
-        <View style={styles.root}>
-          <ScrollView 
-            style={styles.scrollView}
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-          >
-            <Card style={styles.mainCard}>
-              <Text variant="headlineMedium" style={styles.title}>
-                소중한 정보, 안전하게 활용됩니다.
-              </Text>
-              
-              <Text variant="bodyLarge" style={styles.desc}>
+    <ErrorBoundary>
+      <View style={styles.root}>
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <Card style={styles.mainCard}>
+            <Text variant="headlineMedium" style={styles.title}>
+              소중한 정보, 안전하게 활용됩니다.
+            </Text>
+            
+            <Text variant="bodyLarge" style={styles.desc}>
                 FOCUZ는 사용자가 입력한 수면 데이터와 게임 결과를 수집하여 분석에 활용합니다. 이는 개인화된 수면-인지 기능 관계 분석과 서비스 개선을 위해서만 사용됩니다.
+            </Text>
+
+            <Card style={styles.infoCard}>
+              <Text variant="titleMedium" style={styles.infoTitle}>
+                수집하는 정보:
               </Text>
-
-              <Card style={styles.infoCard}>
-                <Text variant="titleMedium" style={styles.infoTitle}>
-                  수집하는 정보:
+              <View style={styles.listBox}>
+                <Text variant="bodyMedium" style={styles.listItem}>
+                  • 사용자가 입력한 수면 관련 데이터
                 </Text>
-                <View style={styles.listBox}>
-                  <Text variant="bodyMedium" style={styles.listItem}>
-                    • 사용자가 입력한 수면 관련 데이터
-                  </Text>
-                  <Text variant="bodyMedium" style={styles.listItem}>
-                    • 인지 능력 게임의 결과 데이터
-                  </Text>
-                  <Text variant="bodyMedium" style={styles.listItem}>
-                    • 서비스 사용 패턴
-                  </Text>
-                </View>
-              </Card>
+                <Text variant="bodyMedium" style={styles.listItem}>
+                  • 인지 능력 게임의 결과 데이터
+                </Text>
+                <Text variant="bodyMedium" style={styles.listItem}>
+                  • 서비스 사용 패턴
+                </Text>
+              </View>
+            </Card>
 
-              <Text variant="bodyLarge" style={styles.desc}>
+            <Text variant="bodyLarge" style={styles.desc}>
                 모든 데이터는 암호화되어 안전하게 분리되어 보관되며, 제3자에게 제공되지 않습니다.
-              </Text>
+            </Text>
 
-              <View style={styles.linkBox}>
-                <TouchableOpacity onPress={() => Linking.openURL('#')}>
-                  <Text variant="bodyMedium" style={styles.link}>
-                    개인정보처리방침 전문 보기 →
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </Card>
-
-            <Card style={styles.agreeCard}>
-              <View style={styles.agreeBox}>
-                <Checkbox
-                  status={checked ? 'checked' : 'unchecked'}
-                  onPress={() => setChecked(!checked)}
-                  color={colors.softBlue}
-                  uncheckedColor={colors.mediumGray}
-                />
-                <Text variant="bodyLarge" style={styles.agreeText}>
-                  개인정보 수집 및 이용에 동의합니다.
+            <View style={styles.linkBox}>
+              <TouchableOpacity onPress={() => Linking.openURL('#')}>
+                <Text variant="bodyMedium" style={styles.link}>
+                  개인정보처리방침 전문 보기 →
                 </Text>
-              </View>
-              
-              <Button
-                title="동의하고 계속하기"
-                onPress={handleAgree}
-                variant="primary"
-                disabled={!checked}
-                style={styles.button}
+              </TouchableOpacity>
+            </View>
+          </Card>
+
+          <Card style={styles.agreeCard}>
+            <View style={styles.agreeBox}>
+              <Checkbox
+                status={checked ? 'checked' : 'unchecked'}
+                onPress={() => setChecked(!checked)}
+                color={colors.softBlue}
+                uncheckedColor={colors.mediumGray}
               />
-            </Card>
-          </ScrollView>
-        </View>
-      </ErrorBoundary>
+              <Text variant="bodyLarge" style={styles.agreeText}>
+                개인정보 수집 및 이용에 동의합니다.
+              </Text>
+            </View>
+            
+            <Button
+              title="동의하고 계속하기"
+              onPress={handleAgree}
+              variant="primary"
+              disabled={!checked}
+              style={styles.button}
+            />
+          </Card>
+        </ScrollView>
+      </View>
+    </ErrorBoundary>
     </Layout>
   );
 };

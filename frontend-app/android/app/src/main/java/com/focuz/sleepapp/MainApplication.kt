@@ -1,4 +1,4 @@
-package com.focuzapp
+package com.focuz.sleepapp
 
 import android.app.Application
 import android.content.res.Configuration
