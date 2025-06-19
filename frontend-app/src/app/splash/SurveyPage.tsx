@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Modal, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/App';
 import { Button } from '@/components/common/Button';
 import { Text } from '@/components/common/Text';
-import { GENDER_OPTIONS, AGE_OPTIONS } from '@/constants/constants';
+import { GENDER_OPTIONS, BIRTH_YEAR_OPTIONS, MBTI_OPTIONS } from '@/constants/constants';
 import { colors } from '@/constants/colors';
 import { Layout } from '@/components/common/Layout';
 
@@ -99,51 +98,31 @@ const CustomDropdown: React.FC<DropdownProps> = ({ items, value, onSelect, place
 export const SurveyPage: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [gender, setGender] = useState<string | null>(null);
-  const [age, setAge] = useState<string | null>(null);
+  const [birthYear, setBirthYear] = useState<string | null>(null);
+  const [mbti, setMbti] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-// useEffect(() => {
-//   const checkSurvey = async () => {
-//     const survey = await AsyncStorage.getItem('sleepSurvey');
-//     if (survey) {
-//       navigation.replace('SleepRecord');
-//     } else {
-//       setLoading(false);
-//     }
-//   };
-//   checkSurvey();
-// }, [navigation]);
-
-// if (loading) return null;
 
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      // await AsyncStorage.setItem('sleepSurvey', JSON.stringify({ gender, age }));
       navigation.navigate('SleepRecord');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleSkip = async () => {
-     // await AsyncStorage.setItem('sleepSurvey', 'skipped');
-    navigation.navigate('SleepRecord');
-  };
 
   return (
     <Layout showNavbar={false}>
-    <View style={styles.container}>
-      <Text variant="headlineMedium" style={styles.title}>
-        간단한 설문에 참여해 주세요
-      </Text>
-      <Text variant="bodyLarge" style={styles.desc}>
-          {`아래 정보는 통계 및 서비스 개선 목적으로만
-사용됩니다.`}
-      </Text>
+      <View style={styles.container}>
+        <Text variant="headlineMedium" style={styles.title}>
+          간단한 설문에 참여해 주세요
+        </Text>
+        <Text variant="bodyLarge" style={styles.desc}>
+          {`아래 정보는 통계 및 서비스 개선 목적으로만\n사용됩니다.`}
+        </Text>
 
-      <Text variant="titleMedium" style={styles.label}>성별</Text>
+        <Text variant="titleMedium" style={styles.label}>성별</Text>
         <CustomDropdown
           items={GENDER_OPTIONS}
           value={gender}
@@ -151,30 +130,32 @@ export const SurveyPage: React.FC = () => {
           placeholder="성별을 선택하세요"
         />
 
-      <Text variant="titleMedium" style={styles.label}>연령대</Text>
+        <Text variant="titleMedium" style={styles.label}>출생년도</Text>
         <CustomDropdown
-          items={AGE_OPTIONS}
-          value={age}
-          onSelect={setAge}
-          placeholder="연령대를 선택하세요"
+          items={BIRTH_YEAR_OPTIONS}
+          value={birthYear}
+          onSelect={setBirthYear}
+          placeholder="출생년도를 선택하세요"
         />
 
-        <View style={styles.buttonRow}>
-          <Button
-            title="건너뛰기"
-            onPress={handleSkip}
-            variant="outline"
-            style={styles.skipBtn}
-          />
-        <Button
-          title="제출"
-          onPress={handleSubmit}
-          disabled={!gender || !age || submitting}
-          variant="primary"
-          style={styles.submitBtn}
+        <Text variant="titleMedium" style={styles.label}>MBTI</Text>
+        <CustomDropdown
+          items={MBTI_OPTIONS}
+          value={mbti}
+          onSelect={setMbti}
+          placeholder="MBTI를 선택하세요"
         />
+
+       
+          <Button
+            title="제출"
+            onPress={handleSubmit}
+            disabled={!gender || !birthYear || !mbti || submitting}
+            variant="primary"
+            style={styles.submitBtn}
+          />
         </View>
-      </View>
+    
     </Layout>
   );
 };
@@ -278,11 +259,12 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   submitBtn: {
-    flex: 1,
-  },
-  skipBtn: {
-    flex: 1,
-  },
+    alignSelf: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 12,
+  }
+
 });
 
-export default SurveyPage; 
+export default SurveyPage;
