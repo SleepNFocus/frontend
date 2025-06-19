@@ -155,17 +155,17 @@ export const DashboardMain: React.FC = memo(() => {
     );
   }
 
-  if (isError) {
-    return (
-      <ErrorBoundary>
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>
-            데이터 로딩 실패: {(error as Error).message}
-          </Text>
-        </View>
-      </ErrorBoundary>
-    );
-  }
+  // if (isError) {
+  //   return (
+  //     <ErrorBoundary>
+  //       <View style={styles.errorContainer}>
+  //         <Text style={styles.errorText}>
+  //           데이터 로딩 실패: {(error as Error).message}
+  //         </Text>
+  //       </View>
+  //     </ErrorBoundary>
+  //   );
+  // }
 
   return (
     <ErrorBoundary>

@@ -337,6 +337,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
+    lineHeight: 32,
     fontWeight: 'bold',
     paddingBottom: 10,
     color: '#0F1C36',
@@ -375,6 +376,7 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     fontSize: 40,
+    lineHeight: 42,
     fontWeight: 'bold',
     color: '#5A6EA3',
     textShadowColor: '#70707050',

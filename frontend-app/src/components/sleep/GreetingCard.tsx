@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Text } from '@/components/common/Text'; 
+import { Text } from '@/components/common/Text';
 import { colors } from '@/constants/colors';
 
 interface GreetingCardProps {
@@ -26,7 +26,7 @@ export const GreetingCard: React.FC<GreetingCardProps> = ({
 
 const styles = StyleSheet.create({
   root: {
-    marginBottom: 24,
+    gap: 10,
   },
   row: {
     flexDirection: 'row',

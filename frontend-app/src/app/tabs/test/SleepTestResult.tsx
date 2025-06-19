@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
   },
   mainTitle: {
     fontSize: 22,
+    lineHeight: 24,
     fontWeight: 'bold',
     marginBottom: 10,
     color: colors.textColor,
@@ -167,6 +168,7 @@ const styles = StyleSheet.create({
   },
   mainScore: {
     fontSize: 34,
+    lineHeight: 38,
     fontWeight: 'bold',
     color: '#5A6EA3',
     textShadowColor: '#70707050',

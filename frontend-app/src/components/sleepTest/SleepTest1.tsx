@@ -217,6 +217,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: 'bold',
+    lineHeight: 32,
     color: '#0F1C36',
     textShadowColor: '#70707050',
     textShadowOffset: { width: 1, height: 1 },
@@ -253,6 +254,7 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     fontSize: 40,
+    lineHeight: 40,
     color: '#5A6EA3',
     fontWeight: 'bold',
     textShadowColor: '#70707050',

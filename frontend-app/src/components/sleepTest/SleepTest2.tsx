@@ -17,7 +17,7 @@ import { GlassCard } from '../common/Card';
 import { Layout } from '../common/Layout';
 
 const MAX_NUM = 9;
-const TIMER_SECOND = 6000;
+const TIMER_SECOND = 60000;
 const RANDOM_SYMBOL = ['♥︎', '✦', '♠︎', '▲', '◉', '★', '▼', '☗', '◆'];
 
 function randomArray(array: string[]) {
@@ -241,6 +241,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
+    lineHeight: 32,
     fontWeight: 'bold',
     color: '#0F1C36',
     textShadowColor: '#70707050',
@@ -276,6 +277,7 @@ const styles = StyleSheet.create({
   },
   symbol: {
     fontSize: 20,
+    lineHeight: 22,
     textAlign: 'center',
     color: '#0F1C36',
   },
@@ -293,6 +295,7 @@ const styles = StyleSheet.create({
   },
   randomNum: {
     fontSize: 60,
+    lineHeight: 64,
     color: '#0F1C36',
   },
   numContainer: {
@@ -313,11 +316,13 @@ const styles = StyleSheet.create({
   },
   number: {
     fontSize: 22,
+    lineHeight: 24,
     fontWeight: 'bold',
     color: '#0F1C36',
   },
   scoreText: {
     fontSize: 40,
+    lineHeight: 42,
     fontWeight: 'bold',
     color: '#5A6EA3',
     textShadowColor: '#70707050',
