@@ -15,8 +15,7 @@ import { useSaveSleepRecord } from '@/services/sleepApi';
 
 export const SleepRecordPage: React.FC = () => {
   const navigation = useNavigation();
-  const navigation2 =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation2 = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isRecordSaved, setIsRecordSaved] = useState(false);
   const [savedRecordId, setSavedRecordId] = useState<number | null>(null); 
   const { openToast } = useUiStore();
@@ -24,8 +23,6 @@ export const SleepRecordPage: React.FC = () => {
   const saveSleepRecordMutation = useSaveSleepRecord();
 
   const handleSaveRecord = async (recordData: SleepRecordData) => {
-    // [정리 필요] console.log 등 디버깅 코드는 배포 전 반드시 제거해야 함
-    // 이유: 불필요한 콘솔 출력은 성능 저하, 보안 이슈, 로그 오염의 원인이 됨
     try {
       console.log('수면 기록 저장 시작:', recordData);
 
@@ -81,16 +78,13 @@ export const SleepRecordPage: React.FC = () => {
 
             <View style={styles.actionButtons}>
               <Button
-                onPress={startNewRecord}
-                title="새로운 기록 입력"
-                variant="outline"
-                style={styles.secondaryButton}
+                onPress={() => navigation2.navigate('SleepTestMain')}
+                title="반응속도 테스트"
+                style={styles.primaryButton}
               />
               <Button
-                onPress={() => {
-                  navigation2.navigate('SleepTestMain');
-                }}
-                title="테스트"
+                onPress={() => navigation2.navigate('History')}
+                title="기록 목록 보기"
                 variant="outline"
                 style={styles.secondaryButton}
               />
@@ -106,26 +100,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  title: {
-    marginBottom: 24,
-    textAlign: 'center',
-    color: colors.deepNavy,
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
   resultSection: {
     paddingBottom: 32,
   },
   actionButtons: {
     gap: 12,
     marginBottom: 24,
+    marginTop: 16, 
   },
   primaryButton: {
-    paddingVertical: 6,
+    paddingVertical: 12,
     backgroundColor: colors.softBlue,
   },
   secondaryButton: {
-    paddingVertical: 6,
+    paddingVertical: 12,
     borderColor: colors.softBlue,
   },
   loadingContainer: {
