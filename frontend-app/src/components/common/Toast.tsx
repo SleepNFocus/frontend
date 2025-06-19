@@ -21,22 +21,38 @@ interface ToastProps {
   onHide?: () => void;
 }
 
-const Toast: React.FC<ToastProps> = ({ type = 'info', message, subMessage, visible, onHide }) => {
+const Toast: React.FC<ToastProps> = ({
+  type = 'info',
+  message,
+  subMessage,
+  visible,
+  onHide,
+}) => {
   const color = TOAST_COLORS[type] || colors.blue;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (visible) {
-      Animated.timing(fadeAnim, { toValue: 1, duration: 200, useNativeDriver: true }).start();
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
     } else {
-      Animated.timing(fadeAnim, { toValue: 0, duration: 200, useNativeDriver: true }).start(() => onHide?.());
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start(() => onHide?.());
     }
   }, [visible]);
 
   if (!visible) return null;
 
   return (
-    <Animated.View style={[styles.toast, { opacity: fadeAnim, borderLeftColor: color }]}> 
+    <Animated.View
+      style={[styles.toast, { opacity: fadeAnim, borderLeftColor: color }]}
+    >
       <Text style={styles.message}>{message}</Text>
       {subMessage && <Text style={styles.subMessage}>{subMessage}</Text>}
     </Animated.View>
@@ -66,7 +82,7 @@ export const ToastList: React.FC = () => {
 const styles = StyleSheet.create({
   toastList: {
     position: 'absolute',
-    top: 40,
+    top: 60,
     left: 0,
     right: 0,
     zIndex: 9999,
@@ -90,4 +106,4 @@ const styles = StyleSheet.create({
   subMessage: { color: '#888', marginTop: 2, fontSize: 12 },
 });
 
-export default Toast; 
+export default Toast;

@@ -12,12 +12,12 @@ import { calculateSleepTest3Score } from '@/utils/sleepTestScore';
 import { useSleepTestStore } from '@/store/testStore';
 import { useAuthStore } from '@/store/authStore';
 import { Text } from '@/components/common/Text';
-import Toast from 'react-native-toast-message';
 import { useNavigation } from 'expo-router';
 import { RootStackParamList } from '@/App';
 import { GlassCard } from '../common/Card';
 import { Button } from '../common/Button';
 import { Layout } from '../common/Layout';
+import useUiStore from '@/store/uiStore';
 
 type RoundInfo = {
   gridSize: number;
@@ -66,6 +66,7 @@ export default function SleepTest3() {
 
   const user = useAuthStore(state => state.user);
   const userId = user?.id;
+  const openToast = useUiStore(state => state.openToast);
 
   const [srtSessionId, setSrtSessionId] = useState<number | null>(null);
   const [symbolSessionId, setSymbolSessionId] = useState<number | null>(null);
@@ -76,11 +77,11 @@ export default function SleepTest3() {
     const sessionId = useSleepTestStore.getState().sessionId;
 
     if (!userId || !test1 || !test2 || !test3) {
-      Toast.show({
-        type: 'error',
-        text1: '결과 전송 실패',
-        text2: '유저 정보 또는 테스트 결과가 없습니다.',
-      });
+      openToast(
+        'error',
+        '결과 전송 실패',
+        '유저 정보 또는 테스트 결과가 없습니다.',
+      );
       return;
     }
 
@@ -108,11 +109,7 @@ export default function SleepTest3() {
         resetGame();
       },
       onError: () => {
-        Toast.show({
-          type: 'error',
-          text1: '결과 전송 실패',
-          text2: '서버 오류가 발생했습니다.',
-        });
+        openToast('error', '결과 전송 실패', '서버 오류가 발생했습니다.');
       },
     });
   }
