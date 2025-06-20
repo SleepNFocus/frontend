@@ -8,7 +8,7 @@ import { Button } from '@/components/common/Button';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAIRecommendation } from '@/hooks/useAIInsight';
-import { AISleepTips } from '@/components/sleep/AISleepTips'; 
+import { AISleepTips } from '@/components/sleep/AISleepTips';
 
 type RootStackParamList = {
   AISleepTips: { date: string; score: number };
@@ -18,13 +18,31 @@ type RootStackParamList = {
 type AISleepTipsRouteProp = RouteProp<RootStackParamList, 'AISleepTips'>;
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-export const AISleepTipsScreen: React.FC = () => {
+interface AISleepTipsScreenProps {
+  date?: string;
+  score?: number;
+  showNavigation?: boolean;
+}
+
+export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
+  date: propDate,
+  score: propScore,
+  showNavigation = true,
+}) => {
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<AISleepTipsRouteProp>();
-  
-  const { date, score } = route.params;
-  
-  const { data: aiData, isLoading, error, refetch } = useAIRecommendation({ date });
+
+  // props로 받은 값이 있으면 사용, 없으면 route params 사용
+  const date =
+    propDate || route.params?.date || new Date().toISOString().split('T')[0];
+  const score = propScore || route.params?.score || 75;
+
+  const {
+    data: aiData,
+    isLoading,
+    error,
+    refetch,
+  } = useAIRecommendation({ date });
 
   const getScoreColor = (score: number) => {
     if (score >= 90) return colors.scoreExcellent || colors.softBlue;
@@ -45,7 +63,7 @@ export const AISleepTipsScreen: React.FC = () => {
       .split(/\n+|[0-9]+\.|•/)
       .map(tip => tip.trim())
       .filter(tip => tip.length > 10);
-    
+
     return tips.length > 0 ? tips : [recommendation];
   };
 
@@ -53,7 +71,12 @@ export const AISleepTipsScreen: React.FC = () => {
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <Card style={[styles.headerCard, { borderLeftColor: getScoreColor(score) }]}>
+          <Card
+            style={[
+              styles.headerCard,
+              { borderLeftColor: getScoreColor(score) },
+            ]}
+          >
             <Card.Content>
               <View style={styles.headerContent}>
                 <Text style={styles.headerEmoji}>{getScoreEmoji(score)}</Text>
@@ -77,7 +100,8 @@ export const AISleepTipsScreen: React.FC = () => {
                   AI가 당신의 수면을 분석하고 있습니다
                 </Text>
                 <Text variant="bodyMedium" style={styles.loadingSubtitle}>
-                  {score}점 수면 기록을 바탕으로 개인화된 인사이트를 생성 중입니다...
+                  {score}점 수면 기록을 바탕으로 개인화된 인사이트를 생성
+                  중입니다...
                 </Text>
               </View>
             </Card.Content>
@@ -91,7 +115,12 @@ export const AISleepTipsScreen: React.FC = () => {
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <Card style={[styles.headerCard, { borderLeftColor: getScoreColor(score) }]}>
+          <Card
+            style={[
+              styles.headerCard,
+              { borderLeftColor: getScoreColor(score) },
+            ]}
+          >
             <Card.Content>
               <View style={styles.headerContent}>
                 <Text style={styles.headerEmoji}>{getScoreEmoji(score)}</Text>
@@ -116,8 +145,8 @@ export const AISleepTipsScreen: React.FC = () => {
                 <Text variant="bodyMedium" style={styles.errorMessage}>
                   네트워크 연결을 확인하거나 잠시 후 다시 시도해주세요.
                 </Text>
-                <Button 
-                  title="다시 시도" 
+                <Button
+                  title="다시 시도"
                   onPress={() => refetch()}
                   style={styles.retryButton}
                 />
@@ -125,12 +154,12 @@ export const AISleepTipsScreen: React.FC = () => {
             </Card.Content>
           </Card>
 
-          <AISleepTips 
+          <AISleepTips
             tips={[
-              "규칙적인 수면 시간을 유지하세요",
-              "잠들기 1시간 전에는 전자기기 사용을 중단하세요", 
-              "침실을 시원하고 어둡게 유지하세요",
-              "카페인은 오후 2시 이후 피하세요"
+              '규칙적인 수면 시간을 유지하세요',
+              '잠들기 1시간 전에는 전자기기 사용을 중단하세요',
+              '침실을 시원하고 어둡게 유지하세요',
+              '카페인은 오후 2시 이후 피하세요',
             ]}
           />
         </ScrollView>
@@ -143,7 +172,9 @@ export const AISleepTipsScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Card style={[styles.headerCard, { borderLeftColor: getScoreColor(score) }]}>
+        <Card
+          style={[styles.headerCard, { borderLeftColor: getScoreColor(score) }]}
+        >
           <Card.Content>
             <View style={styles.headerContent}>
               <Text style={styles.headerEmoji}>{getScoreEmoji(score)}</Text>
@@ -174,13 +205,15 @@ export const AISleepTipsScreen: React.FC = () => {
 
         <AISleepTips tips={aiTips} />
 
-        <View style={styles.buttonContainer}>
-          <Button
-            title="새 수면 기록 추가"
-            onPress={() => navigation.navigate('SleepRecord')}
-            style={styles.actionButton}
-          />
-        </View>
+        {showNavigation && (
+          <View style={styles.buttonContainer}>
+            <Button
+              title="새 수면 기록 추가"
+              onPress={() => navigation.navigate('SleepRecord')}
+              style={styles.actionButton}
+            />
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -194,7 +227,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     padding: 16,
   },
-  
+
   headerCard: {
     marginBottom: 16,
     borderLeftWidth: 4,
