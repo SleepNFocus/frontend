@@ -25,14 +25,8 @@ export const SleepRecordPage: React.FC = () => {
 
   const saveSleepRecordMutation = useSaveSleepRecord();
 
-  // 🔍 savedDate 상태 확인
-  console.log('🔍 현재 savedDate:', savedDate);
-  console.log('🔍 savedDate || "":', savedDate || '');
-  console.log('🔍 isRecordSaved:', isRecordSaved);
-
   // savedDate가 있을 때만 useSleepRecord 호출
   const shouldFetchData = !!savedDate && isRecordSaved;
-  console.log('🔍 shouldFetchData:', shouldFetchData);
 
   const {
     data: sleepData,
@@ -41,26 +35,11 @@ export const SleepRecordPage: React.FC = () => {
     refetch,
   } = useSleepRecord(savedDate || '');
 
-  // 🔍 React Query 상태 변화 추적
-  console.log('🔍 React Query 상태 변화:');
-  console.log('  - savedDate:', savedDate);
-  console.log('  - isLoadingData:', isLoadingData);
-  console.log('  - sleepData:', sleepData);
-  console.log('  - sleepDataError:', sleepDataError);
-  console.log('  - sleepData 타입:', typeof sleepData);
-  console.log('  - sleepData가 존재?:', !!sleepData);
-
   // savedDate가 변경될 때마다 데이터 상태 확인
   useEffect(() => {
-    console.log('🔄 useEffect 실행 - savedDate 변경됨:', savedDate);
-    console.log('🔄 isRecordSaved:', isRecordSaved);
-
     if (savedDate && isRecordSaved) {
-      console.log('🔄 조건 만족 - 데이터 새로고침 시도');
-
       // 간단한 refetch 시도
       setTimeout(() => {
-        console.log('🔄 refetch 실행');
         refetch();
       }, 1000);
     }
@@ -139,27 +118,17 @@ export const SleepRecordPage: React.FC = () => {
 
   const handleSaveRecord = async (recordData: SleepRecordData) => {
     try {
-      console.log('💾 수면 기록 저장 시작:', recordData);
-      console.log('💾 저장할 날짜:', recordData.selectedDate);
-
       const result = await saveSleepRecordMutation.mutateAsync(recordData);
-      console.log('💾 저장 성공:', result);
 
       // 상태 업데이트
-      console.log('💾 상태 업데이트 전 - savedDate:', savedDate);
       setSavedDate(recordData.selectedDate);
       setIsRecordSaved(true);
-      console.log(
-        '💾 상태 업데이트 후 - 설정한 savedDate:',
-        recordData.selectedDate,
-      );
 
       openToast(
         'success',
         `수면 기록이 성공적으로 저장되었습니다. (날짜: ${recordData.selectedDate})`,
       );
     } catch (error) {
-      console.error('💾 저장 실패:', error);
       const errorMessage =
         error instanceof Error
           ? error.message
@@ -270,7 +239,7 @@ export const SleepRecordPage: React.FC = () => {
                   <Button
                     title="🤖 AI 맞춤 분석 보기"
                     onPress={() =>
-                      navigation.navigate('AISleepTipsScreen', {
+                      navigation.navigate('Insight', {
                         date: sleepData.date,
                         score: sleepData.score || 0,
                       })
@@ -298,69 +267,6 @@ export const SleepRecordPage: React.FC = () => {
             <View style={styles.actionButtons}>
               {/* 🧪 임시 테스트 버튼 */}
               <Button
-                onPress={async () => {
-                  console.log('🧪 테스트 버튼 클릭 - 토큰 상태 상세 확인');
-
-                  // AsyncStorage 토큰 확인
-                  const AsyncStorage = await import(
-                    '@react-native-async-storage/async-storage'
-                  );
-                  const userToken =
-                    await AsyncStorage.default.getItem('userToken');
-                  const accessToken =
-                    await AsyncStorage.default.getItem('accessToken');
-                  const refreshToken =
-                    await AsyncStorage.default.getItem('refreshToken');
-
-                  console.log('🔍 AsyncStorage 토큰들:');
-                  console.log(
-                    '  - userToken:',
-                    userToken ? `${userToken.substring(0, 30)}...` : null,
-                  );
-                  console.log(
-                    '  - accessToken:',
-                    accessToken ? `${accessToken.substring(0, 30)}...` : null,
-                  );
-                  console.log(
-                    '  - refreshToken:',
-                    refreshToken ? `${refreshToken.substring(0, 30)}...` : null,
-                  );
-
-                  // 토큰 디코딩해서 만료 시간 확인
-                  if (userToken) {
-                    try {
-                      const payload = JSON.parse(atob(userToken.split('.')[1]));
-                      const currentTime = Math.floor(Date.now() / 1000);
-                      console.log('🔍 토큰 정보:');
-                      console.log(
-                        '  - 발급 시간:',
-                        new Date(payload.iat * 1000),
-                      );
-                      console.log(
-                        '  - 만료 시간:',
-                        new Date(payload.exp * 1000),
-                      );
-                      console.log(
-                        '  - 현재 시간:',
-                        new Date(currentTime * 1000),
-                      );
-                      console.log(
-                        '  - 토큰 만료됨?:',
-                        payload.exp < currentTime,
-                      );
-                    } catch (e) {
-                      console.log('🔍 토큰 디코딩 실패:', e);
-                    }
-                  }
-
-                  setSavedDate('2025-06-20');
-                  setIsRecordSaved(true);
-                }}
-                title="🧪 토큰 상태 상세 확인"
-                style={{ backgroundColor: '#e74c3c', marginBottom: 12 }}
-              />
-
-              <Button
                 onPress={() => navigation.navigate('SleepTestMain')}
                 title="반응속도 테스트"
                 style={styles.primaryButton}
@@ -368,12 +274,6 @@ export const SleepRecordPage: React.FC = () => {
               <Button
                 onPress={() => navigation.navigate('History')}
                 title="기록 목록 보기"
-                variant="outline"
-                style={styles.secondaryButton}
-              />
-              <Button
-                onPress={startNewRecord}
-                title="새 수면 기록 추가"
                 variant="outline"
                 style={styles.secondaryButton}
               />
@@ -395,6 +295,7 @@ const styles = StyleSheet.create({
   card: {
     marginVertical: 16,
     borderLeftWidth: 4,
+    backgroundColor: '#ffffff',
   },
   header: {
     flexDirection: 'row',
@@ -402,7 +303,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   emoji: {
-    fontSize: 32,
+    fontSize: 36,
+    lineHeight: 40,
     marginRight: 12,
   },
   headerText: {
@@ -419,7 +321,6 @@ const styles = StyleSheet.create({
   summarySection: {
     marginBottom: 16,
     padding: 12,
-    backgroundColor: colors.lightGray || '#f5f5f5',
     borderRadius: 8,
   },
   summaryTitle: {

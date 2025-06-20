@@ -52,7 +52,7 @@ export type RootStackParamList = {
   SurveyPage: undefined;
   DailyCheck: undefined;
   History: undefined;
-  Insight: undefined;
+  Insight: { date?: string; score?: number };
   More: undefined;
   SurveyStep1: undefined;
   TestSurvey: undefined;

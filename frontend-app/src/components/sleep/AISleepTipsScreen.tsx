@@ -9,6 +9,7 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAIRecommendation } from '@/hooks/useAIInsight';
 import { AISleepTips } from '@/components/sleep/AISleepTips';
+import BackButton from '../common/BackButton';
 
 type RootStackParamList = {
   AISleepTips: { date: string; score: number };
@@ -79,6 +80,7 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
           >
             <Card.Content>
               <View style={styles.headerContent}>
+                <BackButton color={colors.deepNavy} />
                 <Text style={styles.headerEmoji}>{getScoreEmoji(score)}</Text>
                 <View style={styles.headerText}>
                   <Text variant="headlineSmall" style={styles.headerTitle}>
@@ -204,16 +206,6 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
         </Card>
 
         <AISleepTips tips={aiTips} />
-
-        {showNavigation && (
-          <View style={styles.buttonContainer}>
-            <Button
-              title="새 수면 기록 추가"
-              onPress={() => navigation.navigate('SleepRecord')}
-              style={styles.actionButton}
-            />
-          </View>
-        )}
       </ScrollView>
     </View>
   );
@@ -222,15 +214,14 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollContainer: {
     padding: 16,
   },
-
   headerCard: {
     marginBottom: 16,
     borderLeftWidth: 4,
+    backgroundColor: '#ffffff',
   },
   headerContent: {
     flexDirection: 'row',
@@ -239,6 +230,7 @@ const styles = StyleSheet.create({
   headerEmoji: {
     fontSize: 32,
     marginRight: 12,
+    lineHeight: 38,
   },
   headerText: {
     flex: 1,
@@ -256,13 +248,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderLeftWidth: 4,
     borderLeftColor: colors.softBlue,
+    backgroundColor: '#ffffff',
   },
   aiAnalysisTitle: {
     color: colors.deepNavy,
     marginBottom: 12,
   },
   aiAnalysisContent: {
-    backgroundColor: colors.lightGray,
     borderRadius: 12,
     padding: 16,
   },
