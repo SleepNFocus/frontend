@@ -24,17 +24,22 @@ export const SleepRecordPage: React.FC = () => {
   const queryClient = useQueryClient();
 
   const saveSleepRecordMutation = useSaveSleepRecord();
-  
+
   // 🔍 savedDate 상태 확인
   console.log('🔍 현재 savedDate:', savedDate);
   console.log('🔍 savedDate || "":', savedDate || '');
   console.log('🔍 isRecordSaved:', isRecordSaved);
-  
+
   // savedDate가 있을 때만 useSleepRecord 호출
   const shouldFetchData = !!savedDate && isRecordSaved;
   console.log('🔍 shouldFetchData:', shouldFetchData);
-  
-  const { data: sleepData, isLoading: isLoadingData, error: sleepDataError, refetch } = useSleepRecord(savedDate || '');
+
+  const {
+    data: sleepData,
+    isLoading: isLoadingData,
+    error: sleepDataError,
+    refetch,
+  } = useSleepRecord(savedDate || '');
 
   // 🔍 React Query 상태 변화 추적
   console.log('🔍 React Query 상태 변화:');
@@ -49,10 +54,10 @@ export const SleepRecordPage: React.FC = () => {
   useEffect(() => {
     console.log('🔄 useEffect 실행 - savedDate 변경됨:', savedDate);
     console.log('🔄 isRecordSaved:', isRecordSaved);
-    
+
     if (savedDate && isRecordSaved) {
       console.log('🔄 조건 만족 - 데이터 새로고침 시도');
-      
+
       // 간단한 refetch 시도
       setTimeout(() => {
         console.log('🔄 refetch 실행');
@@ -66,7 +71,8 @@ export const SleepRecordPage: React.FC = () => {
       return {
         emoji: '🌟',
         title: '최고의 수면!',
-        message: '완벽한 수면 습관을 가지고 계시는군요! 오늘 하루도 활기차게 시작하세요!',
+        message:
+          '완벽한 수면 습관을 가지고 계시는군요! 오늘 하루도 활기차게 시작하세요!',
         color: colors.softBlue,
       };
     }
@@ -74,7 +80,8 @@ export const SleepRecordPage: React.FC = () => {
       return {
         emoji: '😊',
         title: '좋은 수면!',
-        message: '건강한 수면 패턴을 잘 유지하고 계세요. 작은 개선으로 더 완벽해질 수 있어요.',
+        message:
+          '건강한 수면 패턴을 잘 유지하고 계세요. 작은 개선으로 더 완벽해질 수 있어요.',
         color: colors.softBlue,
       };
     }
@@ -101,22 +108,32 @@ export const SleepRecordPage: React.FC = () => {
   };
 
   const formatSleepLatency = (latency: number) => {
-    switch(latency) {
-      case 1: return '15분 이하';
-      case 2: return '15-30분';
-      case 3: return '30분 초과';
-      default: return '알 수 없음';
+    switch (latency) {
+      case 1:
+        return '15분 이하';
+      case 2:
+        return '15-30분';
+      case 3:
+        return '30분 초과';
+      default:
+        return '알 수 없음';
     }
   };
 
   const formatSubjectiveQuality = (quality: number) => {
-    switch(quality) {
-      case 5: return '매우 개운함';
-      case 4: return '개운함';
-      case 3: return '보통';
-      case 2: return '약간 피곤함';
-      case 1: return '매우 피곤함';
-      default: return '알 수 없음';
+    switch (quality) {
+      case 5:
+        return '매우 개운함';
+      case 4:
+        return '개운함';
+      case 3:
+        return '보통';
+      case 2:
+        return '약간 피곤함';
+      case 1:
+        return '매우 피곤함';
+      default:
+        return '알 수 없음';
     }
   };
 
@@ -124,15 +141,18 @@ export const SleepRecordPage: React.FC = () => {
     try {
       console.log('💾 수면 기록 저장 시작:', recordData);
       console.log('💾 저장할 날짜:', recordData.selectedDate);
-      
+
       const result = await saveSleepRecordMutation.mutateAsync(recordData);
       console.log('💾 저장 성공:', result);
-      
+
       // 상태 업데이트
       console.log('💾 상태 업데이트 전 - savedDate:', savedDate);
       setSavedDate(recordData.selectedDate);
       setIsRecordSaved(true);
-      console.log('💾 상태 업데이트 후 - 설정한 savedDate:', recordData.selectedDate);
+      console.log(
+        '💾 상태 업데이트 후 - 설정한 savedDate:',
+        recordData.selectedDate,
+      );
 
       openToast(
         'success',
@@ -188,12 +208,24 @@ export const SleepRecordPage: React.FC = () => {
                 </Card.Content>
               </Card>
             ) : savedDate && sleepData ? (
-              <Card style={[styles.card, { borderLeftColor: getFeedback(sleepData.score || 0).color }]}>
+              <Card
+                style={[
+                  styles.card,
+                  { borderLeftColor: getFeedback(sleepData.score || 0).color },
+                ]}
+              >
                 <Card.Content>
                   <View style={styles.header}>
-                    <Text style={styles.emoji}>{getFeedback(sleepData.score || 0).emoji}</Text>
+                    <Text style={styles.emoji}>
+                      {getFeedback(sleepData.score || 0).emoji}
+                    </Text>
                     <View style={styles.headerText}>
-                      <Text variant="titleLarge" style={{ color: getFeedback(sleepData.score || 0).color }}>
+                      <Text
+                        variant="titleLarge"
+                        style={{
+                          color: getFeedback(sleepData.score || 0).color,
+                        }}
+                      >
                         {getFeedback(sleepData.score || 0).title}
                       </Text>
                       <Text variant="headlineSmall" style={styles.score}>
@@ -212,31 +244,37 @@ export const SleepRecordPage: React.FC = () => {
                       수면 요약 ({sleepData.date}):
                     </Text>
                     <Text variant="bodySmall" style={styles.summaryItem}>
-                      • 수면시간: {formatSleepDuration(sleepData.sleep_duration)}
+                      • 수면시간:{' '}
+                      {formatSleepDuration(sleepData.sleep_duration)}
                     </Text>
                     <Text variant="bodySmall" style={styles.summaryItem}>
-                      • 수면 만족도: {formatSubjectiveQuality(sleepData.subjective_quality)}
+                      • 수면 만족도:{' '}
+                      {formatSubjectiveQuality(sleepData.subjective_quality)}
                     </Text>
                     <Text variant="bodySmall" style={styles.summaryItem}>
-                      • 잠들기까지: {formatSleepLatency(sleepData.sleep_latency)}
+                      • 잠들기까지:{' '}
+                      {formatSleepLatency(sleepData.sleep_latency)}
                     </Text>
                     <Text variant="bodySmall" style={styles.summaryItem}>
                       • 야간 각성: {sleepData.wake_count}회
                     </Text>
-                    {sleepData.disturb_factors && sleepData.disturb_factors.length > 0 && (
-                      <Text variant="bodySmall" style={styles.summaryItem}>
-                        • 방해요인: {sleepData.disturb_factors.join(', ')}
-                      </Text>
-                    )}
+                    {sleepData.disturb_factors &&
+                      sleepData.disturb_factors.length > 0 && (
+                        <Text variant="bodySmall" style={styles.summaryItem}>
+                          • 방해요인: {sleepData.disturb_factors.join(', ')}
+                        </Text>
+                      )}
                   </View>
 
                   {/* AI 분석 버튼 */}
                   <Button
                     title="🤖 AI 맞춤 분석 보기"
-                    onPress={() => navigation.navigate('AISleepTips', { 
-                      date: sleepData.date, 
-                      score: sleepData.score || 0
-                    })}
+                    onPress={() =>
+                      navigation.navigate('AISleepTipsScreen', {
+                        date: sleepData.date,
+                        score: sleepData.score || 0,
+                      })
+                    }
                     style={styles.aiButton}
                   />
                 </Card.Content>
@@ -262,40 +300,66 @@ export const SleepRecordPage: React.FC = () => {
               <Button
                 onPress={async () => {
                   console.log('🧪 테스트 버튼 클릭 - 토큰 상태 상세 확인');
-                  
+
                   // AsyncStorage 토큰 확인
-                  const AsyncStorage = await import('@react-native-async-storage/async-storage');
-                  const userToken = await AsyncStorage.default.getItem('userToken');
-                  const accessToken = await AsyncStorage.default.getItem('accessToken');
-                  const refreshToken = await AsyncStorage.default.getItem('refreshToken');
-                  
+                  const AsyncStorage = await import(
+                    '@react-native-async-storage/async-storage'
+                  );
+                  const userToken =
+                    await AsyncStorage.default.getItem('userToken');
+                  const accessToken =
+                    await AsyncStorage.default.getItem('accessToken');
+                  const refreshToken =
+                    await AsyncStorage.default.getItem('refreshToken');
+
                   console.log('🔍 AsyncStorage 토큰들:');
-                  console.log('  - userToken:', userToken ? `${userToken.substring(0, 30)}...` : null);
-                  console.log('  - accessToken:', accessToken ? `${accessToken.substring(0, 30)}...` : null);
-                  console.log('  - refreshToken:', refreshToken ? `${refreshToken.substring(0, 30)}...` : null);
-                  
+                  console.log(
+                    '  - userToken:',
+                    userToken ? `${userToken.substring(0, 30)}...` : null,
+                  );
+                  console.log(
+                    '  - accessToken:',
+                    accessToken ? `${accessToken.substring(0, 30)}...` : null,
+                  );
+                  console.log(
+                    '  - refreshToken:',
+                    refreshToken ? `${refreshToken.substring(0, 30)}...` : null,
+                  );
+
                   // 토큰 디코딩해서 만료 시간 확인
                   if (userToken) {
                     try {
                       const payload = JSON.parse(atob(userToken.split('.')[1]));
                       const currentTime = Math.floor(Date.now() / 1000);
                       console.log('🔍 토큰 정보:');
-                      console.log('  - 발급 시간:', new Date(payload.iat * 1000));
-                      console.log('  - 만료 시간:', new Date(payload.exp * 1000));
-                      console.log('  - 현재 시간:', new Date(currentTime * 1000));
-                      console.log('  - 토큰 만료됨?:', payload.exp < currentTime);
+                      console.log(
+                        '  - 발급 시간:',
+                        new Date(payload.iat * 1000),
+                      );
+                      console.log(
+                        '  - 만료 시간:',
+                        new Date(payload.exp * 1000),
+                      );
+                      console.log(
+                        '  - 현재 시간:',
+                        new Date(currentTime * 1000),
+                      );
+                      console.log(
+                        '  - 토큰 만료됨?:',
+                        payload.exp < currentTime,
+                      );
                     } catch (e) {
                       console.log('🔍 토큰 디코딩 실패:', e);
                     }
                   }
-                  
+
                   setSavedDate('2025-06-20');
                   setIsRecordSaved(true);
                 }}
                 title="🧪 토큰 상태 상세 확인"
                 style={{ backgroundColor: '#e74c3c', marginBottom: 12 }}
               />
-              
+
               <Button
                 onPress={() => navigation.navigate('SleepTestMain')}
                 title="반응속도 테스트"

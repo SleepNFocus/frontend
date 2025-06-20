@@ -77,7 +77,7 @@ export type RootStackParamList = {
   PrivacyNotice: undefined;
   DailyCheckScreen: undefined;
   NotFound: undefined;
-  AISleepTips: { date: string; score: number };
+  AISleepTipsScreen: { date: string; score: number };
   Survey: undefined;
   OAuthCallback: { code: string };
   KakaoLoginWebView: undefined;
@@ -179,7 +179,7 @@ export default function App() {
               <Stack.Screen name="SocialLogin" component={SocialLogin} />
               <Stack.Screen name="SleepRecord" component={SleepRecordPage} />
               <Stack.Screen
-                name="AISleepTips"
+                name="AISleepTipsScreen"
                 component={AISleepTipsScreen}
                 options={{ headerShown: true, title: 'AI 수면 분석' }}
               />
