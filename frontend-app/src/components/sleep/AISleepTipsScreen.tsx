@@ -18,11 +18,24 @@ type RootStackParamList = {
 type AISleepTipsRouteProp = RouteProp<RootStackParamList, 'AISleepTips'>;
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-export const AISleepTipsScreen: React.FC = () => {
+interface AISleepTipsScreenProps {
+  date?: string;
+  score?: number;
+  showNavigation?: boolean;
+}
+
+export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
+  date: propDate,
+  score: propScore,
+  showNavigation = true,
+}) => {
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<AISleepTipsRouteProp>();
 
-  const { date, score } = route.params;
+  // props로 받은 값이 있으면 사용, 없으면 route params 사용
+  const date =
+    propDate || route.params?.date || new Date().toISOString().split('T')[0];
+  const score = propScore || route.params?.score || 75;
 
   const {
     data: aiData,
@@ -192,13 +205,15 @@ export const AISleepTipsScreen: React.FC = () => {
 
         <AISleepTips tips={aiTips} />
 
-        <View style={styles.buttonContainer}>
-          <Button
-            title="새 수면 기록 추가"
-            onPress={() => navigation.navigate('SleepRecord')}
-            style={styles.actionButton}
-          />
-        </View>
+        {showNavigation && (
+          <View style={styles.buttonContainer}>
+            <Button
+              title="새 수면 기록 추가"
+              onPress={() => navigation.navigate('SleepRecord')}
+              style={styles.actionButton}
+            />
+          </View>
+        )}
       </ScrollView>
     </View>
   );
