@@ -4,8 +4,6 @@ import { getApiClient } from '@/services/axios';
 import useUiStore from '@/store/uiStore';
 import { AxiosError } from 'axios';
 
-// const openToast = useUiStore(state => state.openToast);
-
 // 게임 세션 시작 API
 export const startGameSession = async (formatId: number) => {
   const client = await getApiClient();
@@ -74,6 +72,7 @@ export const postSymbolResult = async (data: {
   score: number;
   symbolCorrect: number;
   symbolAccuracy: number;
+  reactionTimes: number[];
 }) => {
   const client = await getApiClient();
   const payload = {
@@ -81,6 +80,7 @@ export const postSymbolResult = async (data: {
     score: data.score,
     symbolCorrect: data.symbolCorrect,
     symbolAccuracy: data.symbolAccuracy,
+    reactionTimes: data.reactionTimes,
   };
   const res = await client.post('cognitive-statistics/result/symbol/', payload);
   return res.data;
@@ -171,6 +171,7 @@ export const sendAllResults = async ({
     score: test2.totalScore,
     symbolCorrect: test2.correctCount,
     symbolAccuracy,
+    reactionTimes: test2.reactionTimes,
   });
 
   await postPatternResult({

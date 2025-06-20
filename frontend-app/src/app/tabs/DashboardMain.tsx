@@ -46,7 +46,7 @@ const AbilityProfileCard: React.FC<AbilityProfileCardProps> = memo(
         <Text style={styles.sectionTitle}>나의 인지 능력 프로필</Text>
         <Text style={styles.sectionLabel}>
           {/* 봉석님 -  수면 점수 추가 */}
-          오늘의 수면 점수: {sleepScore ?? '-'}점
+          오늘의 수면 점수: {sleepScore ?? 80}점
         </Text>
         <View style={styles.chartContainer}>
           <ResultChart data={data} labels={labels} />
@@ -154,18 +154,6 @@ export const DashboardMain: React.FC = memo(() => {
       </Layout>
     );
   }
-
-  // if (isError) {
-  //   return (
-  //     <ErrorBoundary>
-  //       <View style={styles.errorContainer}>
-  //         <Text style={styles.errorText}>
-  //           데이터 로딩 실패: {(error as Error).message}
-  //         </Text>
-  //       </View>
-  //     </ErrorBoundary>
-  //   );
-  // }
 
   return (
     <ErrorBoundary>

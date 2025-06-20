@@ -11,6 +11,7 @@ export type SymbolPayload = {
   totalScore: number;
   correctCount: number;
   wrongCount: number;
+  reactionTimes: number[];
 };
 
 export type PatternPayload = {
