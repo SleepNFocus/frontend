@@ -83,9 +83,14 @@ export const PrivacyNotice: React.FC<{ onAgree?: () => void }> = ({
               </Text>
 
               <View style={styles.linkBox}>
-                <TouchableOpacity onPress={() => Linking.openURL('#')}>
+                <TouchableOpacity onPress={() => navigation.navigate('PrivacyPolicyPage')}>
                   <Text variant="bodyMedium" style={styles.link}>
                     개인정보처리방침 전문 보기 →
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('TermsOfServicePage')}>
+                  <Text variant="bodyMedium" style={styles.link}>
+                    서비스 이용약관 전문 보기 →
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -171,6 +176,7 @@ const styles = StyleSheet.create({
   linkBox: {
     alignItems: 'flex-end',
     marginTop: 4,
+    gap: 8,
   },
   link: {
     color: colors.softBlue,
