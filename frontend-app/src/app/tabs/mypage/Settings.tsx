@@ -16,7 +16,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { logoutUser } from '@/app/auth/logout';
 import { withdrawUser } from '@/app/auth/withdraw';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useProfile, useUpdateProfile, useUploadProfileImage } from '@/services/mypageApi';
+import { useProfile, useUpdateProfile } from '@/services/mypageApi';
 import { NotFoundPage } from '@/components/common/NotFoundPage'
 import { ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -110,11 +110,12 @@ const Settings = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { openModal, openToast } = useUiStore();
   const { user, resetAuth, setUser } = useAuthStore();
+  
 
   // API에서 받아온 프로필 이미지로 동기화
   const { data: profile, isLoading, error, refetch } = useProfile();
   const { mutateAsync: updateProfile } = useUpdateProfile();
-  const { mutateAsync: uploadProfileImage } = useUploadProfileImage();
+  const [profileImageUri, setProfileImageUri] = useState<string | null>(null);
   
   // profile 데이터가 변경될 때마다 로그를 출력하여 리프레시 확인
   useEffect(() => {
@@ -167,20 +168,23 @@ const Settings = () => {
       });
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const selectedImageUri = result.assets[0].uri;
-        
-        try {
-          await uploadProfileImage(selectedImageUri);
-          
-          openToast('success', '프로필 변경', '프로필 이미지가 변경되었습니다.');
-          
-          // 백엔드가 이미지 URL을 업데이트할 시간을 주기 위해 약간의 딜레이 추가
-          await new Promise(resolve => setTimeout(resolve, 500)); 
+        console.log('*****선택된 이미지 URI:', selectedImageUri);
+        setProfileImageUri(selectedImageUri); // 미리보기 URI를 상태에 저장
 
-          await refetch();
+        // // 서버 업로드 로직 주석 처리
+        // try {
+        //   await uploadProfileImage(selectedImageUri);
           
-        } catch (e) {
-          openToast('error', '변경 실패', '프로필 변경에 실패했어요');
-        }
+        //   openToast('success', '프로필 변경', '프로필 이미지가 변경되었습니다.');
+          
+        //   // 백엔드가 이미지 URL을 업데이트할 시간을 주기 위해 약간의 딜레이 추가
+        //   await new Promise(resolve => setTimeout(resolve, 500)); 
+
+        //   await refetch();
+          
+        // } catch (e) {
+        //   openToast('error', '변경 실패', '프로필 변경에 실패했어요');
+        // }
       }
     } catch (e) {
       openToast('error', '변경 실패', '프로필 변경에 실패했어요');
@@ -209,7 +213,6 @@ const Settings = () => {
     try {
       await withdrawUser();
       openToast('success', '탈퇴 완료', '계정이 삭제되었습니다.');
-  
       setTimeout(() => {
         resetAuth();
         navigation.reset({
@@ -255,12 +258,22 @@ const Settings = () => {
       updateData.work_time_pattern = workTimePattern;
     }
 
+    // 새 이미지가 선택된 경우, 데이터 객체에 추가
+    if (profileImageUri) {
+      updateData.profile_image_uri = profileImageUri;
+    }
+
     try {
+      // 모든 데이터를 한 번에 전송
       await updateProfile(updateData);
-      openToast('success', '저장 완료', '프로필이 저장되었습니다.');
-      navigation.goBack();
+      
+      setProfileImageUri(null); // 전송 후 임시 이미지 URI 초기화
+
+      openToast('success', '저장 완료', '프로필 정보가 저장되었습니다.');
+      refetch();
     } catch (e) {
-      openToast('error', '저장 실패', '프로필 저장에 실패했습니다.');
+      openToast('error', '저장 실패', '프로필 정보 저장에 실패했습니다.');
+      console.error('Save error:', e);
     }
   };
 
@@ -355,12 +368,16 @@ const Settings = () => {
           <BackButton color={colors.deepNavy} />
           <Text variant="titleMedium" style={styles.headerTitle}>프로필 수정</Text>
         </View>
-
+        {/* <Image source={{ uri: 'file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252Ffocuz-app-3f8f6d71-8a65-423a-afa2-302759104c40/ImagePicker/6e1347b6-c0e6-48a1-8a90-7c39dfede22e.jpeg' }} style={{ width: 200, height: 200 }} /> */}
         <Card style={styles.profileContainer}>
           <TouchableOpacity onPress={handleProfileImageChange} activeOpacity={0.8} style={styles.profileImageBox}>
             <View style={styles.profileImageWrapper}>
               <Image
-                source={processImageUrl(profile?.profile_img)}
+                source={
+                  profileImageUri 
+                  ? { uri: profileImageUri } 
+                  : processImageUrl(profile?.profile_img) || require('@/assets/icon.png')
+                }
                 style={styles.profileImage}
               />
               <TouchableOpacity
