@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import {
   View,
   StyleSheet,
@@ -23,26 +23,26 @@ const ProfileCard = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const tabNavigation = useNavigation<BottomTabNavigationProp<any>>();
-  console.log(tabNavigation);
-  const user = useAuthStore(state => state.user);
+  const { isLogin, user } = useAuthStore();
   const { data: profile, refetch: refetchProfile } = useProfile();
   const { data: mypageMain, refetch: refetchMypageMain } = useMypageMain();
 
   // 화면이 포커스될 때마다 프로필 데이터 새로 가져오기
   useFocusEffect(
-    React.useCallback(() => {
-      console.log('=== ProfileCard 포커스됨, 데이터 새로고침 ===');
-      refetchProfile();
-      refetchMypageMain();
-    }, [refetchProfile, refetchMypageMain]),
+    useCallback(() => {
+      if (isLogin) {
+        refetchProfile();
+        refetchMypageMain();
+      }
+    }, [isLogin, refetchProfile, refetchMypageMain]),
   );
 
   // profile 데이터가 변경될 때마다 로그를 출력하여 리프레시 확인
   useEffect(() => {
-    console.log(
-      '--- ProfileCard.tsx: profile 데이터 변경 감지 (useEffect) ---',
-    );
-    console.log('업데이트된 profile.profile_img:', profile?.profile_img);
+    // console.log(
+    //   '--- ProfileCard.tsx: profile 데이터 변경 감지 (useEffect) ---',
+    // );
+    // console.log('업데이트된 profile.profile_img:', profile?.profile_img);
   }, [profile]);
 
   // API 데이터를 우선 사용하고, 없으면 로컬 user 데이터 사용
@@ -50,17 +50,17 @@ const ProfileCard = () => {
 
   // 이미지 URL 처리: URL 디코딩 후 카카오 이미지 URL 추출
   const processImageUrl = (url: string | null | undefined): any => {
-    console.log('=== processImageUrl 디버깅 ===');
-    console.log('입력된 URL:', url);
+    // console.log('=== processImageUrl 디버깅 ===');
+    // console.log('입력된 URL:', url);
 
     if (!url) {
-      console.log('URL이 없어서 기본 이미지 반환');
+      // console.log('URL이 없어서 기본 이미지 반환');
       return require('@/assets/icon.png');
     }
 
     try {
       const decodedUrl = decodeURIComponent(url);
-      console.log('디코딩된 URL:', decodedUrl);
+      // console.log('디코딩된 URL:', decodedUrl);
 
       // 중첩된 URL 구조 처리: dev.focusz.site/media/http:/k.kakaocdn.net/... 형태
       if (
@@ -71,7 +71,7 @@ const ProfileCard = () => {
         const mediaIndex = decodedUrl.indexOf('/media/');
         if (mediaIndex !== -1) {
           const afterMedia = decodedUrl.substring(mediaIndex + 7); // '/media/' 제거
-          console.log('media 이후 부분:', afterMedia);
+          // console.log('media 이후 부분:', afterMedia);
 
           // http:/ 또는 https:/ 다음의 실제 URL 추출
           const protocolIndex = afterMedia.indexOf('http:/');
@@ -89,7 +89,7 @@ const ProfileCard = () => {
             actualUrl = actualUrl
               .replace('http:/', 'http://')
               .replace('https:/', 'https://');
-            console.log('추출된 실제 URL:', actualUrl);
+            // console.log('추출된 실제 URL:', actualUrl);
             // 더 강력한 캐시 방지를 위해 랜덤 값도 추가
             const randomParam = Math.random().toString(36).substring(7);
             return { uri: `${actualUrl}?t=${Date.now()}&r=${randomParam}` };
@@ -119,7 +119,7 @@ const ProfileCard = () => {
       }
 
       if (targetUrl) {
-        console.log('추출된 최종 URL:', targetUrl);
+        // console.log('추출된 최종 URL:', targetUrl);
         // 캐싱 방지를 위한 타임스탬프와 랜덤 값 추가
         const randomParam = Math.random().toString(36).substring(7);
         return { uri: `${targetUrl}?t=${Date.now()}&r=${randomParam}` };
@@ -127,14 +127,14 @@ const ProfileCard = () => {
 
       // 로컬 파일 URI인지 확인
       if (url.startsWith('file://')) {
-        console.log('로컬 파일 URI 감지:', url);
+        // console.log('로컬 파일 URI 감지:', url);
         return { uri: url };
       }
 
-      console.log('기본 이미지 사용');
+      // console.log('기본 이미지 사용');
       return require('@/assets/icon.png');
     } catch (error) {
-      console.log('URL 처리 에러:', error);
+      // console.log('URL 처리 에러:', error);
       return require('@/assets/icon.png');
     }
   };

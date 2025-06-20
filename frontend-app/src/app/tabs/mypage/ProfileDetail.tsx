@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { View, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -31,32 +31,24 @@ const ProfileDetail = () => {
 
   // 화면이 포커스될 때마다 프로필 데이터 새로 가져오기
   useFocusEffect(
-    React.useCallback(() => {
-      console.log('=== ProfileDetail 화면 포커스 ===');
-      console.log('프로필 데이터 새로 가져오기 시작');
+    useCallback(() => {
       refetch();
-    }, [refetch])
+    }, [refetch]),
   );
 
   // profile 데이터가 변경될 때마다 로그를 출력하여 리프레시 확인
   useEffect(() => {
-    console.log('--- ProfileDetail.tsx: profile 데이터 변경 감지 (useEffect) ---');
-    console.log('업데이트된 profile.profile_img:', profile?.profile_img);
   }, [profile]);
 
   // 이미지 URL 처리: ProfileCard와 동일한 로직
   const processImageUrl = (url: string | null | undefined): any => {
-    console.log('=== processImageUrl 디버깅 ===');
-    console.log('입력된 URL:', url);
     
     if (!url) {
-      console.log('URL이 없어서 기본 이미지 반환');
       return require('@/assets/icon.png');
     }
     
     try {
       const decodedUrl = decodeURIComponent(url);
-      console.log('디코딩된 URL:', decodedUrl);
 
       // 중첩된 URL 구조 처리: dev.focusz.site/media/http:/k.kakaocdn.net/... 형태
       if (decodedUrl.includes('/media/http:/') || decodedUrl.includes('/media/https:/')) {
@@ -64,7 +56,6 @@ const ProfileDetail = () => {
         const mediaIndex = decodedUrl.indexOf('/media/');
         if (mediaIndex !== -1) {
           const afterMedia = decodedUrl.substring(mediaIndex + 7); // '/media/' 제거
-          console.log('media 이후 부분:', afterMedia);
           
           // http:/ 또는 https:/ 다음의 실제 URL 추출
           const protocolIndex = afterMedia.indexOf('http:/');
@@ -80,7 +71,6 @@ const ProfileDetail = () => {
           if (actualUrl) {
             // http:/ -> http:// 로 수정
             actualUrl = actualUrl.replace('http:/', 'http://').replace('https:/', 'https://');
-            console.log('추출된 실제 URL:', actualUrl);
             // 더 강력한 캐시 방지를 위해 랜덤 값도 추가
             const randomParam = Math.random().toString(36).substring(7);
             return { uri: `${actualUrl}?t=${Date.now()}&r=${randomParam}` };
@@ -108,7 +98,6 @@ const ProfileDetail = () => {
       }
       
       if (targetUrl) {
-        console.log('추출된 최종 URL:', targetUrl);
         // 캐싱 방지를 위한 타임스탬프와 랜덤 값 추가
         const randomParam = Math.random().toString(36).substring(7);
         return { uri: `${targetUrl}?t=${Date.now()}&r=${randomParam}` };
@@ -116,39 +105,16 @@ const ProfileDetail = () => {
 
       // 로컬 파일 URI인지 확인
       if (url.startsWith('file://')) {
-        console.log('로컬 파일 URI 감지:', url);
         return { uri: url };
       }
       
-      console.log('기본 이미지 사용');
       return require('@/assets/icon.png');
     } catch (error) {
-      console.log('URL 처리 에러:', error);
       return require('@/assets/icon.png');
     }
   };
 
-  // 디버깅용 로그 - 프로필 상세 정보
-  console.log('=== ProfileDetail 디버깅 ===');
-  console.log('profile 데이터:', profile);
-  console.log('profile 데이터 타입:', typeof profile);
-  console.log('profile 데이터 JSON:', JSON.stringify(profile, null, 2));
-  console.log('isLoading:', isLoading);
-  console.log('error:', error);
-  console.log('profile?.nickname:', profile?.nickname);
-  console.log('profile?.email:', profile?.email);
-  console.log('profile?.gender:', profile?.gender);
-  console.log('profile?.birth_year:', profile?.birth_year);
-  console.log('profile?.mbti:', profile?.mbti);
-  console.log('profile?.profile_img:', profile?.profile_img);
-  console.log('profile?.cognitive_type_out:', profile?.cognitive_type_out);
-  console.log('profile?.cognitive_type_label:', profile?.cognitive_type_label);
-  console.log('profile?.work_time_pattern_out:', profile?.work_time_pattern_out);
-  console.log('profile?.work_time_pattern_label:', profile?.work_time_pattern_label);
-  
-  // 프로필 이미지 처리 결과 로그
   const processedImageSource = processImageUrl(profile?.profile_img);
-  console.log('처리된 이미지 소스:', processedImageSource);
 
   const handleLogout = async () => {
     try {
@@ -170,7 +136,7 @@ const ProfileDetail = () => {
   const handleWithdrawal = async () => {
     try {
       await withdrawUser();
-      openToast('success', '탈퇴 완료', '계정이 삭제되었습니다.');
+      openToast('error', '탈퇴 완료', '계정이 삭제되었습니다.');
       queryClient.clear();
       setTimeout(() => {
         resetAuth();
@@ -193,7 +159,6 @@ const ProfileDetail = () => {
   }
 
   if (error) {
-    console.log('프로필 에러:', error);
     return <NotFoundPage onRetry={() => refetch()} />;
   }
 

@@ -31,24 +31,17 @@ const OAuthCallback = () => {
     const { code } = route.params ?? {};
 
     if (!code) {
-      console.warn('⚠️ 인가 코드 없음');
       navigation.goBack();
       return;
     }
 
     const authenticate = async () => {
       try {
-        console.log('=== OAuthCallback 인증 시작 ===');
-        console.log('인가 코드:', code);
-
         // 카카오 액세스 토큰 획득
         const access_token = await getAccessTokenFromKakao(code);
-        console.log('카카오 access_token:', access_token);
 
         // 서버에 로그인 요청
         const { access, refresh, user } = await sendKakaoLoginCode(access_token);
-        console.log('=== 서버 로그인 성공 ===');
-        console.log('유저 정보:', user);
 
         // 토큰 저장 키를 accessToken으로 통일
         await AsyncStorage.setItem('accessToken', access);
@@ -60,17 +53,14 @@ const OAuthCallback = () => {
 
         // 온보딩 상태 확인
         const onboardingStatus = user?.has_completed_onboarding;
-        console.log('has_completed_onboarding 값:', onboardingStatus, ' / 타입:', typeof onboardingStatus);
 
         if (onboardingStatus === true) {
           setCompletedOnboarding(true);
-          console.log('Dashboard로 이동');
           setTimeout(() => {
             navigation.reset({ index: 0, routes: [{ name: 'Dashboard' }] });
           }, 100);
         } else {
           setCompletedOnboarding(false);
-          console.log('Onboarding으로 이동');
           setTimeout(() => {
             navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
           }, 100);

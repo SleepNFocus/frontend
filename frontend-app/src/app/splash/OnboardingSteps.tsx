@@ -21,7 +21,7 @@ export const OnboardingSteps: React.FC<{ onNext?: () => void }> = ({
     if (onNext) {
       onNext();
     } else {
-      console.log('PrivacyNotice로 이동');
+      // console.log('PrivacyNotice로 이동');
       navigation.navigate('PrivacyNotice');
     }
   };

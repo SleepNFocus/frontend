@@ -50,7 +50,7 @@ export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
   };
 
   const handleKakaoLogin = () => {
-    console.log('카카오 로그인 버튼 클릭');
+    // console.log('카카오 로그인 버튼 클릭');
     navigation.navigate('KakaoLoginWebView');
   };
 
@@ -73,7 +73,7 @@ export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
 
       navigation.navigate('Dashboard');
     } catch (error) {
-      console.log('구글 로그인 오류:', error);
+      // console.log('구글 로그인 오류:', error);
     }
   };
 

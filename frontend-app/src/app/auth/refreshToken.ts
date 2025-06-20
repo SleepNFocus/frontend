@@ -28,7 +28,6 @@ export const refreshAccessToken = async (): Promise<string> => {
     const newAccessToken = response.data.access;
     await AsyncStorage.setItem('accessToken', newAccessToken);
 
-    console.log('access 토큰 재발급 성공:', newAccessToken);
     return newAccessToken;
   } catch (err) {
     console.error('access 토큰 재발급 실패:', err);

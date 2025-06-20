@@ -103,7 +103,6 @@ export const useAuthStore = create<AuthState>(set => ({
         refreshToken: refreshToken ?? null,
       }));
 
-      console.log('Zustand에 토큰 복원 완료');
     } catch (error) {
       console.error('토큰 복원 실패:', error);
     }
