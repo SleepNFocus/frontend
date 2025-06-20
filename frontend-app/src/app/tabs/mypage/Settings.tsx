@@ -20,61 +20,7 @@ import { useProfile, useUpdateProfile, useUploadProfileImage } from '@/services/
 import { NotFoundPage } from '@/components/common/NotFoundPage'
 import { ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { GENDER_OPTIONS, AGE_OPTIONS } from '@/constants/constants';
-
-// MBTI 옵션 직접 정의
-const MBTI_OPTIONS = [
-  { label: 'ISTJ', value: 'ISTJ' },
-  { label: 'ISFJ', value: 'ISFJ' },
-  { label: 'INFJ', value: 'INFJ' },
-  { label: 'INTJ', value: 'INTJ' },
-  { label: 'ISTP', value: 'ISTP' },
-  { label: 'ISFP', value: 'ISFP' },
-  { label: 'INFP', value: 'INFP' },
-  { label: 'INTP', value: 'INTP' },
-  { label: 'ESTP', value: 'ESTP' },
-  { label: 'ESFP', value: 'ESFP' },
-  { label: 'ENFP', value: 'ENFP' },
-  { label: 'ENTP', value: 'ENTP' },
-  { label: 'ESTJ', value: 'ESTJ' },
-  { label: 'ESFJ', value: 'ESFJ' },
-  { label: 'ENFJ', value: 'ENFJ' },
-  { label: 'ENTJ', value: 'ENTJ' },
-];
-
-// 연령대를 출생년도로 변환하는 함수
-const getBirthYearFromAgeGroup = (ageGroup: string): number | null => {
-  const currentYear = new Date().getFullYear();
-  
-  switch (ageGroup) {
-    case '10s':
-      return currentYear - 15; // 10대 중간값
-    case '20s':
-      return currentYear - 25; // 20대 중간값
-    case '30s':
-      return currentYear - 35; // 30대 중간값
-    case '40s':
-      return currentYear - 45; // 40대 중간값
-    case '50s+':
-      return currentYear - 55; // 50대 중간값
-    default:
-      return null;
-  }
-};
-
-// 출생년도를 연령대로 변환하는 함수
-const getAgeGroupFromBirthYear = (birthYear: number): string | null => {
-  const currentYear = new Date().getFullYear();
-  const age = currentYear - birthYear;
-  
-  if (age >= 10 && age < 20) return '10s';
-  if (age >= 20 && age < 30) return '20s';
-  if (age >= 30 && age < 40) return '30s';
-  if (age >= 40 && age < 50) return '40s';
-  if (age >= 50) return '50s+';
-  
-  return null;
-};
+import { GENDER_OPTIONS, BIRTH_YEAR_OPTIONS, MBTI_OPTIONS, COGNITIVE_TYPE_OPTIONS, WORK_TIME_OPTIONS } from '@/constants/constants';
 
 // SurveyPage에서 복사한 CustomDropdown
 interface DropdownItem {
@@ -165,45 +111,24 @@ const Settings = () => {
   const { openModal, openToast } = useUiStore();
   const { user, resetAuth, setUser } = useAuthStore();
 
-  // 프로필 이미지 상태
-  const [profileImage, setProfileImage] = useState<string | null>(user?.image_url || null);
-
   // API에서 받아온 프로필 이미지로 동기화
   const { data: profile, isLoading, error, refetch } = useProfile();
   const { mutateAsync: updateProfile } = useUpdateProfile();
   const { mutateAsync: uploadProfileImage } = useUploadProfileImage();
   
-  // 디버깅용 로그 - Settings 프로필 데이터
-  console.log('=== Settings 디버깅 ===');
-  console.log('profile 데이터:', profile);
-  console.log('isLoading:', isLoading);
-  console.log('error:', error);
-  console.log('profile?.nickname:', profile?.nickname);
-  console.log('profile?.email:', profile?.email);
-  console.log('profile?.gender:', profile?.gender);
-  console.log('profile?.birth_year:', profile?.birth_year);
-  console.log('profile?.mbti:', profile?.mbti);
-  console.log('profile?.profile_img:', profile?.profile_img);
-  
+  // profile 데이터가 변경될 때마다 로그를 출력하여 리프레시 확인
   useEffect(() => {
-    if (profile?.profile_img) {
-      setProfileImage(profile.profile_img);
-    } else if (user?.image_url) {
-      setProfileImage(user.image_url);
-    }
-  }, [profile?.profile_img, user?.image_url]);
-
-  // profileImage 상태 변경 추적
-  useEffect(() => {
-    console.log('=== profileImage 상태 변경 ===');
-    console.log('새로운 profileImage 값:', profileImage);
-  }, [profileImage]);
+    console.log('--- Settings.tsx: profile 데이터 변경 감지 (useEffect) ---');
+    console.log('업데이트된 profile.profile_img:', profile?.profile_img);
+  }, [profile]);
 
   // 상태 추가
   const [nickname, setNickname] = useState(profile?.nickname || '');
   const [gender, setGender] = useState<string | null>(profile?.gender ?? null);
-  const [age, setAge] = useState<string | null>(profile?.birth_year ? getAgeGroupFromBirthYear(profile.birth_year) : null);
+  const [birthYear, setBirthYear] = useState<string | null>(profile?.birth_year ? String(profile.birth_year) : null);
   const [mbti, setMbti] = useState<string | null>(profile?.mbti ?? null);
+  const [cognitiveType, setCognitiveType] = useState<string | null>(profile?.cognitive_type_out ?? null);
+  const [workTimePattern, setWorkTimePattern] = useState<string | null>(profile?.work_time_pattern_out ?? null);
 
   // 닉네임 유효성 검사
   const nicknamevalidity = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{2,20}$/;
@@ -221,8 +146,10 @@ const Settings = () => {
   useEffect(() => {
     setNickname(profile?.nickname || '');
     setGender(profile?.gender ?? null);
-    setAge(profile?.birth_year ? getAgeGroupFromBirthYear(profile.birth_year) : null);
+    setBirthYear(profile?.birth_year ? String(profile.birth_year) : null);
     setMbti(profile?.mbti ?? null);
+    setCognitiveType(profile?.cognitive_type_out ?? null);
+    setWorkTimePattern(profile?.work_time_pattern_out ?? null);
   }, [profile]);
 
   const handleProfileImageChange = async () => {
@@ -236,50 +163,23 @@ const Settings = () => {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 0.8,
+        quality: 0.2,
       });
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const selectedImageUri = result.assets[0].uri;
-        const uriParts = selectedImageUri.split('.');
-        const fileType = uriParts[uriParts.length - 1];
-        type RNFile = {
-          uri: string;
-          type: string;
-          name: string;
-        };
-        const file: RNFile = {
-          uri: selectedImageUri,
-          type: `image/${fileType}`,
-          name: `profile_image.${fileType}`,
-        };
-        const formData = new FormData();
-        formData.append('profile_image', file as any);
-        console.log('이미지 FormData:', formData);
         
-        // 실제 업로드 로직 활성화
         try {
-          console.log('이미지 업로드 시작:', selectedImageUri);
-          const uploadResult = await uploadProfileImage(selectedImageUri);
-          console.log('이미지 업로드 결과:', uploadResult);
-          
-          // 백엔드에서 새로운 이미지 URL을 반환하지 않는 경우를 대비해 로컬에서 임시 표시
-          if (uploadResult.profile_img && uploadResult.profile_img !== profile?.profile_img) {
-            console.log('백엔드에서 새로운 이미지 URL 반환:', uploadResult.profile_img);
-            setProfileImage(uploadResult.profile_img);
-          } else {
-            // 백엔드에서 업데이트된 URL을 반환하지 않으면 선택된 이미지를 임시로 표시
-            console.log('백엔드에서 새로운 이미지 URL을 반환하지 않아 로컬 이미지 사용');
-            console.log('선택된 이미지 URI:', selectedImageUri);
-            console.log('현재 profileImage 상태:', profileImage);
-            console.log('설정할 새로운 profileImage:', selectedImageUri);
-            setProfileImage(selectedImageUri);
-            console.log('profileImage 상태 업데이트 완료');
-          }
+          await uploadProfileImage(selectedImageUri);
           
           openToast('success', '프로필 변경', '프로필 이미지가 변경되었습니다.');
+          
+          // 백엔드가 이미지 URL을 업데이트할 시간을 주기 위해 약간의 딜레이 추가
+          await new Promise(resolve => setTimeout(resolve, 500)); 
+
+          await refetch();
+          
         } catch (e) {
           openToast('error', '변경 실패', '프로필 변경에 실패했어요');
-          console.error('이미지 업로드 실패:', e);
         }
       }
     } catch (e) {
@@ -340,93 +240,100 @@ const Settings = () => {
       updateData.gender = gender;
     }
     
-    if (age) {
-      const birthYear = getBirthYearFromAgeGroup(age);
-      if (birthYear) {
-        updateData.birth_year = birthYear;
-      }
+    if (birthYear) {
+      updateData.birth_year = parseInt(birthYear);
     }
     
     if (mbti) {
       updateData.mbti = mbti;
     }
 
-    // 디버깅용 로그 - 저장할 데이터
-    console.log('=== Settings 저장 디버깅 ===');
-    console.log('원본 데이터:', { nickname, gender, age, mbti });
-    console.log('정제된 저장 데이터:', updateData);
-    console.log('birth_year 타입:', typeof updateData.birth_year);
+    if (cognitiveType) {
+      updateData.cognitive_type = cognitiveType;
+    }
+    if (workTimePattern) {
+      updateData.work_time_pattern = workTimePattern;
+    }
 
     try {
       await updateProfile(updateData);
-      console.log('프로필 업데이트 성공');
       openToast('success', '저장 완료', '프로필이 저장되었습니다.');
       navigation.goBack();
     } catch (e) {
-      console.error('프로필 업데이트 실패:', e);
       openToast('error', '저장 실패', '프로필 저장에 실패했습니다.');
     }
   };
 
   // 이미지 URL 처리: ProfileCard와 동일한 로직
   const processImageUrl = (url: string | null | undefined): any => {
-    console.log('=== processImageUrl 디버깅 ===');
-    console.log('입력된 URL:', url);
-    
     if (!url) {
-      console.log('URL이 없어서 기본 이미지 반환');
-      return require('@/assets/profile.png');
+      return require('@/assets/icon.png');
     }
     
     try {
-      // 로컬 파일 URI인지 확인
-      if (url.startsWith('file://')) {
-        console.log('로컬 파일 URI 감지:', url);
-        return { uri: url };
-      }
-      
-      // URL 디코딩
       const decodedUrl = decodeURIComponent(url);
-      console.log('디코딩된 URL:', decodedUrl);
-      
-      // 카카오 이미지 URL이 포함되어 있는지 확인
-      if (decodedUrl.includes('k.kakaocdn.net')) {
-        // 잘못 디코딩된 http:/ 부분을 http://로 수정
-        let fixedUrl = decodedUrl.replace('http:/', 'http://');
-        
-        // URL에서 k.kakaocdn.net 부분 찾기
-        const kakaoDomainIndex = fixedUrl.indexOf('k.kakaocdn.net');
-        
-        if (kakaoDomainIndex !== -1) {
-          // k.kakaocdn.net부터 시작하는 부분 추출
-          const kakaoUrl = fixedUrl.substring(kakaoDomainIndex - 8); // 'https://' 부분 포함
+
+      // 중첩된 URL 구조 처리: dev.focusz.site/media/http:/k.kakaocdn.net/... 형태
+      if (decodedUrl.includes('/media/http:/') || decodedUrl.includes('/media/https:/')) {
+        // /media/ 다음의 URL 부분을 추출
+        const mediaIndex = decodedUrl.indexOf('/media/');
+        if (mediaIndex !== -1) {
+          const afterMedia = decodedUrl.substring(mediaIndex + 7); // '/media/' 제거
           
-          // URL이 올바른 형식인지 확인하고 수정
-          if (kakaoUrl.startsWith('/http://')) {
-            const correctedUrl = kakaoUrl.substring(1); // 앞의 '/' 제거
-            console.log('카카오 URL 수정됨:', correctedUrl);
-            return { uri: correctedUrl };
-          } else if (kakaoUrl.startsWith('https://')) {
-            console.log('카카오 URL 그대로 사용:', kakaoUrl);
-            return { uri: kakaoUrl };
-          } else {
-            console.log('예상치 못한 카카오 URL 형식:', kakaoUrl);
-            return require('@/assets/profile.png');
+          // http:/ 또는 https:/ 다음의 실제 URL 추출
+          const protocolIndex = afterMedia.indexOf('http:/');
+          const secureProtocolIndex = afterMedia.indexOf('https:/');
+          
+          let actualUrl = '';
+          if (secureProtocolIndex !== -1) {
+            actualUrl = afterMedia.substring(secureProtocolIndex);
+          } else if (protocolIndex !== -1) {
+            actualUrl = afterMedia.substring(protocolIndex);
+          }
+          
+          if (actualUrl) {
+            // http:/ -> http:// 로 수정
+            actualUrl = actualUrl.replace('http:/', 'http://').replace('https:/', 'https://');
+            // 더 강력한 캐시 방지를 위해 랜덤 값도 추가
+            const randomParam = Math.random().toString(36).substring(7);
+            return { uri: `${actualUrl}?t=${Date.now()}&r=${randomParam}` };
           }
         }
       }
-      
-      // 일반적인 이미지 URL인 경우 그대로 사용
-      if (decodedUrl.startsWith('http')) {
-        console.log('일반 HTTP URL 사용:', decodedUrl);
-        return { uri: decodedUrl };
+
+      // 정규식을 사용하여 http 또는 https로 시작하는 전체 URL 추출
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      const extractedUrls = decodedUrl.match(urlRegex);
+
+      // 카카오 CDN URL을 우선적으로 찾습니다.
+      let targetUrl = extractedUrls?.find(u => u.includes('k.kakaocdn.net'));
+
+      // 카카오 URL이 없으면 첫 번째 추출된 URL을 사용합니다.
+      if (!targetUrl && extractedUrls && extractedUrls.length > 0) {
+        // dev.focusz.site/media/ 다음의 http URL을 찾습니다.
+        const nestedUrl = extractedUrls.find(u => u.startsWith('http') && decodedUrl.includes(`/media/${u}`));
+        if (nestedUrl) {
+            targetUrl = nestedUrl;
+        } else {
+            // 가장 마지막 URL을 사용 (가장 안쪽 URL일 가능성이 높음)
+            targetUrl = extractedUrls[extractedUrls.length - 1];
+        }
       }
       
-      console.log('기본 이미지 사용');
-      return require('@/assets/profile.png');
+      if (targetUrl) {
+        // 캐싱 방지를 위한 타임스탬프와 랜덤 값 추가
+        const randomParam = Math.random().toString(36).substring(7);
+        return { uri: `${targetUrl}?t=${Date.now()}&r=${randomParam}` };
+      }
+
+      // 로컬 파일 URI인지 확인
+      if (url.startsWith('file://')) {
+        return { uri: url };
+      }
+      
+      return require('@/assets/icon.png');
     } catch (error) {
-      console.log('URL 처리 에러:', error);
-      return require('@/assets/profile.png');
+      return require('@/assets/icon.png');
     }
   };
 
@@ -439,7 +346,6 @@ const Settings = () => {
     );
   }
   if (error) {
-    console.log('프로필 에러:', error);
     return <NotFoundPage onRetry={() => refetch()} />;
   }
   return (
@@ -454,7 +360,7 @@ const Settings = () => {
           <TouchableOpacity onPress={handleProfileImageChange} activeOpacity={0.8} style={styles.profileImageBox}>
             <View style={styles.profileImageWrapper}>
               <Image
-                source={processImageUrl(profileImage)}
+                source={processImageUrl(profile?.profile_img)}
                 style={styles.profileImage}
               />
               <TouchableOpacity
@@ -502,12 +408,12 @@ const Settings = () => {
           </Card>
           <Card style={styles.infoCard}>
             <View style={styles.infoRow}>
-              <Text style={styles.label}>연령대</Text>
+              <Text style={styles.label}>출생년도</Text>
               <CustomDropdown
-                items={AGE_OPTIONS}
-                value={age ? String(age) : ''}
-                onSelect={(value) => setAge(value)}
-                placeholder="연령"
+                items={BIRTH_YEAR_OPTIONS}
+                value={birthYear}
+                onSelect={setBirthYear}
+                placeholder="출생년도"
               />
             </View>
           </Card>
@@ -519,6 +425,28 @@ const Settings = () => {
                 value={mbti}
                 onSelect={setMbti}
                 placeholder="MBTI"
+              />
+            </View>
+          </Card>
+          <Card style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>인지 유형</Text>
+              <CustomDropdown
+                items={COGNITIVE_TYPE_OPTIONS}
+                value={cognitiveType}
+                onSelect={setCognitiveType}
+                placeholder="인지 유형"
+              />
+            </View>
+          </Card>
+          <Card style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <Text style={styles.label}>근무 시간 패턴</Text>
+              <CustomDropdown
+                items={WORK_TIME_OPTIONS}
+                value={workTimePattern}
+                onSelect={setWorkTimePattern}
+                placeholder="근무 시간 패턴"
               />
             </View>
           </Card>

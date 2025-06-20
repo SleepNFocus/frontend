@@ -50,6 +50,7 @@ export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
   };
 
   const handleKakaoLogin = () => {
+    console.log('카카오 로그인 버튼 클릭');
     navigation.navigate('KakaoLoginWebView');
   };
 

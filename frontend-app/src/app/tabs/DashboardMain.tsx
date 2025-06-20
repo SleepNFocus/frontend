@@ -83,7 +83,6 @@ const ScoreDetailCard: React.FC<ScoreDetailCardProps> = memo(
     );
   },
 );
-
 // DashboardMain
 export const DashboardMain: React.FC = memo(() => {
   const navigation =

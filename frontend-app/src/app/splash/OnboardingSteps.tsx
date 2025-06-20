@@ -20,15 +20,8 @@ export const OnboardingSteps: React.FC<{ onNext?: () => void }> = ({
     if (onNext) {
       onNext();
     } else {
-      if (step.current === 0) {
+      console.log('PrivacyNotice로 이동');
       navigation.navigate('PrivacyNotice');
-        step.current = 1;
-      } else if (step.current === 1) {
-        navigation.navigate('Survey');
-        step.current = 2;
-      } else {
-        navigation.navigate('SleepRecord');
-      }
     }
   };
 
