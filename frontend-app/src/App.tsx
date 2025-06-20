@@ -35,6 +35,8 @@ import { SurveyPage } from './app/splash/SurveyPage';
 import SleepTestResult from './app/tabs/test/SleepTestResult';
 import { PrivacyNotice } from './app/splash/PrivacyNotice';
 import LandingPage from './app/splash/LandingPage';
+import { TermsOfServicePage } from './app/legal/TermsOfServicePage';
+import { PrivacyPolicyPage } from './app/legal/PrivacyPolicyPage';
 // import MyRecord from './app/tabs/mypage/MyRecord';
 // import { Loading } from './app/tabs/Loading';
 import OAuthCallback from './app/auth/OAuthCallback';
@@ -81,6 +83,8 @@ export type RootStackParamList = {
   OAuthCallback: { code: string };
   KakaoLoginWebView: undefined;
   SleepDetail: { date: string };
+  TermsOfServicePage: undefined;
+  PrivacyPolicyPage: undefined;
 };
 
 export const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -204,6 +208,8 @@ export default function App() {
                 component={SleepTestResult}
               />
               <Stack.Screen name="PrivacyNotice" component={PrivacyNotice} />
+              <Stack.Screen name="TermsOfServicePage" component={TermsOfServicePage} />
+              <Stack.Screen name="PrivacyPolicyPage" component={PrivacyPolicyPage} />
               {/* <Stack.Screen name="MyRecord" component={MyRecord} />
             <Stack.Screen name="Loading" component={Loading} />  */}
               <Stack.Screen name="OAuthCallback" component={OAuthCallback} />

@@ -41,10 +41,16 @@ export const MorePage: React.FC = () => {
         <View style={styles.card}>
           <Text style={styles.title}>정보</Text>
           <View style={styles.linkGroup}>
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => navigation.navigate('PrivacyPolicyPage' as never)}
+            >
               <Text style={styles.subText}>개인정보처리방침</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => navigation.navigate('TermsOfServicePage' as never)}
+            >
               <Text style={styles.subText}>서비스 이용약관</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.menuItem}>
