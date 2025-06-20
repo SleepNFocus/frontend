@@ -28,14 +28,13 @@ export interface SleepRecordData {
 }
 
 export interface SleepRecordApiResponse {
-  id: number;
   date: string;
   sleep_duration: number;
   subjective_quality: number;
   sleep_latency: number;
   wake_count: number;
   disturb_factors: string[];
-  memo: string;
+  memo: string | null;
   score: number;
   created_at: string;
   updated_at: string;
