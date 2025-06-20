@@ -1,7 +1,11 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, 
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
   // ViewStyle, TextStyle
- } from 'react-native';
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
@@ -30,54 +34,61 @@ const ProfileCard = () => {
       console.log('=== ProfileCard 포커스됨, 데이터 새로고침 ===');
       refetchProfile();
       refetchMypageMain();
-    }, [refetchProfile, refetchMypageMain])
+    }, [refetchProfile, refetchMypageMain]),
   );
 
   // profile 데이터가 변경될 때마다 로그를 출력하여 리프레시 확인
   useEffect(() => {
-    console.log('--- ProfileCard.tsx: profile 데이터 변경 감지 (useEffect) ---');
+    console.log(
+      '--- ProfileCard.tsx: profile 데이터 변경 감지 (useEffect) ---',
+    );
     console.log('업데이트된 profile.profile_img:', profile?.profile_img);
   }, [profile]);
 
   // API 데이터를 우선 사용하고, 없으면 로컬 user 데이터 사용
   const displayName = profile?.nickname || user?.nickname || '-';
-  
+
   // 이미지 URL 처리: URL 디코딩 후 카카오 이미지 URL 추출
   const processImageUrl = (url: string | null | undefined): any => {
     console.log('=== processImageUrl 디버깅 ===');
     console.log('입력된 URL:', url);
-    
+
     if (!url) {
       console.log('URL이 없어서 기본 이미지 반환');
       return require('@/assets/icon.png');
     }
-    
+
     try {
       const decodedUrl = decodeURIComponent(url);
       console.log('디코딩된 URL:', decodedUrl);
 
       // 중첩된 URL 구조 처리: dev.focusz.site/media/http:/k.kakaocdn.net/... 형태
-      if (decodedUrl.includes('/media/http:/') || decodedUrl.includes('/media/https:/')) {
+      if (
+        decodedUrl.includes('/media/http:/') ||
+        decodedUrl.includes('/media/https:/')
+      ) {
         // /media/ 다음의 URL 부분을 추출
         const mediaIndex = decodedUrl.indexOf('/media/');
         if (mediaIndex !== -1) {
           const afterMedia = decodedUrl.substring(mediaIndex + 7); // '/media/' 제거
           console.log('media 이후 부분:', afterMedia);
-          
+
           // http:/ 또는 https:/ 다음의 실제 URL 추출
           const protocolIndex = afterMedia.indexOf('http:/');
           const secureProtocolIndex = afterMedia.indexOf('https:/');
-          
+
           let actualUrl = '';
           if (secureProtocolIndex !== -1) {
             actualUrl = afterMedia.substring(secureProtocolIndex);
           } else if (protocolIndex !== -1) {
             actualUrl = afterMedia.substring(protocolIndex);
           }
-          
+
           if (actualUrl) {
             // http:/ -> http:// 로 수정
-            actualUrl = actualUrl.replace('http:/', 'http://').replace('https:/', 'https://');
+            actualUrl = actualUrl
+              .replace('http:/', 'http://')
+              .replace('https:/', 'https://');
             console.log('추출된 실제 URL:', actualUrl);
             // 더 강력한 캐시 방지를 위해 랜덤 값도 추가
             const randomParam = Math.random().toString(36).substring(7);
@@ -96,15 +107,17 @@ const ProfileCard = () => {
       // 카카오 URL이 없으면 첫 번째 추출된 URL을 사용합니다.
       if (!targetUrl && extractedUrls && extractedUrls.length > 0) {
         // dev.focusz.site/media/ 다음의 http URL을 찾습니다.
-        const nestedUrl = extractedUrls.find(u => u.startsWith('http') && decodedUrl.includes(`/media/${u}`));
+        const nestedUrl = extractedUrls.find(
+          u => u.startsWith('http') && decodedUrl.includes(`/media/${u}`),
+        );
         if (nestedUrl) {
-            targetUrl = nestedUrl;
+          targetUrl = nestedUrl;
         } else {
-            // 가장 마지막 URL을 사용 (가장 안쪽 URL일 가능성이 높음)
-            targetUrl = extractedUrls[extractedUrls.length - 1];
+          // 가장 마지막 URL을 사용 (가장 안쪽 URL일 가능성이 높음)
+          targetUrl = extractedUrls[extractedUrls.length - 1];
         }
       }
-      
+
       if (targetUrl) {
         console.log('추출된 최종 URL:', targetUrl);
         // 캐싱 방지를 위한 타임스탬프와 랜덤 값 추가
@@ -117,7 +130,7 @@ const ProfileCard = () => {
         console.log('로컬 파일 URI 감지:', url);
         return { uri: url };
       }
-      
+
       console.log('기본 이미지 사용');
       return require('@/assets/icon.png');
     } catch (error) {
@@ -125,8 +138,10 @@ const ProfileCard = () => {
       return require('@/assets/icon.png');
     }
   };
-  
-  const displayImageSource = processImageUrl(profile?.profile_img || user?.image_url);
+
+  const displayImageSource = processImageUrl(
+    profile?.profile_img || user?.image_url,
+  );
 
   // tracking_days가 없거나 undefined면 1로 표시
   const trackingDays = mypageMain?.tracking_days || 1;
