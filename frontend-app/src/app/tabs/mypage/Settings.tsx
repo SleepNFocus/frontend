@@ -119,8 +119,13 @@ const Settings = () => {
   
   // profile 데이터가 변경될 때마다 로그를 출력하여 리프레시 확인
   useEffect(() => {
-    console.log('--- Settings.tsx: profile 데이터 변경 감지 (useEffect) ---');
-    console.log('업데이트된 profile.profile_img:', profile?.profile_img);
+    // console.log('--- Settings.tsx: profile 데이터 변경 감지 (useEffect) ---');
+    // console.log('업데이트된 profile.profile_img:', profile?.profile_img);
+    if (profile?.profile_img) {
+      if (profile.profile_img.startsWith('http')) {
+        setProfileImageUri(profile.profile_img);
+      }
+    }
   }, [profile]);
 
   // 상태 추가
@@ -168,7 +173,7 @@ const Settings = () => {
       });
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const selectedImageUri = result.assets[0].uri;
-        console.log('*****선택된 이미지 URI:', selectedImageUri);
+        // console.log('*****선택된 이미지 URI:', selectedImageUri);
         setProfileImageUri(selectedImageUri); // 미리보기 URI를 상태에 저장
 
         // // 서버 업로드 로직 주석 처리
@@ -212,7 +217,7 @@ const Settings = () => {
   const handleWithdrawal = async () => {
     try {
       await withdrawUser();
-      openToast('success', '탈퇴 완료', '계정이 삭제되었습니다.');
+      openToast('error', '탈퇴 완료', '계정이 삭제되었습니다.');
       setTimeout(() => {
         resetAuth();
         navigation.reset({

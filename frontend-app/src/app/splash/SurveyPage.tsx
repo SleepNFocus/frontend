@@ -132,15 +132,6 @@ export const SurveyPage: React.FC = () => {
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      // 토큰 상태 확인
-      const userToken = await AsyncStorage.getItem('userToken');
-      const refreshToken = await AsyncStorage.getItem('refreshToken');
-      console.log('=== 토큰 디버깅 ===');
-      console.log('userToken:', userToken);
-      console.log('refreshToken:', refreshToken);
-      console.log('userToken 길이:', userToken?.length);
-      console.log('refreshToken 길이:', refreshToken?.length);
-
       // null 체크 추가
       if (
         !gender ||
@@ -170,14 +161,11 @@ export const SurveyPage: React.FC = () => {
         work_time_pattern: workTimePattern,
       };
 
-      console.log('basic payload:', basicPayload);
-      console.log('job payload:', jobPayload);
-
       await saveBasicInfo(basicPayload);
       await saveJobInfo(jobPayload);
 
-      console.log('온보딩 성공!');
-      navigation.navigate('SleepRecord');
+      navigation.navigate('Dashboard');
+
     } catch (err) {
       console.error('온보딩 전송 실패:', err);
     } finally {

@@ -46,9 +46,6 @@ const adaptUserInfoToUser = (userInfo: UserInfo): User => ({
 
 export const sendKakaoLoginCode = async (code: string): Promise<LoginResponse> => {
   try {
-    console.log('=== 카카오 로그인 시작 ===');
-    console.log('인가 코드:', code);
-    
     const response = await axios.post<{
       access: string;
       refresh: string;
@@ -69,12 +66,6 @@ export const sendKakaoLoginCode = async (code: string): Promise<LoginResponse> =
     const { access, refresh, user: userInfo } = response.data;
     const user = adaptUserInfoToUser(userInfo);
 
-    console.log('=== 서버 응답 ===');
-    console.log('access token:', access);
-    console.log('refresh token:', refresh);
-    console.log('user info:', userInfo);
-    console.log('has_completed_onboarding:', user.has_completed_onboarding);
-
     // 토큰 저장 키를 accessToken으로 통일
     await AsyncStorage.multiSet([
       ['accessToken', access],
@@ -83,8 +74,6 @@ export const sendKakaoLoginCode = async (code: string): Promise<LoginResponse> =
       ['hasLoggedInBefore', 'true'],
     ]);
 
-    console.log('=== 토큰 저장 완료 ===');
-    console.log('로그인 성공:', user);
     return { access, refresh, user };
   } catch (err) {
     if (axios.isAxiosError(err)) {

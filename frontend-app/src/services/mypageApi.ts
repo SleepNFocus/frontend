@@ -14,23 +14,13 @@ import { Platform } from 'react-native';
 // 프로필 조회
 export const getProfile = async (): Promise<Profile> => {
   const apiClient = await getApiClient();
-  console.log('=== getProfile API 호출 ===');
   const response = await apiClient.get<Profile>('/users/mypage/profile/');
-  console.log('=== getProfile API 응답 ===');
-  console.log('응답 데이터:', response.data);
-  console.log('응답 데이터 JSON:', JSON.stringify(response.data, null, 2));
-  console.log('cognitive_type_out:', response.data.cognitive_type_out);
-  console.log('cognitive_type_label:', response.data.cognitive_type_label);
-  console.log('work_time_pattern_out:', response.data.work_time_pattern_out);
-  console.log('work_time_pattern_label:', response.data.work_time_pattern_label);
   return response.data;
 };
 
 // 프로필 수정 (이미지 포함)
 export const updateProfile = async (data: ProfileUpdateRequest & { profile_image_uri?: string }): Promise<Profile> => {
   const apiClient = await getApiClient();
-
-  console.log('=== updateProfile API 호출 데이터 ===', JSON.stringify(data, null, 2));
 
   // 이미지 URI가 있는지 확인
   if (data.profile_image_uri) {
@@ -59,40 +49,15 @@ export const updateProfile = async (data: ProfileUpdateRequest & { profile_image
 
     formData.append('profile_img', fileObject as any);
     
-    console.log('FormData로 프로필 업데이트 시도:', formData);
-
-    try {
-      const response = await apiClient.patch<Profile>('/users/mypage/profile/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      console.log('프로필(이미지 포함) 업데이트 성공:', response.data);
-      return response.data;
-    } catch (error: any) {
-      console.error('프로필(이미지 포함) 업데이트 실패 상세:', {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message,
-      });
-      throw error;
-    }
-
+    const response = await apiClient.patch<Profile>('/users/mypage/profile/', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
   } else {
     // 이미지가 없는 경우, 기존처럼 JSON으로 전송
-    console.log('JSON으로 프로필 업데이트 시도:', data);
     const { profile_image_uri, ...jsonData } = data; // 이미지 URI 정보는 제외
-
-    try {
-      const response = await apiClient.patch<Profile>('/users/mypage/profile/', jsonData);
-      console.log('프로필(텍스트) 업데이트 성공:', response.data);
-      return response.data;
-    } catch (error: any) {
-      console.error('프로필(텍스트) 업데이트 실패 상세:', {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message,
-      });
-      throw error;
-    }
+    const response = await apiClient.patch<Profile>('/users/mypage/profile/', jsonData);
+    return response.data;
   }
 };
 
@@ -100,8 +65,6 @@ export const updateProfile = async (data: ProfileUpdateRequest & { profile_image
 export const getMypageMain = async (): Promise<MypageMain> => {
   const apiClient = await getApiClient();
   const response = await apiClient.get<MypageMain>('/users/mypage/main/');
-
-  console.log('메인 페이지 정보조회 API 응답:', response.data);
   return response.data;
 };
 
@@ -158,5 +121,20 @@ export const useRecordDetail = (date: string) => {
     queryKey: ['recordDetail', date],
     queryFn: () => getRecordDetail(date),
     enabled: !!date,
+  });
+};
+
+export const useGetProfile = () => {
+  return useQuery<Profile>({
+    queryKey: ['profile'],
+    queryFn: getProfile,
+  });
+};
+
+export const useGetMainPage = () => {
+  return useQuery<MypageMain>({
+    queryKey: ['mainPage'],
+    queryFn: getMypageMain,
+    staleTime: 1000 * 60 * 5, // 5분
   });
 }; 

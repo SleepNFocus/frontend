@@ -81,8 +81,6 @@ const KakaoLoginWebView: React.FC = () => {
   };
 
   const exchangeCodeForToken = async (code: string): Promise<UserData> => {
-    console.log('=== 토큰 교환 시작 ===');
-    console.log('인가 코드:', code);
     
     try {
       const loginResponse = await sendKakaoLoginCode(code);
@@ -103,7 +101,6 @@ const KakaoLoginWebView: React.FC = () => {
         }
       };
       
-      console.log('=== 토큰 교환 완료 ===');
       return userData;
     } catch (error) {
       console.error('토큰 교환 실패:', error);
@@ -113,9 +110,6 @@ const KakaoLoginWebView: React.FC = () => {
 
   const handleLoginSuccess = async (userData: UserData) => {
     if (!userData.access || !userData.user?.user_id) throw new Error('유효하지 않은 로그인 정보');
-
-    console.log('=== 로그인 성공 처리 ===');
-    console.log('userData:', userData);
 
     setLogin(true);
     const user: User = {
@@ -127,14 +121,10 @@ const KakaoLoginWebView: React.FC = () => {
     setUser(user);
 
     // 토큰은 이미 sendKakaoLoginCode에서 저장됨
-    console.log('=== 네비게이션 처리 ===');
-    console.log('has_completed_onboarding:', userData.user.has_completed_onboarding);
 
     if (userData.user.has_completed_onboarding) {
-      console.log('Dashboard로 이동');
       navigation.navigate('Dashboard');
     } else {
-      console.log('Onboarding으로 이동');
       navigation.navigate('Onboarding'); 
     }
   };

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Toast from 'react-native-toast-message';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
@@ -129,6 +129,8 @@ export default function App() {
     NanumSquareRoundB: require('./assets/fonts/NanumSquareRoundB.ttf'),
     NanumSquareRoundEB: require('./assets/fonts/NanumSquareRoundEB.ttf'),
   });
+  const navigationRef = useNavigationContainerRef<RootStackParamList>();
+  const resetAuth = useAuthStore(state => state.resetAuth);
 
   useEffect(() => {
     if (fontsLoaded) {
@@ -136,14 +138,23 @@ export default function App() {
     }
   }, [fontsLoaded]);
 
-  // 리프레시 토큰 만료 시 로그인 페이지로 이동하는 이벤트 설정
+  // 전역 강제 로그아웃 이벤트 리스너 설정
   useEffect(() => {
-    globalThis.forceLogoutEvent = () => {
-      // 네비게이션을 사용하여 로그인 페이지로 이동
-      // 여기서는 LandingPage로 이동하도록 설정
-      console.log('리프레시 토큰 만료로 인한 강제 로그아웃');
+    const handleForceLogout = async () => {
+      await resetAuth();
+      // 로그인 화면으로 즉시 이동하기 위해 navigation state 초기화
+      navigationRef.current?.reset({
+        index: 0,
+        routes: [{ name: 'LandingPage' }],
+      });
     };
-  }, []);
+
+    (globalThis as any).forceLogoutEvent = handleForceLogout;
+
+    return () => {
+      (globalThis as any).forceLogoutEvent = undefined;
+    };
+  }, [resetAuth]);
 
   if (!fontsLoaded) return null;
 
@@ -151,7 +162,7 @@ export default function App() {
     <PaperProvider theme={paperTheme}>
       <QueryClientProvider client={queryClient}>
         <ErrorBoundary>
-          <NavigationContainer>
+          <NavigationContainer ref={navigationRef}>
             <Stack.Navigator
               initialRouteName="LandingPage"
               screenOptions={{ headerShown: false }}

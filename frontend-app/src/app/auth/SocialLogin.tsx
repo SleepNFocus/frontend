@@ -8,9 +8,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '@/App';
 
 export const SocialLogin: React.FC = () => {
-  console.log('SocialLogin 컴포넌트 렌더링');
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  console.log('navigation 확인:', navigation);
 
   const [isStarted, setIsStarted] = useState(false);
   const [showKakaoWebView, setShowKakaoWebView] = useState(false);
