@@ -205,7 +205,7 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
 
         <AISleepTips tips={aiTips} />
 
-        {showNavigation && (
+        {/* {showNavigation && (
           <View style={styles.buttonContainer}>
             <Button
               title="새 수면 기록 추가"
@@ -213,7 +213,7 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
               style={styles.actionButton}
             />
           </View>
-        )}
+        )} */}
       </ScrollView>
     </View>
   );
