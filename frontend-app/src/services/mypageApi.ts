@@ -14,7 +14,15 @@ import { Platform } from 'react-native';
 // 프로필 조회
 export const getProfile = async (): Promise<Profile> => {
   const apiClient = await getApiClient();
+  console.log('=== getProfile API 호출 ===');
   const response = await apiClient.get<Profile>('/users/mypage/profile/');
+  console.log('=== getProfile API 응답 ===');
+  console.log('응답 데이터:', response.data);
+  console.log('응답 데이터 JSON:', JSON.stringify(response.data, null, 2));
+  console.log('cognitive_type_out:', response.data.cognitive_type_out);
+  console.log('cognitive_type_label:', response.data.cognitive_type_label);
+  console.log('work_time_pattern_out:', response.data.work_time_pattern_out);
+  console.log('work_time_pattern_label:', response.data.work_time_pattern_label);
   return response.data;
 };
 
@@ -30,7 +38,7 @@ export const updateProfile = async (data: ProfileUpdateRequest): Promise<Profile
   try {
     const response = await apiClient.patch<Profile>('/users/mypage/profile/', data);
     console.log('프로필 업데이트 성공:', response.data);
-    return response.data;
+  return response.data;
   } catch (error: any) {
     console.error('프로필 업데이트 실패 상세:', {
       status: error.response?.status,

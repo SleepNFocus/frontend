@@ -8,7 +8,7 @@ export const withdrawUser = async (): Promise<void> => {
   console.log('[withdrawUser] 함수 시작');
 
  
-  const token = await AsyncStorage.getItem('userToken');
+  const token = await AsyncStorage.getItem('accessToken');
   console.log('accessToken (from AsyncStorage):', token);
 
   if (!token) {

@@ -33,16 +33,13 @@ export const PrivacyNotice: React.FC<{ onAgree?: () => void }> = ({
       if (onAgree) {
         onAgree();
       } else {
-        navigation.navigate('Survey');
+        navigation.navigate('SurveyPage');
       }
     } catch (error) {
-      // [정리 필요] console.log 등 디버깅 코드는 배포 전 반드시 제거해야 함
-      // 이유: 불필요한 콘솔 출력은 성능 저하, 보안 이슈, 로그 오염의 원인이 됨
-      // 오류가 발생해도 계속 진행
       if (onAgree) {
         onAgree();
       } else {
-        navigation.navigate('Survey');
+        navigation.navigate('SurveyPage');
       }
     }
   };

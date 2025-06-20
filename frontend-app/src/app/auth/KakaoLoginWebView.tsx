@@ -9,6 +9,8 @@ import { RootStackParamList } from '@/App';
 import { BackButton } from '@/components/common/BackButton';
 import { colors } from '@/constants/colors';
 import { KAKAO_JAVASCRIPT_KEY, DEV_API_URL } from '@env';
+import type { WebViewErrorEvent } from 'react-native-webview/lib/WebViewTypes';
+import { sendKakaoLoginCode } from './sendKakaoLoginCode';
 
 export interface UserData {
   access: string;
@@ -19,8 +21,9 @@ export interface UserData {
     profile_img: string | null;
     social_id: string;
     social_type: 'KAKAO' | 'GOOGLE' | 'NAVER';
-    status: 'active' | 'inactive';
+    status: string;
     user_id: number;
+    has_completed_onboarding: boolean; 
   };
 }
 
@@ -78,22 +81,41 @@ const KakaoLoginWebView: React.FC = () => {
   };
 
   const exchangeCodeForToken = async (code: string): Promise<UserData> => {
-    const requestUrl = `${DEV_API_URL}/api/users/social-login/`;
-    const response = await fetch(requestUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, provider: 'kakao' }),
-    });
-
-    const responseText = await response.text();
-    const data = JSON.parse(responseText);
-
-    if (response.ok) return data;
-    throw new Error(`토큰 교환 실패 (${response.status})`);
+    console.log('=== 토큰 교환 시작 ===');
+    console.log('인가 코드:', code);
+    
+    try {
+      const loginResponse = await sendKakaoLoginCode(code);
+      
+      // UserData 형식으로 변환
+      const userData: UserData = {
+        access: loginResponse.access,
+        refresh: loginResponse.refresh,
+        user: {
+          email: loginResponse.user.email,
+          nickname: loginResponse.user.nickname,
+          profile_img: loginResponse.user.profile_img,
+          social_id: loginResponse.user.social_id,
+          social_type: loginResponse.user.social_type,
+          status: loginResponse.user.status,
+          user_id: loginResponse.user.id,
+          has_completed_onboarding: loginResponse.user.has_completed_onboarding,
+        }
+      };
+      
+      console.log('=== 토큰 교환 완료 ===');
+      return userData;
+    } catch (error) {
+      console.error('토큰 교환 실패:', error);
+      throw error;
+    }
   };
 
   const handleLoginSuccess = async (userData: UserData) => {
     if (!userData.access || !userData.user?.user_id) throw new Error('유효하지 않은 로그인 정보');
+
+    console.log('=== 로그인 성공 처리 ===');
+    console.log('userData:', userData);
 
     setLogin(true);
     const user: User = {
@@ -104,18 +126,21 @@ const KakaoLoginWebView: React.FC = () => {
     };
     setUser(user);
 
-    await AsyncStorage.multiSet([
-      ['hasLoggedInBefore', 'true'],
-      ['onboardingComplete', 'true'],
-      ['userToken', userData.access],
-      ['refreshToken', userData.refresh],
-    ]);
+    // 토큰은 이미 sendKakaoLoginCode에서 저장됨
+    console.log('=== 네비게이션 처리 ===');
+    console.log('has_completed_onboarding:', userData.user.has_completed_onboarding);
 
-    navigation.navigate('Dashboard');
+    if (userData.user.has_completed_onboarding) {
+      console.log('Dashboard로 이동');
+      navigation.navigate('Dashboard');
+    } else {
+      console.log('Onboarding으로 이동');
+      navigation.navigate('Onboarding'); 
+    }
   };
 
-  const handleWebViewError = (syntheticEvent: any) => {
-    const { nativeEvent } = syntheticEvent;
+  const handleWebViewError = (event: WebViewErrorEvent) => {
+    const { nativeEvent } = event;
     setError(`WebView 오류: ${nativeEvent.description || '알 수 없는 오류'}`);
   };
 
