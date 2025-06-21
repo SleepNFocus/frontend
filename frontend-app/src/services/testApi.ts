@@ -15,10 +15,6 @@ export const startGameSession = async (formatId: number) => {
 export const useStartGameSession = () =>
   useMutation({
     mutationFn: startGameSession,
-    onSuccess: () => {
-      const openToast = useUiStore.getState().openToast;
-      openToast('success', '게임 세션 시작 완료!');
-    },
     onError: error => {
       const axiosError = error as AxiosError<{ message?: string }>;
       const openToast = useUiStore.getState().openToast;
@@ -51,10 +47,6 @@ export const postSRTResult = async (data: {
 export const usePostSRTResult = () =>
   useMutation({
     mutationFn: postSRTResult,
-    onSuccess: () => {
-      const openToast = useUiStore.getState().openToast;
-      openToast('success', 'SRT 점수 저장 완료!');
-    },
     onError: error => {
       const axiosError = error as AxiosError<{ message: string }>;
       const openToast = useUiStore.getState().openToast;
@@ -89,17 +81,12 @@ export const postSymbolResult = async (data: {
 export const usePostSymbolResult = () =>
   useMutation({
     mutationFn: postSymbolResult,
-    onSuccess: () => {
-      const openToast = useUiStore.getState().openToast;
-      openToast('success', 'Symbol 점수 저장 완료!');
-    },
     onError: error => {
       const axiosError = error as AxiosError<{ message: string }>;
       const openToast = useUiStore.getState().openToast;
       openToast(
         'error',
         'Symbol 점수 전송 실패',
-
         axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
       );
     },
@@ -129,10 +116,6 @@ export const postPatternResult = async (data: {
 export const usePostPatternResult = () =>
   useMutation({
     mutationFn: postPatternResult,
-    onSuccess: () => {
-      const openToast = useUiStore.getState().openToast;
-      openToast('success', 'Pattern 점수 저장 완료!');
-    },
     onError: error => {
       const axiosError = error as AxiosError<{ message: string }>;
       const openToast = useUiStore.getState().openToast;
@@ -219,10 +202,6 @@ export const getDailySummary = async () => {
 export const useGetDailySummary = () =>
   useMutation({
     mutationFn: getDailySummary,
-    onSuccess: () => {
-      const openToast = useUiStore.getState().openToast;
-      openToast('success', '결과 요약 불러오기 성공!');
-    },
     onError: error => {
       const axiosError = error as AxiosError<{ message: string }>;
       const openToast = useUiStore.getState().openToast;

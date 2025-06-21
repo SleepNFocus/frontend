@@ -240,6 +240,7 @@ const styles = StyleSheet.create({
   resultText: {
     marginTop: 16,
     alignItems: 'center',
+    gap: 5,
   },
   resultBox: {
     flex: 1,

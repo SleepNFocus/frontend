@@ -202,18 +202,6 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
             </View>
           </Card.Content>
         </Card>
-
-        <AISleepTips tips={aiTips} />
-
-        {showNavigation && (
-          <View style={styles.buttonContainer}>
-            <Button
-              title="새 수면 기록 추가"
-              onPress={() => navigation.navigate('SleepRecord')}
-              style={styles.actionButton}
-            />
-          </View>
-        )}
       </ScrollView>
     </View>
   );
@@ -233,11 +221,12 @@ const styles = StyleSheet.create({
   },
   headerContent: {
     flexDirection: 'row',
-    alignItems: 'center',    
+    alignItems: 'center',
   },
   headerEmoji: {
     fontSize: 32,
     marginRight: 12,
+    lineHeight: 40,
   },
   headerText: {
     flex: 1,
@@ -255,13 +244,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderLeftWidth: 4,
     borderLeftColor: colors.softBlue,
+    backgroundColor: '#ffffff',
   },
   aiAnalysisTitle: {
     color: colors.deepNavy,
     marginBottom: 12,
   },
   aiAnalysisContent: {
-    backgroundColor: colors.lightGray,
     borderRadius: 12,
     padding: 16,
   },

@@ -1,5 +1,11 @@
 import React, { useEffect, useCallback } from 'react';
-import { View, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/App';
@@ -37,40 +43,43 @@ const ProfileDetail = () => {
   );
 
   // profile 데이터가 변경될 때마다 로그를 출력하여 리프레시 확인
-  useEffect(() => {
-  }, [profile]);
+  useEffect(() => {}, [profile]);
 
   // 이미지 URL 처리: ProfileCard와 동일한 로직
   const processImageUrl = (url: string | null | undefined): any => {
-    
     if (!url) {
       return require('@/assets/icon.png');
     }
-    
+
     try {
       const decodedUrl = decodeURIComponent(url);
 
       // 중첩된 URL 구조 처리: dev.focusz.site/media/http:/k.kakaocdn.net/... 형태
-      if (decodedUrl.includes('/media/http:/') || decodedUrl.includes('/media/https:/')) {
+      if (
+        decodedUrl.includes('/media/http:/') ||
+        decodedUrl.includes('/media/https:/')
+      ) {
         // /media/ 다음의 URL 부분을 추출
         const mediaIndex = decodedUrl.indexOf('/media/');
         if (mediaIndex !== -1) {
           const afterMedia = decodedUrl.substring(mediaIndex + 7); // '/media/' 제거
-          
+
           // http:/ 또는 https:/ 다음의 실제 URL 추출
           const protocolIndex = afterMedia.indexOf('http:/');
           const secureProtocolIndex = afterMedia.indexOf('https:/');
-          
+
           let actualUrl = '';
           if (secureProtocolIndex !== -1) {
             actualUrl = afterMedia.substring(secureProtocolIndex);
           } else if (protocolIndex !== -1) {
             actualUrl = afterMedia.substring(protocolIndex);
           }
-          
+
           if (actualUrl) {
             // http:/ -> http:// 로 수정
-            actualUrl = actualUrl.replace('http:/', 'http://').replace('https:/', 'https://');
+            actualUrl = actualUrl
+              .replace('http:/', 'http://')
+              .replace('https:/', 'https://');
             // 더 강력한 캐시 방지를 위해 랜덤 값도 추가
             const randomParam = Math.random().toString(36).substring(7);
             return { uri: `${actualUrl}?t=${Date.now()}&r=${randomParam}` };
@@ -88,15 +97,17 @@ const ProfileDetail = () => {
       // 카카오 URL이 없으면 첫 번째 추출된 URL을 사용합니다.
       if (!targetUrl && extractedUrls && extractedUrls.length > 0) {
         // dev.focusz.site/media/ 다음의 http URL을 찾습니다.
-        const nestedUrl = extractedUrls.find(u => u.startsWith('http') && decodedUrl.includes(`/media/${u}`));
+        const nestedUrl = extractedUrls.find(
+          u => u.startsWith('http') && decodedUrl.includes(`/media/${u}`),
+        );
         if (nestedUrl) {
-            targetUrl = nestedUrl;
+          targetUrl = nestedUrl;
         } else {
-            // 가장 마지막 URL을 사용 (가장 안쪽 URL일 가능성이 높음)
-            targetUrl = extractedUrls[extractedUrls.length - 1];
+          // 가장 마지막 URL을 사용 (가장 안쪽 URL일 가능성이 높음)
+          targetUrl = extractedUrls[extractedUrls.length - 1];
         }
       }
-      
+
       if (targetUrl) {
         // 캐싱 방지를 위한 타임스탬프와 랜덤 값 추가
         const randomParam = Math.random().toString(36).substring(7);
@@ -107,7 +118,7 @@ const ProfileDetail = () => {
       if (url.startsWith('file://')) {
         return { uri: url };
       }
-      
+
       return require('@/assets/icon.png');
     } catch (error) {
       return require('@/assets/icon.png');
@@ -118,7 +129,7 @@ const ProfileDetail = () => {
 
   const handleLogout = async () => {
     try {
-      await logoutUser(); 
+      await logoutUser();
       openToast('success', '로그아웃 완료', '로그아웃 되었습니다.');
       queryClient.clear();
       setTimeout(() => {
@@ -141,7 +152,8 @@ const ProfileDetail = () => {
       setTimeout(() => {
         resetAuth();
         navigation.reset({
-          index: 0, routes: [{ name: 'LandingPage' }],
+          index: 0,
+          routes: [{ name: 'LandingPage' }],
         });
       }, 1500);
     } catch (error) {
@@ -164,20 +176,30 @@ const ProfileDetail = () => {
 
   return (
     <Layout>
-      <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.header}>
           <BackButton color={colors.deepNavy} />
-          <Text variant="titleMedium" style={styles.headerTitle}>프로필 상세정보</Text>
+          <Text variant="titleMedium" style={styles.headerTitle}>
+            프로필 상세정보
+          </Text>
           <View style={{ width: 30 }} />
         </View>
 
         <Card style={styles.wrapper}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.settingsButton}
             onPress={() => navigation.navigate('Settings')}
             activeOpacity={0.8}
           >
-            <Ionicons name="settings-outline" size={24} color={colors.textColor} />
+            <Ionicons
+              name="settings-outline"
+              size={24}
+              color={colors.textColor}
+            />
           </TouchableOpacity>
 
           <View style={styles.profileContainer}>
@@ -235,8 +257,10 @@ const ProfileDetail = () => {
               <View style={styles.infoRow}>
                 <Text style={styles.label}>인지 유형</Text>
                 <View style={styles.valueRow}>
-                  <Text style={styles.value}>
-                    {profile?.cognitive_type_label ?? profile?.cognitive_type_out ?? '-'}
+                  <Text style={styles.longValue}>
+                    {profile?.cognitive_type_label ??
+                      profile?.cognitive_type_out ??
+                      '-'}
                   </Text>
                 </View>
               </View>
@@ -245,8 +269,10 @@ const ProfileDetail = () => {
               <View style={styles.infoRow}>
                 <Text style={styles.label}>업무 시간 패턴</Text>
                 <View style={styles.valueRow}>
-                  <Text style={styles.value}>
-                    {profile?.work_time_pattern_label ?? profile?.work_time_pattern_out ?? '-'}
+                  <Text style={styles.longValue}>
+                    {profile?.work_time_pattern_label ??
+                      profile?.work_time_pattern_out ??
+                      '-'}
                   </Text>
                 </View>
               </View>
@@ -374,6 +400,10 @@ const styles = StyleSheet.create({
     color: colors.textColor,
     fontSize: 16,
   },
+  longValue: {
+    color: colors.textColor,
+    fontSize: 14,
+  },
   buttonGroup: {
     gap: 12,
     marginTop: 12,
@@ -382,4 +412,4 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
   },
-}); 
+});

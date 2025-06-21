@@ -104,7 +104,7 @@ export default function SleepTest3() {
     sendAllResults(requestBody, {
       onSuccess: basicResult => {
         navigation.navigate('SleepTestResult', {
-          basic: JSON.stringify(basicResult),
+          basic: basicResult,
         });
         resetGame();
       },

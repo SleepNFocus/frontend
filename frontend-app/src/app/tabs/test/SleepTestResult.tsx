@@ -7,11 +7,11 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import ResultChart from '@/components/common/ResultChart';
+import { useNavigation } from '@react-navigation/native';
 import { GlassCard } from '@/components/common/Card';
 import { Button } from '@/components/common/Button';
 import { Layout } from '@/components/common/Layout';
 import { Text } from '@/components/common/Text';
-import { useNavigation } from 'expo-router';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 
@@ -22,7 +22,7 @@ type SleepTestResultRouteProp = RouteProp<
 
 export default function SleepTestResult() {
   const route = useRoute<SleepTestResultRouteProp>();
-  const basic = JSON.parse(route.params.basic);
+  const basic = route.params.basic;
 
   const { width: windowWidth } = useWindowDimensions();
   const containerWidth = Math.min(windowWidth * 0.9, 700);

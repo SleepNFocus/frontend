@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import Toast from 'react-native-toast-message';
-import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
@@ -43,6 +46,7 @@ import OAuthCallback from './app/auth/OAuthCallback';
 import KakaoLoginWebView from './app/auth/KakaoLoginWebView';
 import { useAuthStore } from '@/store/authStore';
 import SleepRecordDetailPage from './app/tabs/HistoryDetail';
+import { Contactus } from './app/legal/Contactus';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -85,6 +89,7 @@ export type RootStackParamList = {
   SleepDetail: { date: string };
   TermsOfServicePage: undefined;
   PrivacyPolicyPage: undefined;
+  Contactus: undefined;
 };
 
 export const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -208,8 +213,14 @@ export default function App() {
                 component={SleepTestResult}
               />
               <Stack.Screen name="PrivacyNotice" component={PrivacyNotice} />
-              <Stack.Screen name="TermsOfServicePage" component={TermsOfServicePage} />
-              <Stack.Screen name="PrivacyPolicyPage" component={PrivacyPolicyPage} />
+              <Stack.Screen
+                name="TermsOfServicePage"
+                component={TermsOfServicePage}
+              />
+              <Stack.Screen
+                name="PrivacyPolicyPage"
+                component={PrivacyPolicyPage}
+              />
               {/* <Stack.Screen name="MyRecord" component={MyRecord} />
             <Stack.Screen name="Loading" component={Loading} />  */}
               <Stack.Screen name="OAuthCallback" component={OAuthCallback} />
@@ -228,6 +239,7 @@ export default function App() {
                 component={SleepRecordDetailPage}
                 options={{ title: '기록 상세' }}
               />
+              <Stack.Screen name="Contactus" component={Contactus} />
             </Stack.Navigator>
             <Toast />
           </NavigationContainer>

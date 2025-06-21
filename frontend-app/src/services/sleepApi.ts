@@ -68,44 +68,43 @@ export const useSaveSleepRecord = () => {
         queryKey: ['sleepRecord', variables.selectedDate],
       });
     },
-    onError: error => {
-    },
+    onError: error => {},
   });
 };
 
 // 날짜 기반으로 수면 기록 조회
+
 export const useSleepRecord = (date: string | null | undefined) => {
   return useQuery({
     queryKey: ['sleepRecord', date],
+    enabled: !!date, // ✅ date 없으면 아예 실행 안 함
     queryFn: async () => {
-      if (!date) {
-        throw new Error('Date is required');
-      }
-      try {
-        const apiClient = await getApiClient();
+      if (!date) return null;
 
+      const apiClient = await getApiClient();
+
+      try {
         const response = await apiClient.get<{
-          message: string;
-          data: any; // Using any to avoid type error for now
-        }>(`/sleep-records/daily`, {
+          message?: string;
+          data: any; // 실제 타입 있으면 적용
+        }>('/sleepRecord/', {
           params: { date },
         });
 
-        return response.data.data;
+        // ✅ 백엔드에서 data: null 로 오면 그대로 넘기기
+        return response.data?.data ?? null;
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          if (error.response?.status === 404) {
-            return {
-              sleep_data: null,
-              // ... existing code ...
-            };
+          if (
+            error.response?.status === 204 || // 백엔드가 record 없을 때 이렇게 줄 수 있음
+            error.response?.status === 404
+          ) {
+            return null;
           }
         }
-        throw error;
+        throw error; // 진짜 에러는 그대로 던져서 isError로 처리
       }
     },
-    enabled: !!date && date !== '',
-    staleTime: 1000 * 60 * 5, // 5분
   });
 };
 
@@ -149,7 +148,6 @@ export const useUpdateSleepRecord = () => {
       });
       queryClient.invalidateQueries({ queryKey: ['sleepRecords'] });
     },
-    onError: error => {
-    },
+    onError: error => {},
   });
 };
