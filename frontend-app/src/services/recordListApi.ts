@@ -12,7 +12,7 @@ export const fetchSleepRecordList = async (
 
 export const useSleepRecordList = (period: 'day' | 'week' | 'month') => {
   return useQuery<RecordListResponse>({
-    queryKey: ['sleepRecordList', period],
+    queryKey: ['/sleepRecordList', period],
     queryFn: () => fetchSleepRecordList(period),
     enabled: !!period,
   });
@@ -42,5 +42,10 @@ export const fetchSleepRecordDetail = async (
 ): Promise<SleepRecordDetail> => {
   const client = await getApiClient();
   const res = await client.get(`/users/mypage/records/${date}/detail/`);
-  return res.data.detail; // 스웨거 응답 구조에 맞춰 `.detail` 반환
+
+  if (!res.data || !res.data.detail) {
+    throw new Error('서버에서 수면 기록 데이터를 찾을 수 없습니다.');
+  }
+
+  return res.data.detail;
 };

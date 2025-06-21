@@ -15,6 +15,8 @@ import { RootStackParamList } from '@/App';
 import { useGetDailySummary } from '@/services/testApi';
 import ResultChart from '@/components/common/ResultChart';
 import { useAuthStore } from '@/store/authStore';
+import { format } from 'date-fns';
+import { useSleepRecord } from '@/services/sleepApi';
 
 interface ScoreDetail {
   label: string;
@@ -45,8 +47,7 @@ const AbilityProfileCard: React.FC<AbilityProfileCardProps> = memo(
       <Card style={styles.abilityCard}>
         <Text style={styles.sectionTitle}>나의 인지 능력 프로필</Text>
         <Text style={styles.sectionLabel}>
-          {/* 봉석님 -  수면 점수 추가 */}
-          오늘의 수면 점수: {sleepScore ?? 80}점
+          오늘의 수면 점수: {sleepScore}점
         </Text>
         <View style={styles.chartContainer}>
           <ResultChart data={data} labels={labels} />
@@ -61,9 +62,9 @@ const ScoreDetailCard: React.FC<ScoreDetailCardProps> = memo(
   ({ details, averageScore }) => {
     return (
       <Card style={styles.detailCard}>
-        <Text style={styles.sectionTitle}>상세 결과</Text>
+        <Text style={styles.sectionTitle}>인지 테스트 상세 결과</Text>
         <Text style={styles.avgScore}>
-          전체 평균 점수:{' '}
+          평균 점수:{' '}
           <Text style={styles.avgScorePoint}>{Math.floor(averageScore)}점</Text>
         </Text>
         <View style={styles.scoreCardList}>
@@ -87,6 +88,12 @@ const ScoreDetailCard: React.FC<ScoreDetailCardProps> = memo(
 export const DashboardMain: React.FC = memo(() => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const today = format(new Date(), 'yyyy-MM-dd');
+  const { data: sleepRecordData } = useSleepRecord(today);
+
+  const sleepScore = sleepRecordData?.sleep_score ?? 0;
+
   const [cognitionData, setCognitionData] = useState<CognitionData>({
     data: [],
     labels: [],
@@ -169,6 +176,7 @@ export const DashboardMain: React.FC = memo(() => {
           <AbilityProfileCard
             data={cognitionData.data}
             labels={cognitionData.labels}
+            sleepScore={sleepScore}
           />
 
           <ScoreDetailCard details={scoreDetails} averageScore={averageScore} />
