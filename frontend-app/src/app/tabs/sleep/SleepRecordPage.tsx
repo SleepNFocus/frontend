@@ -35,6 +35,8 @@ export const SleepRecordPage: React.FC = () => {
     refetch,
   } = useSleepRecord(shouldFetchData ? savedDate : '');
 
+  console.log('DEBUGGING', savedDate, sleepData);
+
   // 재시도 로직은 handleSaveRecord 안으로 이동시켜, 저장 직후 제어하도록 합니다.
   // useEffect(() => { ... });
 
@@ -150,7 +152,7 @@ export const SleepRecordPage: React.FC = () => {
       openToast('error', errorMessage);
     }
   };
-  
+
   // 로딩 상태
   if (saveSleepRecordMutation.isPending) {
     return (
