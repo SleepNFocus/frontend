@@ -164,7 +164,7 @@ export const SurveyPage: React.FC = () => {
       await saveBasicInfo(basicPayload);
       await saveJobInfo(jobPayload);
 
-      navigation.navigate('Dashboard');
+      navigation.navigate('SleepRecord');
 
     } catch (err) {
       console.error('온보딩 전송 실패:', err);

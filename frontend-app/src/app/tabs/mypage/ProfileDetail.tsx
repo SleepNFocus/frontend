@@ -21,8 +21,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Button } from '@/components/common/Button';
 import useUiStore from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
-import { logoutUser } from '@/app/auth/logout';
-import { withdrawUser } from '@/app/auth/withdraw';
+import { logoutUser } from '@/utils/auth/logout';
+import { withdrawUser } from '@/utils/auth/withdraw';
 import { Ionicons } from '@expo/vector-icons';
 import { useQueryClient } from '@tanstack/react-query';
 

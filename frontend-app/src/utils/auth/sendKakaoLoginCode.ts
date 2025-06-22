@@ -44,7 +44,7 @@ const adaptUserInfoToUser = (userInfo: UserInfo): User => ({
   has_completed_onboarding: userInfo.has_completed_onboarding ?? false,
 });
 
-export const sendKakaoLoginCode = async (code: string): Promise<LoginResponse> => {
+export const sendKakaoLoginToken = async (accessToken: string): Promise<LoginResponse> => {
   try {
     const response = await axios.post<{
       access: string;
@@ -54,7 +54,7 @@ export const sendKakaoLoginCode = async (code: string): Promise<LoginResponse> =
       `${BASE_URL}/users/social-login/`,
       {
         provider: 'kakao',
-        code,
+        access_token: accessToken,
       },
       {
         headers: {

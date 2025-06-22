@@ -91,54 +91,56 @@ export const SocialLogin: React.FC = () => {
   );
 }
 
-  const styles = StyleSheet.create({
-    outer: {
-      flex: 1,
-      backgroundColor: '#F7F9FC',
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingHorizontal: 20,
-    },
-    card: {
-      backgroundColor: '#fff',
-      padding: 32,
-      borderRadius: 20,
-      borderWidth: 1,
-      borderColor: '#e5e7eb',
-      shadowColor: '#000',
-      shadowOpacity: 0.05,
-      shadowRadius: 10,
-      elevation: 6,
-      width: '100%',
-      maxWidth: 360,
-    },
-    title: {
-      marginBottom: 32,
-      textAlign: 'center',
-      fontWeight: 'bold',
-      color: '#1F2937',
-    },
-    buttonGroup: {
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    socialButton: {
-      flexDirection: 'row',
-      borderRadius: 12,
-      width: '100%',
-      marginBottom: 16,
-      elevation: 2,
-    },
-    googleButton: {
-      backgroundColor: '#fff',
-      borderWidth: 1,
-      borderColor: '#ddd',
-    },
-    icon: {
-      height: 24,
-      width: 24,
-      marginRight: 8,
-      resizeMode: 'contain',
-    },
-  });
+const styles = StyleSheet.create({
+  outer: {
+    flex: 1,
+    backgroundColor: '#F7F9FC',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  card: {
+    backgroundColor: '#fff',
+    padding: 32,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 6,
+    width: '100%',
+    maxWidth: 360,
+  },
+  title: {
+    marginBottom: 32,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#1F2937',
+  },
+  buttonGroup: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  socialButton: {
+    flexDirection: 'row',
+    borderRadius: 12,
+    width: '100%',
+    marginBottom: 16,
+    elevation: 2,
+  },
+  googleButton: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  icon: {
+    height: 24,
+    width: 24,
+    marginRight: 8,
+    resizeMode: 'contain',
+  },
+});
+
+export default SocialLogin;
   

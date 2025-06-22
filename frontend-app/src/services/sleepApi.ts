@@ -48,6 +48,7 @@ export const useSaveSleepRecord = () => {
         wake_count: wakeCountMapping[recordData.nightWakeCount] || 0,
         disturb_factors: recordData.sleepDisruptors,
         memo: null,
+        score: recordData.totalScore,
       };
 
       const apiClient = await getApiClient();

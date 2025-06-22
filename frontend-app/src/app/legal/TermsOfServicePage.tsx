@@ -144,3 +144,5 @@ const styles = StyleSheet.create({
     borderLeftColor: colors.softBlue,
   },
 });
+
+export default TermsOfServicePage;

@@ -15,8 +15,8 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useAuthStore } from '@/store/authStore';
-import { getAccessTokenFromKakao } from './getAccessTokenFromKakao';
-import { sendKakaoLoginCode } from './sendKakaoLoginCode';
+import { getAccessTokenFromKakao } from '@/utils/auth/getAccessTokenFromKakao';
+import { sendKakaoLoginToken } from '@/utils/auth/sendKakaoLoginCode';
 import { RootStackParamList } from '@/App';
 
 const OAuthCallback = () => {
@@ -41,7 +41,7 @@ const OAuthCallback = () => {
         const access_token = await getAccessTokenFromKakao(code);
 
         // 서버에 로그인 요청
-        const { access, refresh, user } = await sendKakaoLoginCode(access_token);
+        const { access, refresh, user } = await sendKakaoLoginToken(access_token);
 
         // 토큰 저장 키를 accessToken으로 통일
         await AsyncStorage.setItem('accessToken', access);
