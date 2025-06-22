@@ -55,7 +55,7 @@ const ProfileCard = () => {
   const processImageUrl = (url: string | null | undefined): any => {
     if (!url) {
       // console.log('URL이 없어서 기본 이미지 반환');
-      return require('@/assets/icon.png');
+      return require('../../../../assets/icon.png');
     }
 
     try {
@@ -132,10 +132,10 @@ const ProfileCard = () => {
       }
 
       // console.log('기본 이미지 사용');
-      return require('@/assets/icon.png');
+      return require('../../../../assets/icon.png');
     } catch (error) {
       // console.log('URL 처리 에러:', error);
-      return require('@/assets/icon.png');
+      return require('../../../../assets/icon.png');
     }
   };
 
