@@ -6,6 +6,7 @@ export interface User {
   email: string;
   nickname: string;
   image_url?: string;
+  has_completed_onboarding?: boolean;
 }
 
 interface AuthState {
@@ -19,6 +20,7 @@ interface AuthState {
   setRefreshToken: (token: string) => void;
   resetAuth: () => void;
   loadTokensFromStorage: () => Promise<void>;
+  setCompletedOnboarding: (value: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>(set => ({
@@ -33,7 +35,7 @@ export const useAuthStore = create<AuthState>(set => ({
         await AsyncStorage.setItem('hasLoggedInBefore', 'true');
       }
       set(() => ({ isLogin: value }));
-    } catch (error) {
+    } catch {
       set(() => ({ isLogin: value }));
     }
   },
@@ -42,7 +44,7 @@ export const useAuthStore = create<AuthState>(set => ({
     try {
       await AsyncStorage.setItem('userInfo', JSON.stringify(user));
       set(() => ({ user }));
-    } catch (error) {
+    } catch {
       set(() => ({ user }));
     }
   },
@@ -51,7 +53,7 @@ export const useAuthStore = create<AuthState>(set => ({
     try {
       await AsyncStorage.setItem('accessToken', token);
       set(() => ({ accessToken: token }));
-    } catch (error) {
+    } catch {
       set(() => ({ accessToken: token }));
     }
   },
@@ -60,7 +62,7 @@ export const useAuthStore = create<AuthState>(set => ({
     try {
       await AsyncStorage.setItem('refreshToken', token);
       set(() => ({ refreshToken: token }));
-    } catch (error) {
+    } catch {
       set(() => ({ refreshToken: token }));
     }
   },
@@ -79,7 +81,7 @@ export const useAuthStore = create<AuthState>(set => ({
         accessToken: null,
         refreshToken: null,
       }));
-    } catch (error) {
+    } catch {
       set(() => ({
         isLogin: false,
         user: null,
@@ -100,10 +102,16 @@ export const useAuthStore = create<AuthState>(set => ({
         accessToken: accessToken ?? null,
         refreshToken: refreshToken ?? null,
       }));
-
-      console.log('🪄 Zustand에 토큰 복원 완료');
     } catch (error) {
-      console.error('🛑 토큰 복원 실패:', error);
+      console.error('토큰 복원 실패:', error);
     }
+  },
+
+  setCompletedOnboarding: (value: boolean) => {
+    set(state => ({
+      user: state.user
+        ? { ...state.user, has_completed_onboarding: value }
+        : null,
+    }));
   },
 }));

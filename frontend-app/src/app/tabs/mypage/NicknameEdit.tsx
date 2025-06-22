@@ -53,10 +53,10 @@ const NicknameEdit = () => {
 
     try {
       await updateProfile({ nickname });
-      openToast('success', '닉네임 변경', '닉네임이 변경되었어요!');
-      setTimeout(() => {
-        navigation.goBack();
-      }, 500);
+    openToast('success', '닉네임 변경', '닉네임이 변경되었어요!');
+    setTimeout(() => {
+      navigation.goBack();
+    }, 500);
     } catch (e) {
       openToast('error', '변경 실패', '닉네임 변경에 실패했어요');
     }

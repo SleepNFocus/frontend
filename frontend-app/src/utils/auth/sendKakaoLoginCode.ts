@@ -1,8 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const BASE_URL = 'https://www.dev.focusz.site'; 
-
+const BASE_URL = 'https://www.dev.focusz.site/api';
 
 interface UserInfo {
   user_id: number;
@@ -12,6 +11,7 @@ interface UserInfo {
   email: string;
   profile_img: string | null;
   status: string;
+  has_completed_onboarding: boolean;
 }
 
 
@@ -23,6 +23,7 @@ export interface User {
   email: string;
   profile_img: string | null;
   status: string;
+  has_completed_onboarding: boolean;
 }
 
 interface LoginResponse {
@@ -31,7 +32,7 @@ interface LoginResponse {
   user: User;
 }
 
-// 변환 함수
+
 const adaptUserInfoToUser = (userInfo: UserInfo): User => ({
   id: userInfo.user_id,
   social_type: userInfo.social_type,
@@ -40,19 +41,20 @@ const adaptUserInfoToUser = (userInfo: UserInfo): User => ({
   email: userInfo.email,
   profile_img: userInfo.profile_img,
   status: userInfo.status,
+  has_completed_onboarding: userInfo.has_completed_onboarding ?? false,
 });
 
-export const sendKakaoLoginCode = async (code: string): Promise<LoginResponse> => {
+export const sendKakaoLoginToken = async (accessToken: string): Promise<LoginResponse> => {
   try {
     const response = await axios.post<{
       access: string;
       refresh: string;
       user: UserInfo;
     }>(
-      `${BASE_URL}/api/users/social-login/`,
+      `${BASE_URL}/users/social-login/`,
       {
         provider: 'kakao',
-        code,
+        access_token: accessToken,
       },
       {
         headers: {
@@ -64,19 +66,20 @@ export const sendKakaoLoginCode = async (code: string): Promise<LoginResponse> =
     const { access, refresh, user: userInfo } = response.data;
     const user = adaptUserInfoToUser(userInfo);
 
+    // 토큰 저장 키를 accessToken으로 통일
     await AsyncStorage.multiSet([
       ['accessToken', access],
       ['refreshToken', refresh],
       ['userInfo', JSON.stringify(user)],
+      ['hasLoggedInBefore', 'true'],
     ]);
 
-    console.log('✅ 로그인 성공:', user);
     return { access, refresh, user };
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      console.error('❌ 로그인 실패:', err.response?.data || err.message);
+      console.error('로그인 실패:', err.response?.data || err.message);
     } else {
-      console.error('❌ 알 수 없는 에러:', err);
+      console.error('알 수 없는 에러:', err);
     }
     throw err;
   }

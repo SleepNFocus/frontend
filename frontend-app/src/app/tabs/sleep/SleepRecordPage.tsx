@@ -13,6 +13,8 @@ import { colors } from '@/constants/colors';
 import useUiStore from '@/store/uiStore';
 import { useSaveSleepRecord, useSleepRecord } from '@/services/sleepApi';
 import { useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { getApiClient } from '@/services/axios';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -20,51 +22,42 @@ export const SleepRecordPage: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const [isRecordSaved, setIsRecordSaved] = useState(false);
   const [savedDate, setSavedDate] = useState<string | null>(null);
+  const [isExist, setIsExist] = useState(false);
   const { openToast } = useUiStore();
   const queryClient = useQueryClient();
 
   const saveSleepRecordMutation = useSaveSleepRecord();
 
-  // 🔍 savedDate 상태 확인
-  console.log('🔍 현재 savedDate:', savedDate);
-  console.log('🔍 savedDate || "":', savedDate || '');
-  console.log('🔍 isRecordSaved:', isRecordSaved);
-
   // savedDate가 있을 때만 useSleepRecord 호출
   const shouldFetchData = !!savedDate && isRecordSaved;
-  console.log('🔍 shouldFetchData:', shouldFetchData);
+
+  // ! 임시로 useEffect로 작성 -> 리팩토링 필요
+  // ! 사용자가 이미 테스트를 했는지 구분하는 API
+  useEffect(() => {
+    async function fetchIsExistData() {
+      const apiClient = await getApiClient();
+      const response = await apiClient.get(
+        `/sleepRecord/exist/?date=${savedDate}`,
+      );
+      setIsExist(response.data.exists);
+      console.log('존재하는 데이터인지 확인', response.data);
+    }
+
+    console.log('fetchIsExistData 호출');
+    fetchIsExistData();
+  }, []);
 
   const {
     data: sleepData,
     isLoading: isLoadingData,
     error: sleepDataError,
     refetch,
-  } = useSleepRecord(savedDate || '');
+  } = useSleepRecord(shouldFetchData ? savedDate : '');
 
-  // 🔍 React Query 상태 변화 추적
-  console.log('🔍 React Query 상태 변화:');
-  console.log('  - savedDate:', savedDate);
-  console.log('  - isLoadingData:', isLoadingData);
-  console.log('  - sleepData:', sleepData);
-  console.log('  - sleepDataError:', sleepDataError);
-  console.log('  - sleepData 타입:', typeof sleepData);
-  console.log('  - sleepData가 존재?:', !!sleepData);
+  console.log('DEBUGGING', savedDate, sleepData);
 
-  // savedDate가 변경될 때마다 데이터 상태 확인
-  useEffect(() => {
-    console.log('🔄 useEffect 실행 - savedDate 변경됨:', savedDate);
-    console.log('🔄 isRecordSaved:', isRecordSaved);
-
-    if (savedDate && isRecordSaved) {
-      console.log('🔄 조건 만족 - 데이터 새로고침 시도');
-
-      // 간단한 refetch 시도
-      setTimeout(() => {
-        console.log('🔄 refetch 실행');
-        refetch();
-      }, 1000);
-    }
-  }, [savedDate, isRecordSaved, refetch]);
+  // 재시도 로직은 handleSaveRecord 안으로 이동시켜, 저장 직후 제어하도록 합니다.
+  // useEffect(() => { ... });
 
   const getFeedback = (score: number) => {
     if (score >= 90) {
@@ -139,38 +132,44 @@ export const SleepRecordPage: React.FC = () => {
 
   const handleSaveRecord = async (recordData: SleepRecordData) => {
     try {
-      console.log('💾 수면 기록 저장 시작:', recordData);
-      console.log('💾 저장할 날짜:', recordData.selectedDate);
+      // 1. 수면 기록 저장
+      await saveSleepRecordMutation.mutateAsync(recordData);
 
-      const result = await saveSleepRecordMutation.mutateAsync(recordData);
-      console.log('💾 저장 성공:', result);
-
-      // 상태 업데이트
-      console.log('💾 상태 업데이트 전 - savedDate:', savedDate);
+      // 2. UI 상태를 결과 화면으로 전환
       setSavedDate(recordData.selectedDate);
       setIsRecordSaved(true);
-      console.log(
-        '💾 상태 업데이트 후 - 설정한 savedDate:',
-        recordData.selectedDate,
-      );
 
       openToast(
         'success',
         `수면 기록이 성공적으로 저장되었습니다. (날짜: ${recordData.selectedDate})`,
       );
+
+      // 3. 서버가 점수를 계산할 시간을 벌기 위해, 결과가 나올 때까지 반복 요청 (Polling)
+      const pollForResult = async (retries = 5, interval = 1500) => {
+        for (let i = 0; i < retries; i++) {
+          try {
+            // 수동으로 데이터 리프레시
+            const { data: fetchedData } = await refetch();
+            // 데이터를 성공적으로 받아오면, 반복을 중단
+            if (fetchedData) {
+              return;
+            }
+            // 데이터를 못 받으면, 다음 시도까지 대기
+            await new Promise(resolve => setTimeout(resolve, interval));
+          } catch (error) {
+            // refetch 중 에러가 발생하면 다음 시도로 넘어감
+          }
+        }
+      };
+
+      pollForResult(); // 백그라운드에서 결과 확인 시작
     } catch (error) {
-      console.error('💾 저장 실패:', error);
       const errorMessage =
         error instanceof Error
           ? error.message
           : '수면 기록 저장에 실패했습니다. 다시 시도해 주세요.';
       openToast('error', errorMessage);
     }
-  };
-
-  const startNewRecord = () => {
-    setIsRecordSaved(false);
-    setSavedDate(null);
   };
 
   // 로딩 상태
@@ -189,7 +188,7 @@ export const SleepRecordPage: React.FC = () => {
   return (
     <Layout>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        {!isRecordSaved ? (
+        {!isRecordSaved && !isExist ? (
           // 수면 기록 입력 폼
           <SleepRecordForm onSave={handleSaveRecord} />
         ) : (
@@ -270,7 +269,7 @@ export const SleepRecordPage: React.FC = () => {
                   <Button
                     title="🤖 AI 맞춤 분석 보기"
                     onPress={() =>
-                      navigation.navigate('AISleepTipsScreen', {
+                      navigation.navigate('Insight', {
                         date: sleepData.date,
                         score: sleepData.score || 0,
                       })
@@ -292,74 +291,24 @@ export const SleepRecordPage: React.FC = () => {
                   </View>
                 </Card.Content>
               </Card>
+            ) : savedDate && !isLoadingData && !sleepData ? (
+              <Card style={styles.card}>
+                <Card.Content>
+                  <View style={styles.loadingContainer}>
+                    <Text variant="titleMedium" style={styles.errorText}>
+                      수면 기록이 저장되었지만 점수 계산에 실패했습니다
+                    </Text>
+                    <Text variant="bodyMedium" style={styles.loadingText}>
+                      잠시 후 다시 시도해주세요.
+                    </Text>
+                  </View>
+                </Card.Content>
+              </Card>
             ) : null}
 
             {/* 액션 버튼들 */}
             <View style={styles.actionButtons}>
               {/* 🧪 임시 테스트 버튼 */}
-              <Button
-                onPress={async () => {
-                  console.log('🧪 테스트 버튼 클릭 - 토큰 상태 상세 확인');
-
-                  // AsyncStorage 토큰 확인
-                  const AsyncStorage = await import(
-                    '@react-native-async-storage/async-storage'
-                  );
-                  const userToken =
-                    await AsyncStorage.default.getItem('userToken');
-                  const accessToken =
-                    await AsyncStorage.default.getItem('accessToken');
-                  const refreshToken =
-                    await AsyncStorage.default.getItem('refreshToken');
-
-                  console.log('🔍 AsyncStorage 토큰들:');
-                  console.log(
-                    '  - userToken:',
-                    userToken ? `${userToken.substring(0, 30)}...` : null,
-                  );
-                  console.log(
-                    '  - accessToken:',
-                    accessToken ? `${accessToken.substring(0, 30)}...` : null,
-                  );
-                  console.log(
-                    '  - refreshToken:',
-                    refreshToken ? `${refreshToken.substring(0, 30)}...` : null,
-                  );
-
-                  // 토큰 디코딩해서 만료 시간 확인
-                  if (userToken) {
-                    try {
-                      const payload = JSON.parse(atob(userToken.split('.')[1]));
-                      const currentTime = Math.floor(Date.now() / 1000);
-                      console.log('🔍 토큰 정보:');
-                      console.log(
-                        '  - 발급 시간:',
-                        new Date(payload.iat * 1000),
-                      );
-                      console.log(
-                        '  - 만료 시간:',
-                        new Date(payload.exp * 1000),
-                      );
-                      console.log(
-                        '  - 현재 시간:',
-                        new Date(currentTime * 1000),
-                      );
-                      console.log(
-                        '  - 토큰 만료됨?:',
-                        payload.exp < currentTime,
-                      );
-                    } catch (e) {
-                      console.log('🔍 토큰 디코딩 실패:', e);
-                    }
-                  }
-
-                  setSavedDate('2025-06-20');
-                  setIsRecordSaved(true);
-                }}
-                title="🧪 토큰 상태 상세 확인"
-                style={{ backgroundColor: '#e74c3c', marginBottom: 12 }}
-              />
-
               <Button
                 onPress={() => navigation.navigate('SleepTestMain')}
                 title="반응속도 테스트"
@@ -368,12 +317,6 @@ export const SleepRecordPage: React.FC = () => {
               <Button
                 onPress={() => navigation.navigate('History')}
                 title="기록 목록 보기"
-                variant="outline"
-                style={styles.secondaryButton}
-              />
-              <Button
-                onPress={startNewRecord}
-                title="새 수면 기록 추가"
                 variant="outline"
                 style={styles.secondaryButton}
               />
@@ -395,6 +338,7 @@ const styles = StyleSheet.create({
   card: {
     marginVertical: 16,
     borderLeftWidth: 4,
+    backgroundColor: '#ffffff',
   },
   header: {
     flexDirection: 'row',
@@ -402,7 +346,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   emoji: {
-    fontSize: 32,
+    fontSize: 36,
+    lineHeight: 40,
     marginRight: 12,
   },
   headerText: {
@@ -419,7 +364,6 @@ const styles = StyleSheet.create({
   summarySection: {
     marginBottom: 16,
     padding: 12,
-    backgroundColor: colors.lightGray || '#f5f5f5',
     borderRadius: 8,
   },
   summaryTitle: {
@@ -463,3 +407,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export default SleepRecordPage;

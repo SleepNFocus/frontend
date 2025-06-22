@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import Toast from 'react-native-toast-message';
 import {
   NavigationContainer,
-  NavigationContainerRef,
+  useNavigationContainerRef,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -38,11 +38,15 @@ import { SurveyPage } from './app/splash/SurveyPage';
 import SleepTestResult from './app/tabs/test/SleepTestResult';
 import { PrivacyNotice } from './app/splash/PrivacyNotice';
 import LandingPage from './app/splash/LandingPage';
+import { TermsOfServicePage } from './app/legal/TermsOfServicePage';
+import { PrivacyPolicyPage } from './app/legal/PrivacyPolicyPage';
 // import MyRecord from './app/tabs/mypage/MyRecord';
 // import { Loading } from './app/tabs/Loading';
 import OAuthCallback from './app/auth/OAuthCallback';
 import KakaoLoginWebView from './app/auth/KakaoLoginWebView';
 import { useAuthStore } from '@/store/authStore';
+import SleepRecordDetailPage from './app/tabs/HistoryDetail';
+import { Contactus } from './app/legal/Contactus';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -51,9 +55,10 @@ export type RootStackParamList = {
   IntroCard: undefined;
   Onboarding: undefined;
   Dashboard: undefined;
+  SurveyPage: undefined;
   DailyCheck: undefined;
   History: undefined;
-  Insight: undefined;
+  Insight: { date?: string; score?: number };
   More: undefined;
   SurveyStep1: undefined;
   TestSurvey: undefined;
@@ -72,7 +77,7 @@ export type RootStackParamList = {
   SleepTest3Desc: undefined;
   SleepTest3: undefined;
   SleepTestResult: {
-    basic: string;
+    basic: CognitiveResultType;
   };
   PrivacyNotice: undefined;
   DailyCheckScreen: undefined;
@@ -81,6 +86,10 @@ export type RootStackParamList = {
   Survey: undefined;
   OAuthCallback: { code: string };
   KakaoLoginWebView: undefined;
+  SleepDetail: { date: string };
+  TermsOfServicePage: undefined;
+  PrivacyPolicyPage: undefined;
+  Contactus: undefined;
 };
 
 export const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -129,31 +138,32 @@ export default function App() {
     NanumSquareRoundB: require('./assets/fonts/NanumSquareRoundB.ttf'),
     NanumSquareRoundEB: require('./assets/fonts/NanumSquareRoundEB.ttf'),
   });
-
-  // navigation ref 선언
-  const navigationRef = useRef<NavigationContainerRef<any>>(null);
-
-  // forceLogoutEvent 등록
-  useEffect(() => {
-    globalThis.forceLogoutEvent = async () => {
-      // Zustand store에서 resetAuth 직접 호출
-      await useAuthStore.getState().resetAuth();
-      // navigation으로 로그인(랜딩) 페이지로 이동
-      navigationRef.current?.reset({
-        index: 0,
-        routes: [{ name: 'LandingPage' }],
-      });
-    };
-    return () => {
-      globalThis.forceLogoutEvent = undefined;
-    };
-  }, []);
+  const navigationRef = useNavigationContainerRef<RootStackParamList>();
+  const resetAuth = useAuthStore(state => state.resetAuth);
 
   useEffect(() => {
     if (fontsLoaded) {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
+
+  // 전역 강제 로그아웃 이벤트 리스너 설정
+  useEffect(() => {
+    const handleForceLogout = async () => {
+      await resetAuth();
+      // 로그인 화면으로 즉시 이동하기 위해 navigation state 초기화
+      navigationRef.current?.reset({
+        index: 0,
+        routes: [{ name: 'LandingPage' }],
+      });
+    };
+
+    (globalThis as any).forceLogoutEvent = handleForceLogout;
+
+    return () => {
+      (globalThis as any).forceLogoutEvent = undefined;
+    };
+  }, [resetAuth]);
 
   if (!fontsLoaded) return null;
 
@@ -203,6 +213,14 @@ export default function App() {
                 component={SleepTestResult}
               />
               <Stack.Screen name="PrivacyNotice" component={PrivacyNotice} />
+              <Stack.Screen
+                name="TermsOfServicePage"
+                component={TermsOfServicePage}
+              />
+              <Stack.Screen
+                name="PrivacyPolicyPage"
+                component={PrivacyPolicyPage}
+              />
               {/* <Stack.Screen name="MyRecord" component={MyRecord} />
             <Stack.Screen name="Loading" component={Loading} />  */}
               <Stack.Screen name="OAuthCallback" component={OAuthCallback} />
@@ -216,6 +234,12 @@ export default function App() {
                 name="KakaoLoginWebView"
                 component={KakaoLoginWebView}
               />
+              <Stack.Screen
+                name="SleepDetail"
+                component={SleepRecordDetailPage}
+                options={{ title: '기록 상세' }}
+              />
+              <Stack.Screen name="Contactus" component={Contactus} />
             </Stack.Navigator>
             <Toast />
           </NavigationContainer>

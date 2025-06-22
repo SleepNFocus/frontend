@@ -18,27 +18,46 @@ export const getProfile = async (): Promise<Profile> => {
   return response.data;
 };
 
-// 프로필 수정
-export const updateProfile = async (data: ProfileUpdateRequest): Promise<Profile> => {
+// 프로필 수정 (이미지 포함)
+export const updateProfile = async (data: ProfileUpdateRequest & { profile_image_uri?: string }): Promise<Profile> => {
   const apiClient = await getApiClient();
-  
-  console.log('=== updateProfile API 디버깅 ===');
-  console.log('요청 데이터:', data);
-  console.log('요청 데이터 타입:', typeof data);
-  console.log('요청 데이터 JSON:', JSON.stringify(data, null, 2));
-  
-  try {
-    const response = await apiClient.patch<Profile>('/users/mypage/profile/', data);
-    console.log('프로필 업데이트 성공:', response.data);
-    return response.data;
-  } catch (error: any) {
-    console.error('프로필 업데이트 실패 상세:', {
-      status: error.response?.status,
-      statusText: error.response?.statusText,
-      data: error.response?.data,
-      message: error.message,
+
+  // 이미지 URI가 있는지 확인
+  if (data.profile_image_uri) {
+    const formData = new FormData();
+    
+    // 1. 텍스트 데이터를 FormData에 추가
+    Object.keys(data).forEach(key => {
+      // profile_image_uri는 파일로 추가할 것이므로 건너뜁니다.
+      if (key === 'profile_image_uri' || data[key as keyof typeof data] === null || data[key as keyof typeof data] === undefined) {
+        return;
+      }
+      // 모든 값을 문자열로 변환하여 추가
+      formData.append(key, String(data[key as keyof typeof data]));
     });
-    throw error;
+
+    // 2. 이미지 파일을 FormData에 추가
+    const imageUri = data.profile_image_uri;
+    const uriParts = imageUri.split('.');
+    const fileType = uriParts[uriParts.length - 1];
+    
+    const fileObject = {
+      uri: imageUri,
+      type: `image/${fileType}`,
+      name: `profile_image.${fileType}`,
+    };
+
+    formData.append('profile_img', fileObject as any);
+    
+    const response = await apiClient.patch<Profile>('/users/mypage/profile/', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  } else {
+    // 이미지가 없는 경우, 기존처럼 JSON으로 전송
+    const { profile_image_uri, ...jsonData } = data; // 이미지 URI 정보는 제외
+    const response = await apiClient.patch<Profile>('/users/mypage/profile/', jsonData);
+    return response.data;
   }
 };
 
@@ -60,37 +79,6 @@ export const getRecords = async (period: 'day' | 'week' | 'month'): Promise<Reco
 export const getRecordDetail = async (date: string): Promise<RecordDetail> => {
   const apiClient = await getApiClient();
   const response = await apiClient.get<RecordDetail>(`/users/mypage/records/${date}/detail/`);
-  return response.data;
-};
-
-// 프로필 이미지 업로드
-export const uploadProfileImage = async (imageUri: string): Promise<Profile> => {
-  const apiClient = await getApiClient();
-  
-  // FormData 생성
-  const formData = new FormData();
-  
-  // 파일명 생성 (확장자 추출)
-  const uriParts = imageUri.split('.');
-  const fileType = uriParts[uriParts.length - 1];
-  
-  formData.append('profile_image', {
-    uri: imageUri,
-    type: `image/${fileType}`,
-    name: `profile_image.${fileType}`,
-  } as any);
-  
-  console.log('업로드할 이미지 URI:', imageUri);
-  console.log('업로드할 파일 타입:', fileType);
-  
-  // PATCH 메서드로 프로필 수정 API 사용
-  const response = await apiClient.patch<Profile>('/users/mypage/profile/', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-  
-  console.log('이미지 업로드 API 응답:', response.data);
   return response.data;
 };
 
@@ -136,14 +124,17 @@ export const useRecordDetail = (date: string) => {
   });
 };
 
-export const useUploadProfileImage = () => {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: uploadProfileImage,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
-      queryClient.invalidateQueries({ queryKey: ['mypageMain'] });
-    },
+export const useGetProfile = () => {
+  return useQuery<Profile>({
+    queryKey: ['profile'],
+    queryFn: getProfile,
+  });
+};
+
+export const useGetMainPage = () => {
+  return useQuery<MypageMain>({
+    queryKey: ['mainPage'],
+    queryFn: getMypageMain,
+    staleTime: 1000 * 60 * 5, // 5분
   });
 }; 

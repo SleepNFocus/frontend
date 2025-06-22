@@ -36,9 +36,9 @@ export const Text: React.FC<TextProps> = ({
 }) => {
   const getTextStyle = () => {
     const baseStyle = styles[variant] || styles.bodyMedium;
-    
+
     let selectedFont: keyof typeof fonts = 'regular';
-    
+
     if (fontFamily) {
       selectedFont = fontFamily;
     } else {
@@ -50,10 +50,10 @@ export const Text: React.FC<TextProps> = ({
       } else if (fontWeight === '300') {
         selectedFont = 'light';
       } else {
-        selectedFont = 'regular'; 
+        selectedFont = 'regular';
       }
     }
-    
+
     return {
       ...baseStyle,
       fontFamily: fonts[selectedFont],
@@ -63,7 +63,7 @@ export const Text: React.FC<TextProps> = ({
   return (
     <RNText
       style={[
-        { fontFamily: fonts.regular }, 
+        { fontFamily: fonts.regular },
         getTextStyle(),
         { color: color || colors.deepNavy },
         style,
@@ -77,25 +77,25 @@ export const Text: React.FC<TextProps> = ({
 const styles = StyleSheet.create({
   displayLarge: {
     fontSize: 57,
-    fontWeight: '800', 
+    fontWeight: '800',
     letterSpacing: 0,
     lineHeight: 64,
   },
   displayMedium: {
     fontSize: 45,
-    fontWeight: '700', 
+    fontWeight: '700',
     letterSpacing: 0,
     lineHeight: 52,
   },
   displaySmall: {
     fontSize: 36,
-    fontWeight: '700', 
+    fontWeight: '700',
     letterSpacing: 0,
     lineHeight: 44,
   },
   headlineLarge: {
     fontSize: 32,
-    fontWeight: '700', 
+    fontWeight: '700',
     letterSpacing: 0,
     lineHeight: 40,
   },
@@ -107,31 +107,31 @@ const styles = StyleSheet.create({
   },
   headlineSmall: {
     fontSize: 24,
-    fontWeight: '700', 
+    fontWeight: '700',
     letterSpacing: 0,
     lineHeight: 32,
   },
   titleLarge: {
     fontSize: 22,
-    fontWeight: '700', 
+    fontWeight: '700',
     letterSpacing: 0,
     lineHeight: 28,
   },
   titleMedium: {
     fontSize: 16,
-    fontWeight: '700', 
+    fontWeight: '700',
     letterSpacing: 0.15,
     lineHeight: 24,
   },
   titleSmall: {
     fontSize: 14,
-    fontWeight: '700', 
+    fontWeight: '700',
     letterSpacing: 0.1,
     lineHeight: 20,
   },
   bodyLarge: {
     fontSize: 16,
-    fontWeight: '400', 
+    fontWeight: '400',
     letterSpacing: 0.5,
     lineHeight: 24,
   },
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   labelSmall: {
     fontSize: 11,
-    fontWeight: '700', 
+    fontWeight: '700',
     letterSpacing: 0.5,
     lineHeight: 16,
   },

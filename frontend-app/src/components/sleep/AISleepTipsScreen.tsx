@@ -202,7 +202,6 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
             </View>
           </Card.Content>
         </Card>
-
         <AISleepTips tips={aiTips} />
 
         {/* {showNavigation && (
@@ -214,6 +213,7 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
             />
           </View>
         )} */}
+
       </ScrollView>
     </View>
   );
@@ -222,15 +222,14 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollContainer: {
     padding: 16,
   },
-
   headerCard: {
     marginBottom: 16,
     borderLeftWidth: 4,
+    backgroundColor: '#ffffff',
   },
   headerContent: {
     flexDirection: 'row',
@@ -239,6 +238,7 @@ const styles = StyleSheet.create({
   headerEmoji: {
     fontSize: 32,
     marginRight: 12,
+    lineHeight: 40,
   },
   headerText: {
     flex: 1,
@@ -256,13 +256,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderLeftWidth: 4,
     borderLeftColor: colors.softBlue,
+    backgroundColor: '#ffffff',
   },
   aiAnalysisTitle: {
     color: colors.deepNavy,
     marginBottom: 12,
   },
   aiAnalysisContent: {
-    backgroundColor: colors.lightGray,
     borderRadius: 12,
     padding: 16,
   },

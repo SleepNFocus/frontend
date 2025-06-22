@@ -8,7 +8,7 @@ import ProfileCard from './mypage/ProfileCard';
 import { Button } from '@/components/common/Button';
 import useUiStore from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
-import { logoutUser } from '../auth/logout';
+import { logoutUser } from '@/utils/auth/logout';
 
 export const MorePage: React.FC = () => {
   const navigation = useNavigation();
@@ -19,7 +19,7 @@ export const MorePage: React.FC = () => {
     try {
       await logoutUser();
       openToast('success', '로그아웃 완료', '로그아웃 되었습니다.');
-  
+
       setTimeout(() => {
         navigation.navigate('LandingPage' as never);
       }, 3000);
@@ -41,13 +41,23 @@ export const MorePage: React.FC = () => {
         <View style={styles.card}>
           <Text style={styles.title}>정보</Text>
           <View style={styles.linkGroup}>
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.navigate('PrivacyPolicyPage' as never)}
+            >
               <Text style={styles.subText}>개인정보처리방침</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
+
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.navigate('TermsOfServicePage' as never)}
+            >
               <Text style={styles.subText}>서비스 이용약관</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.navigate('Contactus' as never)}
+            >
               <Text style={styles.subText}>문의 하기</Text>
             </TouchableOpacity>
           </View>
@@ -73,7 +83,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     padding: 12,
-    gap: 12
+    gap: 12,
   },
   card: {
     backgroundColor: colors.white,

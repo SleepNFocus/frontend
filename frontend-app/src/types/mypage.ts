@@ -4,10 +4,10 @@ export interface Profile {
   gender: string;
   birth_year: number;
   mbti: string;
-  cognitive_type: string;
-  cognitive_type_out_label: string;
-  work_time_pattern: string;
-  work_time_pattern_out_label: string;
+  cognitive_type_out: string;
+  cognitive_type_label: string;
+  work_time_pattern_out: string;
+  work_time_pattern_label: string;
   email: string;
 }
 

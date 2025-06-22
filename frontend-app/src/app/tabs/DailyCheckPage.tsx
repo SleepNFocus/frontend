@@ -26,3 +26,5 @@ const styles = StyleSheet.create({
     color: '#222',
   },
 });
+
+export default DailyCheckPage;

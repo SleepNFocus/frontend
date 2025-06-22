@@ -1,5 +1,11 @@
-import React from 'react';
-import { View, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useCallback } from 'react';
+import {
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/App';
@@ -15,84 +21,117 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Button } from '@/components/common/Button';
 import useUiStore from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
-import { logoutUser } from '@/app/auth/logout';
-import { withdrawUser } from '@/app/auth/withdraw';
+import { logoutUser } from '@/utils/auth/logout';
+import { withdrawUser } from '@/utils/auth/withdraw';
 import { Ionicons } from '@expo/vector-icons';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ProfileDetail = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { openToast } = useUiStore();
   const { resetAuth } = useAuthStore();
+  const queryClient = useQueryClient();
 
   const { data: profile, isLoading, error, refetch } = useProfile();
 
   // 화면이 포커스될 때마다 프로필 데이터 새로 가져오기
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       refetch();
-    }, [refetch])
+    }, [refetch]),
   );
 
-  // 디버깅용 로그 - 프로필 상세 정보
-  console.log('=== ProfileDetail 디버깅 ===');
-  console.log('profile 데이터:', profile);
-  console.log('isLoading:', isLoading);
-  console.log('error:', error);
-  console.log('profile?.nickname:', profile?.nickname);
-  console.log('profile?.email:', profile?.email);
-  console.log('profile?.gender:', profile?.gender);
-  console.log('profile?.birth_year:', profile?.birth_year);
-  console.log('profile?.mbti:', profile?.mbti);
-  console.log('profile?.profile_img:', profile?.profile_img);
+  // profile 데이터가 변경될 때마다 로그를 출력하여 리프레시 확인
+  useEffect(() => {}, [profile]);
 
   // 이미지 URL 처리: ProfileCard와 동일한 로직
   const processImageUrl = (url: string | null | undefined): any => {
-    if (!url) return require('@/assets/profile.png');
-    
+    if (!url) {
+      return require('@/assets/icon.png');
+    }
+
     try {
-      // URL 디코딩
       const decodedUrl = decodeURIComponent(url);
-      
-      // 카카오 이미지 URL이 포함되어 있는지 확인
-      if (decodedUrl.includes('k.kakaocdn.net')) {
-        // 잘못 디코딩된 http:/ 부분을 http://로 수정
-        let fixedUrl = decodedUrl.replace('http:/', 'http://');
-        
-        // URL에서 k.kakaocdn.net 부분 찾기
-        const kakaoDomainIndex = fixedUrl.indexOf('k.kakaocdn.net');
-        
-        if (kakaoDomainIndex !== -1) {
-          // k.kakaocdn.net부터 시작하는 부분 추출
-          const kakaoUrl = fixedUrl.substring(kakaoDomainIndex - 8); // 'https://' 부분 포함
-          
-          // URL이 올바른 형식인지 확인하고 수정
-          if (kakaoUrl.startsWith('/http://')) {
-            const correctedUrl = kakaoUrl.substring(1); // 앞의 '/' 제거
-            return { uri: correctedUrl };
-          } else if (kakaoUrl.startsWith('https://')) {
-            return { uri: kakaoUrl };
-          } else {
-            return require('@/assets/profile.png');
+
+      // 중첩된 URL 구조 처리: dev.focusz.site/media/http:/k.kakaocdn.net/... 형태
+      if (
+        decodedUrl.includes('/media/http:/') ||
+        decodedUrl.includes('/media/https:/')
+      ) {
+        // /media/ 다음의 URL 부분을 추출
+        const mediaIndex = decodedUrl.indexOf('/media/');
+        if (mediaIndex !== -1) {
+          const afterMedia = decodedUrl.substring(mediaIndex + 7); // '/media/' 제거
+
+          // http:/ 또는 https:/ 다음의 실제 URL 추출
+          const protocolIndex = afterMedia.indexOf('http:/');
+          const secureProtocolIndex = afterMedia.indexOf('https:/');
+
+          let actualUrl = '';
+          if (secureProtocolIndex !== -1) {
+            actualUrl = afterMedia.substring(secureProtocolIndex);
+          } else if (protocolIndex !== -1) {
+            actualUrl = afterMedia.substring(protocolIndex);
+          }
+
+          if (actualUrl) {
+            // http:/ -> http:// 로 수정
+            actualUrl = actualUrl
+              .replace('http:/', 'http://')
+              .replace('https:/', 'https://');
+            // 더 강력한 캐시 방지를 위해 랜덤 값도 추가
+            const randomParam = Math.random().toString(36).substring(7);
+            return { uri: `${actualUrl}?t=${Date.now()}&r=${randomParam}` };
           }
         }
       }
-      
-      // 일반적인 이미지 URL인 경우 그대로 사용
-      if (decodedUrl.startsWith('http')) {
-        return { uri: decodedUrl };
+
+      // 정규식을 사용하여 http 또는 https로 시작하는 전체 URL 추출
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      const extractedUrls = decodedUrl.match(urlRegex);
+
+      // 카카오 CDN URL을 우선적으로 찾습니다.
+      let targetUrl = extractedUrls?.find(u => u.includes('k.kakaocdn.net'));
+
+      // 카카오 URL이 없으면 첫 번째 추출된 URL을 사용합니다.
+      if (!targetUrl && extractedUrls && extractedUrls.length > 0) {
+        // dev.focusz.site/media/ 다음의 http URL을 찾습니다.
+        const nestedUrl = extractedUrls.find(
+          u => u.startsWith('http') && decodedUrl.includes(`/media/${u}`),
+        );
+        if (nestedUrl) {
+          targetUrl = nestedUrl;
+        } else {
+          // 가장 마지막 URL을 사용 (가장 안쪽 URL일 가능성이 높음)
+          targetUrl = extractedUrls[extractedUrls.length - 1];
+        }
       }
-      
-      return require('@/assets/profile.png');
+
+      if (targetUrl) {
+        // 캐싱 방지를 위한 타임스탬프와 랜덤 값 추가
+        const randomParam = Math.random().toString(36).substring(7);
+        return { uri: `${targetUrl}?t=${Date.now()}&r=${randomParam}` };
+      }
+
+      // 로컬 파일 URI인지 확인
+      if (url.startsWith('file://')) {
+        return { uri: url };
+      }
+
+      return require('@/assets/icon.png');
     } catch (error) {
-      return require('@/assets/profile.png');
+      return require('@/assets/icon.png');
     }
   };
 
+  const processedImageSource = processImageUrl(profile?.profile_img);
+
   const handleLogout = async () => {
     try {
-      await logoutUser(); 
+      await logoutUser();
       openToast('success', '로그아웃 완료', '로그아웃 되었습니다.');
+      queryClient.clear();
       setTimeout(() => {
         navigation.reset({
           index: 0,
@@ -108,11 +147,13 @@ const ProfileDetail = () => {
   const handleWithdrawal = async () => {
     try {
       await withdrawUser();
-      openToast('success', '탈퇴 완료', '계정이 삭제되었습니다.');
+      openToast('error', '탈퇴 완료', '계정이 삭제되었습니다.');
+      queryClient.clear();
       setTimeout(() => {
         resetAuth();
         navigation.reset({
-          index: 0, routes: [{ name: 'LandingPage' }],
+          index: 0,
+          routes: [{ name: 'LandingPage' }],
         });
       }, 1500);
     } catch (error) {
@@ -130,33 +171,43 @@ const ProfileDetail = () => {
   }
 
   if (error) {
-    console.log('프로필 에러:', error);
     return <NotFoundPage onRetry={() => refetch()} />;
   }
 
   return (
     <Layout>
-      <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.header}>
           <BackButton color={colors.deepNavy} />
-          <Text variant="titleMedium" style={styles.headerTitle}>프로필 상세정보</Text>
+          <Text variant="titleMedium" style={styles.headerTitle}>
+            프로필 상세정보
+          </Text>
           <View style={{ width: 30 }} />
         </View>
 
         <Card style={styles.wrapper}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.settingsButton}
             onPress={() => navigation.navigate('Settings')}
             activeOpacity={0.8}
           >
-            <Ionicons name="settings-outline" size={24} color={colors.textColor} />
+            <Ionicons
+              name="settings-outline"
+              size={24}
+              color={colors.textColor}
+            />
           </TouchableOpacity>
 
           <View style={styles.profileContainer}>
             <View style={styles.profileImageBox}>
               <View style={styles.profileImageWrapper}>
                 <Image
-                  source={processImageUrl(profile?.profile_img)}
+                  key={profile?.profile_img}
+                  source={processedImageSource}
                   style={styles.profileImage}
                 />
               </View>
@@ -199,6 +250,30 @@ const ProfileDetail = () => {
                 <Text style={styles.label}>MBTI</Text>
                 <View style={styles.valueRow}>
                   <Text style={styles.value}>{profile?.mbti ?? '-'}</Text>
+                </View>
+              </View>
+            </Card>
+            <Card style={styles.infoCard}>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>인지 유형</Text>
+                <View style={styles.valueRow}>
+                  <Text style={styles.longValue}>
+                    {profile?.cognitive_type_label ??
+                      profile?.cognitive_type_out ??
+                      '-'}
+                  </Text>
+                </View>
+              </View>
+            </Card>
+            <Card style={styles.infoCard}>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>업무 시간 패턴</Text>
+                <View style={styles.valueRow}>
+                  <Text style={styles.longValue}>
+                    {profile?.work_time_pattern_label ??
+                      profile?.work_time_pattern_out ??
+                      '-'}
+                  </Text>
                 </View>
               </View>
             </Card>
@@ -325,6 +400,10 @@ const styles = StyleSheet.create({
     color: colors.textColor,
     fontSize: 16,
   },
+  longValue: {
+    color: colors.textColor,
+    fontSize: 14,
+  },
   buttonGroup: {
     gap: 12,
     marginTop: 12,
@@ -333,4 +412,4 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
   },
-}); 
+});
