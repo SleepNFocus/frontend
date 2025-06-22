@@ -91,8 +91,7 @@ export const DashboardMain: React.FC = memo(() => {
 
   const today = format(new Date(), 'yyyy-MM-dd');
   const { data: sleepRecordData } = useSleepRecord(today);
-
-  const sleepScore = sleepRecordData?.sleep_score ?? 0;
+  const sleepScore = sleepRecordData?.score ?? 0;
 
   const [cognitionData, setCognitionData] = useState<CognitionData>({
     data: [],
@@ -172,6 +171,9 @@ export const DashboardMain: React.FC = memo(() => {
           <Card style={styles.greetingWrap}>
             <GreetingCard userName={user?.nickname} />
           </Card>
+          <View style={styles.checkinSection}>
+            <CheckinCard onCheckin={() => navigation.navigate('SleepRecord')} />
+          </View>
 
           <AbilityProfileCard
             data={cognitionData.data}
@@ -184,10 +186,6 @@ export const DashboardMain: React.FC = memo(() => {
           {/* <Card style={styles.summarySection}>
             <SummaryCard />
           </Card> */}
-
-          <View style={styles.checkinSection}>
-            <CheckinCard onCheckin={() => navigation.navigate('SleepRecord')} />
-          </View>
         </ScrollView>
       </Layout>
     </ErrorBoundary>
