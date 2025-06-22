@@ -12,23 +12,22 @@ import { Card } from '@/components/common/Card';
 export const PrivacyPolicyPage: React.FC = () => {
   return (
     <Layout showNavbar={false}>
-
-        <View style={styles.header}>
-          <BackButton />
-          <Text variant="titleLarge" style={styles.headerTitle}>
-            개인정보처리방침
-          </Text>
-        </View>
-        <Card style={styles.container}> 
+      <View style={styles.header}>
+        <BackButton />
+        <Text variant="titleLarge" style={styles.headerTitle}>
+          개인정보처리방침
+        </Text>
+      </View>
+      <Card style={styles.container}>
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           <Text variant="bodyMedium" style={styles.effectiveDate}>
             시행일자: 2025년 6월 18일
           </Text>
-          
+
           <Text variant="bodyLarge" style={styles.intro}>
-            "FOCUZ" 앱(이하 "회사" 또는 "저희")은 사용자의 개인정보를 소중하게 
-            생각하며, 「개인정보 보호법」 등 관련 법령을 준수하기 위해 최선을 다하고 
-            있습니다.
+            "FOCUZ" 앱(이하 "회사" 또는 "저희")은 사용자의 개인정보를 소중하게
+            생각하며, 「개인정보 보호법」 등 관련 법령을 준수하기 위해 최선을
+            다하고 있습니다.
           </Text>
 
           <View style={styles.section}>
@@ -36,19 +35,20 @@ export const PrivacyPolicyPage: React.FC = () => {
               제1조 (수집하는 개인정보의 종류 및 수집 방법)
             </Text>
             <Text variant="bodyMedium" style={styles.sectionContent}>
-              저희는 서비스 제공 및 개선을 위해 다음과 같은 개인정보를 수집합니다.
+              저희는 서비스 제공 및 개선을 위해 다음과 같은 개인정보를
+              수집합니다.
             </Text>
-            
             <Text variant="titleSmall" style={styles.subTitle}>
               1. 회원이 직접 제공하는 정보:
             </Text>
             <Text variant="bodyMedium" style={styles.listItem}>
-              • 계정 정보: 이름, 이메일 주소, 비밀번호 (암호화되어 저장), 전화번호 (선택 사항)
+              • 계정 정보: 이름, 이메일 주소, 비밀번호 (암호화되어 저장),
+              전화번호 (선택 사항)
             </Text>
             <Text variant="bodyMedium" style={styles.listItem}>
-              • 프로필 정보: 성별, 연령, 거주 지역, 수면 습관, 수면 목표, 인지 능력 관련 목표 등
+              • 프로필 정보: 성별, 연령, 거주 지역, 수면 습관, 수면 목표, 인지
+              능력 관련 목표 등
             </Text>
-            
             <Text variant="titleSmall" style={styles.subTitle}>
               2. 서비스 이용 과정에서 자동으로 생성 및 수집되는 정보:
             </Text>
@@ -56,7 +56,8 @@ export const PrivacyPolicyPage: React.FC = () => {
               • 기기 및 사용 정보: IP 주소, 기기 식별자, 운영체제 정보 등
             </Text>
             <Text variant="bodyMedium" style={styles.listItem}>
-              • 건강 관련 정보: 수면 관련 정보, 인지 능력 관련 정보, 생체 신호 정보 등
+              • 건강 관련 정보: 수면 관련 정보, 인지 능력 관련 정보, 생체 신호
+              정보 등
             </Text>
           </View>
 
@@ -78,17 +79,6 @@ export const PrivacyPolicyPage: React.FC = () => {
             </Text>
             <Text variant="bodyMedium" style={styles.listItem}>
               • 법적 의무 준수 및 권리 보호
-            </Text>
-          </View>
-
-          {/* 추가 조항들... */}
-          
-          <View style={styles.contact}>
-            <Text variant="titleMedium" style={styles.sectionTitle}>
-              문의사항
-            </Text>
-            <Text variant="bodyMedium" style={styles.sectionContent}>
-              개인정보와 관련하여 궁금한 사항이 있으시면 언제든지 문의해 주시기 바랍니다.
             </Text>
           </View>
         </ScrollView>

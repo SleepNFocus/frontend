@@ -37,7 +37,10 @@ export const HistoryPage: React.FC = () => {
 
   return (
     <Layout>
-      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.headerContainer}>
           <Text variant="headlineMedium" style={styles.title}>
             수면 기록 조회
@@ -64,14 +67,34 @@ export const HistoryPage: React.FC = () => {
         {/* 상태 표시 */}
         {isLoading && (
           <View style={styles.statusContainer}>
-            <Text variant="bodyLarge" style={styles.statusText}>로딩 중...</Text>
+            <Text variant="bodyLarge" style={styles.statusText}>
+              로딩 중...
+            </Text>
           </View>
         )}
         {error && (
           <View style={styles.statusContainer}>
-            <Text variant="bodyLarge" style={[styles.statusText, styles.errorText]}>
-              에러 발생:{' '}
-              {error instanceof Error ? error.message : '알 수 없는 오류'}
+            <Text
+              variant="bodyLarge"
+              style={[styles.statusText, styles.errorText]}
+            >
+              {(() => {
+                if (
+                  error instanceof Error &&
+                  'response' in error &&
+                  typeof error.response === 'object'
+                ) {
+                  const err = error as any;
+                  const status = err?.response?.status;
+                  const msg = err?.response?.data?.message;
+                  if (status === 400) {
+                    return '테스트 정보가 없습니다. \n 오늘의 수면을 기록해보세요 !';
+                  }
+                  return `에러 발생: ${msg ?? error.message}`;
+                }
+
+                return '에러 발생: 알 수 없는 오류';
+              })()}
             </Text>
           </View>
         )}
@@ -91,18 +114,30 @@ export const HistoryPage: React.FC = () => {
                 </Text>
                 <View style={styles.scoreContainer}>
                   <View style={styles.scoreItem}>
-                    <Text variant="labelMedium" style={styles.scoreLabel}>수면점수</Text>
-                    <Text variant="titleMedium" style={styles.scoreValue}>{item.sleep_score}점</Text>
+                    <Text variant="labelMedium" style={styles.scoreLabel}>
+                      수면점수
+                    </Text>
+                    <Text variant="titleMedium" style={styles.scoreValue}>
+                      {item.sleep_score}점
+                    </Text>
                   </View>
                   <View style={styles.scoreItem}>
-                    <Text variant="labelMedium" style={styles.scoreLabel}>인지점수</Text>
-                    <Text variant="titleMedium" style={styles.scoreValue}>{item.cognitive_score}점</Text>
+                    <Text variant="labelMedium" style={styles.scoreLabel}>
+                      인지점수
+                    </Text>
+                    <Text variant="titleMedium" style={styles.scoreValue}>
+                      {item.cognitive_score}점
+                    </Text>
                   </View>
                 </View>
               </View>
               <View style={styles.sleepTimeContainer}>
-                <Text variant="bodyLarge" style={styles.sleepTimeLabel}>총 수면시간</Text>
-                <Text variant="titleLarge" style={styles.sleepTimeValue}>{item.sleep_hour}시간</Text>
+                <Text variant="bodyLarge" style={styles.sleepTimeLabel}>
+                  총 수면시간
+                </Text>
+                <Text variant="titleLarge" style={styles.sleepTimeValue}>
+                  {item.sleep_hour}시간
+                </Text>
               </View>
             </Card>
           ))}
@@ -118,16 +153,28 @@ export const HistoryPage: React.FC = () => {
               </View>
               <View style={styles.statsContainer}>
                 <View style={styles.statItem}>
-                  <Text variant="bodyMedium" style={styles.statLabel}>총 수면시간</Text>
-                  <Text variant="titleMedium" style={styles.statValue}>{item.total_sleep_hours}시간</Text>
+                  <Text variant="bodyMedium" style={styles.statLabel}>
+                    총 수면시간
+                  </Text>
+                  <Text variant="titleMedium" style={styles.statValue}>
+                    {item.total_sleep_hours}시간
+                  </Text>
                 </View>
                 <View style={styles.statItem}>
-                  <Text variant="bodyMedium" style={styles.statLabel}>평균 수면점수</Text>
-                  <Text variant="titleMedium" style={styles.statValue}>{item.average_sleep_score}점</Text>
+                  <Text variant="bodyMedium" style={styles.statLabel}>
+                    평균 수면점수
+                  </Text>
+                  <Text variant="titleMedium" style={styles.statValue}>
+                    {item.average_sleep_score}점
+                  </Text>
                 </View>
                 <View style={styles.statItem}>
-                  <Text variant="bodyMedium" style={styles.statLabel}>평균 인지점수</Text>
-                  <Text variant="titleMedium" style={styles.statValue}>{item.average_cognitive_score}점</Text>
+                  <Text variant="bodyMedium" style={styles.statLabel}>
+                    평균 인지점수
+                  </Text>
+                  <Text variant="titleMedium" style={styles.statValue}>
+                    {item.average_cognitive_score}점
+                  </Text>
                 </View>
               </View>
             </Card>
@@ -144,16 +191,28 @@ export const HistoryPage: React.FC = () => {
               </View>
               <View style={styles.statsContainer}>
                 <View style={styles.statItem}>
-                  <Text variant="bodyMedium" style={styles.statLabel}>총 수면시간</Text>
-                  <Text variant="titleMedium" style={styles.statValue}>{item.total_sleep_hours}시간</Text>
+                  <Text variant="bodyMedium" style={styles.statLabel}>
+                    총 수면시간
+                  </Text>
+                  <Text variant="titleMedium" style={styles.statValue}>
+                    {item.total_sleep_hours}시간
+                  </Text>
                 </View>
                 <View style={styles.statItem}>
-                  <Text variant="bodyMedium" style={styles.statLabel}>평균 수면점수</Text>
-                  <Text variant="titleMedium" style={styles.statValue}>{item.average_sleep_score}점</Text>
+                  <Text variant="bodyMedium" style={styles.statLabel}>
+                    평균 수면점수
+                  </Text>
+                  <Text variant="titleMedium" style={styles.statValue}>
+                    {item.average_sleep_score}점
+                  </Text>
                 </View>
                 <View style={styles.statItem}>
-                  <Text variant="bodyMedium" style={styles.statLabel}>평균 인지점수</Text>
-                  <Text variant="titleMedium" style={styles.statValue}>{item.average_cognitive_score}점</Text>
+                  <Text variant="bodyMedium" style={styles.statLabel}>
+                    평균 인지점수
+                  </Text>
+                  <Text variant="titleMedium" style={styles.statValue}>
+                    {item.average_cognitive_score}점
+                  </Text>
                 </View>
               </View>
             </Card>
