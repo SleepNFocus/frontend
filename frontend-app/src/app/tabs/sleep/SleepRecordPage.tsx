@@ -33,17 +33,10 @@ export const SleepRecordPage: React.FC = () => {
     isLoading: isLoadingData,
     error: sleepDataError,
     refetch,
-  } = useSleepRecord(savedDate || '');
+  } = useSleepRecord(shouldFetchData ? savedDate : '');
 
-  // savedDate가 변경될 때마다 데이터 상태 확인
-  useEffect(() => {
-    if (savedDate && isRecordSaved) {
-      // 간단한 refetch 시도
-      setTimeout(() => {
-        refetch();
-      }, 1000);
-    }
-  }, [savedDate, isRecordSaved, refetch]);
+  // 재시도 로직은 handleSaveRecord 안으로 이동시켜, 저장 직후 제어하도록 합니다.
+  // useEffect(() => { ... });
 
   const getFeedback = (score: number) => {
     if (score >= 90) {
@@ -118,24 +111,46 @@ export const SleepRecordPage: React.FC = () => {
 
   const handleSaveRecord = async (recordData: SleepRecordData) => {
     try {
-      const result = await saveSleepRecordMutation.mutateAsync(recordData);
+      // 1. 수면 기록 저장
+      await saveSleepRecordMutation.mutateAsync(recordData);
 
-      // 상태 업데이트
+      // 2. UI 상태를 결과 화면으로 전환
       setSavedDate(recordData.selectedDate);
       setIsRecordSaved(true);
+
+      openToast(
+        'success',
+        `수면 기록이 성공적으로 저장되었습니다. (날짜: ${recordData.selectedDate})`,
+      );
+
+      // 3. 서버가 점수를 계산할 시간을 벌기 위해, 결과가 나올 때까지 반복 요청 (Polling)
+      const pollForResult = async (retries = 5, interval = 1500) => {
+        for (let i = 0; i < retries; i++) {
+          try {
+            // 수동으로 데이터 리프레시
+            const { data: fetchedData } = await refetch();
+            // 데이터를 성공적으로 받아오면, 반복을 중단
+            if (fetchedData) {
+              return;
+            }
+            // 데이터를 못 받으면, 다음 시도까지 대기
+            await new Promise(resolve => setTimeout(resolve, interval));
+          } catch (error) {
+            // refetch 중 에러가 발생하면 다음 시도로 넘어감
+          }
+        }
+      };
+
+      pollForResult(); // 백그라운드에서 결과 확인 시작
     } catch (error) {
       const errorMessage =
         error instanceof Error
           ? error.message
           : '수면 기록 저장에 실패했습니다. 다시 시도해 주세요.';
+      openToast('error', errorMessage);
     }
   };
-
-  const startNewRecord = () => {
-    setIsRecordSaved(false);
-    setSavedDate(null);
-  };
-
+  
   // 로딩 상태
   if (saveSleepRecordMutation.isPending) {
     return (
@@ -255,6 +270,19 @@ export const SleepRecordPage: React.FC = () => {
                   </View>
                 </Card.Content>
               </Card>
+            ) : savedDate && !isLoadingData && !sleepData ? (
+              <Card style={styles.card}>
+                <Card.Content>
+                  <View style={styles.loadingContainer}>
+                    <Text variant="titleMedium" style={styles.errorText}>
+                      수면 기록이 저장되었지만 점수 계산에 실패했습니다
+                    </Text>
+                    <Text variant="bodyMedium" style={styles.loadingText}>
+                      잠시 후 다시 시도해주세요.
+                    </Text>
+                  </View>
+                </Card.Content>
+              </Card>
             ) : null}
 
             {/* 액션 버튼들 */}
@@ -358,3 +386,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export default SleepRecordPage;

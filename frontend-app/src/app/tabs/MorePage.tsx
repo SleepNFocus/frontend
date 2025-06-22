@@ -8,7 +8,7 @@ import ProfileCard from './mypage/ProfileCard';
 import { Button } from '@/components/common/Button';
 import useUiStore from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
-import { logoutUser } from '../auth/logout';
+import { logoutUser } from '@/utils/auth/logout';
 
 export const MorePage: React.FC = () => {
   const navigation = useNavigation();

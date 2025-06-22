@@ -250,3 +250,5 @@ const styles = StyleSheet.create({
     marginLeft: 40,
   },
 });
+
+export default IntroCard;

@@ -21,3 +21,5 @@ export const InsightPage: React.FC = () => {
     </ErrorBoundary>
   );
 };
+
+export default InsightPage;

@@ -196,6 +196,8 @@ export const DashboardMain: React.FC = memo(() => {
 
 DashboardMain.displayName = 'DashboardMain';
 
+export default DashboardMain;
+
 // 스타일 정의
 const styles = StyleSheet.create({
   scrollView: {

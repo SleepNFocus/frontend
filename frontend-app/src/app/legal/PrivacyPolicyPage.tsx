@@ -149,3 +149,5 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
 });
+
+export default PrivacyPolicyPage;
