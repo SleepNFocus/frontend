@@ -102,15 +102,16 @@ export const useAuthStore = create<AuthState>(set => ({
         accessToken: accessToken ?? null,
         refreshToken: refreshToken ?? null,
       }));
-
     } catch (error) {
       console.error('토큰 복원 실패:', error);
     }
   },
 
   setCompletedOnboarding: (value: boolean) => {
-    set((state) => ({
-      user: state.user ? { ...state.user, has_completed_onboarding: value } : null,
+    set(state => ({
+      user: state.user
+        ? { ...state.user, has_completed_onboarding: value }
+        : null,
     }));
   },
 }));
