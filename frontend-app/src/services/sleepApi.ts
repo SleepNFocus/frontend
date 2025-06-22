@@ -1,7 +1,26 @@
 import { SleepRecordData, SleepRecordApiResponse } from '@/types/sleep';
 import { getApiClient } from '@/services/axios';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from '@tanstack/react-query';
 import axios from 'axios';
+
+//임시로 생성 - (혜원)
+export type SleepRecord = {
+  created_at: string; // ISO date string
+  updated_at: string;
+  date: string; // YYYY-MM-DD
+  disturb_factors: string[]; // 예: ['electronics', 'noise']
+  memo: string | null;
+  score: number;
+  sleep_duration: number; // 분 단위?
+  sleep_latency: number; // 잠드는 데 걸린 시간?
+  subjective_quality: number; // 1~5 등급?
+  wake_count: number;
+};
 
 export const useSaveSleepRecord = () => {
   const queryClient = useQueryClient();
@@ -75,35 +94,27 @@ export const useSaveSleepRecord = () => {
 
 // 날짜 기반으로 수면 기록 조회
 
-export const useSleepRecord = (date: string | null | undefined) => {
+export const useSleepRecord = (
+  date: string | null | undefined,
+): UseQueryResult<SleepRecordApiResponse | null> => {
   return useQuery({
     queryKey: ['sleepRecord', date],
-    enabled: !!date, // ✅ date 없으면 아예 실행 안 함
-    queryFn: async () => {
+    enabled: !!date,
+    queryFn: async (): Promise<SleepRecordApiResponse | null> => {
       if (!date) return null;
 
       const apiClient = await getApiClient();
 
-      try {
-        const response = await apiClient.get<{
-          message?: string;
-          data: any; // 실제 타입 있으면 적용
-        }>('/sleepRecord/', {
-          params: { date },
-        });
+      const url = `/sleepRecord/?date=${date}`;
 
-        // ✅ 백엔드에서 data: null 로 오면 그대로 넘기기
-        return response.data?.data ?? null;
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          if (
-            error.response?.status === 204 || // 백엔드가 record 없을 때 이렇게 줄 수 있음
-            error.response?.status === 404
-          ) {
-            return null;
-          }
-        }
-        throw error; // 진짜 에러는 그대로 던져서 isError로 처리
+      try {
+        const response = await apiClient.get(url);
+
+        //return response.data?.data ?? null;
+        return response.data ?? null;
+      } catch (error: unknown) {
+        console.log(error);
+        throw error;
       }
     },
   });
