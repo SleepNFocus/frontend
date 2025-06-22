@@ -181,9 +181,9 @@ export const DashboardMain: React.FC = memo(() => {
 
           <ScoreDetailCard details={scoreDetails} averageScore={averageScore} />
 
-          <Card style={styles.summarySection}>
+          {/* <Card style={styles.summarySection}>
             <SummaryCard />
-          </Card>
+          </Card> */}
 
           <View style={styles.checkinSection}>
             <CheckinCard onCheckin={() => navigation.navigate('SleepRecord')} />

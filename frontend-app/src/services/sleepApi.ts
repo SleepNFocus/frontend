@@ -30,23 +30,23 @@ export const useSaveSleepRecord = () => {
       recordData: SleepRecordData,
     ): Promise<SleepRecordApiResponse> => {
       const qualityMapping: Record<string, number> = {
-        excellent: 5,
-        good: 4,
-        fair: 3,
-        poor: 2,
-        very_poor: 1,
+        excellent: 4,
+        good: 3,
+        fair: 2,
+        poor: 1,
+        very_poor: 0,
       };
 
       const fallAsleepMapping: Record<string, number> = {
-        under_15: 1,
-        '15_30': 2,
-        over_30: 3,
+        under_15: 0,
+        '15_30': 1,
+        over_30: 2,
       };
 
       const wakeCountMapping: Record<string, number> = {
         '0': 0,
         '1_2': 1,
-        '3_more': 3,
+        '3_more': 2,
       };
 
       const convertSleepDuration = (duration: string) => {
@@ -58,17 +58,22 @@ export const useSaveSleepRecord = () => {
         }
         return parseInt(duration) || 0;
       };
-
+      console.log(
+        'fall asleep time',
+        recordData.fallAsleepTime,
+        fallAsleepMapping[recordData.fallAsleepTime],
+      );
       const requestPayload = {
         date: recordData.selectedDate,
         sleep_duration: convertSleepDuration(recordData.sleepDuration),
-        subjective_quality: qualityMapping[recordData.sleepQuality] || 2,
-        sleep_latency: fallAsleepMapping[recordData.fallAsleepTime] || 3,
-        wake_count: wakeCountMapping[recordData.nightWakeCount] || 0,
+        subjective_quality: qualityMapping[recordData.sleepQuality] ?? 2,
+        sleep_latency: fallAsleepMapping[recordData.fallAsleepTime] ?? 0,
+        wake_count: wakeCountMapping[recordData.nightWakeCount] ?? 0,
         disturb_factors: recordData.sleepDisruptors,
         memo: null,
-        score: recordData.totalScore,
+        //score: recordData.totalScore,
       };
+      console.log('출력', requestPayload);
 
       const apiClient = await getApiClient();
       const response = await apiClient.post<SleepRecordApiResponse>(

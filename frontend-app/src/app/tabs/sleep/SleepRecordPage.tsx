@@ -13,6 +13,8 @@ import { colors } from '@/constants/colors';
 import useUiStore from '@/store/uiStore';
 import { useSaveSleepRecord, useSleepRecord } from '@/services/sleepApi';
 import { useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { getApiClient } from '@/services/axios';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -20,6 +22,7 @@ export const SleepRecordPage: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const [isRecordSaved, setIsRecordSaved] = useState(false);
   const [savedDate, setSavedDate] = useState<string | null>(null);
+  const [isExist, setIsExist] = useState(false);
   const { openToast } = useUiStore();
   const queryClient = useQueryClient();
 
@@ -27,6 +30,22 @@ export const SleepRecordPage: React.FC = () => {
 
   // savedDate가 있을 때만 useSleepRecord 호출
   const shouldFetchData = !!savedDate && isRecordSaved;
+
+  // ! 임시로 useEffect로 작성 -> 리팩토링 필요
+  // ! 사용자가 이미 테스트를 했는지 구분하는 API
+  useEffect(() => {
+    async function fetchIsExistData() {
+      const apiClient = await getApiClient();
+      const response = await apiClient.get(
+        `/sleepRecord/exist/?date=${savedDate}`,
+      );
+      setIsExist(response.data.exists);
+      console.log('존재하는 데이터인지 확인', response.data);
+    }
+
+    console.log('fetchIsExistData 호출');
+    fetchIsExistData();
+  }, []);
 
   const {
     data: sleepData,
@@ -169,7 +188,7 @@ export const SleepRecordPage: React.FC = () => {
   return (
     <Layout>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        {!isRecordSaved ? (
+        {!isRecordSaved && !isExist ? (
           // 수면 기록 입력 폼
           <SleepRecordForm onSave={handleSaveRecord} />
         ) : (
