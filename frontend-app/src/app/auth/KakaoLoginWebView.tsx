@@ -23,12 +23,13 @@ export interface UserData {
     social_type: 'KAKAO' | 'GOOGLE' | 'NAVER';
     status: string;
     user_id: number;
-    has_completed_onboarding: boolean; 
+    has_completed_onboarding: boolean;
   };
 }
 
 const KakaoLoginWebView: React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { setLogin, setUser } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,9 +42,9 @@ const KakaoLoginWebView: React.FC = () => {
       if (!KAKAO_JAVASCRIPT_KEY) throw new Error('KAKAO_JAVASCRIPT_KEY 누락');
       if (!DEV_API_URL) throw new Error('DEV_API_URL 누락');
 
-      const redirectUri = 'http://localhost:8081/oauth/callback';
+      const redirectUri = 'https://focusz.site/oauth/callback';
       const url = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_JAVASCRIPT_KEY}&redirect_uri=${encodeURIComponent(
-        redirectUri
+        redirectUri,
       )}&response_type=code`;
 
       setKakaoLoginUrl(url);
@@ -53,7 +54,8 @@ const KakaoLoginWebView: React.FC = () => {
   }, []);
 
   const handleNavigationStateChange = async (navState: WebViewNavigation) => {
-    if (isProcessing || !navState.url.includes('localhost:8081/oauth/callback')) return;
+    if (isProcessing || !navState.url.includes('localhost:8081/oauth/callback'))
+      return;
 
     try {
       setIsProcessing(true);
@@ -81,10 +83,9 @@ const KakaoLoginWebView: React.FC = () => {
   };
 
   const exchangeCodeForToken = async (code: string): Promise<UserData> => {
-    
     try {
       const loginResponse = await sendKakaoLoginCode(code);
-      
+
       // UserData 형식으로 변환
       const userData: UserData = {
         access: loginResponse.access,
@@ -98,9 +99,9 @@ const KakaoLoginWebView: React.FC = () => {
           status: loginResponse.user.status,
           user_id: loginResponse.user.id,
           has_completed_onboarding: loginResponse.user.has_completed_onboarding,
-        }
+        },
       };
-      
+
       return userData;
     } catch (error) {
       console.error('토큰 교환 실패:', error);
@@ -109,7 +110,8 @@ const KakaoLoginWebView: React.FC = () => {
   };
 
   const handleLoginSuccess = async (userData: UserData) => {
-    if (!userData.access || !userData.user?.user_id) throw new Error('유효하지 않은 로그인 정보');
+    if (!userData.access || !userData.user?.user_id)
+      throw new Error('유효하지 않은 로그인 정보');
 
     setLogin(true);
     const user: User = {
@@ -125,7 +127,7 @@ const KakaoLoginWebView: React.FC = () => {
     if (userData.user.has_completed_onboarding) {
       navigation.navigate('Dashboard');
     } else {
-      navigation.navigate('Onboarding'); 
+      navigation.navigate('Onboarding');
     }
   };
 
@@ -163,7 +165,9 @@ const KakaoLoginWebView: React.FC = () => {
         {isLoading && (
           <View style={styles.loadingOverlay}>
             <ActivityIndicator size="large" color={colors.deepNavy} />
-            <Text style={styles.loadingText}>카카오 로그인 페이지 로딩 중...</Text>
+            <Text style={styles.loadingText}>
+              카카오 로그인 페이지 로딩 중...
+            </Text>
           </View>
         )}
         <WebView
@@ -215,8 +219,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 1,
   },
-  content: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
   loadingText: { fontSize: 16, color: colors.deepNavy, marginTop: 12 },
-  errorText: { fontSize: 18, fontWeight: '600', color: colors.deepNavy, marginBottom: 8 },
-  errorDescription: { fontSize: 14, color: colors.mediumGray, textAlign: 'center', lineHeight: 20 },
+  errorText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.deepNavy,
+    marginBottom: 8,
+  },
+  errorDescription: {
+    fontSize: 14,
+    color: colors.mediumGray,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
 });
