@@ -35,9 +35,13 @@ export const SleepRecordPage: React.FC = () => {
   // ! 사용자가 이미 테스트를 했는지 구분하는 API
   useEffect(() => {
     async function fetchIsExistData() {
+      // 오늘 날짜를 yyyy-mm-dd 형식으로 생성
+      const today = new Date();
+      const todayString = today.toISOString().split('T')[0]; // yyyy-mm-dd 형식
+
       const apiClient = await getApiClient();
       const response = await apiClient.get(
-        `/sleepRecord/exist/?date=${savedDate}`,
+        `/sleepRecord/exist/?date=${todayString}`,
       );
       setIsExist(response.data.exists);
       console.log('존재하는 데이터인지 확인', response.data);

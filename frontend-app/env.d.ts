@@ -6,6 +6,7 @@ declare module '@env' {
   export const REDIRECT_URI: string;
   export const API_BASE_URL: string;
   export const DEV_API_URL: string;
+  export const LIVE_API_URL: string;
   export const GOOGLE_CLIENT_ID: string;
   export const GOOGLE_CLIENT_SECRET: string;
-} 
+}

@@ -30,6 +30,7 @@ import { useProfile, useUpdateProfile } from '@/services/mypageApi';
 import { NotFoundPage } from '@/components/common/NotFoundPage';
 import { ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import {
   GENDER_OPTIONS,
   BIRTH_YEAR_OPTIONS,
@@ -193,45 +194,159 @@ const Settings = () => {
     setWorkTimePattern(profile?.work_time_pattern_out ?? null);
   }, [profile]);
 
+  // 컴포넌트 언마운트 시 cleanup
+  useEffect(() => {
+    return () => {
+      // 임시 이미지 URI 정리
+      setProfileImageUri(null);
+    };
+  }, []);
+
   const handleProfileImageChange = async () => {
+    // 간단한 방법: 권한 요청 없이 바로 ImagePicker 시도
     try {
-      const permissionResult =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (!permissionResult.granted) {
-        openToast(
-          'error',
-          '권한 필요',
-          '이미지 선택을 위해 갤러리 접근 권한이 필요합니다.',
-        );
+      await launchImagePicker();
+      return;
+    } catch (error) {
+      // 권한 요청으로 폴백
+    }
+
+    try {
+      // 현재 권한 상태 먼저 확인
+      const currentPermission =
+        await ImagePicker.getMediaLibraryPermissionsAsync();
+
+      // 이미 권한이 있으면 바로 ImagePicker 실행
+      if (currentPermission.granted) {
+        await launchImagePicker();
         return;
       }
+
+      // 권한 요청 - 타임아웃 추가
+      try {
+        // 권한 요청에 타임아웃 설정
+        const permissionPromise =
+          ImagePicker.requestMediaLibraryPermissionsAsync();
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('권한 요청 타임아웃')), 5000),
+        );
+
+        const permissionResult = (await Promise.race([
+          permissionPromise,
+          timeoutPromise,
+        ])) as any;
+
+        if (!permissionResult || !permissionResult.granted) {
+          openToast(
+            'error',
+            '권한 필요',
+            '이미지 선택을 위해 갤러리 접근 권한이 필요합니다. 설정에서 권한을 허용해주세요.',
+          );
+          return;
+        }
+
+        await launchImagePicker();
+      } catch (permissionError) {
+        if (
+          permissionError instanceof Error &&
+          permissionError.message.includes('타임아웃')
+        ) {
+          openToast(
+            'error',
+            '권한 요청 실패',
+            '권한 요청이 시간 초과되었습니다. 앱을 다시 시작하거나 설정에서 권한을 확인해주세요.',
+          );
+        } else {
+          openToast(
+            'error',
+            '권한 요청 실패',
+            '갤러리 접근 권한을 허용해주세요.',
+          );
+        }
+        return;
+      }
+    } catch (error) {
+      // 권한 요청이 실패한 경우, 직접 ImagePicker 시도
+      if (error instanceof Error && error.message.includes('권한')) {
+        try {
+          await launchImagePicker();
+          return;
+        } catch (directError) {
+          console.error('ImagePicker 실행 실패:', directError);
+        }
+      }
+
+      // 구체적인 에러 메시지 처리
+      let errorMessage = '이미지 선택에 실패했습니다.';
+      if (error instanceof Error) {
+        if (error.message.includes('permission')) {
+          errorMessage = '갤러리 접근 권한이 필요합니다.';
+        } else if (error.message.includes('canceled')) {
+          return; // 사용자가 취소한 경우 토스트 표시하지 않음
+        } else if (error.message.includes('타임아웃')) {
+          errorMessage = '권한 요청이 시간 초과되었습니다. 다시 시도해주세요.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
+      openToast('error', '이미지 선택 실패', errorMessage);
+    }
+  };
+
+  // ImagePicker 실행을 별도 함수로 분리
+  const launchImagePicker = async () => {
+    try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.2,
+        allowsMultipleSelection: false,
       });
+
+      // 결과 처리
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const selectedImageUri = result.assets[0].uri;
-        setProfileImageUri(selectedImageUri); // 미리보기 URI를 상태에 저장
 
-        // // 서버 업로드 로직 주석 처리
-        // try {
-        //   await uploadProfileImage(selectedImageUri);
+        // URI 유효성 검사
+        if (!selectedImageUri) {
+          openToast(
+            'error',
+            '이미지 선택 실패',
+            '선택된 이미지를 처리할 수 없습니다.',
+          );
+          return;
+        }
 
-        //   openToast('success', '프로필 변경', '프로필 이미지가 변경되었습니다.');
+        // 파일 크기 제한 (10MB) - 안전하게 처리
+        try {
+          const response = await fetch(selectedImageUri);
+          const blob = await response.blob();
+          const fileSizeInMB = blob.size / (1024 * 1024);
 
-        //   // 백엔드가 이미지 URL을 업데이트할 시간을 주기 위해 약간의 딜레이 추가
-        //   await new Promise(resolve => setTimeout(resolve, 500));
+          if (fileSizeInMB > 10) {
+            openToast(
+              'error',
+              '파일 크기 초과',
+              '10MB 이하의 이미지를 선택해주세요.',
+            );
+            return;
+          }
+        } catch (sizeError) {
+          // 파일 크기 확인 실패해도 계속 진행
+        }
 
-        //   await refetch();
-
-        // } catch (e) {
-        //   openToast('error', '변경 실패', '프로필 변경에 실패했어요');
-        // }
+        setProfileImageUri(selectedImageUri);
+        openToast(
+          'success',
+          '이미지 선택 완료',
+          '이미지가 선택되었습니다. 저장 버튼을 눌러주세요.',
+        );
       }
-    } catch (e) {
-      openToast('error', '변경 실패', '프로필 변경에 실패했어요');
+    } catch (error) {
+      console.error('ImagePicker 실행 에러:', error);
+      throw error;
     }
   };
 
@@ -363,7 +478,8 @@ const Settings = () => {
               .replace('https:/', 'https://');
             // 더 강력한 캐시 방지를 위해 랜덤 값도 추가
             const randomParam = Math.random().toString(36).substring(7);
-            return { uri: `${actualUrl}?t=${Date.now()}&r=${randomParam}` };
+            const finalUrl = `${actualUrl}?t=${Date.now()}&r=${randomParam}`;
+            return { uri: finalUrl };
           }
         }
       }
@@ -392,7 +508,8 @@ const Settings = () => {
       if (targetUrl) {
         // 캐싱 방지를 위한 타임스탬프와 랜덤 값 추가
         const randomParam = Math.random().toString(36).substring(7);
-        return { uri: `${targetUrl}?t=${Date.now()}&r=${randomParam}` };
+        const finalUrl = `${targetUrl}?t=${Date.now()}&r=${randomParam}`;
+        return { uri: finalUrl };
       }
 
       // 로컬 파일 URI인지 확인
@@ -402,6 +519,7 @@ const Settings = () => {
 
       return require('@/assets/icon.png');
     } catch (error) {
+      console.warn('이미지 URL 처리 중 에러:', error);
       return require('@/assets/icon.png');
     }
   };
@@ -418,138 +536,146 @@ const Settings = () => {
     return <NotFoundPage onRetry={() => refetch()} />;
   }
   return (
-    <Layout>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.header}>
-          <BackButton color={colors.deepNavy} />
-          <Text variant="titleMedium" style={styles.headerTitle}>
-            프로필 수정
-          </Text>
-        </View>
-        {/* <Image source={{ uri: 'file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252Ffocuz-app-3f8f6d71-8a65-423a-afa2-302759104c40/ImagePicker/6e1347b6-c0e6-48a1-8a90-7c39dfede22e.jpeg' }} style={{ width: 200, height: 200 }} /> */}
-        <Card style={styles.profileContainer}>
-          <TouchableOpacity
-            onPress={handleProfileImageChange}
-            activeOpacity={0.8}
-            style={styles.profileImageBox}
-          >
-            <View style={styles.profileImageWrapper}>
-              <Image
-                source={
-                  profileImageUri
-                    ? { uri: profileImageUri }
-                    : processImageUrl(profile?.profile_img) ||
-                      require('@/assets/icon.png')
-                }
-                style={styles.profileImage}
-              />
-              <TouchableOpacity
-                style={styles.cameraIconWrapper}
-                onPress={handleProfileImageChange}
-                activeOpacity={0.8}
-              >
-                <Ionicons name="camera" size={20} color={colors.white} />
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>닉네임</Text>
-              <TextInput
-                style={styles.input}
-                value={nickname}
-                onChangeText={setNickname}
-                placeholder="닉네임을 입력하세요"
-                placeholderTextColor={colors.mediumGray}
-              />
-            </View>
-          </Card>
-          {!isNicknameValid && nickname.length > 0 && (
-            <Text style={styles.errorText}>
-              {errorMsg || '닉네임은 한글, 영문, 숫자만 입력 가능합니다.'}
+    <ErrorBoundary>
+      <Layout>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <BackButton color={colors.deepNavy} />
+            <Text variant="titleMedium" style={styles.headerTitle}>
+              프로필 수정
             </Text>
-          )}
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>이메일</Text>
-              <Text style={styles.emailTextOnly}>{profile?.email || '-'}</Text>
-            </View>
+          </View>
+          {/* <Image source={{ uri: 'file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252Ffocuz-app-3f8f6d71-8a65-423a-afa2-302759104c40/ImagePicker/6e1347b6-c0e6-48a1-8a90-7c39dfede22e.jpeg' }} style={{ width: 200, height: 200 }} /> */}
+          <Card style={styles.profileContainer}>
+            <TouchableOpacity
+              onPress={handleProfileImageChange}
+              activeOpacity={0.8}
+              style={styles.profileImageBox}
+            >
+              <View style={styles.profileImageWrapper}>
+                <Image
+                  source={
+                    profileImageUri
+                      ? { uri: profileImageUri }
+                      : processImageUrl(profile?.profile_img) ||
+                        require('@/assets/icon.png')
+                  }
+                  style={styles.profileImage}
+                  onError={error => {
+                    console.warn('프로필 이미지 로딩 실패:', error);
+                    setProfileImageUri(null);
+                  }}
+                  defaultSource={require('@/assets/icon.png')}
+                  resizeMode="cover"
+                />
+                <TouchableOpacity
+                  style={styles.cameraIconWrapper}
+                  onPress={handleProfileImageChange}
+                  activeOpacity={0.8}
+                >
+                  <Ionicons name="camera" size={20} color={colors.white} />
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+            <Card style={styles.infoCard}>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>닉네임</Text>
+                <TextInput
+                  style={styles.input}
+                  value={nickname}
+                  onChangeText={setNickname}
+                  placeholder="닉네임을 입력하세요"
+                  placeholderTextColor={colors.mediumGray}
+                />
+              </View>
+            </Card>
+            {!isNicknameValid && nickname.length > 0 && (
+              <Text style={styles.errorText}>
+                {errorMsg || '닉네임은 한글, 영문, 숫자만 입력 가능합니다.'}
+              </Text>
+            )}
+            <Card style={styles.infoCard}>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>이메일</Text>
+                <Text style={styles.emailTextOnly}>
+                  {profile?.email || '-'}
+                </Text>
+              </View>
+            </Card>
+            <Card style={styles.infoCard}>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>성별</Text>
+                <CustomDropdown
+                  items={GENDER_OPTIONS}
+                  value={gender}
+                  onSelect={setGender}
+                  placeholder="성별"
+                />
+              </View>
+            </Card>
+            <Card style={styles.infoCard}>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>출생년도</Text>
+                <CustomDropdown
+                  items={BIRTH_YEAR_OPTIONS}
+                  value={birthYear}
+                  onSelect={setBirthYear}
+                  placeholder="출생년도"
+                />
+              </View>
+            </Card>
+            <Card style={styles.infoCard}>
+              <View style={styles.infoRow}>
+                <Text style={styles.label}>MBTI</Text>
+                <CustomDropdown
+                  items={MBTI_OPTIONS}
+                  value={mbti}
+                  onSelect={setMbti}
+                  placeholder="MBTI"
+                />
+              </View>
+            </Card>
+            <Card style={styles.infoCard}>
+              <View style={styles.infoRowColumn}>
+                <Text style={styles.label}>인지 유형</Text>
+                <CustomDropdown
+                  items={COGNITIVE_TYPE_OPTIONS}
+                  value={cognitiveType}
+                  onSelect={setCognitiveType}
+                  placeholder="인지 유형"
+                  style={{ width: '100%' }}
+                />
+              </View>
+            </Card>
+            <Card style={styles.infoCard}>
+              <View style={styles.infoRowColumn}>
+                <Text style={styles.label}>근무 시간 패턴</Text>
+                <CustomDropdown
+                  items={WORK_TIME_OPTIONS}
+                  value={workTimePattern}
+                  onSelect={setWorkTimePattern}
+                  placeholder="근무 시간 패턴"
+                  style={{ width: '100%' }}
+                />
+              </View>
+            </Card>
           </Card>
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>성별</Text>
-              <CustomDropdown
-                items={GENDER_OPTIONS}
-                value={gender}
-                onSelect={setGender}
-                placeholder="성별"
-              />
-            </View>
-          </Card>
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>출생년도</Text>
-              <CustomDropdown
-                items={BIRTH_YEAR_OPTIONS}
-                value={birthYear}
-                onSelect={setBirthYear}
-                placeholder="출생년도"
-              />
-            </View>
-          </Card>
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>MBTI</Text>
-              <CustomDropdown
-                items={MBTI_OPTIONS}
-                value={mbti}
-                onSelect={setMbti}
-                placeholder="MBTI"
-              />
-            </View>
-          </Card>
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRowColumn}>
-              {' '}
-              {/* 새 스타일 */}
-              <Text style={styles.label}>인지 유형</Text>
-              <CustomDropdown
-                items={COGNITIVE_TYPE_OPTIONS}
-                value={cognitiveType}
-                onSelect={setCognitiveType}
-                placeholder="인지 유형"
-                style={{ width: '100%' }}
-              />
-            </View>
-          </Card>
-          <Card style={styles.infoCard}>
-            <View style={styles.infoRowColumn}>
-              <Text style={styles.label}>근무 시간 패턴</Text>
-              <CustomDropdown
-                items={WORK_TIME_OPTIONS}
-                value={workTimePattern}
-                onSelect={setWorkTimePattern}
-                placeholder="근무 시간 패턴"
-                style={{ width: '100%' }}
-              />
-            </View>
-          </Card>
-        </Card>
 
-        <View style={styles.buttonGroup}>
-          <Button
-            title="저장"
-            variant="primary"
-            onPress={handleSave}
-            style={styles.button}
-          />
-        </View>
-      </ScrollView>
-    </Layout>
+          <View style={styles.buttonGroup}>
+            <Button
+              title="저장"
+              variant="primary"
+              onPress={handleSave}
+              style={styles.button}
+            />
+          </View>
+        </ScrollView>
+      </Layout>
+    </ErrorBoundary>
   );
 };
 

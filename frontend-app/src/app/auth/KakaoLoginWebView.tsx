@@ -1,5 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
 import { WebView, WebViewNavigation } from 'react-native-webview';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -8,7 +14,7 @@ import { useAuthStore, User } from '@/store/authStore';
 import { RootStackParamList } from '@/App';
 import { BackButton } from '@/components/common/BackButton';
 import { colors } from '@/constants/colors';
-import { KAKAO_REST_API_KEY, DEV_API_URL, REDIRECT_URI } from '@env';
+import { KAKAO_REST_API_KEY, LIVE_API_URL, REDIRECT_URI } from '@env';
 import type { WebViewErrorEvent } from 'react-native-webview/lib/WebViewTypes';
 import { sendKakaoLoginToken } from '@/utils/auth/sendKakaoLoginCode';
 import { getAccessTokenFromKakao } from '@/utils/auth/getAccessTokenFromKakao';
@@ -24,12 +30,13 @@ export interface UserData {
     social_type: 'KAKAO' | 'GOOGLE' | 'NAVER';
     status: string;
     user_id: number;
-    has_completed_onboarding: boolean; 
+    has_completed_onboarding: boolean;
   };
 }
 
 const KakaoLoginWebView: React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { setLogin, setUser } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,24 +49,27 @@ const KakaoLoginWebView: React.FC = () => {
   useEffect(() => {
     try {
       if (!KAKAO_REST_API_KEY) throw new Error('KAKAO_REST_API_KEY 누락');
-      if (!DEV_API_URL) throw new Error('DEV_API_URL 누락');
+      if (!LIVE_API_URL) throw new Error('LIVE_API_URL 누락');
       if (!REDIRECT_URI) throw new Error('REDIRECT_URI 누락');
 
       const redirectUri = REDIRECT_URI;
       const url = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${encodeURIComponent(
-        redirectUri
+        redirectUri,
       )}&response_type=code`;
 
       setKakaoLoginUrl(url);
     } catch (err) {
-      console.error('환경 변수 오류:', err instanceof Error ? err.message : '알 수 없는 오류');
+      console.error(
+        '환경 변수 오류:',
+        err instanceof Error ? err.message : '알 수 없는 오류',
+      );
       // 에러를 화면에 표시하지 않고 콘솔로만 출력
     }
   }, []);
 
   const handleShouldStartLoadWithRequest = (request: any) => {
     const { url } = request;
-    
+
     // 리다이렉트 URI로 시작하는 경우에만 처리
     if (!url.startsWith(REDIRECT_URI)) {
       return true; // 다른 URL은 정상적으로 로드
@@ -90,7 +100,7 @@ const KakaoLoginWebView: React.FC = () => {
 
         // 처리된 코드 목록에 추가
         setProcessedCodes(prev => new Set([...prev, code]));
-        
+
         // 비동기로 토큰 교환 처리
         setIsProcessing(true);
         exchangeCodeForToken(code)
@@ -101,7 +111,7 @@ const KakaoLoginWebView: React.FC = () => {
           .finally(() => {
             setIsProcessing(false);
           });
-        
+
         return false; // 리다이렉트 URI 로딩 방지
       }
     } catch (error) {
@@ -118,7 +128,7 @@ const KakaoLoginWebView: React.FC = () => {
 
       // 2. 받은 액세스 토큰으로 우리 서버에 로그인 요청
       const loginResponse = await sendKakaoLoginToken(accessToken);
-      
+
       // UserData 형식으로 변환
       const userData: UserData = {
         access: loginResponse.access,
@@ -132,9 +142,9 @@ const KakaoLoginWebView: React.FC = () => {
           status: loginResponse.user.status,
           user_id: loginResponse.user.id,
           has_completed_onboarding: loginResponse.user.has_completed_onboarding,
-        }
+        },
       };
-      
+
       return userData;
     } catch (error) {
       console.error('토큰 교환 실패:', error);
@@ -143,7 +153,8 @@ const KakaoLoginWebView: React.FC = () => {
   };
 
   const handleLoginSuccess = async (userData: UserData) => {
-    if (!userData.access || !userData.user?.user_id) throw new Error('유효하지 않은 로그인 정보');
+    if (!userData.access || !userData.user?.user_id)
+      throw new Error('유효하지 않은 로그인 정보');
 
     try {
       setLogin(true);
@@ -164,7 +175,7 @@ const KakaoLoginWebView: React.FC = () => {
       if (userData.user.has_completed_onboarding) {
         navigation.navigate('Dashboard');
       } else {
-        navigation.navigate('Onboarding'); 
+        navigation.navigate('Onboarding');
       }
     } catch (error) {
       console.error('로그인 성공 처리 중 오류:', error);
@@ -174,7 +185,10 @@ const KakaoLoginWebView: React.FC = () => {
 
   const handleWebViewError = (event: WebViewErrorEvent) => {
     const { nativeEvent } = event;
-    console.error('WebView 오류:', nativeEvent.description || '알 수 없는 오류');
+    console.error(
+      'WebView 오류:',
+      nativeEvent.description || '알 수 없는 오류',
+    );
     // 연결 오류 시 사용자에게 알림
     if (nativeEvent.description?.includes('ERR_CONNECTION_REFUSED')) {
       setConnectionError(true);
@@ -223,7 +237,9 @@ const KakaoLoginWebView: React.FC = () => {
         {isLoading && (
           <View style={styles.loadingOverlay}>
             <ActivityIndicator size="large" color={colors.deepNavy} />
-            <Text style={styles.loadingText}>카카오 로그인 페이지 로딩 중...</Text>
+            <Text style={styles.loadingText}>
+              카카오 로그인 페이지 로딩 중...
+            </Text>
           </View>
         )}
         {kakaoLoginUrl && (
@@ -277,12 +293,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 1,
   },
-  content: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
   loadingText: { fontSize: 16, color: colors.deepNavy, marginTop: 12 },
-  errorText: { fontSize: 18, fontWeight: '600', color: colors.deepNavy, marginBottom: 8 },
-  errorDescription: { fontSize: 14, color: colors.mediumGray, textAlign: 'center', lineHeight: 20 },
+  errorText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.deepNavy,
+    marginBottom: 8,
+  },
+  errorDescription: {
+    fontSize: 14,
+    color: colors.mediumGray,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
   errorIcon: { fontSize: 48, marginBottom: 12 },
-  errorTitle: { fontSize: 24, fontWeight: '600', color: colors.deepNavy, marginBottom: 8 },
+  errorTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: colors.deepNavy,
+    marginBottom: 8,
+  },
   retryButton: {
     backgroundColor: colors.deepNavy,
     padding: 16,
