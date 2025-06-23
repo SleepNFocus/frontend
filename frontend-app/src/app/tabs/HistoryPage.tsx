@@ -14,6 +14,8 @@ import { Card } from '@/components/common/Card';
 import { Layout } from '@/components/common/Layout';
 import { ToastList } from '@/components/common/Toast';
 import useUiStore from '@/store/uiStore';
+import { useQueryClient } from '@tanstack/react-query';
+import { useFocusEffect } from 'expo-router';
 
 const periodOptions = ['day', 'week', 'month'] as const;
 type Period = (typeof periodOptions)[number];
@@ -24,6 +26,14 @@ export const HistoryPage: React.FC = () => {
   const { openToast } = useUiStore();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  // const queryClient = useQueryClient();
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     queryClient.invalidateQueries({ queryKey: ['/sleepRecordList'] });
+  //   }, [queryClient]),
+  // );
 
   const handlePeriodChange = (newPeriod: Period) => {
     if (period !== newPeriod) {

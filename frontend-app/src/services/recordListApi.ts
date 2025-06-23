@@ -15,6 +15,7 @@ export const useSleepRecordList = (period: 'day' | 'week' | 'month') => {
     queryKey: ['/sleepRecordList', period],
     queryFn: () => fetchSleepRecordList(period),
     enabled: !!period,
+    staleTime: 0, // 캐시를 즉시 삭제
   });
 };
 

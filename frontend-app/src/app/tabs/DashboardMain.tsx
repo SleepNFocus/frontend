@@ -110,6 +110,8 @@ export const DashboardMain: React.FC = memo(() => {
     error,
   } = useGetDailySummary();
 
+  const [hasCognitiveScore, setHasCognitiveScore] = useState(false);
+
   useEffect(() => {
     fetchSummary(undefined, {
       onSuccess: res => {
@@ -122,6 +124,11 @@ export const DashboardMain: React.FC = memo(() => {
           latest.raw_scores.symbol.average_score,
           latest.raw_scores.pattern.average_score,
         ];
+
+        const hasScore = cognition.some(
+          score => typeof score === 'number' && score > 0,
+        );
+        setHasCognitiveScore(hasScore);
 
         const labels = ['반응 속도', '정보 처리', '패턴 기억'];
 
@@ -171,9 +178,13 @@ export const DashboardMain: React.FC = memo(() => {
           <Card style={styles.greetingWrap}>
             <GreetingCard userName={user?.nickname} />
           </Card>
-          <View style={styles.checkinSection}>
-            <CheckinCard onCheckin={() => navigation.navigate('SleepRecord')} />
-          </View>
+          {!hasCognitiveScore && (
+            <View style={styles.checkinSection}>
+              <CheckinCard
+                onCheckin={() => navigation.navigate('SleepRecord')}
+              />
+            </View>
+          )}
 
           <AbilityProfileCard
             data={cognitionData.data}
