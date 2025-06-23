@@ -28,7 +28,9 @@ export const SleepRecordDetailPage: React.FC = () => {
     return (
       <Layout showLogo={false} showNavbar={false}>
         <View style={styles.loadingContainer}>
-          <Text variant="bodyLarge" style={styles.loadingText}>로딩 중...</Text>
+          <Text variant="bodyLarge" style={styles.loadingText}>
+            로딩 중...
+          </Text>
         </View>
       </Layout>
     );
@@ -38,7 +40,9 @@ export const SleepRecordDetailPage: React.FC = () => {
     return (
       <Layout showLogo={false} showNavbar={false}>
         <View style={styles.errorContainer}>
-          <Text variant="bodyLarge" style={styles.errorText}>에러 발생 혹은 데이터 없음</Text>
+          <Text variant="bodyLarge" style={styles.errorText}>
+            에러 발생 혹은 데이터 없음
+          </Text>
         </View>
       </Layout>
     );
@@ -62,7 +66,10 @@ export const SleepRecordDetailPage: React.FC = () => {
 
   return (
     <Layout showLogo={false} showNavbar={false}>
-      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         {/* 헤더 섹션 */}
         <View style={styles.headerSection}>
           <BackButton size={32} />
@@ -70,7 +77,7 @@ export const SleepRecordDetailPage: React.FC = () => {
             <Text variant="headlineMedium" style={styles.headerTitle}>
               {data.date} 기록 상세
             </Text>
-            <Text variant="bodyMedium" style={styles.headerSubtitle}>
+            <Text variant="titleMedium" style={styles.headerSubtitle}>
               수면 및 인지 테스트 결과를 확인해보세요
             </Text>
           </View>
@@ -78,76 +85,130 @@ export const SleepRecordDetailPage: React.FC = () => {
 
         {/* 수면 정보 카드 */}
         <Card style={styles.mainCard} elevation={4}>
-          <Text variant="titleLarge" style={styles.cardTitle}>수면 정보</Text>
+          <Text variant="titleLarge" style={styles.cardTitle}>
+            수면 정보
+          </Text>
           <View style={styles.sleepInfoContainer}>
             <View style={styles.infoItem}>
-              <Text variant="labelMedium" style={styles.infoLabel}>총 수면시간</Text>
-              <Text variant="headlineSmall" style={styles.infoValue}>{total_sleep_hours}시간</Text>
+              <Text variant="labelMedium" style={styles.infoLabel}>
+                총 수면시간
+              </Text>
+              <Text variant="headlineSmall" style={styles.infoValue}>
+                {total_sleep_hours}시간
+              </Text>
             </View>
             <View style={styles.infoItem}>
-              <Text variant="labelMedium" style={styles.infoLabel}>수면점수</Text>
-              <Text variant="headlineSmall" style={styles.infoValue}>{sleep_score}점</Text>
+              <Text variant="labelMedium" style={styles.infoLabel}>
+                수면점수
+              </Text>
+              <Text variant="headlineSmall" style={styles.infoValue}>
+                {sleep_score}점
+              </Text>
             </View>
           </View>
         </Card>
 
         {/* 인지 테스트 결과 카드 */}
         <Card style={styles.mainCard} elevation={4}>
-          <Text variant="titleLarge" style={styles.cardTitle}>인지 테스트 결과</Text>
-          
+          <Text variant="titleLarge" style={styles.cardTitle}>
+            인지 테스트 결과
+          </Text>
+
           {/* SRT 테스트 */}
           <View style={styles.testSection}>
-            <Text variant="titleMedium" style={styles.testTitle}>SRT (Simple Reaction Time)</Text>
+            <Text variant="titleMedium" style={styles.testTitle}>
+              SRT (Simple Reaction Time)
+            </Text>
             <View style={styles.testResultContainer}>
               <View style={styles.testResultItem}>
-                <Text variant="bodyMedium" style={styles.testResultLabel}>점수</Text>
-                <Text variant="titleMedium" style={styles.testResultValue}>{srt_score}점</Text>
+                <Text variant="bodyMedium" style={styles.testResultLabel}>
+                  점수
+                </Text>
+                <Text variant="titleMedium" style={styles.testResultValue}>
+                  {srt_score}점
+                </Text>
               </View>
               <View style={styles.testResultItem}>
-                <Text variant="bodyMedium" style={styles.testResultLabel}>반응시간</Text>
-                <Text variant="titleMedium" style={styles.testResultValue}>{srt_time_ms}ms</Text>
+                <Text variant="bodyMedium" style={styles.testResultLabel}>
+                  반응시간
+                </Text>
+                <Text variant="titleMedium" style={styles.testResultValue}>
+                  {srt_time_ms}ms
+                </Text>
               </View>
             </View>
           </View>
 
           {/* Symbol 테스트 */}
           <View style={styles.testSection}>
-            <Text variant="titleMedium" style={styles.testTitle}>Symbol 테스트</Text>
+            <Text variant="titleMedium" style={styles.testTitle}>
+              Symbol 테스트
+            </Text>
             <View style={styles.testResultContainer}>
               <View style={styles.testResultItem}>
-                <Text variant="bodyMedium" style={styles.testResultLabel}>점수</Text>
-                <Text variant="titleMedium" style={styles.testResultValue}>{symbol_score}점</Text>
+                <Text variant="bodyMedium" style={styles.testResultLabel}>
+                  점수
+                </Text>
+                <Text variant="titleMedium" style={styles.testResultValue}>
+                  {symbol_score}점
+                </Text>
               </View>
               <View style={styles.testResultItem}>
-                <Text variant="bodyMedium" style={styles.testResultLabel}>완료 개수</Text>
-                <Text variant="titleMedium" style={styles.testResultValue}>{symbol_count}개</Text>
+                <Text variant="bodyMedium" style={styles.testResultLabel}>
+                  완료 개수
+                </Text>
+                <Text variant="titleMedium" style={styles.testResultValue}>
+                  {symbol_count}개
+                </Text>
               </View>
               <View style={styles.testResultItem}>
-                <Text variant="bodyMedium" style={styles.testResultLabel}>정확도</Text>
-                <Text variant="titleMedium" style={styles.testResultValue}>{symbol_accuracy}%</Text>
+                <Text variant="bodyMedium" style={styles.testResultLabel}>
+                  정확도
+                </Text>
+                <Text variant="titleMedium" style={styles.testResultValue}>
+                  {symbol_accuracy}%
+                </Text>
               </View>
             </View>
           </View>
 
           {/* Pattern 테스트 */}
           <View style={styles.testSection}>
-            <Text variant="titleMedium" style={styles.testTitle}>Pattern 테스트</Text>
+            <Text variant="titleMedium" style={styles.testTitle}>
+              Pattern 테스트
+            </Text>
             <View style={styles.testResultContainer}>
               <View style={styles.testResultItem}>
-                <Text variant="bodyMedium" style={styles.testResultLabel}>점수</Text>
-                <Text variant="titleMedium" style={styles.testResultValue}>{pattern_score}점</Text>
+                <Text variant="bodyMedium" style={styles.testResultLabel}>
+                  점수
+                </Text>
+                <Text variant="titleMedium" style={styles.testResultValue}>
+                  {pattern_score}점
+                </Text>
               </View>
               <View style={styles.testResultItem}>
-                <Text variant="bodyMedium" style={styles.testResultLabel}>완료 개수</Text>
-                <Text variant="titleMedium" style={styles.testResultValue}>{pattern_count}개</Text>
+                <Text variant="bodyMedium" style={styles.testResultLabel}>
+                  완료 개수
+                </Text>
+                <Text variant="titleMedium" style={styles.testResultValue}>
+                  {pattern_count}개
+                </Text>
               </View>
               <View style={styles.testResultItem}>
-                <Text variant="bodyMedium" style={styles.testResultLabel}>정확도</Text>
-                <Text variant="titleMedium" style={styles.testResultValue}>{pattern_accuracy}%</Text>
+                <Text variant="bodyMedium" style={styles.testResultLabel}>
+                  정확도
+                </Text>
+                <Text variant="titleMedium" style={styles.testResultValue}>
+                  {pattern_accuracy}%
+                </Text>
               </View>
               <View style={styles.testResultItem}>
-                <Text variant="bodyMedium" style={styles.testResultLabel}>평균 시간</Text>
-                <Text variant="titleMedium" style={styles.testResultValue}>{pattern_time_ms}ms</Text>
+                <Text variant="bodyMedium" style={styles.testResultLabel}>
+                  평균 시간
+                </Text>
+                <Text variant="titleMedium" style={styles.testResultValue}>
+                  {pattern_time_ms}ms
+                </Text>
               </View>
             </View>
           </View>
@@ -195,7 +256,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     color: colors.textColor + '80',
-    fontSize: fontSize.sm,
+    // fontSize: fontSize.sm,
   },
   mainCard: {
     marginBottom: spacing.lg,
