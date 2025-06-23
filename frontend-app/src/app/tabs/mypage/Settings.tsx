@@ -514,8 +514,7 @@ const Settings = () => {
           </Card>
           <Card style={styles.infoCard}>
             <View style={styles.infoRowColumn}>
-              {' '}
-              {/* 새 스타일 */}
+              <Text>{' '}</Text>
               <Text style={styles.label}>인지 유형</Text>
               <CustomDropdown
                 items={COGNITIVE_TYPE_OPTIONS}
