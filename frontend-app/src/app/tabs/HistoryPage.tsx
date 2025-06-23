@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   subtitle: {
     textAlign: 'center',
     color: colors.textColor + '80',
-    fontSize: fontSize.sm,
+    // fontSize: fontSize.sm,
   },
   filterContainer: {
     flexDirection: 'row',
@@ -265,9 +265,10 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: spacing.xs,
     minWidth: 70,
-    height: 40,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
+    height: 50,
+
+    // paddingVertical: spacing.sm,
+    // paddingHorizontal: spacing.md,
   },
   activeFilterText: {
     fontWeight: 'bold',
@@ -278,7 +279,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     textAlign: 'center',
-    fontSize: fontSize.md,
+    // fontSize: fontSize.md,
     color: colors.textColor + '80',
   },
   errorText: {
@@ -299,7 +300,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   cardDate: {
-    fontSize: fontSize.lg,
+    // fontSize: fontSize.lg,
     fontWeight: '700',
     color: colors.textColor,
     marginBottom: spacing.sm,
@@ -316,12 +317,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scoreLabel: {
-    fontSize: fontSize.sm,
+    // fontSize: fontSize.sm,
     color: colors.textColor + '80',
     marginBottom: spacing.xs,
   },
   scoreValue: {
-    fontSize: fontSize.lg,
+    // fontSize: fontSize.lg,
     fontWeight: '700',
     color: colors.deepNavy,
   },
@@ -334,12 +335,12 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   sleepTimeLabel: {
-    fontSize: fontSize.md,
+    // fontSize: fontSize.md,
     color: colors.textColor,
     fontWeight: '600',
   },
   sleepTimeValue: {
-    fontSize: fontSize.lg,
+    // fontSize: fontSize.lg,
     fontWeight: '700',
     color: colors.deepNavy,
   },
@@ -355,12 +356,12 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   statLabel: {
-    fontSize: fontSize.md,
+    // fontSize: fontSize.md,
     color: colors.textColor + '80',
     fontWeight: '600',
   },
   statValue: {
-    fontSize: fontSize.md,
+    // fontSize: fontSize.md,
     fontWeight: '700',
     color: colors.textColor,
   },

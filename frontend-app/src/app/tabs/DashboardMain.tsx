@@ -244,19 +244,19 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     color: colors.midnightBlue,
-    fontSize: fontSize.md,
+    // fontSize: fontSize.sm,
     fontWeight: 'bold',
     marginBottom: spacing.sm,
   },
   sectionTitle: {
     color: colors.textColor,
-    fontSize: fontSize.lg,
+    // fontSize: fontSize.lg,
     fontWeight: 'bold',
     marginBottom: spacing.lg,
   },
   avgScore: {
     color: colors.midnightBlue,
-    fontSize: fontSize.md,
+    // fontSize: fontSize.md,
     marginBottom: spacing.lg,
   },
   avgScorePoint: {
@@ -281,16 +281,16 @@ const styles = StyleSheet.create({
   },
   scoreCardLabel: {
     color: colors.deepNavy,
-    fontSize: fontSize.md,
+    // fontSize: fontSize.md,
     fontWeight: 'bold',
   },
   scoreCardValue: {
     color: colors.midnightBlue,
-    fontSize: fontSize.xs,
+    // fontSize: fontSize.xs,
   },
   scoreCardPoint: {
     color: colors.softBlue,
-    fontSize: fontSize.lg,
+    // fontSize: fontSize.lg,
     fontWeight: 'bold',
   },
   errorContainer: {
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.midnightBlue,
-    fontSize: fontSize.md,
+    // fontSize: fontSize.md,
     textAlign: 'center',
   },
 });
