@@ -9,14 +9,20 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAIRecommendation } from '@/hooks/useAIInsight';
 import { AISleepTips } from '@/components/sleep/AISleepTips';
+import { RootStackParamList } from '@/App';
+import { useSleepRecord } from '@/services/sleepApi';
 
-type RootStackParamList = {
-  AISleepTips: { date: string; score: number };
-  SleepRecord: undefined;
-};
+// type RootStackParamList = {
+//   AISleepTips: { date: string; score: number };
+//   SleepRecord: undefined;
+// };
 
-type AISleepTipsRouteProp = RouteProp<RootStackParamList, 'AISleepTips'>;
+// type AISleepTipsRouteProp = RouteProp<RootStackParamList, 'Insight'>;
+
+type AISleepTipsRouteProp = RouteProp<RootStackParamList, 'AISleepTipsScreen'>;
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+// const route = useRoute<AISleepTipsRouteProp>();
 
 interface AISleepTipsScreenProps {
   date?: string;
@@ -30,12 +36,16 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
   showNavigation = true,
 }) => {
   const navigation = useNavigation<NavigationProp>();
-  const route = useRoute<AISleepTipsRouteProp>();
+  // const route = useRoute<AISleepTipsRouteProp>();
 
   // props로 받은 값이 있으면 사용, 없으면 route params 사용
-  const date =
-    propDate || route.params?.date || new Date().toISOString().split('T')[0];
-  const score = propScore || route.params?.score || 75;
+  const date = propDate || new Date().toISOString().split('T')[0];
+  const score = propScore;
+
+  // const today = format(new Date(), 'yyyy-MM-dd');
+  // const { data: sleepRecordData } = useSleepRecord(date);
+
+  // console.log(sleepRecordData);
 
   const {
     data: aiData,
@@ -67,6 +77,10 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
     return tips.length > 0 ? tips : [recommendation];
   };
 
+  // console.log('route.params:', route.params);
+  // console.log('propScore:', propScore, 'routeScore:', route.params?.score);
+  // console.log('최종 score:',score);
+
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -74,12 +88,14 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
           <Card
             style={[
               styles.headerCard,
-              { borderLeftColor: getScoreColor(score) },
+              { borderLeftColor: getScoreColor(score || 0) },
             ]}
           >
             <Card.Content>
               <View style={styles.headerContent}>
-                <Text style={styles.headerEmoji}>{getScoreEmoji(score)}</Text>
+                <Text style={styles.headerEmoji}>
+                  {getScoreEmoji(score || 0)}
+                </Text>
                 <View style={styles.headerText}>
                   <Text variant="headlineSmall" style={styles.headerTitle}>
                     AI 수면 분석
@@ -118,12 +134,14 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
           <Card
             style={[
               styles.headerCard,
-              { borderLeftColor: getScoreColor(score) },
+              { borderLeftColor: getScoreColor(score || 0) },
             ]}
           >
             <Card.Content>
               <View style={styles.headerContent}>
-                <Text style={styles.headerEmoji}>{getScoreEmoji(score)}</Text>
+                <Text style={styles.headerEmoji}>
+                  {getScoreEmoji(score || 0)}
+                </Text>
                 <View style={styles.headerText}>
                   <Text variant="headlineSmall" style={styles.headerTitle}>
                     AI 수면 분석
@@ -173,11 +191,16 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Card
-          style={[styles.headerCard, { borderLeftColor: getScoreColor(score) }]}
+          style={[
+            styles.headerCard,
+            { borderLeftColor: getScoreColor(score || 0) },
+          ]}
         >
           <Card.Content>
             <View style={styles.headerContent}>
-              <Text style={styles.headerEmoji}>{getScoreEmoji(score)}</Text>
+              <Text style={styles.headerEmoji}>
+                {getScoreEmoji(score || 0)}
+              </Text>
               <View style={styles.headerText}>
                 <Text variant="headlineSmall" style={styles.headerTitle}>
                   AI 수면 분석

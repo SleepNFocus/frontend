@@ -106,11 +106,11 @@ export const SleepRecordPage: React.FC = () => {
 
   const formatSleepLatency = (latency: number) => {
     switch (latency) {
-      case 1:
+      case 0:
         return '15분 이하';
-      case 2:
+      case 1:
         return '15-30분';
-      case 3:
+      case 2:
         return '30분 초과';
       default:
         return '알 수 없음';
@@ -119,20 +119,21 @@ export const SleepRecordPage: React.FC = () => {
 
   const formatSubjectiveQuality = (quality: number) => {
     switch (quality) {
-      case 5:
-        return '매우 개운함';
       case 4:
-        return '개운함';
+        return '매우 개운함';
       case 3:
-        return '보통';
+        return '개운함';
       case 2:
-        return '약간 피곤함';
+        return '보통';
       case 1:
+        return '약간 피곤함';
+      case 0:
         return '매우 피곤함';
       default:
         return '알 수 없음';
     }
   };
+  console.log('데이터', sleepData);
 
   const handleSaveRecord = async (recordData: SleepRecordData) => {
     try {
@@ -166,7 +167,7 @@ export const SleepRecordPage: React.FC = () => {
         }
       };
 
-      pollForResult(); // 백그라운드에서 결과 확인 시작
+      await pollForResult(); // 백그라운드에서 결과 확인 시작
     } catch (error) {
       const errorMessage =
         error instanceof Error
@@ -275,7 +276,7 @@ export const SleepRecordPage: React.FC = () => {
                     onPress={() =>
                       navigation.navigate('Insight', {
                         date: sleepData.date,
-                        score: sleepData.score || 0,
+                        score: sleepData.score,
                       })
                     }
                     style={styles.aiButton}
@@ -311,8 +312,18 @@ export const SleepRecordPage: React.FC = () => {
             ) : null}
 
             {/* 액션 버튼들 */}
+            {/* <Card style={styles.actionCard}>
+              <Card.Content> */}
+            <View style={styles.nextBox}>
+              <Text variant="titleLarge" style={styles.actionTitle}>
+                오늘의 수면 기록이 완료되었습니다!
+              </Text>
+              <Text variant="titleSmall" style={styles.actionSubtitle}>
+                이제 인지 능력 테스트에 도전하거나, 이전 기록을 확인해보세요.
+              </Text>
+            </View>
+
             <View style={styles.actionButtons}>
-              {/* 🧪 임시 테스트 버튼 */}
               <Button
                 onPress={() => navigation.navigate('SleepTestMain')}
                 title="반응속도 테스트"
@@ -320,11 +331,13 @@ export const SleepRecordPage: React.FC = () => {
               />
               <Button
                 onPress={() => navigation.navigate('History')}
-                title="기록 목록 보기"
+                title="기록 히스토리"
                 variant="outline"
                 style={styles.secondaryButton}
               />
             </View>
+            {/* </Card.Content>
+            </Card> */}
           </View>
         )}
       </ScrollView>
@@ -409,6 +422,30 @@ const styles = StyleSheet.create({
   errorText: {
     color: colors.red || '#e74c3c',
     fontWeight: 'bold',
+  },
+  actionCard: {
+    marginVertical: 16,
+    backgroundColor: '#ffffff',
+    opacity: 0.7,
+    borderRadius: 8,
+  },
+  actionTitle: {
+    color: colors.textColor,
+    // fontSize: fontSize.lg,
+    fontWeight: 'bold',
+    // marginBottom: spacing.sm,
+  },
+  actionSubtitle: {
+    color: colors.midnightBlue,
+    // fontSize: fontSize.md,
+    // marginBottom: spacing.lg,
+    lineHeight: 20,
+  },
+  nextBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+    gap: 10,
   },
 });
 
