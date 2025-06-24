@@ -4,10 +4,12 @@ import UserManagement from './admin/UserManagement';
 import AdminLayout from './admin/layout/AdminLayout';
 import Home from './admin/Home';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useAutoLogin } from '@/hooks/useAutoLogin';
 
 const queryClient = new QueryClient();
 
 function App() {
+  useAutoLogin();
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
@@ -15,6 +17,8 @@ function App() {
           <div>
             <Routes>
               <Route path="/" element={<AdminLayout><Home /></AdminLayout>} />
+              <Route path="/oauth/kakao" element={<AdminLayout><Home /></AdminLayout>} />
+              <Route path="/oauth/google" element={<AdminLayout><Home /></AdminLayout>} />
               <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
               <Route path="/admin/users" element={<AdminLayout><UserManagement /></AdminLayout>} />
             </Routes>

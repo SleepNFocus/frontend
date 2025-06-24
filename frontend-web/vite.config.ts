@@ -8,4 +8,13 @@ export default defineConfig({
       '@': '/src',
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://www.dev.focusz.site',
+        changeOrigin: true,
+        secure: true,
+      },
+    },
+  },
 }); 
