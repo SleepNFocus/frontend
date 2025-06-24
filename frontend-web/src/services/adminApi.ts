@@ -5,49 +5,55 @@ import {
   User,
   UserUpdateRequest,
   AdminMain,
-  UsersResponse,
   LogsResponse,
+  LogCreateRequest,
 } from '@/types/admin';
 
 // 관리자 메인 정보 조회
 export const getAdminMain = async (): Promise<AdminMain> => {
   const apiClient = getApiClient();
-  const response = await apiClient.get<AdminMain>('/api/admin/');
+  const response = await apiClient.get<AdminMain>('/admin/');
   return response.data;
 };
 
 // 모든 사용자 조회
-export const getAllUsers = async (): Promise<UsersResponse> => {
+export const getAllUsers = async (): Promise<User[]> => {
   const apiClient = getApiClient();
-  const response = await apiClient.get<UsersResponse>('/api/admin/users');
+  const response = await apiClient.get<User[]>('/admin/users/');
   return response.data;
 };
 
 // 특정 사용자 조회
 export const getUser = async (userId: number): Promise<User> => {
   const apiClient = getApiClient();
-  const response = await apiClient.get<User>(`/api/admin/users/${userId}`);
+  const response = await apiClient.get<User>(`/admin/users/${userId}/`);
   return response.data;
 };
 
 // 사용자 정보 수정
-export const updateUser = async ({ userId, updateData }: { userId: number; updateData: UserUpdateRequest }): Promise<User> => {
+export const updateUser = async (updateData: UserUpdateRequest): Promise<User> => {
   const apiClient = getApiClient();
-  const response = await apiClient.put<User>(`/api/admin/users/${userId}`, updateData);
+  const response = await apiClient.put<User>(`/admin/users/${updateData.user_id}/`, updateData);
   return response.data;
 };
 
 // 사용자 삭제
 export const deleteUser = async (userId: number): Promise<void> => {
   const apiClient = getApiClient();
-  await apiClient.delete(`/api/admin/users/${userId}`);
+  await apiClient.delete(`/admin/users/${userId}/`);
 };
 
 // 관리자 로그 조회
 export const getAdminLogs = async (): Promise<LogsResponse> => {
   const apiClient = getApiClient();
-  const response = await apiClient.get<LogsResponse>('/api/admin/logs');
+  const response = await apiClient.get<LogsResponse>('/admin/logs/');
   return response.data;
+};
+
+// 시스템 로그 기록
+export const createLog = async (logData: LogCreateRequest): Promise<void> => {
+  const apiClient = getApiClient();
+  await apiClient.post('/logs/', logData);
 };
 
 // React Query Hooks
@@ -99,7 +105,7 @@ export const useUpdateUser = () => {
     mutationFn: updateUser,
     onSuccess: (data, variables) => {
       // 개별 사용자 캐시 업데이트
-      queryClient.setQueryData(['user', variables.userId], data);
+      queryClient.setQueryData(['user', variables.user_id], data);
       // 사용자 목록 캐시 무효화
       queryClient.invalidateQueries({ queryKey: ['users'] });
       // 관리자 메인 정보 캐시 무효화
@@ -137,5 +143,21 @@ export const useAdminLogs = () => {
   return useQuery({
     queryKey: ['adminLogs'],
     queryFn: getAdminLogs,
+  });
+};
+
+/**
+ * 시스템 로그 생성 훅
+ * @returns 로그를 생성하는 mutation 함수
+ */
+export const useCreateLog = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createLog,
+    onSuccess: () => {
+      // 로그 목록 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: ['adminLogs'] });
+    },
   });
 }; 
