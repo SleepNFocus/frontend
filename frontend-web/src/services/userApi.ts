@@ -172,6 +172,59 @@ export const useSocialLogin = () => {
 };
 
 export async function refreshAccessToken(refreshToken: string) {
-  const response = await axios.post('/api/users/token/refresh/', { refresh: refreshToken });
-  return response.data; // { access: '새 accessToken' }
+  try {
+    const response = await axios.post('/api/users/token/refresh/', { 
+      refresh: refreshToken 
+    });
+    
+    const { access } = response.data;
+    localStorage.setItem('accessToken', access);
+    
+    console.log('✅ 토큰 갱신 성공');
+    return { access };
+  } catch (error: any) {
+    console.error('❌ 토큰 갱신 실패:', error);
+    
+    // 리프레시 토큰도 만료된 경우 자동 로그아웃
+    if (error.response?.status === 401) {
+      console.log('🚨 리프레시 토큰 만료 - 자동 로그아웃');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+      localStorage.removeItem('loginTime');
+      
+      // 홈페이지로 리다이렉트
+      window.location.href = '/';
+    }
+    
+    throw error;
+  }
 }
+
+// 토큰 유효성 검사 함수 추가
+export const checkTokenValidity = async (): Promise<boolean> => {
+  const accessToken = localStorage.getItem('accessToken');
+  const refreshToken = localStorage.getItem('refreshToken');
+  
+  if (!accessToken || !refreshToken) {
+    return false;
+  }
+  
+  try {
+    const apiClient = getApiClient();
+    await apiClient.get('/users/me/'); // 또는 다른 간단한 인증 확인 엔드포인트
+    return true;
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      // 액세스 토큰이 만료된 경우 리프레시 토큰으로 갱신 시도
+      try {
+        await refreshAccessToken(refreshToken);
+        return true;
+      } catch (refreshError) {
+        // 리프레시 토큰도 만료된 경우
+        return false;
+      }
+    }
+    return false;
+  }
+};

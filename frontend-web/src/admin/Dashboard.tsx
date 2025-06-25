@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAllUsers, useAdminLogs } from '@/services/adminApi';
+import { useAllUsers, useAdminLogs, useCreateLog } from '@/services/adminApi';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -8,9 +8,18 @@ import { Card, CardContent } from "@/components/ui/Card";
 const Dashboard = () => {
   const { data: users, isLoading, error } = useAllUsers();
   const { data: logs } = useAdminLogs();
+  const { mutate: createLog } = useCreateLog();
   const [isLoginSuccessModalOpen, setLoginSuccessModalOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  // API 호출 상태 로깅
+  console.log('🔍 Dashboard API 상태:', {
+    users: users ? `${users.length}명` : '로딩중',
+    logs: logs ? `${logs.logs?.length || 0}개` : '로딩중',
+    isLoading,
+    error: error?.message || '없음'
+  });
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -20,13 +29,26 @@ const Dashboard = () => {
     }
   }, [location, navigate]);
 
+  // 대시보드 접근 로그 기록
+  useEffect(() => {
+    createLog({
+      action_type: 'DASHBOARD_ACCESS',
+      description: '관리자가 대시보드에 접근했습니다.',
+    });
+  }, [createLog]);
+
   if (isLoading) return <div>로딩중...</div>;
   if (error) return <div>에러 발생: {error.message}</div>;
   if (!users) return null;
 
   // 통계 계산
   const totalUsers = users.length;
-  const activeUsers = users.filter(u => u.is_active).length;
+  
+  // 최근 로그인 기반 활성 사용자 계산 (최근 30일)
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const activeUsers = users.filter(u => u.last_login_at && new Date(u.last_login_at) > thirtyDaysAgo).length;
+  
   const today = new Date().toISOString().slice(0, 10); // 'YYYY-MM-DD'
   const newUsersToday = users.filter(u => u.joined_at && u.joined_at.slice(0, 10) === today).length;
   const adminCount = users.filter(u => u.is_admin).length;
@@ -51,6 +73,18 @@ const Dashboard = () => {
   const sortedAgeGroups = Object.entries(ageGroups).sort(([, a], [, b]) => b - a);
   const recentLogs = Array.isArray(logs?.logs) ? logs.logs.slice(0, 10) : [];
 
+  // 상태 한글 매핑 함수
+  const getStatusKoreanName = (status: string) => {
+    const statusMap: Record<string, string> = {
+      'active': '활성',
+      'withdrawn': '탈퇴',
+      'suspended': '정지',
+      'pending': '대기',
+      'inactive': '비활성'
+    };
+    return statusMap[status] || status;
+  };
+
   return (
     <>
       <div className="p-6">
@@ -64,7 +98,7 @@ const Dashboard = () => {
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-lg font-semibold">활성 사용자</div>
+              <div className="text-lg font-semibold">최근 30일 로그인</div>
               <div className="text-2xl font-bold text-green-600">{activeUsers}</div>
             </CardContent>
           </Card>
@@ -91,7 +125,7 @@ const Dashboard = () => {
               <div className="text-lg font-semibold">상태별 사용자 수</div>
               <div className="text-base space-y-1">
                 {Object.entries(statusCounts).map(([status, count]) => (
-                  <div key={status}>{status}: {count}</div>
+                  <div key={status}>{getStatusKoreanName(status)}: {count}</div>
                 ))}
               </div>
             </CardContent>

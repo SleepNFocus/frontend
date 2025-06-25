@@ -11,6 +11,7 @@
 
 body {
     font-family: 'NanumSquareRound', sans-serif;
+    color: #0F1C36; /* textColor */
 }
 
 
@@ -78,6 +79,7 @@ body {
     @apply border-border;
     }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background;
+    color: #0F1C36; /* textColor */
     }
 }
