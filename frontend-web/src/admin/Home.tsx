@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import { useSocialLogin } from '@/services/userApi';
-import { getUser } from '@/services/adminApi';
+import { useSocialLogin, checkTokenValidity } from '@/services/userApi';
+import { getUser, useCreateLog } from '@/services/adminApi';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
@@ -15,6 +15,7 @@ const GOOGLE_REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI || 'http://
 
 const Home = () => {
   const { mutate, isPending } = useSocialLogin();
+  const { mutate: createLog } = useCreateLog();
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInProvider, setLoggedInProvider] = useState<string | null>(null);
@@ -53,6 +54,12 @@ const Home = () => {
           setLoginResultType('success');
           setIsLoginResultModalOpen(true);
           setLoginFailReason(null);
+          
+          // 관리자 로그인 성공 로그 기록
+          createLog({
+            action_type: 'ADMIN_LOGIN',
+            description: `관리자 로그인 성공: ${loginUser.nickname} (${loginUser.email})`,
+          });
         } else {
           console.log('❌ 관리자 권한 없음 - 실패 모달 표시');
           console.log('🔍 실패 원인:', {
@@ -62,14 +69,14 @@ const Home = () => {
           });
           setLoginResultType('fail');
           setIsLoginResultModalOpen(true);
-          setLoginFailReason('관리자 권한이 없습니다.');
+          setLoginFailReason('관리자 권한이 없습니다. 일반 사용자 계정으로 로그인하셨습니다.');
         }
         setShouldCheckAdmin(false);
       }
     };
     
     verifyAdminPermission();
-  }, [shouldCheckAdmin, loginUser]);
+  }, [shouldCheckAdmin, loginUser, createLog]);
 
   // OAuth 콜백 처리 로직
   useEffect(() => {
@@ -102,12 +109,40 @@ const Home = () => {
     processCallback();
   }, [mutate, navigate]);
 
+  // 페이지 로드 시 로그인 상태 초기화
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    const user = localStorage.getItem('user');
+    
+    if (token && user) {
+      try {
+        const userData = JSON.parse(user);
+        console.log('🔄 페이지 로드 시 로그인 상태 복원:', userData);
+        setLoginUser(userData);
+        setIsLoggedIn(true);
+        setLoggedInProvider(userData.social_type);
+      } catch (e) {
+        console.error("localStorage에서 사용자 정보 파싱 실패", e);
+        localStorage.clear();
+        setIsLoggedIn(false);
+        setLoggedInProvider(null);
+        setLoginUser(null);
+      }
+    } else {
+      console.log('🔄 페이지 로드 시 로그아웃 상태 확인');
+      setIsLoggedIn(false);
+      setLoggedInProvider(null);
+      setLoginUser(null);
+    }
+  }, []);
+
   // 로그인 성공 감지 및 관리자 권한 확인
   useEffect(() => {
     const checkLoginSuccess = () => {
       const token = localStorage.getItem('accessToken');
       const user = localStorage.getItem('user');
       
+      // localStorage에 토큰과 사용자 정보가 있는데 로그인 상태가 아닌 경우
       if (token && user && !isLoggedIn) {
         console.log('🔍 로그인 성공 감지됨');
         try {
@@ -124,6 +159,15 @@ const Home = () => {
           console.error("localStorage에서 사용자 정보 파싱 실패", e);
         }
       }
+      
+      // localStorage에 토큰과 사용자 정보가 없는데 로그인 상태인 경우
+      if ((!token || !user) && isLoggedIn) {
+        console.log('🔍 로그아웃 감지됨');
+        setIsLoggedIn(false);
+        setLoggedInProvider(null);
+        setLoginUser(null);
+        setShouldCheckAdmin(false);
+      }
     };
     
     // 주기적으로 로그인 상태 확인
@@ -137,10 +181,18 @@ const Home = () => {
   };
 
   const confirmLogout = () => {
+    console.log('🚪 로그아웃 실행');
     localStorage.clear();
     setIsLoggedIn(false);
     setLoggedInProvider(null);
+    setLoginUser(null);
+    setShouldCheckAdmin(false);
+    setLoginResultType(null);
+    setIsLoginResultModalOpen(false);
     setIsLogoutModalOpen(false);
+    callbackProcessed.current = false;
+    console.log('✅ 로그아웃 완료 - 모든 상태 초기화');
+    window.location.href = '/'; // 홈으로 이동
   };
 
   const handleKakaoLogin = () => {
@@ -168,7 +220,13 @@ const Home = () => {
     if (loginResultType === 'success') {
       navigate('/admin', { replace: true });
     } else {
-      // 실패 시에는 현재 페이지에 머무름
+      // 관리자 권한이 없는 경우 자동 로그아웃
+      console.log('🚪 관리자 권한 없음 - 자동 로그아웃');
+      localStorage.clear();
+      setIsLoggedIn(false);
+      setLoggedInProvider(null);
+      setLoginUser(null);
+      setShouldCheckAdmin(false);
       callbackProcessed.current = false;
     }
     setLoginResultType(null);
@@ -179,15 +237,18 @@ const Home = () => {
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-textColor">관리자 소셜 로그인</CardTitle>
-          <CardDescription className="text-softBlue">소셜 계정으로 간편하게 로그인하세요.</CardDescription>
+          {!isLoggedIn && (
+            <CardDescription className="text-softBlue">소셜 계정으로 간편하게 로그인하세요.</CardDescription>
+          )}
         </CardHeader>
         <CardContent className="flex flex-col items-center">
           {isLoggedIn ? (
             <div className="w-full text-center">
               <p className="mb-4 text-softBlue">{loggedInProvider} 계정으로 로그인되어 있습니다.</p>
+              
               <button
                 onClick={handleLogout}
-                className="w-full mb-4 py-3 px-4 rounded-lg bg-gray-500 text-white font-semibold shadow hover:bg-gray-600 transition flex items-center justify-center"
+                className="w-full py-3 px-4 rounded-lg bg-gray-500 text-white font-semibold shadow hover:bg-gray-600 transition flex items-center justify-center"
               >
                 로그아웃
               </button>
@@ -230,6 +291,10 @@ const Home = () => {
                 <p>Google Client ID: {GOOGLE_CLIENT_ID ? '✅' : '❌'}</p>
                 <p>현재 경로: {window.location.pathname}</p>
                 <p>로그인 상태: {isLoggedIn ? '✅ 로그인됨' : '❌ 로그아웃'}</p>
+                <p>localStorage accessToken: {localStorage.getItem('accessToken') ? '✅ 있음' : '❌ 없음'}</p>
+                <p>localStorage user: {localStorage.getItem('user') ? '✅ 있음' : '❌ 없음'}</p>
+                <p>loggedInProvider: {loggedInProvider || '없음'}</p>
+                <p>loginUser: {loginUser ? `ID: ${loginUser.user_id}` : '없음'}</p>
               </CardContent>
             </Card>
           )}
@@ -239,14 +304,22 @@ const Home = () => {
       <Dialog open={isLogoutModalOpen} onOpenChange={setIsLogoutModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>로그아웃 하시겠습니까?</DialogTitle>
-            <DialogDescription>
-              이 작업은 현재 세션을 종료합니다.
-            </DialogDescription>
+          <DialogTitle className="text-textColor">로그아웃 하시겠습니까?</DialogTitle>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:justify-center">
-            <Button variant="outline" onClick={() => setIsLogoutModalOpen(false)}>취소</Button>
-            <Button onClick={confirmLogout}>확인</Button>
+            <Button 
+              className="bg-softBlue text-white hover:bg-deepNavy border-none"
+              onClick={confirmLogout}
+            >
+              확인
+            </Button>
+            <Button 
+              variant="outline" 
+              className="border-softBlue text-softBlue hover:bg-softBlue hover:text-white"
+              onClick={() => setIsLogoutModalOpen(false)}
+            >
+              취소
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -254,15 +327,22 @@ const Home = () => {
       <Dialog open={isLoginResultModalOpen} onOpenChange={setIsLoginResultModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              {loginResultType === 'success' ? '로그인이 완료되었습니다.' : '로그인 실패'}
+            <DialogTitle className="text-textColor">
+              {loginResultType === 'success' ? '로그인이 완료되었습니다.' : '접근 권한이 없습니다'}
             </DialogTitle>
             {loginResultType === 'fail' && (
-              <p className="text-red-500 mt-2">{loginFailReason || '다시 시도해주세요.'}</p>
+              <DialogDescription className="mt-2">
+                {loginFailReason || '다시 시도해주세요.'}
+              </DialogDescription>
             )}
           </DialogHeader>
           <DialogFooter className="gap-2 sm:justify-center">
-            <Button onClick={handleLoginResultModalClose}>확인</Button>
+            <Button 
+              className="bg-softBlue text-white hover:bg-deepNavy border-none"
+              onClick={handleLoginResultModalClose}
+            >
+              확인
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

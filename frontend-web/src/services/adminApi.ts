@@ -18,42 +18,84 @@ export const getAdminMain = async (): Promise<AdminMain> => {
 
 // 모든 사용자 조회
 export const getAllUsers = async (): Promise<User[]> => {
+  console.log('📡 getAllUsers API 호출 시작');
   const apiClient = getApiClient();
-  const response = await apiClient.get<User[]>('/admin/users/');
-  return response.data;
+  try {
+    const response = await apiClient.get<User[]>('/admin/users/');
+    console.log('✅ getAllUsers API 성공:', response.data.length, '명의 사용자');
+    return response.data;
+  } catch (error) {
+    console.error('❌ getAllUsers API 실패:', error);
+    throw error;
+  }
 };
 
 // 특정 사용자 조회
 export const getUser = async (userId: number): Promise<User> => {
+  console.log('📡 getUser API 호출 시작 - userId:', userId);
   const apiClient = getApiClient();
-  const response = await apiClient.get<User>(`/admin/users/${userId}/`);
-  return response.data;
+  try {
+    const response = await apiClient.get<User>(`/admin/users/${userId}/`);
+    console.log('✅ getUser API 성공:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('❌ getUser API 실패:', error);
+    throw error;
+  }
 };
 
 // 사용자 정보 수정
 export const updateUser = async (updateData: UserUpdateRequest): Promise<User> => {
+  console.log('📡 updateUser API 호출 시작:', updateData);
   const apiClient = getApiClient();
-  const response = await apiClient.put<User>(`/admin/users/${updateData.user_id}/`, updateData);
-  return response.data;
+  try {
+    const response = await apiClient.put<User>(`/admin/users/${updateData.user_id}/`, updateData);
+    console.log('✅ updateUser API 성공:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('❌ updateUser API 실패:', error);
+    throw error;
+  }
 };
 
 // 사용자 삭제
 export const deleteUser = async (userId: number): Promise<void> => {
+  console.log('📡 deleteUser API 호출 시작 - userId:', userId);
   const apiClient = getApiClient();
-  await apiClient.delete(`/admin/users/${userId}/`);
+  try {
+    await apiClient.delete(`/admin/users/${userId}/`);
+    console.log('✅ deleteUser API 성공');
+  } catch (error) {
+    console.error('❌ deleteUser API 실패:', error);
+    throw error;
+  }
 };
 
 // 관리자 로그 조회
 export const getAdminLogs = async (): Promise<LogsResponse> => {
+  console.log('📡 getAdminLogs API 호출 시작');
   const apiClient = getApiClient();
-  const response = await apiClient.get<LogsResponse>('/admin/logs/');
-  return response.data;
+  try {
+    const response = await apiClient.get<LogsResponse>('/admin/logs/');
+    console.log('✅ getAdminLogs API 성공:', response.data.logs?.length || 0, '개의 로그');
+    return response.data;
+  } catch (error) {
+    console.error('❌ getAdminLogs API 실패:', error);
+    throw error;
+  }
 };
 
 // 시스템 로그 기록
 export const createLog = async (logData: LogCreateRequest): Promise<void> => {
+  console.log('📡 createLog API 호출 시작:', logData);
   const apiClient = getApiClient();
-  await apiClient.post('/logs/', logData);
+  try {
+    await apiClient.post('/logs/', logData);
+    console.log('✅ createLog API 성공');
+  } catch (error) {
+    console.error('❌ createLog API 실패:', error);
+    throw error;
+  }
 };
 
 // React Query Hooks
