@@ -8,6 +8,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { useAuthStore } from '@/store/authStore';
+import WarningText from '@/components/common/WarningText';
 
 // Intro: Focuz 전체화면 인트로/랜딩 페이지
 export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
@@ -107,6 +108,19 @@ export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
               resizeMode="contain"
             />
           </TouchableOpacity>
+          <TouchableOpacity>
+            <View style={styles.btn}>
+              <Button
+                variant="secondary"
+                title="비회원 접속"
+                onPress={() => {
+                  navigation.navigate('SleepRecordIntro');
+                }}
+                style={{ width: 260, height: 36, paddingVertical: 0 }}
+                textStyle={{ fontSize: 14 }}
+              />
+            </View>
+          </TouchableOpacity>
 
           {/* <TouchableOpacity
             style={styles.googleSignInButton}
@@ -125,6 +139,9 @@ export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
             </View>
           </TouchableOpacity> */}
         </View>
+      </View>
+      <View style={styles.warningBox}>
+        <WarningText style={{ width: '80%' }} />
       </View>
     </View>
   );
@@ -248,6 +265,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flex: 1,
     marginLeft: 40,
+  },
+  btn: {
+    width: '70%',
+  },
+  warningBox: {
+    marginVertical: 20,
   },
 });
 
