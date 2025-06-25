@@ -15,6 +15,7 @@ import { useSaveSleepRecord, useSleepRecord } from '@/services/sleepApi';
 import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { getApiClient } from '@/services/axios';
+import WarningText from '@/components/common/WarningText';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -336,10 +337,14 @@ export const SleepRecordPage: React.FC = () => {
                 style={styles.secondaryButton}
               />
             </View>
+
             {/* </Card.Content>
             </Card> */}
           </View>
         )}
+        <View style={styles.warningBox}>
+          <WarningText />
+        </View>
       </ScrollView>
     </Layout>
   );
@@ -446,6 +451,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 20,
     gap: 10,
+  },
+  warningBox: {
+    marginVertical: 20,
   },
 });
 

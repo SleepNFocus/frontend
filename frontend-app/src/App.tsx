@@ -47,6 +47,8 @@ import KakaoLoginWebView from './app/auth/KakaoLoginWebView';
 import { useAuthStore } from '@/store/authStore';
 import SleepRecordDetailPage from './app/tabs/HistoryDetail';
 import { Contactus } from './app/legal/Contactus';
+import SleepRecordIntro from './app/tabs/SleepRecordIntro';
+import TestIntro from './app/tabs/TestIntro';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -90,6 +92,8 @@ export type RootStackParamList = {
   TermsOfServicePage: undefined;
   PrivacyPolicyPage: undefined;
   Contactus: undefined;
+  SleepRecordIntro: undefined;
+  TestIntro: undefined;
 };
 
 export const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -240,6 +244,11 @@ export default function App() {
                 options={{ title: '기록 상세' }}
               />
               <Stack.Screen name="Contactus" component={Contactus} />
+              <Stack.Screen
+                name="SleepRecordIntro"
+                component={SleepRecordIntro}
+              />
+              <Stack.Screen name="TestIntro" component={TestIntro} />
             </Stack.Navigator>
             <Toast />
           </NavigationContainer>

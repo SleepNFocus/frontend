@@ -50,3 +50,19 @@ export const fetchSleepRecordDetail = async (
 
   return res.data.detail;
 };
+
+export const useSleepRecordDetail = (date: string) => {
+  return useQuery({
+    queryKey: ['sleepRecordDetail', date],
+    staleTime: 0,
+    queryFn: async (): Promise<SleepRecordDetail> => {
+      const client = await getApiClient();
+      const res = await client.get(`/users/mypage/records/${date}/detail/`);
+      if (!res.data || !res.data.detail) {
+        throw new Error('수면 기록이 없습니다.');
+      }
+      return res.data.detail;
+    },
+    enabled: !!date,
+  });
+};

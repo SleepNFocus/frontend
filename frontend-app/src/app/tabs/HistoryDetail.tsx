@@ -196,14 +196,6 @@ export const SleepRecordDetailPage: React.FC = () => {
               </View>
               <View style={styles.testResultItem}>
                 <Text variant="bodyMedium" style={styles.testResultLabel}>
-                  정확도
-                </Text>
-                <Text variant="titleMedium" style={styles.testResultValue}>
-                  {pattern_accuracy}%
-                </Text>
-              </View>
-              <View style={styles.testResultItem}>
-                <Text variant="bodyMedium" style={styles.testResultLabel}>
                   평균 시간
                 </Text>
                 <Text variant="titleMedium" style={styles.testResultValue}>

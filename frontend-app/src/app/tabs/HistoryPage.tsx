@@ -1,21 +1,16 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { useSleepRecordList } from '@/services/recordListApi';
 import { Text } from '@/components/common/Text';
 import { DayRecord, MonthRecord, WeekRecord } from '@/types/history';
 import { colors } from '@/constants/colors';
-import { fontSize, spacing } from '@/utils/responsive';
-import { black } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
+import { spacing } from '@/utils/responsive';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/App';
 import { Button } from '@/components/common/Button';
 import { Card } from '@/components/common/Card';
 import { Layout } from '@/components/common/Layout';
-import { ToastList } from '@/components/common/Toast';
-import useUiStore from '@/store/uiStore';
-import { useQueryClient } from '@tanstack/react-query';
-import { useFocusEffect } from 'expo-router';
 
 const periodOptions = ['day', 'week', 'month'] as const;
 type Period = (typeof periodOptions)[number];
@@ -23,17 +18,8 @@ type Period = (typeof periodOptions)[number];
 export const HistoryPage: React.FC = () => {
   const [period, setPeriod] = useState<Period>('day');
   const { data, isLoading, error } = useSleepRecordList(period);
-  const { openToast } = useUiStore();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
-  // const queryClient = useQueryClient();
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     queryClient.invalidateQueries({ queryKey: ['/sleepRecordList'] });
-  //   }, [queryClient]),
-  // );
 
   const handlePeriodChange = (newPeriod: Period) => {
     if (period !== newPeriod) {
@@ -111,122 +97,139 @@ export const HistoryPage: React.FC = () => {
 
         {/* 일별 */}
         {period === 'day' &&
-          (data?.results as DayRecord[])?.map((item, index) => (
-            <Card
-              key={index}
-              style={styles.card}
-              elevation={4}
-              onPress={() => handleCardPress(item.date)}
-            >
-              <View style={styles.cardHeader}>
-                <Text variant="titleLarge" style={styles.cardDate}>
-                  {item.date}
-                </Text>
-                <View style={styles.scoreContainer}>
-                  <View style={styles.scoreItem}>
-                    <Text variant="labelMedium" style={styles.scoreLabel}>
-                      수면점수
-                    </Text>
-                    <Text variant="titleMedium" style={styles.scoreValue}>
-                      {item.sleep_score}점
-                    </Text>
-                  </View>
-                  <View style={styles.scoreItem}>
-                    <Text variant="labelMedium" style={styles.scoreLabel}>
-                      인지점수
-                    </Text>
-                    <Text variant="titleMedium" style={styles.scoreValue}>
-                      {item.cognitive_score}점
-                    </Text>
+          (data?.results as DayRecord[])
+            ?.sort((a, b) => (a.date < b.date ? 1 : -1))
+            .slice(0, 60)
+            .map((item, index) => (
+              <Card
+                key={index}
+                style={styles.card}
+                elevation={4}
+                onPress={() => handleCardPress(item.date)}
+              >
+                <View style={styles.cardHeader}>
+                  <Text variant="titleLarge" style={styles.cardDate}>
+                    {item.date}
+                  </Text>
+                  <View style={styles.scoreContainer}>
+                    <View style={styles.scoreItem}>
+                      <Text variant="labelMedium" style={styles.scoreLabel}>
+                        수면점수
+                      </Text>
+                      <Text variant="titleMedium" style={styles.scoreValue}>
+                        {item.sleep_score}점
+                      </Text>
+                    </View>
+                    <View style={styles.scoreItem}>
+                      <Text variant="labelMedium" style={styles.scoreLabel}>
+                        인지점수
+                      </Text>
+                      <Text variant="titleMedium" style={styles.scoreValue}>
+                        {item.cognitive_score}점
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-              <View style={styles.sleepTimeContainer}>
-                <Text variant="bodyLarge" style={styles.sleepTimeLabel}>
-                  총 수면시간
-                </Text>
-                <Text variant="titleLarge" style={styles.sleepTimeValue}>
-                  {item.sleep_hour}시간
-                </Text>
-              </View>
-            </Card>
-          ))}
+                <View style={styles.sleepTimeContainer}>
+                  <Text variant="bodyLarge" style={styles.sleepTimeLabel}>
+                    총 수면시간
+                  </Text>
+                  <Text variant="titleLarge" style={styles.sleepTimeValue}>
+                    {item.sleep_hour}시간
+                  </Text>
+                </View>
+              </Card>
+            ))}
 
         {/* 주별 */}
         {period === 'week' &&
-          (data?.results as WeekRecord[])?.map((item, index) => (
-            <Card key={index} style={styles.card} elevation={4}>
-              <View style={styles.cardHeader}>
-                <Text variant="titleLarge" style={styles.cardDate}>
-                  {item.start_date} ~ {item.end_date}
-                </Text>
-              </View>
-              <View style={styles.statsContainer}>
-                <View style={styles.statItem}>
-                  <Text variant="bodyMedium" style={styles.statLabel}>
-                    총 수면시간
-                  </Text>
-                  <Text variant="titleMedium" style={styles.statValue}>
-                    {item.total_sleep_hours}시간
+          (data?.results as WeekRecord[])
+            ?.sort(
+              (a, b) =>
+                new Date(b.start_date).getTime() -
+                new Date(a.start_date).getTime(),
+            )
+            .slice(0, 12)
+            .map((item, index) => (
+              <Card key={index} style={styles.card} elevation={4}>
+                <View style={styles.cardHeader}>
+                  <Text variant="titleLarge" style={styles.cardDate}>
+                    {item.start_date} ~ {item.end_date}
                   </Text>
                 </View>
-                <View style={styles.statItem}>
-                  <Text variant="bodyMedium" style={styles.statLabel}>
-                    평균 수면점수
-                  </Text>
-                  <Text variant="titleMedium" style={styles.statValue}>
-                    {item.average_sleep_score}점
-                  </Text>
+                <View style={styles.statsContainer}>
+                  <View style={styles.statItem}>
+                    <Text variant="bodyMedium" style={styles.statLabel}>
+                      총 수면시간
+                    </Text>
+                    <Text variant="titleMedium" style={styles.statValue}>
+                      {item.total_sleep_hours}시간
+                    </Text>
+                  </View>
+                  <View style={styles.statItem}>
+                    <Text variant="bodyMedium" style={styles.statLabel}>
+                      평균 수면점수
+                    </Text>
+                    <Text variant="titleMedium" style={styles.statValue}>
+                      {item.average_sleep_score}점
+                    </Text>
+                  </View>
+                  <View style={styles.statItem}>
+                    <Text variant="bodyMedium" style={styles.statLabel}>
+                      평균 인지점수
+                    </Text>
+                    <Text variant="titleMedium" style={styles.statValue}>
+                      {item.average_cognitive_score}점
+                    </Text>
+                  </View>
                 </View>
-                <View style={styles.statItem}>
-                  <Text variant="bodyMedium" style={styles.statLabel}>
-                    평균 인지점수
-                  </Text>
-                  <Text variant="titleMedium" style={styles.statValue}>
-                    {item.average_cognitive_score}점
-                  </Text>
-                </View>
-              </View>
-            </Card>
-          ))}
+              </Card>
+            ))}
 
         {/* 월별 */}
         {period === 'month' &&
-          (data?.results as MonthRecord[])?.map((item, index) => (
-            <Card key={index} style={styles.card} elevation={4}>
-              <View style={styles.cardHeader}>
-                <Text variant="titleLarge" style={styles.cardDate}>
-                  {item.month}
-                </Text>
-              </View>
-              <View style={styles.statsContainer}>
-                <View style={styles.statItem}>
-                  <Text variant="bodyMedium" style={styles.statLabel}>
-                    총 수면시간
-                  </Text>
-                  <Text variant="titleMedium" style={styles.statValue}>
-                    {item.total_sleep_hours}시간
+          (data?.results as MonthRecord[])
+            ?.sort(
+              (a, b) =>
+                new Date(b.month + '-01').getTime() -
+                new Date(a.month + '-01').getTime(),
+            )
+            .slice(0, 3)
+            .map((item, index) => (
+              <Card key={index} style={styles.card} elevation={4}>
+                <View style={styles.cardHeader}>
+                  <Text variant="titleLarge" style={styles.cardDate}>
+                    {item.month}
                   </Text>
                 </View>
-                <View style={styles.statItem}>
-                  <Text variant="bodyMedium" style={styles.statLabel}>
-                    평균 수면점수
-                  </Text>
-                  <Text variant="titleMedium" style={styles.statValue}>
-                    {item.average_sleep_score}점
-                  </Text>
+                <View style={styles.statsContainer}>
+                  <View style={styles.statItem}>
+                    <Text variant="bodyMedium" style={styles.statLabel}>
+                      총 수면시간
+                    </Text>
+                    <Text variant="titleMedium" style={styles.statValue}>
+                      {item.total_sleep_hours}시간
+                    </Text>
+                  </View>
+                  <View style={styles.statItem}>
+                    <Text variant="bodyMedium" style={styles.statLabel}>
+                      평균 수면점수
+                    </Text>
+                    <Text variant="titleMedium" style={styles.statValue}>
+                      {item.average_sleep_score}점
+                    </Text>
+                  </View>
+                  <View style={styles.statItem}>
+                    <Text variant="bodyMedium" style={styles.statLabel}>
+                      평균 인지점수
+                    </Text>
+                    <Text variant="titleMedium" style={styles.statValue}>
+                      {item.average_cognitive_score}점
+                    </Text>
+                  </View>
                 </View>
-                <View style={styles.statItem}>
-                  <Text variant="bodyMedium" style={styles.statLabel}>
-                    평균 인지점수
-                  </Text>
-                  <Text variant="titleMedium" style={styles.statValue}>
-                    {item.average_cognitive_score}점
-                  </Text>
-                </View>
-              </View>
-            </Card>
-          ))}
+              </Card>
+            ))}
       </ScrollView>
     </Layout>
   );
@@ -251,7 +254,6 @@ const styles = StyleSheet.create({
   subtitle: {
     textAlign: 'center',
     color: colors.textColor + '80',
-    // fontSize: fontSize.sm,
   },
   filterContainer: {
     flexDirection: 'row',
@@ -266,9 +268,6 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.xs,
     minWidth: 70,
     height: 50,
-
-    // paddingVertical: spacing.sm,
-    // paddingHorizontal: spacing.md,
   },
   activeFilterText: {
     fontWeight: 'bold',
@@ -279,7 +278,6 @@ const styles = StyleSheet.create({
   },
   statusText: {
     textAlign: 'center',
-    // fontSize: fontSize.md,
     color: colors.textColor + '80',
   },
   errorText: {
@@ -300,7 +298,6 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   cardDate: {
-    // fontSize: fontSize.lg,
     fontWeight: '700',
     color: colors.textColor,
     marginBottom: spacing.sm,
@@ -317,12 +314,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scoreLabel: {
-    // fontSize: fontSize.sm,
     color: colors.textColor + '80',
     marginBottom: spacing.xs,
   },
   scoreValue: {
-    // fontSize: fontSize.lg,
     fontWeight: '700',
     color: colors.deepNavy,
   },
@@ -335,12 +330,10 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   sleepTimeLabel: {
-    // fontSize: fontSize.md,
     color: colors.textColor,
     fontWeight: '600',
   },
   sleepTimeValue: {
-    // fontSize: fontSize.lg,
     fontWeight: '700',
     color: colors.deepNavy,
   },
@@ -356,12 +349,10 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   statLabel: {
-    // fontSize: fontSize.md,
     color: colors.textColor + '80',
     fontWeight: '600',
   },
   statValue: {
-    // fontSize: fontSize.md,
     fontWeight: '700',
     color: colors.textColor,
   },

@@ -14,6 +14,7 @@ import { Layout } from '@/components/common/Layout';
 import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { useEffect, useRef } from 'react';
+import WarningText from '@/components/common/WarningText';
 
 export default function SleepTestDesc() {
   const navigation =
@@ -79,6 +80,7 @@ export default function SleepTestDesc() {
               style={styles.button}
               onPress={goToSleepTest1Desc}
             />
+            <WarningText />
           </GlassCard>
         </View>
       </ScrollView>
@@ -103,7 +105,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 30,
     marginBottom: 10,
-    gap: 50,
+    gap: 40,
   },
   title: {
     fontWeight: 'bold',
@@ -141,7 +143,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 130,
-    paddingVertical: 12,
+    paddingVertical: 7,
     borderRadius: 10,
     backgroundColor: '#3F4F80',
     alignItems: 'center',

@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/App';
 import { Layout } from '@/components/common/Layout';
+import WarningText from '@/components/common/WarningText';
 
 // OnboardingSteps: 잠과 퍼포먼스의 연결고리 찾기 안내 페이지
 export const OnboardingSteps: React.FC<{ onNext?: () => void }> = ({
@@ -68,6 +69,10 @@ export const OnboardingSteps: React.FC<{ onNext?: () => void }> = ({
             variant="primary"
             style={styles.nextButton}
           />
+
+          <View style={styles.warningBox}>
+            <WarningText />
+          </View>
         </View>
       </ScrollView>
     </Layout>
@@ -137,6 +142,9 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 8,
     backgroundColor: colors.softBlue,
+  },
+  warningBox: {
+    marginVertical: 20,
   },
 });
 

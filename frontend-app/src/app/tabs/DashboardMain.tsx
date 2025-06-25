@@ -17,6 +17,7 @@ import ResultChart from '@/components/common/ResultChart';
 import { useAuthStore } from '@/store/authStore';
 import { format } from 'date-fns';
 import { useSleepRecord } from '@/services/sleepApi';
+import { useSleepRecordDetail } from '@/services/recordListApi';
 
 interface ScoreDetail {
   label: string;
@@ -90,8 +91,9 @@ export const DashboardMain: React.FC = memo(() => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const today = format(new Date(), 'yyyy-MM-dd');
-  const { data: sleepRecordData } = useSleepRecord(today);
-  const sleepScore = sleepRecordData?.score ?? 0;
+  // const { data: sleepRecordData } = useSleepRecord(today);
+  const { data: sleepDetailData } = useSleepRecordDetail(today);
+  const sleepScore = sleepDetailData?.sleep_score ?? 0;
 
   const [cognitionData, setCognitionData] = useState<CognitionData>({
     data: [],
