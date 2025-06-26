@@ -1,0 +1,68 @@
+{
+  "expo": {
+    "name": "FOCUZ",
+    "slug": "focuz-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*",
+      "assets/_redirects"
+    ],
+
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.focuz.sleepapp"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#DFE3EA"
+      },
+      "package": "com.focuz.sleepapp",
+      "versionCode": 1,
+      "compileSdkVersion": 34,
+      "targetSdkVersion": 34,
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.SYSTEM_ALERT_WINDOW"
+      ],
+      "usesCleartextTraffic": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "static",
+      "build": {
+        "babel": {
+          "include": [
+            "node_modules/expo"
+          ]
+        }
+      }
+    },
+    "scheme": "focuz-app",
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "fonts": [
+      "./assets/fonts/NanumSquareRoundL.ttf",
+      "./assets/fonts/NanumSquareRoundR.ttf",
+      "./assets/fonts/NanumSquareRoundB.ttf",
+      "./assets/fonts/NanumSquareRoundEB.ttf"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {}
+    }
+  }
+}
