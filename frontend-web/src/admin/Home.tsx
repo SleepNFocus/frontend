@@ -1,21 +1,29 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import { useSocialLogin, checkTokenValidity } from '@/services/userApi';
-import { getUser, useCreateLog } from '@/services/adminApi';
+import { useSocialLogin } from '@/services/userApi';
+import { getUser } from '@/services/adminApi';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 
 const isDev = import.meta.env.NODE_ENV === 'development';
 const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
-const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI || 'http://localhost:5173/oauth/kakao';
+const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI || 'https://focuz-admin.netlify.app/oauth/kakao';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-const GOOGLE_REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI || 'http://localhost:5173/oauth/google';
+const GOOGLE_REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI || 'https://focuz-admin.netlify.app/oauth/google';
+
+// 디버깅용 로그 (배포용으로 주석처리)
+// if (isDev) {
+//   console.log('🔧 환경변수 디버깅:');
+//   console.log('KAKAO_CLIENT_ID:', KAKAO_CLIENT_ID);
+//   console.log('KAKAO_REDIRECT_URI:', KAKAO_REDIRECT_URI);
+//   console.log('GOOGLE_CLIENT_ID:', GOOGLE_CLIENT_ID);
+//   console.log('GOOGLE_REDIRECT_URI:', GOOGLE_REDIRECT_URI);
+// }
 
 const Home = () => {
   const { mutate, isPending } = useSocialLogin();
-  const { mutate: createLog } = useCreateLog();
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInProvider, setLoggedInProvider] = useState<string | null>(null);
@@ -54,12 +62,6 @@ const Home = () => {
           setLoginResultType('success');
           setIsLoginResultModalOpen(true);
           setLoginFailReason(null);
-          
-          // 관리자 로그인 성공 로그 기록
-          createLog({
-            action_type: 'ADMIN_LOGIN',
-            description: `관리자 로그인 성공: ${loginUser.nickname} (${loginUser.email})`,
-          });
         } else {
           console.log('❌ 관리자 권한 없음 - 실패 모달 표시');
           console.log('🔍 실패 원인:', {
@@ -76,7 +78,7 @@ const Home = () => {
     };
     
     verifyAdminPermission();
-  }, [shouldCheckAdmin, loginUser, createLog]);
+  }, [shouldCheckAdmin, loginUser]);
 
   // OAuth 콜백 처리 로직
   useEffect(() => {

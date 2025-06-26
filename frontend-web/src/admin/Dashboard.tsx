@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAllUsers, useAdminLogs, useCreateLog } from '@/services/adminApi';
+import { useAllUsers, useAdminLogs } from '@/services/adminApi';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -8,7 +8,6 @@ import { Card, CardContent } from "@/components/ui/Card";
 const Dashboard = () => {
   const { data: users, isLoading, error } = useAllUsers();
   const { data: logs } = useAdminLogs();
-  const { mutate: createLog } = useCreateLog();
   const [isLoginSuccessModalOpen, setLoginSuccessModalOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -28,14 +27,6 @@ const Dashboard = () => {
       navigate(location.pathname, { replace: true });
     }
   }, [location, navigate]);
-
-  // 대시보드 접근 로그 기록
-  useEffect(() => {
-    createLog({
-      action_type: 'DASHBOARD_ACCESS',
-      description: '관리자가 대시보드에 접근했습니다.',
-    });
-  }, [createLog]);
 
   if (isLoading) return <div>로딩중...</div>;
   if (error) return <div>에러 발생: {error.message}</div>;
@@ -71,7 +62,6 @@ const Dashboard = () => {
   }, {} as Record<string, number>);
 
   const sortedAgeGroups = Object.entries(ageGroups).sort(([, a], [, b]) => b - a);
-  const recentLogs = Array.isArray(logs?.logs) ? logs.logs.slice(0, 10) : [];
 
   // 상태 한글 매핑 함수
   const getStatusKoreanName = (status: string) => {
@@ -195,36 +185,6 @@ const Dashboard = () => {
               {sortedAgeGroups.map(([group, count]) => (
                 <div key={group} className="text-base">{group}: {count}명</div>
               ))}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* 최근 관리자 활동 로그 */}
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-2">최근 관리자 활동 로그</h2>
-          <Card>
-            <CardContent className="p-4">
-              <table className="min-w-full">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2">시간</th>
-                    <th className="px-4 py-2">행위 유형</th>
-                    <th className="px-4 py-2">설명</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentLogs.length === 0 && (
-                    <tr><td colSpan={3} className="text-center py-2">로그 없음</td></tr>
-                  )}
-                  {recentLogs.map(log => (
-                    <tr key={log.logs_id}>
-                      <td className="px-4 py-2">{new Date(log.created_at).toLocaleString()}</td>
-                      <td className="px-4 py-2">{log.action_type}</td>
-                      <td className="px-4 py-2">{log.description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </CardContent>
           </Card>
         </div>
