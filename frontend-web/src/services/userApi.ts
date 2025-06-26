@@ -15,7 +15,7 @@ const exchangeKakaoCodeForToken = async (code: string): Promise<string> => {
   const params = new URLSearchParams();
   params.append('grant_type', 'authorization_code');
   params.append('client_id', KAKAO_CLIENT_ID);
-  params.append('redirect_uri', KAKAO_REDIRECT_URI || 'http://localhost:5173/oauth/kakao');
+  params.append('redirect_uri', KAKAO_REDIRECT_URI || 'https://focuz-admin.netlify.app/oauth/kakao');
   params.append('code', code);
 
   try {

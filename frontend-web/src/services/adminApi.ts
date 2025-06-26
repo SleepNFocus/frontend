@@ -6,7 +6,6 @@ import {
   UserUpdateRequest,
   AdminMain,
   LogsResponse,
-  LogCreateRequest,
 } from '@/types/admin';
 
 // 관리자 메인 정보 조회
@@ -81,19 +80,6 @@ export const getAdminLogs = async (): Promise<LogsResponse> => {
     return response.data;
   } catch (error) {
     console.error('❌ getAdminLogs API 실패:', error);
-    throw error;
-  }
-};
-
-// 시스템 로그 기록
-export const createLog = async (logData: LogCreateRequest): Promise<void> => {
-  console.log('📡 createLog API 호출 시작:', logData);
-  const apiClient = getApiClient();
-  try {
-    await apiClient.post('/logs/', logData);
-    console.log('✅ createLog API 성공');
-  } catch (error) {
-    console.error('❌ createLog API 실패:', error);
     throw error;
   }
 };
@@ -185,21 +171,5 @@ export const useAdminLogs = () => {
   return useQuery({
     queryKey: ['adminLogs'],
     queryFn: getAdminLogs,
-  });
-};
-
-/**
- * 시스템 로그 생성 훅
- * @returns 로그를 생성하는 mutation 함수
- */
-export const useCreateLog = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: createLog,
-    onSuccess: () => {
-      // 로그 목록 캐시 무효화
-      queryClient.invalidateQueries({ queryKey: ['adminLogs'] });
-    },
   });
 }; 

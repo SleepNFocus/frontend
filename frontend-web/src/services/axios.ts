@@ -57,8 +57,14 @@ const refreshToken = async (): Promise<string | null> => {
 export const getApiClient = () => {
   const AUTH_TOKEN = localStorage.getItem('accessToken');
   
+  const apiBaseUrl =
+    import.meta.env.VITE_API_URL ||
+    import.meta.env.VITE_LIVE_API_URL ||
+    import.meta.env.VITE_DEV_API_URL ||
+    '/api';
+
   const apiClient = axios.create({
-    baseURL: '/api',
+    baseURL: apiBaseUrl,
     timeout: 10000,
     headers: {
       'Content-Type': 'application/json',

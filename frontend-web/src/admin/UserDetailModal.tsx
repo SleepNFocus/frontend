@@ -1,4 +1,4 @@
-import { useUser, useUpdateUser, useDeleteUser, useCreateLog } from '@/services/adminApi';
+import { useUser, useUpdateUser, useDeleteUser } from '@/services/adminApi';
 import { UserUpdateRequest } from '@/types/admin';
 import { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/Card";
@@ -12,7 +12,6 @@ const UserDetailModal = ({ userId, onClose }: UserDetailModalProps) => {
   const { data: user, isLoading, error } = useUser(userId);
   const { mutate: updateUser, isPending: isUpdating } = useUpdateUser();
   const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
-  const { mutate: createLog } = useCreateLog();
 
   // 수정용 상태
   const [nickname, setNickname] = useState('');
@@ -34,10 +33,6 @@ const UserDetailModal = ({ userId, onClose }: UserDetailModalProps) => {
     };
     updateUser(updateData, {
       onSuccess: () => {
-        createLog({
-          action_type: 'USER_UPDATE',
-          description: `Admin updated user ${user.user_id} (${user.nickname})`,
-        });
         onClose();
       },
     });
@@ -47,10 +42,6 @@ const UserDetailModal = ({ userId, onClose }: UserDetailModalProps) => {
     if (!user) return;
     deleteUser(user.user_id, {
       onSuccess: () => {
-        createLog({
-          action_type: 'USER_DELETE',
-          description: `Admin deleted user ${user.user_id} (${user.nickname})`,
-        });
         onClose();
       },
     });

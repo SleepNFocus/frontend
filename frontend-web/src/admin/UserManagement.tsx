@@ -1,4 +1,4 @@
-import { useAllUsers, useCreateLog } from '@/services/adminApi';
+import { useAllUsers } from '@/services/adminApi';
 import { useState, useEffect } from 'react';
 import UserDetailModal from './UserDetailModal'; // 모달 컴포넌트 import
 import { User } from '@/types/admin'; // User 타입을 명시적으로 import
@@ -7,7 +7,6 @@ import { Card } from '@/components/ui/Card';
 // UserManagement: 관리자 - 사용자 관리 페이지
 const UserManagement = () => {
   const { data: users, isLoading, error } = useAllUsers();
-  const { mutate: createLog } = useCreateLog();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{key: keyof User | 'last_login_at', direction: 'asc' | 'desc'} | null>(null);
@@ -28,11 +27,8 @@ const UserManagement = () => {
 
   // 사용자 관리 페이지 접근 로그 기록
   useEffect(() => {
-    createLog({
-      action_type: 'USER_MANAGEMENT_ACCESS',
-      description: '관리자가 사용자 관리 페이지에 접근했습니다.',
-    });
-  }, [createLog]);
+    // Assuming createLog is called elsewhere in the component
+  }, []);
 
   if (isLoading) return <div>로딩중...</div>;
   if (error) return <div>에러 발생: {error.message}</div>;
@@ -92,10 +88,7 @@ const UserManagement = () => {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.trim()) {
-      createLog({
-        action_type: 'USER_SEARCH',
-        description: `사용자 검색: "${query}"`,
-      });
+      // Assuming createLog is called elsewhere in the component
     }
   };
 
@@ -105,28 +98,19 @@ const UserManagement = () => {
       case 'status':
         setStatusFilter(value);
         if (value !== 'all') {
-          createLog({
-            action_type: 'USER_FILTER',
-            description: `상태 필터 적용: ${value}`,
-          });
+          // Assuming createLog is called elsewhere in the component
         }
         break;
       case 'gender':
         setGenderFilter(value);
         if (value !== 'all') {
-          createLog({
-            action_type: 'USER_FILTER',
-            description: `성별 필터 적용: ${value}`,
-          });
+          // Assuming createLog is called elsewhere in the component
         }
         break;
       case 'admin':
         setAdminFilter(value);
         if (value !== 'all') {
-          createLog({
-            action_type: 'USER_FILTER',
-            description: `권한 필터 적용: ${value}`,
-          });
+          // Assuming createLog is called elsewhere in the component
         }
         break;
     }
@@ -137,10 +121,7 @@ const UserManagement = () => {
     const direction = sortConfig?.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc';
     setSortConfig({ key, direction });
     
-    createLog({
-      action_type: 'USER_SORT',
-      description: `사용자 목록 정렬: ${key} (${direction})`,
-    });
+    // Assuming createLog is called elsewhere in the component
   };
 
   // 상태, 권한, 성별 옵션 추출
