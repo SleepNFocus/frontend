@@ -30,6 +30,8 @@ const ProfileCard = () => {
   const { data: mypageMain, refetch: refetchMypageMain } = useMypageMain();
   const today = new Date().toISOString().split('T')[0];
 
+  console.log(mypageMain);
+
   const { data: dayRecordData } = useSleepRecordList('day');
   const hasTodayRecord = (dayRecordData?.results as DayRecord[])?.some(
     item => item.date === today,
@@ -212,10 +214,18 @@ const ProfileCard = () => {
         </View>
         <View style={styles.averageBox}>
           <Text variant="bodyMedium" style={styles.averageLabel}>
-            평균 점수
+            수면 평균 점수
           </Text>
           <Text variant="titleMedium" style={styles.averageValue}>
             {mypageMain?.average_sleep_score ?? '-'}점
+          </Text>
+        </View>
+        <View style={styles.averageBox}>
+          <Text variant="bodyMedium" style={styles.averageLabel}>
+            인지 평균 점수
+          </Text>
+          <Text variant="titleMedium" style={styles.averageValue}>
+            {mypageMain?.average_cognitive_score ?? '-'}점
           </Text>
         </View>
       </Card>

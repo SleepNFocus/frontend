@@ -199,7 +199,7 @@ export const SleepRecordDetailPage: React.FC = () => {
                   평균 시간
                 </Text>
                 <Text variant="titleMedium" style={styles.testResultValue}>
-                  {pattern_time_ms}ms
+                  {pattern_time_ms}s
                 </Text>
               </View>
             </View>
