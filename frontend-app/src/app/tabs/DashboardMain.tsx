@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Layout } from '@/components/common/Layout';
 import { GreetingCard } from '@/components/sleep/GreetingCard';
-import { Card } from '@/components/common/Card';
+import { Card, GlassCard } from '@/components/common/Card';
 import { SummaryCard } from '@/components/sleep/SummaryCard';
 import { CheckinCard } from '@/components/sleep/CheckinCard';
 import { Text } from '@/components/common/Text';
@@ -34,6 +34,7 @@ interface AbilityProfileCardProps {
   data: number[];
   labels: string[];
   sleepScore?: number;
+  averageScore: number;
 }
 
 interface ScoreDetailCardProps {
@@ -43,12 +44,31 @@ interface ScoreDetailCardProps {
 
 // AbilityProfileCard
 const AbilityProfileCard: React.FC<AbilityProfileCardProps> = memo(
-  ({ data, labels, sleepScore }) => {
+  ({ data, labels, sleepScore, averageScore }) => {
     return (
       <Card style={styles.abilityCard}>
-        <Text style={styles.sectionTitle}>나의 인지 능력 프로필</Text>
-        <Text style={styles.sectionLabel}>
-          오늘의 수면 점수: {sleepScore}점
+        <Text variant='titleMedium' style={styles.sectionTitle}>나의 인지 능력 프로필</Text>
+        <View style={styles.scoreContainer}>
+          <View style={styles.scoreItem}>
+            <Text variant="labelLarge" style={styles.scoreLabel}>
+              수면점수
+            </Text>
+            <Text variant="titleMedium" style={styles.scoreValue}>
+              {sleepScore}점
+            </Text>
+          </View>
+          <View style={styles.scoreItem}>
+            <Text variant="labelLarge" style={styles.scoreLabel}>
+              인지점수
+            </Text>
+            <Text variant="titleMedium" style={styles.scoreValue}>
+              {Math.floor(averageScore)}점
+            </Text>
+          </View>
+        </View>
+        <View style={styles.line}></View>
+        <Text variant='bodyMedium' style={styles.sectionLabel1}>
+          [ 인지테스트 결과 시각화 ]
         </Text>
         <View style={styles.chartContainer}>
           <ResultChart data={data} labels={labels} />
@@ -65,8 +85,8 @@ const ScoreDetailCard: React.FC<ScoreDetailCardProps> = memo(
       <Card style={styles.detailCard}>
         <Text style={styles.sectionTitle}>인지 테스트 상세 결과</Text>
         <Text style={styles.avgScore}>
-          평균 점수:{' '}
-          <Text style={styles.avgScorePoint}>{Math.floor(averageScore)}점</Text>
+          {/* 평균 점수:{' '} */}
+          <Text variant='titleLarge' style={styles.avgScorePoint}>{Math.floor(averageScore)}점</Text>
         </Text>
         <View style={styles.scoreCardList}>
           {details.map(item => (
@@ -115,17 +135,32 @@ export const DashboardMain: React.FC = memo(() => {
   const [hasCognitiveScore, setHasCognitiveScore] = useState(false);
 
   useEffect(() => {
+
+    const defaultLabels = ['반응 속도', '정보 처리', '패턴 기억'];
+  setCognitionData(prev => ({ ...prev, labels: defaultLabels }));
+
     fetchSummary(undefined, {
       onSuccess: res => {
         if (!res || res.length === 0) return;
 
-        const latest = res[res.length - 1];
+
+        // const latest = res[res.length - 1];
+
+        // 오늘 날짜 데이터만 필터링
+      const today = format(new Date(), 'yyyy-MM-dd');
+      const todayResult = res.find(item => item.date === today);
+
+      if (!todayResult) {
+        setHasCognitiveScore(false);
+        setCognitionData({ data: [0, 0, 0], labels: defaultLabels });
+        return; // 오늘 데이터 없으면 아무것도 설정하지 않음
+      }
 
         const cognition = [
-          latest.raw_scores.srt.average_score,
-          latest.raw_scores.symbol.average_score,
-          latest.raw_scores.pattern.average_score,
-        ];
+        todayResult.raw_scores.srt.average_score,
+        todayResult.raw_scores.symbol.average_score,
+        todayResult.raw_scores.pattern.average_score,
+      ];
 
         const hasScore = cognition.some(
           score => typeof score === 'number' && score > 0,
@@ -137,24 +172,24 @@ export const DashboardMain: React.FC = memo(() => {
         const detail: ScoreDetail[] = [
           {
             label: '반응 속도',
-            value: `${latest.raw_scores.srt.avg_ms}ms`,
-            score: Math.floor(latest.raw_scores.srt.average_score),
+            value: `${todayResult.raw_scores.srt.avg_ms}ms`,
+            score: Math.floor(todayResult.raw_scores.srt.average_score),
           },
           {
             label: '정보 처리',
-            value: `정답 개수: ${latest.raw_scores.symbol.correct}개 / 정확도: ${latest.raw_scores.symbol.symbol_accuracy}%`,
-            score: Math.floor(latest.raw_scores.symbol.average_score),
+            value: `정답 개수: ${todayResult.raw_scores.symbol.correct}개 / 정확도: ${todayResult.raw_scores.symbol.symbol_accuracy}%`,
+            score: Math.floor(todayResult.raw_scores.symbol.average_score),
           },
           {
             label: '패턴 기억',
-            value: `정답 개수: ${latest.raw_scores.pattern.correct}개`,
-            score: Math.floor(latest.raw_scores.pattern.average_score),
+            value: `정답 개수: ${todayResult.raw_scores.pattern.correct}개`,
+            score: Math.floor(todayResult.raw_scores.pattern.average_score),
           },
         ];
 
         setCognitionData({ data: cognition, labels });
         setScoreDetails(detail);
-        setAverageScore(latest.average_score);
+        setAverageScore(todayResult.average_score);
       },
     });
   }, []);
@@ -192,6 +227,7 @@ export const DashboardMain: React.FC = memo(() => {
             data={cognitionData.data}
             labels={cognitionData.labels}
             sleepScore={sleepScore}
+            averageScore={averageScore}
           />
 
           <ScoreDetailCard details={scoreDetails} averageScore={averageScore} />
@@ -232,6 +268,7 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     alignItems: 'center',
+    marginTop: 20
   },
   detailCard: {
     padding: 16,
@@ -249,6 +286,7 @@ const styles = StyleSheet.create({
     // fontSize: fontSize.sm,
     fontWeight: 'bold',
     marginBottom: spacing.sm,
+    textAlign: 'center'
   },
   sectionTitle: {
     color: colors.textColor,
@@ -285,6 +323,7 @@ const styles = StyleSheet.create({
     color: colors.deepNavy,
     // fontSize: fontSize.md,
     fontWeight: 'bold',
+    
   },
   scoreCardValue: {
     color: colors.midnightBlue,
@@ -305,5 +344,34 @@ const styles = StyleSheet.create({
     color: colors.midnightBlue,
     // fontSize: fontSize.md,
     textAlign: 'center',
+  },
+  line: {
+    height: 1,
+    backgroundColor: colors.midnightBlue,
+    opacity:0.4,
+    marginBottom: 20,
+    margin: 10,
+  },
+  sectionLabel1: {
+    textAlign: 'center'
+  },
+  scoreContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: colors.bgColor + '20',
+    borderRadius: 12,
+    padding: spacing.md,
+  },
+  scoreItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  scoreLabel: {
+    color: colors.textColor + '80',
+    marginBottom: spacing.xs,
+  },
+  scoreValue: {
+    fontWeight: '700',
+    color: colors.deepNavy,
   },
 });

@@ -1,4 +1,4 @@
-import { PatternPayload, SRTPayload, SymbolPayload } from '@/types/test';
+import { CognitiveDailySummary, PatternPayload, SRTPayload, SymbolPayload } from '@/types/test';
 import { useMutation } from '@tanstack/react-query';
 import { getApiClient } from '@/services/axios';
 import useUiStore from '@/store/uiStore';
@@ -193,7 +193,7 @@ export const useSendAllResults = () =>
   });
 
 // 일별 요약 조회
-export const getDailySummary = async () => {
+export const getDailySummary = async (): Promise<CognitiveDailySummary[]> => {
   const client = await getApiClient();
   const res = await client.get('cognitive-statistics/result/daily-summary/');
   return res.data;
