@@ -48,24 +48,31 @@ const AbilityProfileCard: React.FC<AbilityProfileCardProps> = memo(
     return (
       <Card style={styles.abilityCard}>
         <Text variant='titleMedium' style={styles.sectionTitle}>나의 인지 능력 프로필</Text>
-        <View style={styles.scoreContainer}>
-          <View style={styles.scoreItem}>
-            <Text variant="labelLarge" style={styles.scoreLabel}>
-              수면점수
-            </Text>
-            <Text variant="titleMedium" style={styles.scoreValue}>
-              {sleepScore}점
-            </Text>
-          </View>
-          <View style={styles.scoreItem}>
-            <Text variant="labelLarge" style={styles.scoreLabel}>
-              인지점수
-            </Text>
-            <Text variant="titleMedium" style={styles.scoreValue}>
-              {Math.floor(averageScore)}점
-            </Text>
-          </View>
-        </View>
+
+        {sleepScore === 0 && averageScore === 0 ? (
+            <Text style={styles.sectionLabel}>오늘 기록이 없습니다!</Text>
+          ) : (
+            <>
+              <View style={styles.scoreContainer}>
+                <View style={styles.scoreItem}>
+                  <Text variant="labelLarge" style={styles.scoreLabel}>
+                    수면점수
+                  </Text>
+                  <Text variant="titleMedium" style={styles.scoreValue}>
+                    {sleepScore}점
+                  </Text>
+                </View>
+                <View style={styles.scoreItem}>
+                  <Text variant="labelLarge" style={styles.scoreLabel}>
+                    인지점수
+                  </Text>
+                  <Text variant="titleMedium" style={styles.scoreValue}>
+                    {Math.floor(averageScore)}점
+                  </Text>
+                </View>
+              </View>
+            </>
+          )}
         <View style={styles.line}></View>
         <Text variant='bodyMedium' style={styles.sectionLabel1}>
           [ 인지테스트 결과 시각화 ]
@@ -86,7 +93,7 @@ const ScoreDetailCard: React.FC<ScoreDetailCardProps> = memo(
         <Text style={styles.sectionTitle}>인지 테스트 상세 결과</Text>
         <Text style={styles.avgScore}>
           {/* 평균 점수:{' '} */}
-          <Text variant='titleLarge' style={styles.avgScorePoint}>{Math.floor(averageScore)}점</Text>
+          <Text variant='titleMedium' style={styles.avgScorePoint}>{Math.floor(averageScore)=== 0 ?  '오늘의 인지테스트 기록이 없습니다.' : `${Math.floor(averageScore)}점`}</Text>
         </Text>
         <View style={styles.scoreCardList}>
           {details.map(item => (
@@ -96,7 +103,9 @@ const ScoreDetailCard: React.FC<ScoreDetailCardProps> = memo(
                   <Text style={styles.scoreCardLabel}>{item.label}</Text>
                   <Text style={styles.scoreCardValue}>{item.value}</Text>
                 </View>
-                <Text style={styles.scoreCardPoint}>{item.score}점</Text>
+                <Text style={styles.scoreCardPoint}>
+                  {item.score}점
+                </Text>
               </View>
             </View>
           ))}
@@ -110,7 +119,9 @@ export const DashboardMain: React.FC = memo(() => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const today = format(new Date(), 'yyyy-MM-dd');
+  const now = new Date();
+const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+const today = kst.toISOString().slice(0, 10);
   // const { data: sleepRecordData } = useSleepRecord(today);
   const { data: sleepDetailData } = useSleepRecordDetail(today);
   const sleepScore = sleepDetailData?.sleep_score ?? 0;
@@ -147,7 +158,9 @@ export const DashboardMain: React.FC = memo(() => {
         // const latest = res[res.length - 1];
 
         // 오늘 날짜 데이터만 필터링
-      const today = format(new Date(), 'yyyy-MM-dd');
+      const now = new Date();
+const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+const today = kst.toISOString().slice(0, 10);
       const todayResult = res.find(item => item.date === today);
 
       if (!todayResult) {

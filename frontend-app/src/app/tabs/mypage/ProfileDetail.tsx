@@ -35,6 +35,13 @@ const ProfileDetail = () => {
 
 
   const { data: profile, isLoading, error, refetch } = useProfile();
+  const [profileImageUri, setProfileImageUri] = useState<string | null>(null);
+
+  const imageSource = useMemo(() => {
+        return profile?.profile_img
+          ? { uri: profile.profile_img }
+          : require('@/assets/icon.png');
+      }, [profileImageUri]);
 
   const handleLogout = async () => {
     try {
@@ -82,15 +89,7 @@ const ProfileDetail = () => {
   if (error) {
     return <NotFoundPage onRetry={() => refetch()} />;
   }
-
-  const [profileImageUri, setProfileImageUri] = useState<string | null>(null);
   
-
-      const imageSource = useMemo(() => {
-        return profile?.profile_img
-          ? { uri: profile.profile_img }
-          : require('@/assets/icon.png');
-      }, [profileImageUri]);
 
   return (
     <Layout>

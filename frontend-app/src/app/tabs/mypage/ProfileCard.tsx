@@ -30,7 +30,9 @@ const ProfileCard = () => {
   const { isLogin, user } = useAuthStore();
   const { data: profile, refetch: refetchProfile } = useProfile();
   const { data: mypageMain, refetch: refetchMypageMain } = useMypageMain();
-  const today = new Date().toISOString().split('T')[0];
+  const now = new Date();
+const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+const today = kst.toISOString().slice(0, 10);
 
   console.log(mypageMain);
 

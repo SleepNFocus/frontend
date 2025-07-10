@@ -23,7 +23,7 @@ export const SleepRecordPage: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const [isRecordSaved, setIsRecordSaved] = useState(false);
   const [savedDate, setSavedDate] = useState<string | null>(null);
-  const [isExist, setIsExist] = useState(false);
+  const [isExist, setIsExist] = useState<boolean | null>(null);
   const { openToast } = useUiStore();
   const queryClient = useQueryClient();
 
@@ -37,8 +37,9 @@ export const SleepRecordPage: React.FC = () => {
   useEffect(() => {
     async function fetchIsExistData() {
       // 오늘 날짜를 yyyy-mm-dd 형식으로 생성
-      const today = new Date();
-      const todayString = today.toISOString().split('T')[0]; // yyyy-mm-dd 형식
+     const today = new Date();
+    const todayKST = new Date(today.getTime() + 9 * 60 * 60 * 1000);
+    const todayString = todayKST.toISOString().split('T')[0];
 
       const apiClient = await getApiClient();
       const response = await apiClient.get(
@@ -194,10 +195,11 @@ export const SleepRecordPage: React.FC = () => {
   return (
     <Layout>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        {!isRecordSaved && !isExist ? (
-          // 수면 기록 입력 폼
-          <SleepRecordForm onSave={handleSaveRecord} />
-        ) : (
+        {isExist === null ? (
+          <ActivityIndicator />
+        ) : !isRecordSaved && !isExist ? (
+  <SleepRecordForm onSave={handleSaveRecord} />
+) : (
           // 결과 화면
           <View style={styles.resultSection}>
             {/* 점수 피드백 */}
