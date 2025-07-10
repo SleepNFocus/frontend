@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   StyleSheet,
@@ -143,20 +143,21 @@ const Settings = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { openModal, openToast } = useUiStore();
   const { user, resetAuth, setUser } = useAuthStore();
+  const { updateProfileImage } = useAuthStore();
 
   // API에서 받아온 프로필 이미지로 동기화
   const { data: profile, isLoading, error, refetch } = useProfile();
   const { mutateAsync: updateProfile } = useUpdateProfile();
   const [profileImageUri, setProfileImageUri] = useState<string | null>(null);
 
-  // profile 데이터가 변경될 때마다 로그를 출력하여 리프레시 확인
-  useEffect(() => {
-    if (profile?.profile_img) {
-      if (profile.profile_img.startsWith('http')) {
-        setProfileImageUri(profile.profile_img);
-      }
-    }
-  }, [profile]);
+  // // profile 데이터가 변경될 때마다 로그를 출력하여 리프레시 확인
+  // useEffect(() => {
+  //   if (profile?.profile_img) {
+  //     if (profile.profile_img.startsWith('http')) {
+  //       setProfileImageUri(profile.profile_img);
+  //     }
+  //   }
+  // }, [profile]);
 
   // 상태 추가
   const [nickname, setNickname] = useState(profile?.nickname || '');
@@ -422,14 +423,28 @@ const Settings = () => {
       updateData.work_time_pattern = workTimePattern;
     }
 
-    // 새 이미지가 선택된 경우, 데이터 객체에 추가
-    if (profileImageUri) {
-      updateData.profile_image_uri = profileImageUri;
-    }
+    // 새 이미지가 선택된 경우에만 전송
+  // if (
+  //   profileImageUri &&
+  //   profileImageUri !== profile?.profile_img
+  // ) {
+  //   updateData.profile_image_uri = profileImageUri;
+  // }
+  if (
+  profileImageUri &&
+  profileImageUri !== profile?.profile_img
+) {
+  if (profileImageUri?.startsWith('file://')) {
+  updateData.profile_image_uri = profileImageUri;
+  updateProfileImage(profileImageUri); // Zustand에도 반영
+}
+}
+  
 
     try {
       // 모든 데이터를 한 번에 전송
       await updateProfile(updateData);
+      
 
       setProfileImageUri(null); // 전송 후 임시 이미지 URI 초기화
 
@@ -439,13 +454,21 @@ const Settings = () => {
       openToast('error', '저장 실패', '프로필 정보 저장에 실패했습니다.');
       console.error('Save error:', e);
     }
+    console.log('보내는 데이터:', updateData);
   };
 
   // 이미지 URL 처리: ProfileCard와 동일한 로직
   const processImageUrl = (url: string | null | undefined): any => {
+    
     if (!url) {
       return require('@/assets/icon.png');
     }
+    if (!url.startsWith('http') && !url.startsWith('file://')) {
+  // 상대 경로인 경우: S3 도메인을 붙여줌
+  return {
+    uri: `https://your-s3-bucket-name.s3.ap-northeast-2.amazonaws.com/${url}`,
+  };
+}
 
     try {
       const decodedUrl = decodeURIComponent(url);
@@ -535,6 +558,22 @@ const Settings = () => {
   if (error) {
     return <NotFoundPage onRetry={() => refetch()} />;
   }
+      useEffect(() => {
+  if (profile?.profile_img && !profileImageUri) {
+    // 이 경우, presigned URL을 다시 쓰게 되므로 404 원인 가능
+    setProfileImageUri(profile.profile_img); // ❌ 주의
+  }
+}, [profile]);
+  
+        const imageSource = useMemo(() => {
+                                if (profileImageUri) {
+                                  return { uri: profileImageUri };
+                                }
+
+                                return profile?.profile_img
+                                  ? { uri: profile.profile_img }
+                                  : require('@/assets/icon.png');
+                              }, [profileImageUri]);
   return (
     <ErrorBoundary>
       <Layout>
@@ -558,20 +597,10 @@ const Settings = () => {
             >
               <View style={styles.profileImageWrapper}>
                 <Image
-                  source={
-                    profileImageUri
-                      ? { uri: profileImageUri }
-                      : processImageUrl(profile?.profile_img) ||
-                        require('@/assets/icon.png')
-                  }
-                  style={styles.profileImage}
-                  onError={error => {
-                    console.warn('프로필 이미지 로딩 실패:', error);
-                    setProfileImageUri(null);
-                  }}
-                  defaultSource={require('@/assets/icon.png')}
-                  resizeMode="cover"
-                />
+                                  // key={profile?.profile_img}
+                                  source={imageSource}
+                                  style={styles.profileImage}
+                                />
                 <TouchableOpacity
                   style={styles.cameraIconWrapper}
                   onPress={handleProfileImageChange}
