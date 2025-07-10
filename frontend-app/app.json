@@ -15,7 +15,6 @@
       "**/*",
       "assets/_redirects"
     ],
-
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.focuz.sleepapp"
@@ -62,7 +61,11 @@
       "typedRoutes": true
     },
     "extra": {
-      "router": {}
-    }
+      "router": {},
+      "eas": {
+        "projectId": "83790d37-6bc1-49cf-96a4-1c3ff6ce4ad7"
+      }
+    },
+    "owner": "gusul"
   }
 }
