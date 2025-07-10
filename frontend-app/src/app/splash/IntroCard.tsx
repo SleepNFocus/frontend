@@ -9,12 +9,41 @@ import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { useAuthStore } from '@/store/authStore';
 import WarningText from '@/components/common/WarningText';
+import {
+  AppleButton,
+  appleAuth,
+} from '@invertase/react-native-apple-authentication';
+import { loginWithAppleCode } from '@/utils/auth/loginWithApple';
 
 // Intro: Focuz 전체화면 인트로/랜딩 페이지
 export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { isLogin, user, setLogin, setUser } = useAuthStore();
+
+  const onAppleButtonPress = async () => {
+    try {
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      });
+
+      const { authorizationCode } = appleAuthRequestResponse;
+
+      if (authorizationCode) {
+        const result = await loginWithAppleCode(authorizationCode);
+        if (result.success) {
+          navigation.navigate('Dashboard');
+        } else {
+          Alert.alert('로그인 실패', result.message);
+        }
+      } else {
+        Alert.alert('애플 로그인 실패', '인가 코드가 없습니다.');
+      }
+    } catch (error) {
+      Alert.alert('Apple 로그인 오류', '다시 시도해 주세요.');
+    }
+  };
 
   // 이미 로그인한 기존 사용자라면 대시보드로 바로 이동
   // useEffect(() => {
@@ -97,6 +126,13 @@ export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
           소셜 계정으로 시작하기
         </Text>
         <View style={styles.socialButtonColumn}>
+          <AppleButton
+            buttonStyle={AppleButton.Style.WHITE}
+            buttonType={AppleButton.Type.SIGN_IN}
+            cornerRadius={5}
+            style={{ width: 260, height: 44 }}
+            onPress={onAppleButtonPress}
+          />
           <TouchableOpacity
             onPress={handleKakaoLogin}
             activeOpacity={0.8}
