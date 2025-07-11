@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAuthStore } from '@/store/authStore';
 import { getApiClient } from '@/services/axios';
+import { useAppleAuthStore } from '@/store/appleAuthStore';
 
 interface UserInfo {
   id: number;
   email: string;
-  nickname: string;
+  full_name: string;
   image_url: string;
 }
 
@@ -37,7 +37,7 @@ export const loginWithAppleCode = async (authorizationCode: string) => {
     await AsyncStorage.setItem('accessToken', access);
     await AsyncStorage.setItem('refreshToken', refresh);
 
-    const { setLogin, setUser } = useAuthStore.getState();
+    const { setLogin, setUser } = useAppleAuthStore.getState();
     setLogin(true);
     setUser(user);
 
