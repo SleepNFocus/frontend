@@ -11,20 +11,17 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*",
-      "assets/_redirects"
-    ],
+    "assetBundlePatterns": ["**/*", "assets/_redirects"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.focuz.sleepapp"
+      "bundleIdentifier": "com.focuz.focuz"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#DFE3EA"
       },
-      "package": "com.focuz.sleepapp",
+      "package": "com.focuz.focuz",
       "versionCode": 1,
       "compileSdkVersion": 34,
       "targetSdkVersion": 34,
@@ -40,17 +37,12 @@
       "output": "static",
       "build": {
         "babel": {
-          "include": [
-            "node_modules/expo"
-          ]
+          "include": ["node_modules/expo"]
         }
       }
     },
     "scheme": "focuz-app",
-    "plugins": [
-      "expo-router",
-      "expo-font"
-    ],
+    "plugins": ["expo-router", "expo-font"],
     "fonts": [
       "./assets/fonts/NanumSquareRoundL.ttf",
       "./assets/fonts/NanumSquareRoundR.ttf",
