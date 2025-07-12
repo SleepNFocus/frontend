@@ -28,7 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>focuz-app</string>
-          <string>com.focuz.sleepapp</string>
+          <string>com.focuz.focuz</string>
         </array>
       </dict>
       <dict>
