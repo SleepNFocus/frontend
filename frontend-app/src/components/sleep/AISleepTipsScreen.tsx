@@ -127,6 +127,49 @@ export const AISleepTipsScreen: React.FC<AISleepTipsScreenProps> = ({
     );
   }
 
+  // 이 줄 아래에 추가하세요
+if (!score || !aiData?.recommendation) {
+  const todayStr = new Date().toISOString().split('T')[0];
+  const isToday = date === todayStr;
+
+  if (isToday) {
+    return (
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <Card style={styles.headerCard}>
+            <Card.Content>
+              <View style={styles.headerContent}>
+                <Text style={styles.headerEmoji}>🛌</Text>
+                <View style={styles.headerText}>
+                  <Text variant="headlineSmall" style={styles.headerTitle}>
+                    AI 수면 분석
+                  </Text>
+                  <Text variant="bodyMedium" style={styles.headerSubtitle}>
+                    {date} • 수면 데이터 없음
+                  </Text>
+                </View>
+              </View>
+            </Card.Content>
+          </Card>
+
+          <Card style={styles.errorCard}>
+            <Card.Content>
+              <View style={styles.errorContainer}>
+                <Text variant="titleMedium" style={styles.errorTitle}>
+                  오늘의 수면 기록이 없습니다
+                </Text>
+                <Text variant="bodyMedium" style={styles.errorMessage}>
+                  수면 기록을 남기면 AI가 분석을 시작할 수 있어요.
+                </Text>
+              </View>
+            </Card.Content>
+          </Card>
+        </ScrollView>
+      </View>
+    );
+  }
+}
+
   if (error || !aiData) {
     return (
       <View style={styles.container}>
