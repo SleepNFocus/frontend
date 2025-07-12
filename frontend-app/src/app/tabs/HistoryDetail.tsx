@@ -91,7 +91,7 @@ export const SleepRecordDetailPage: React.FC = () => {
           <View style={styles.sleepInfoContainer}>
             <View style={styles.infoItem}>
               <Text variant="labelMedium" style={styles.infoLabel}>
-                총 수면시간
+                수면시간
               </Text>
               <Text variant="headlineSmall" style={styles.infoValue}>
                 {total_sleep_hours}시간

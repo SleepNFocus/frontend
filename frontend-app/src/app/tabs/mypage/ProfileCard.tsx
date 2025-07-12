@@ -34,7 +34,12 @@ const ProfileCard = () => {
 const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
 const today = kst.toISOString().slice(0, 10);
 
-  console.log(mypageMain);
+  useFocusEffect(
+    useCallback(() => {
+      refetchMypageMain();
+      refetchProfile();
+    }, [refetchMypageMain, refetchProfile])
+  );
 
   const { data: dayRecordData } = useSleepRecordList('day');
   const hasTodayRecord = (dayRecordData?.results as DayRecord[])?.some(
@@ -58,10 +63,10 @@ const today = kst.toISOString().slice(0, 10);
   const trackingDays = mypageMain?.tracking_days || 1;
 
   const imageSource = useMemo(() => {
-                                  return profile?.profile_img
-                                    ? { uri: profile.profile_img }
-                                    : require('@/assets/icon.png');
-                                }, [profileImageUri]);
+    return profile?.profile_img
+      ? { uri: profile.profile_img }
+      : require('@/assets/icon.png');
+  }, [profileImageUri]);
 
 
   return (
@@ -120,9 +125,11 @@ const today = kst.toISOString().slice(0, 10);
       )}
 
       <Card style={styles.sleepSummary}>
+        <Text variant='titleMedium'> 나의 누적 수면 요약 </Text>
+        <View style={styles.sleepSummary1}>
         <View style={styles.averageBox}>
           <Text variant="bodyMedium" style={styles.averageLabel}>
-            총 수면시간
+            수면시간
           </Text>
           <Text variant="titleMedium" style={styles.averageValue}>
             {mypageMain?.total_sleep_hours ?? '-'}시간
@@ -130,7 +137,7 @@ const today = kst.toISOString().slice(0, 10);
         </View>
         <View style={styles.averageBox}>
           <Text variant="bodyMedium" style={styles.averageLabel}>
-            수면 평균 점수
+            수면 점수
           </Text>
           <Text variant="titleMedium" style={styles.averageValue}>
             {mypageMain?.average_sleep_score ?? '-'}점
@@ -138,11 +145,12 @@ const today = kst.toISOString().slice(0, 10);
         </View>
         <View style={styles.averageBox}>
           <Text variant="bodyMedium" style={styles.averageLabel}>
-            인지 평균 점수
+            인지 점수
           </Text>
           <Text variant="titleMedium" style={styles.averageValue}>
             {mypageMain?.average_cognitive_score ?? '-'}점
           </Text>
+        </View>
         </View>
       </Card>
 
@@ -231,8 +239,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   sleepSummary: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '100%',
     marginBottom: 10,
     backgroundColor: colors.white,
@@ -244,6 +253,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 20,
     elevation: 10,
+    gap: 20
+  },
+  sleepSummary1: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   averageBox: {
     flex: 1,

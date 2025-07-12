@@ -399,9 +399,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   effectiveDate: {
+    fontSize: 12,
     color: colors.mediumGray,
-    marginBottom: 16,
-    fontStyle: 'italic',
+    marginBottom: 20,
+    textAlign: 'right',
   },
   intro: {
     color: colors.textColor,

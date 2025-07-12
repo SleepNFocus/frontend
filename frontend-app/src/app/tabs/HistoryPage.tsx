@@ -132,7 +132,7 @@ export const HistoryPage: React.FC = () => {
                 </View>
                 <View style={styles.sleepTimeContainer}>
                   <Text variant="bodyLarge" style={styles.sleepTimeLabel}>
-                    총 수면시간
+                    수면시간
                   </Text>
                   <Text variant="titleLarge" style={styles.sleepTimeValue}>
                     {item.sleep_hour}시간
