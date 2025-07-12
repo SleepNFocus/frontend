@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import {
   View,
   StyleSheet,
@@ -22,131 +22,55 @@ import { useSleepRecordList } from '@/services/recordListApi';
 import { DayRecord } from '@/types/history';
 
 const ProfileCard = () => {
+
+  
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const tabNavigation = useNavigation<BottomTabNavigationProp<any>>();
   const { isLogin, user } = useAuthStore();
   const { data: profile, refetch: refetchProfile } = useProfile();
   const { data: mypageMain, refetch: refetchMypageMain } = useMypageMain();
-  const today = new Date().toISOString().split('T')[0];
+  const now = new Date();
+const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+const today = kst.toISOString().slice(0, 10);
 
-  console.log(mypageMain);
+  useFocusEffect(
+    useCallback(() => {
+      refetchMypageMain();
+      refetchProfile();
+    }, [refetchMypageMain, refetchProfile])
+  );
 
   const { data: dayRecordData } = useSleepRecordList('day');
   const hasTodayRecord = (dayRecordData?.results as DayRecord[])?.some(
     item => item.date === today,
   );
 
-  // 화면이 포커스될 때마다 프로필 데이터 새로 가져오기
-  useFocusEffect(
-    useCallback(() => {
-      if (isLogin) {
-        refetchProfile();
-        refetchMypageMain();
-      }
-    }, [isLogin, refetchProfile, refetchMypageMain]),
-  );
+  const [profileImageUri, setProfileImageUri] = useState<string | null>(null);
 
-  // profile 데이터가 변경될 때마다 로그를 출력하여 리프레시 확인
-  useEffect(() => {}, [profile]);
+  useEffect(() => {
+      if (profile?.profile_img) {
+        if (profile.profile_img.startsWith('http')) {
+          setProfileImageUri(profile.profile_img);
+        }
+      }
+    }, [profile]);
 
   // API 데이터를 우선 사용하고, 없으면 로컬 user 데이터 사용
   const displayName = profile?.nickname || user?.nickname || '-';
 
-  // 이미지 URL 처리: URL 디코딩 후 카카오 이미지 URL 추출
-  const processImageUrl = (url: string | null | undefined): any => {
-    if (!url) {
-      // console.log('URL이 없어서 기본 이미지 반환');
-      return require('../../../../assets/icon.png');
-    }
-
-    try {
-      const decodedUrl = decodeURIComponent(url);
-      // console.log('디코딩된 URL:', decodedUrl);
-
-      // 중첩된 URL 구조 처리: dev.focusz.site/media/http:/k.kakaocdn.net/... 형태
-      if (
-        decodedUrl.includes('/media/http:/') ||
-        decodedUrl.includes('/media/https:/')
-      ) {
-        // /media/ 다음의 URL 부분을 추출
-        const mediaIndex = decodedUrl.indexOf('/media/');
-        if (mediaIndex !== -1) {
-          const afterMedia = decodedUrl.substring(mediaIndex + 7); // '/media/' 제거
-          // console.log('media 이후 부분:', afterMedia);
-
-          // http:/ 또는 https:/ 다음의 실제 URL 추출
-          const protocolIndex = afterMedia.indexOf('http:/');
-          const secureProtocolIndex = afterMedia.indexOf('https:/');
-
-          let actualUrl = '';
-          if (secureProtocolIndex !== -1) {
-            actualUrl = afterMedia.substring(secureProtocolIndex);
-          } else if (protocolIndex !== -1) {
-            actualUrl = afterMedia.substring(protocolIndex);
-          }
-
-          if (actualUrl) {
-            // http:/ -> http:// 로 수정
-            actualUrl = actualUrl
-              .replace('http:/', 'http://')
-              .replace('https:/', 'https://');
-            // console.log('추출된 실제 URL:', actualUrl);
-            // 더 강력한 캐시 방지를 위해 랜덤 값도 추가
-            const randomParam = Math.random().toString(36).substring(7);
-            return { uri: `${actualUrl}?t=${Date.now()}&r=${randomParam}` };
-          }
-        }
-      }
-
-      // 정규식을 사용하여 http 또는 https로 시작하는 전체 URL 추출
-      const urlRegex = /(https?:\/\/[^\s]+)/g;
-      const extractedUrls = decodedUrl.match(urlRegex);
-
-      // 카카오 CDN URL을 우선적으로 찾습니다.
-      let targetUrl = extractedUrls?.find(u => u.includes('k.kakaocdn.net'));
-
-      // 카카오 URL이 없으면 첫 번째 추출된 URL을 사용합니다.
-      if (!targetUrl && extractedUrls && extractedUrls.length > 0) {
-        // dev.focusz.site/media/ 다음의 http URL을 찾습니다.
-        const nestedUrl = extractedUrls.find(
-          u => u.startsWith('http') && decodedUrl.includes(`/media/${u}`),
-        );
-        if (nestedUrl) {
-          targetUrl = nestedUrl;
-        } else {
-          // 가장 마지막 URL을 사용 (가장 안쪽 URL일 가능성이 높음)
-          targetUrl = extractedUrls[extractedUrls.length - 1];
-        }
-      }
-
-      if (targetUrl) {
-        // console.log('추출된 최종 URL:', targetUrl);
-        // 캐싱 방지를 위한 타임스탬프와 랜덤 값 추가
-        const randomParam = Math.random().toString(36).substring(7);
-        return { uri: `${targetUrl}?t=${Date.now()}&r=${randomParam}` };
-      }
-
-      // 로컬 파일 URI인지 확인
-      if (url.startsWith('file://')) {
-        // console.log('로컬 파일 URI 감지:', url);
-        return { uri: url };
-      }
-
-      // console.log('기본 이미지 사용');
-      return require('../../../../assets/icon.png');
-    } catch (error) {
-      // console.log('URL 처리 에러:', error);
-      return require('../../../../assets/icon.png');
-    }
-  };
-
-  const displayImageSource = processImageUrl(
-    profile?.profile_img || user?.image_url,
-  );
-
   // tracking_days가 없거나 undefined면 1로 표시
-  const trackingDays = mypageMain?.tracking_days || 1;
+  const trackingDays =
+    mypageMain?.tracking_days != null && mypageMain.tracking_days > 1
+      ? mypageMain.tracking_days - 1
+      : 1;
+
+  const imageSource = useMemo(() => {
+    return profile?.profile_img
+      ? { uri: profile.profile_img }
+      : require('@/assets/icon.png');
+  }, [profileImageUri]);
+
 
   return (
     <Card style={styles.wrapper}>
@@ -161,8 +85,8 @@ const ProfileCard = () => {
       </View>
 
       <Image
-        key={profile?.profile_img || user?.image_url}
-        source={displayImageSource}
+        // key={profile?.profile_img || user?.image_url}
+        source={user?.image_url ? { uri: user.image_url } : require('@/assets/icon.png')}
         style={styles.profileImage}
         resizeMode="cover"
       />
@@ -204,9 +128,11 @@ const ProfileCard = () => {
       )}
 
       <Card style={styles.sleepSummary}>
+        <Text variant='titleMedium'> 나의 누적 수면 요약 </Text>
+        <View style={styles.sleepSummary1}>
         <View style={styles.averageBox}>
           <Text variant="bodyMedium" style={styles.averageLabel}>
-            총 수면시간
+            수면시간
           </Text>
           <Text variant="titleMedium" style={styles.averageValue}>
             {mypageMain?.total_sleep_hours ?? '-'}시간
@@ -214,19 +140,24 @@ const ProfileCard = () => {
         </View>
         <View style={styles.averageBox}>
           <Text variant="bodyMedium" style={styles.averageLabel}>
-            수면 평균 점수
+            수면 점수
           </Text>
           <Text variant="titleMedium" style={styles.averageValue}>
-            {mypageMain?.average_sleep_score ?? '-'}점
+            {mypageMain?.average_sleep_score != null
+              ? Math.floor(mypageMain.average_sleep_score) + '점'
+              : '-'}
           </Text>
         </View>
         <View style={styles.averageBox}>
           <Text variant="bodyMedium" style={styles.averageLabel}>
-            인지 평균 점수
+            인지 점수
           </Text>
           <Text variant="titleMedium" style={styles.averageValue}>
-            {mypageMain?.average_cognitive_score ?? '-'}점
+            {mypageMain?.average_cognitive_score != null
+              ? Math.floor(mypageMain.average_cognitive_score) + '점'
+              : '-'}
           </Text>
+        </View>
         </View>
       </Card>
 
@@ -315,8 +246,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   sleepSummary: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '100%',
     marginBottom: 10,
     backgroundColor: colors.white,
@@ -328,6 +260,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 20,
     elevation: 10,
+    gap: 20
+  },
+  sleepSummary1: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   averageBox: {
     flex: 1,

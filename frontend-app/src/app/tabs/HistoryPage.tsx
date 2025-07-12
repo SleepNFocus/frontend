@@ -125,14 +125,14 @@ export const HistoryPage: React.FC = () => {
                         인지점수
                       </Text>
                       <Text variant="titleMedium" style={styles.scoreValue}>
-                        {item.cognitive_score}점
+                        {Math.floor(item.cognitive_score)}점
                       </Text>
                     </View>
                   </View>
                 </View>
                 <View style={styles.sleepTimeContainer}>
                   <Text variant="bodyLarge" style={styles.sleepTimeLabel}>
-                    총 수면시간
+                    수면시간
                   </Text>
                   <Text variant="titleLarge" style={styles.sleepTimeValue}>
                     {item.sleep_hour}시간
@@ -171,7 +171,7 @@ export const HistoryPage: React.FC = () => {
                       평균 수면점수
                     </Text>
                     <Text variant="titleMedium" style={styles.statValue}>
-                      {item.average_sleep_score}점
+                      {Math.floor(item.average_sleep_score)}점
                     </Text>
                   </View>
                   <View style={styles.statItem}>
@@ -179,7 +179,7 @@ export const HistoryPage: React.FC = () => {
                       평균 인지점수
                     </Text>
                     <Text variant="titleMedium" style={styles.statValue}>
-                      {item.average_cognitive_score}점
+                      {Math.floor(item.average_cognitive_score)}점
                     </Text>
                   </View>
                 </View>
@@ -216,7 +216,7 @@ export const HistoryPage: React.FC = () => {
                       평균 수면점수
                     </Text>
                     <Text variant="titleMedium" style={styles.statValue}>
-                      {item.average_sleep_score}점
+                      {Math.floor(item.average_sleep_score)}점
                     </Text>
                   </View>
                   <View style={styles.statItem}>
@@ -224,7 +224,7 @@ export const HistoryPage: React.FC = () => {
                       평균 인지점수
                     </Text>
                     <Text variant="titleMedium" style={styles.statValue}>
-                      {item.average_cognitive_score}점
+                      {Math.floor(item.average_cognitive_score)}점
                     </Text>
                   </View>
                 </View>

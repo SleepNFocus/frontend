@@ -42,7 +42,7 @@ export const BackButton: React.FC<BackButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    padding: 8,
+    padding: 2,
     borderRadius: 8,
   },
 });

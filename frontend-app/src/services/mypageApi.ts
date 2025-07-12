@@ -106,6 +106,10 @@ export const useMypageMain = () => {
   return useQuery({
     queryKey: ['mypageMain'],
     queryFn: getMypageMain,
+    staleTime: 0,
+    gcTime: 1000 * 60,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -113,6 +117,10 @@ export const useRecords = (period: 'day' | 'week' | 'month') => {
   return useQuery({
     queryKey: ['records', period],
     queryFn: () => getRecords(period),
+    staleTime: 0,
+    gcTime: 1000 * 60,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 };
 

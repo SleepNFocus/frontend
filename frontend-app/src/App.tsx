@@ -72,7 +72,7 @@ export type RootStackParamList = {
   NicknameEdit: undefined;
   SleepTestMain: undefined;
   SleepTestDesc: undefined;
-  SleepTest1Desc: undefined;
+  SleepTest1Desc: { formatId: number };
   SleepTest1: undefined;
   SleepTest2Desc: undefined;
   SleepTest2: undefined;

@@ -21,6 +21,7 @@ interface AuthState {
   resetAuth: () => void;
   loadTokensFromStorage: () => Promise<void>;
   setCompletedOnboarding: (value: boolean) => void;
+  updateProfileImage: (imageUrl: string) => void;
 }
 
 export const useAuthStore = create<AuthState>(set => ({
@@ -114,4 +115,18 @@ export const useAuthStore = create<AuthState>(set => ({
         : null,
     }));
   },
+  updateProfileImage: (imageUrl: string) => {
+  set(state => {
+    const updatedUser = state.user
+      ? { ...state.user, image_url: imageUrl }
+      : null;
+
+    // AsyncStorage에도 저장 (user 전체 다시 저장)
+    if (updatedUser) {
+      AsyncStorage.setItem('userInfo', JSON.stringify(updatedUser));
+    }
+
+    return { user: updatedUser };
+  });
+},
 }));
