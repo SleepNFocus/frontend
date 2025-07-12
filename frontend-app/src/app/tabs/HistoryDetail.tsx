@@ -114,6 +114,15 @@ export const SleepRecordDetailPage: React.FC = () => {
             인지 테스트 결과
           </Text>
 
+          <View style={styles.totalScoreContainer}>
+            <Text variant="bodyLarge" style={styles.testResultLabel}>
+              총 인지 점수
+            </Text>
+            <Text variant="headlineSmall" style={styles.totalScoreText}>
+              {Math.floor((srt_score + symbol_score + pattern_score) / 3)}점
+            </Text>
+          </View>
+
           {/* SRT 테스트 */}
           <View style={styles.testSection}>
             <Text variant="titleMedium" style={styles.testTitle}>
@@ -125,7 +134,7 @@ export const SleepRecordDetailPage: React.FC = () => {
                   점수
                 </Text>
                 <Text variant="titleMedium" style={styles.testResultValue}>
-                  {srt_score}점
+                  {Math.floor(srt_score)}점
                 </Text>
               </View>
               <View style={styles.testResultItem}>
@@ -150,7 +159,7 @@ export const SleepRecordDetailPage: React.FC = () => {
                   점수
                 </Text>
                 <Text variant="titleMedium" style={styles.testResultValue}>
-                  {symbol_score}점
+                  {Math.floor(symbol_score)}점
                 </Text>
               </View>
               <View style={styles.testResultItem}>
@@ -183,7 +192,7 @@ export const SleepRecordDetailPage: React.FC = () => {
                   점수
                 </Text>
                 <Text variant="titleMedium" style={styles.testResultValue}>
-                  {pattern_score}점
+                  {Math.floor(pattern_score)}점
                 </Text>
               </View>
               <View style={styles.testResultItem}>
@@ -310,6 +319,18 @@ const styles = StyleSheet.create({
     color: colors.textColor,
     fontWeight: '700',
   },
+  totalScoreContainer: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: spacing.lg,
+  paddingHorizontal: spacing.sm,
+  padding: 20
+},
+totalScoreText: {
+  color: colors.deepNavy,
+  fontWeight: '700',
+},
 });
 
 export default SleepRecordDetailPage;

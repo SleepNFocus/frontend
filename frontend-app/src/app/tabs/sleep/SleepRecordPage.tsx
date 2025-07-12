@@ -16,6 +16,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { getApiClient } from '@/services/axios';
 import WarningText from '@/components/common/WarningText';
+import { useGetDailySummary } from '@/services/testApi';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -26,11 +27,18 @@ export const SleepRecordPage: React.FC = () => {
   const [isExist, setIsExist] = useState<boolean | null>(null);
   const { openToast } = useUiStore();
   const queryClient = useQueryClient();
+  const todayString = new Date().toISOString().split('T')[0];
+  const { data: summaryData, isLoading: isLoadingSummary } = useGetDailySummary();
+
+  const isTodayCognitiveTestDone = summaryData?.some(
+    (record) => record.date === todayString
+  );
 
   const saveSleepRecordMutation = useSaveSleepRecord();
 
   // savedDate가 있을 때만 useSleepRecord 호출
   const shouldFetchData = !!savedDate && isRecordSaved;
+
 
   // ! 임시로 useEffect로 작성 -> 리팩토링 필요
   // ! 사용자가 이미 테스트를 했는지 구분하는 API
@@ -59,8 +67,6 @@ export const SleepRecordPage: React.FC = () => {
     error: sleepDataError,
     refetch,
   } = useSleepRecord(shouldFetchData ? savedDate : '');
-
-  console.log('DEBUGGING', savedDate, sleepData);
 
   // 재시도 로직은 handleSaveRecord 안으로 이동시켜, 저장 직후 제어하도록 합니다.
   // useEffect(() => { ... });
@@ -135,7 +141,6 @@ export const SleepRecordPage: React.FC = () => {
         return '알 수 없음';
     }
   };
-  console.log('데이터', sleepData);
 
   const handleSaveRecord = async (recordData: SleepRecordData) => {
     try {
@@ -319,19 +324,25 @@ export const SleepRecordPage: React.FC = () => {
               <Card.Content> */}
             <View style={styles.nextBox}>
               <Text variant="titleLarge" style={styles.actionTitle}>
-                오늘의 수면 기록이 완료되었습니다!
+                {isTodayCognitiveTestDone
+                  ? '오늘의 수면 기록 및\n인지테스트가 완료되었습니다!'
+                  : '오늘의 수면 기록이 완료되었습니다!'}
               </Text>
               <Text variant="titleSmall" style={styles.actionSubtitle}>
-                이제 인지 능력 테스트에 도전하거나, 이전 기록을 확인해보세요.
+                {isTodayCognitiveTestDone
+                  ? '이전 기록을 확인해보세요!'
+                  : '이제 인지 능력 테스트에 도전하거나, 이전 기록을 확인해보세요.'}
               </Text>
             </View>
 
             <View style={styles.actionButtons}>
-              <Button
-                onPress={() => navigation.navigate('SleepTestMain')}
-                title="반응속도 테스트"
-                style={styles.primaryButton}
-              />
+              {!isTodayCognitiveTestDone && (
+                <Button
+                  onPress={() => navigation.navigate('SleepTestMain')}
+                  title="반응속도 테스트"
+                  style={styles.primaryButton}
+                />
+              )}
               <Button
                 onPress={() => navigation.navigate('History')}
                 title="기록 히스토리"
@@ -441,6 +452,7 @@ const styles = StyleSheet.create({
     // fontSize: fontSize.lg,
     fontWeight: 'bold',
     // marginBottom: spacing.sm,
+    textAlign: 'center'
   },
   actionSubtitle: {
     color: colors.midnightBlue,

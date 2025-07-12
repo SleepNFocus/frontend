@@ -15,15 +15,20 @@ import { colors } from '@/constants/colors';
 import { RootStackParamList } from '@/App';
 import { useEffect, useRef } from 'react';
 import WarningText from '@/components/common/WarningText';
+import { useStartGameSession } from '@/services/testApi';
 
 export default function SleepTestDesc() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const { mutate: startSession, isPending } = useStartGameSession();
+
   const { width: windowWidth } = useWindowDimensions();
   const containerWidth = Math.min(windowWidth * 0.9, 700);
 
   const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const formatId = 1;
 
   useEffect(() => {
     Animated.loop(
@@ -43,7 +48,16 @@ export default function SleepTestDesc() {
   }, [scaleAnim]);
 
   function goToSleepTest1Desc() {
-    navigation.navigate('SleepTest1Desc');
+    if (isPending) return;
+
+    startSession(formatId, {
+      onSuccess: () => {
+        navigation.navigate('SleepTest1Desc', { formatId: 1 });
+      },
+      onError: error => {
+        console.error('게임 세션 시작 실패:', error);
+      },
+    });
   }
 
   return (
@@ -79,6 +93,7 @@ export default function SleepTestDesc() {
               variant="secondary"
               style={styles.button}
               onPress={goToSleepTest1Desc}
+              disabled={isPending}
             />
             <WarningText />
           </GlassCard>

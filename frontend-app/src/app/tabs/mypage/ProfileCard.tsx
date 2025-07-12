@@ -60,7 +60,10 @@ const today = kst.toISOString().slice(0, 10);
   const displayName = profile?.nickname || user?.nickname || '-';
 
   // tracking_days가 없거나 undefined면 1로 표시
-  const trackingDays = mypageMain?.tracking_days || 1;
+  const trackingDays =
+    mypageMain?.tracking_days != null && mypageMain.tracking_days > 1
+      ? mypageMain.tracking_days - 1
+      : 1;
 
   const imageSource = useMemo(() => {
     return profile?.profile_img
@@ -140,7 +143,9 @@ const today = kst.toISOString().slice(0, 10);
             수면 점수
           </Text>
           <Text variant="titleMedium" style={styles.averageValue}>
-            {mypageMain?.average_sleep_score ?? '-'}점
+            {mypageMain?.average_sleep_score != null
+              ? Math.floor(mypageMain.average_sleep_score) + '점'
+              : '-'}
           </Text>
         </View>
         <View style={styles.averageBox}>
@@ -148,7 +153,9 @@ const today = kst.toISOString().slice(0, 10);
             인지 점수
           </Text>
           <Text variant="titleMedium" style={styles.averageValue}>
-            {mypageMain?.average_cognitive_score ?? '-'}점
+            {mypageMain?.average_cognitive_score != null
+              ? Math.floor(mypageMain.average_cognitive_score) + '점'
+              : '-'}
           </Text>
         </View>
         </View>

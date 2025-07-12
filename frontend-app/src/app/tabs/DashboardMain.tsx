@@ -136,76 +136,64 @@ const today = kst.toISOString().slice(0, 10);
   const { user } = useAuthStore();
 
   const {
-    mutate: fetchSummary,
-    data,
-    isPending,
-    isError,
-    error,
-  } = useGetDailySummary();
+  data,
+  isPending,
+  isError,
+  error,
+  refetch,
+} = useGetDailySummary();
+
 
   const [hasCognitiveScore, setHasCognitiveScore] = useState(false);
 
   useEffect(() => {
+  if (!data || data.length === 0) return;
 
-    const defaultLabels = ['반응 속도', '정보 처리', '패턴 기억'];
+  const defaultLabels = ['반응 속도', '정보 처리', '패턴 기억'];
   setCognitionData(prev => ({ ...prev, labels: defaultLabels }));
 
-    fetchSummary(undefined, {
-      onSuccess: res => {
-        if (!res || res.length === 0) return;
+  const now = new Date();
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  const today = kst.toISOString().slice(0, 10);
+  const todayResult = data.find(item => item.date === today);
 
+  if (!todayResult) {
+    setHasCognitiveScore(false);
+    setCognitionData({ data: [0, 0, 0], labels: defaultLabels });
+    return;
+  }
 
-        // const latest = res[res.length - 1];
+  const cognition = [
+    todayResult.raw_scores.srt.average_score,
+    todayResult.raw_scores.symbol.average_score,
+    todayResult.raw_scores.pattern.average_score,
+  ];
 
-        // 오늘 날짜 데이터만 필터링
-      const now = new Date();
-const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-const today = kst.toISOString().slice(0, 10);
-      const todayResult = res.find(item => item.date === today);
+  const hasScore = cognition.some(score => typeof score === 'number' && score > 0);
+  setHasCognitiveScore(hasScore);
 
-      if (!todayResult) {
-        setHasCognitiveScore(false);
-        setCognitionData({ data: [0, 0, 0], labels: defaultLabels });
-        return; // 오늘 데이터 없으면 아무것도 설정하지 않음
-      }
+  const detail: ScoreDetail[] = [
+    {
+      label: '반응 속도',
+      value: `${todayResult.raw_scores.srt.avg_ms}ms`,
+      score: Math.floor(todayResult.raw_scores.srt.average_score),
+    },
+    {
+      label: '정보 처리',
+      value: `정답 개수: ${todayResult.raw_scores.symbol.correct}개 / 정확도: ${todayResult.raw_scores.symbol.symbol_accuracy}%`,
+      score: Math.floor(todayResult.raw_scores.symbol.average_score),
+    },
+    {
+      label: '패턴 기억',
+      value: `정답 개수: ${todayResult.raw_scores.pattern.correct}개`,
+      score: Math.floor(todayResult.raw_scores.pattern.average_score),
+    },
+  ];
 
-        const cognition = [
-        todayResult.raw_scores.srt.average_score,
-        todayResult.raw_scores.symbol.average_score,
-        todayResult.raw_scores.pattern.average_score,
-      ];
-
-        const hasScore = cognition.some(
-          score => typeof score === 'number' && score > 0,
-        );
-        setHasCognitiveScore(hasScore);
-
-        const labels = ['반응 속도', '정보 처리', '패턴 기억'];
-
-        const detail: ScoreDetail[] = [
-          {
-            label: '반응 속도',
-            value: `${todayResult.raw_scores.srt.avg_ms}ms`,
-            score: Math.floor(todayResult.raw_scores.srt.average_score),
-          },
-          {
-            label: '정보 처리',
-            value: `정답 개수: ${todayResult.raw_scores.symbol.correct}개 / 정확도: ${todayResult.raw_scores.symbol.symbol_accuracy}%`,
-            score: Math.floor(todayResult.raw_scores.symbol.average_score),
-          },
-          {
-            label: '패턴 기억',
-            value: `정답 개수: ${todayResult.raw_scores.pattern.correct}개`,
-            score: Math.floor(todayResult.raw_scores.pattern.average_score),
-          },
-        ];
-
-        setCognitionData({ data: cognition, labels });
-        setScoreDetails(detail);
-        setAverageScore(todayResult.average_score);
-      },
-    });
-  }, []);
+  setCognitionData({ data: cognition, labels: defaultLabels });
+  setScoreDetails(detail);
+  setAverageScore(todayResult.average_score);
+}, [data]);
 
   if (isPending) {
     return (
