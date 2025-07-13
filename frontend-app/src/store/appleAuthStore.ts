@@ -14,10 +14,10 @@ interface AuthState {
   user: AppleUser | null;
   accessToken: string | null;
   refreshToken: string | null;
-  setLogin: (value: boolean) => void;
-  setUser: (user: AppleUser) => void;
-  setAccessToken: (token: string) => void;
-  setRefreshToken: (token: string) => void;
+  setAppleLogin: (value: boolean) => void;
+  setAppleUser: (user: AppleUser) => void;
+  setAppleAccessToken: (token: string) => void;
+  setAppleRefreshToken: (token: string) => void;
   resetAuth: () => void;
   loadTokensFromStorage: () => Promise<void>;
   setCompletedOnboarding: (value: boolean) => void;
@@ -30,7 +30,7 @@ export const useAppleAuthStore = create<AuthState>(set => ({
   accessToken: null,
   refreshToken: null,
 
-  setLogin: async (value: boolean) => {
+  setAppleLogin: async (value: boolean) => {
     try {
       if (value) {
         await AsyncStorage.setItem('hasLoggedInBefore', 'true');
@@ -41,7 +41,7 @@ export const useAppleAuthStore = create<AuthState>(set => ({
     }
   },
 
-  setUser: async (user: AppleUser) => {
+  setAppleUser: async (user: AppleUser) => {
     try {
       await AsyncStorage.setItem('userInfo', JSON.stringify(user));
       set(() => ({ user }));
@@ -50,7 +50,7 @@ export const useAppleAuthStore = create<AuthState>(set => ({
     }
   },
 
-  setAccessToken: async (token: string) => {
+  setAppleAccessToken: async (token: string) => {
     try {
       await AsyncStorage.setItem('accessToken', token);
       set(() => ({ accessToken: token }));
@@ -59,7 +59,7 @@ export const useAppleAuthStore = create<AuthState>(set => ({
     }
   },
 
-  setRefreshToken: async (token: string) => {
+  setAppleRefreshToken: async (token: string) => {
     try {
       await AsyncStorage.setItem('refreshToken', token);
       set(() => ({ refreshToken: token }));

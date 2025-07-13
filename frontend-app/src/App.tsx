@@ -86,7 +86,7 @@ export type RootStackParamList = {
   NotFound: undefined;
   AISleepTipsScreen: { date: string; score: number };
   Survey: undefined;
-  OAuthCallback: { code: string };
+  OAuthCallback: { code: string; provider: 'kakao' | 'apple' };
   KakaoLoginWebView: undefined;
   SleepDetail: { date: string };
   TermsOfServicePage: undefined;
