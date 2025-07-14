@@ -4,7 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export interface User {
   id: number;
   email: string;
-  nickname: string;
+  nickname?: string;
+  full_name?: string; // 애플 로그인 지원
   image_url?: string;
   has_completed_onboarding?: boolean;
 }
@@ -21,6 +22,12 @@ interface AuthState {
   resetAuth: () => void;
   loadTokensFromStorage: () => Promise<void>;
   setCompletedOnboarding: (value: boolean) => void;
+  // 애플 로그인용 메서드 추가 (카카오와 동일하게 동작)
+  setAppleLogin: (value: boolean) => void;
+  setAppleUser: (user: User) => void;
+  setAppleAccessToken: (token: string) => void;
+  setAppleRefreshToken: (token: string) => void;
+  updateProfileImage: (imageUrl: string) => void;
 }
 
 export const useAuthStore = create<AuthState>(set => ({
@@ -113,5 +120,54 @@ export const useAuthStore = create<AuthState>(set => ({
         ? { ...state.user, has_completed_onboarding: value }
         : null,
     }));
+  },
+
+  // 애플 로그인용 메서드 추가 (카카오와 동일하게 동작)
+  setAppleLogin: async (value: boolean) => {
+    // 카카오 setLogin과 동일하게 처리
+    try {
+      if (value) {
+        await AsyncStorage.setItem('hasLoggedInBefore', 'true');
+      }
+      set(() => ({ isLogin: value }));
+    } catch {
+      set(() => ({ isLogin: value }));
+    }
+  },
+  setAppleUser: async (user: User) => {
+    // 카카오 setUser와 동일하게 처리
+    try {
+      await AsyncStorage.setItem('userInfo', JSON.stringify(user));
+      set(() => ({ user }));
+    } catch {
+      set(() => ({ user }));
+    }
+  },
+  setAppleAccessToken: async (token: string) => {
+    try {
+      await AsyncStorage.setItem('accessToken', token);
+      set(() => ({ accessToken: token }));
+    } catch {
+      set(() => ({ accessToken: token }));
+    }
+  },
+  setAppleRefreshToken: async (token: string) => {
+    try {
+      await AsyncStorage.setItem('refreshToken', token);
+      set(() => ({ refreshToken: token }));
+    } catch {
+      set(() => ({ refreshToken: token }));
+    }
+  },
+  updateProfileImage: (imageUrl: string) => {
+    set(state => {
+      const updatedUser = state.user
+        ? { ...state.user, image_url: imageUrl }
+        : null;
+      if (updatedUser) {
+        AsyncStorage.setItem('userInfo', JSON.stringify(updatedUser));
+      }
+      return { user: updatedUser };
+    });
   },
 }));

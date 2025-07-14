@@ -1,11 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getApiClient } from '@/services/axios';
-import { useAppleAuthStore } from '@/store/appleAuthStore';
+import { useAuthStore } from '@/store/authStore';
 
 interface UserInfo {
   id: number;
   email: string;
-  full_name: string;
+  given_name?: string;
+  family_name?: string;
   image_url: string;
   has_completed_onboarding: boolean;
 }
@@ -22,6 +23,7 @@ type AppleLoginResult =
 
 export const loginWithAppleCode = async (
   authorizationCode: string,
+  fullName?: { givenName?: string; familyName?: string },
 ): Promise<AppleLoginResult> => {
   try {
     const client = await getApiClient();
@@ -35,6 +37,11 @@ export const loginWithAppleCode = async (
       {
         headers: {
           'Content-Type': 'application/json',
+          ...(fullName && {
+            name:
+              `${fullName.familyName ?? ''}${fullName.givenName ?? ''}`.trim() ||
+              undefined,
+          }),
         },
       },
     );
@@ -44,9 +51,9 @@ export const loginWithAppleCode = async (
     await AsyncStorage.setItem('accessToken', access);
     await AsyncStorage.setItem('refreshToken', refresh);
 
-    const { setAppleLogin, setAppleUser } = useAppleAuthStore.getState();
-    setAppleLogin(true);
-    setAppleUser(user);
+    const { setLogin, setUser } = useAuthStore.getState();
+    setLogin(true);
+    setUser(user);
 
     return { success: true, user };
   } catch (err) {

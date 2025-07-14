@@ -14,7 +14,6 @@ import {
   appleAuth,
 } from '@invertase/react-native-apple-authentication';
 import { loginWithAppleCode } from '@/utils/auth/loginWithApple';
-import { useAppleAuthStore } from '@/store/appleAuthStore';
 
 // Intro: Focuz 전체화면 인트로/랜딩 페이지
 export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
@@ -29,18 +28,25 @@ export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
         requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
       });
 
-      const { authorizationCode } = appleAuthRequestResponse;
+      const { authorizationCode, fullName } = appleAuthRequestResponse;
 
       if (!authorizationCode) {
         Alert.alert('애플 로그인 실패', '인가 코드가 없습니다.');
         return;
       }
 
-      const result = await loginWithAppleCode(authorizationCode);
+      const safeFullName = fullName
+        ? {
+            givenName: fullName.givenName ?? undefined,
+            familyName: fullName.familyName ?? undefined,
+          }
+        : undefined;
+
+      const result = await loginWithAppleCode(authorizationCode, safeFullName);
 
       if (result.success) {
         const { user } = result;
-
+        // 이미 setLogin, setUser는 loginWithAppleCode에서 처리됨
         const navigationTarget = user.has_completed_onboarding
           ? 'Dashboard'
           : 'Onboarding';
