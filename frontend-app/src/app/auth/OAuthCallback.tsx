@@ -9,7 +9,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useAuthStore } from '@/store/authStore';
-import { useAppleAuthStore } from '@/store/appleAuthStore';
 import { getAccessTokenFromKakao } from '@/utils/auth/getAccessTokenFromKakao';
 import { sendKakaoLoginToken } from '@/utils/auth/sendKakaoLoginCode';
 import { RootStackParamList } from '@/App';
@@ -27,9 +26,6 @@ const OAuthCallback = () => {
   const setCompletedOnboarding = useAuthStore(
     state => state.setCompletedOnboarding,
   );
-
-  const setAppleLogin = useAppleAuthStore(state => state.setAppleLogin);
-  const setAppleUser = useAppleAuthStore(state => state.setAppleUser);
 
   useEffect(() => {
     if (!code || !provider) {
@@ -65,8 +61,8 @@ const OAuthCallback = () => {
           const { user: appleUser } = result;
 
           await AsyncStorage.setItem('userInfo', JSON.stringify(appleUser));
-          setAppleLogin(true);
-          setAppleUser(appleUser);
+          setLogin(true);
+          setUser(appleUser);
 
           user = appleUser;
         } else {
