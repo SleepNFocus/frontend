@@ -1,5 +1,5 @@
-import { PatternPayload, SRTPayload, SymbolPayload } from '@/types/test';
-import { useMutation } from '@tanstack/react-query';
+import { CognitiveDailySummary, PatternPayload, SRTPayload, SymbolPayload } from '@/types/test';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getApiClient } from '@/services/axios';
 import useUiStore from '@/store/uiStore';
 import { AxiosError } from 'axios';
@@ -193,22 +193,18 @@ export const useSendAllResults = () =>
   });
 
 // 일별 요약 조회
-export const getDailySummary = async () => {
+export const getDailySummary = async (): Promise<CognitiveDailySummary[]> => {
   const client = await getApiClient();
   const res = await client.get('cognitive-statistics/result/daily-summary/');
   return res.data;
 };
 
 export const useGetDailySummary = () =>
-  useMutation({
-    mutationFn: getDailySummary,
-    onError: error => {
-      const axiosError = error as AxiosError<{ message: string }>;
-      const openToast = useUiStore.getState().openToast;
-      openToast(
-        'error',
-        '결과 요약 불러오기 실패',
-        axiosError.response?.data?.message || '서버 오류가 발생했습니다.',
-      );
-    },
+  useQuery({
+    queryKey: ['dailySummary'],
+    queryFn: getDailySummary,
+    staleTime: 0,                // 즉시 stale
+    gcTime: 1000 * 60,        // 캐시 유지 시간 1분
+    refetchOnMount: true,        // 마운트 시 리패치
+    refetchOnWindowFocus: true,  // 포커스 시 리패치
   });

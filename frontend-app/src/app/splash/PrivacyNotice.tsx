@@ -99,11 +99,13 @@ export const PrivacyNotice: React.FC<{ onAgree?: () => void }> = ({
             <Card style={styles.agreeCard}>
               <TouchableOpacity onPress={() => setChecked(!checked)}>
                 <View style={styles.agreeBox}>
-                  <Checkbox
-                    status={checked ? 'checked' : 'unchecked'}
-                    color={colors.softBlue}
-                    uncheckedColor={colors.midnightBlue}
-                  />
+                  <View style={{ backgroundColor: '#F2F2F2',paddingLeft:2, paddingTop:2, borderRadius: 100, width: 40, height: 40 }}>
+                    <Checkbox
+                      status={checked ? 'checked' : 'unchecked'}
+                      color={colors.softBlue}
+                      uncheckedColor={colors.midnightBlue}
+                    />
+                  </View>
                   <Text variant="bodyLarge" style={styles.agreeText}>
                     개인정보 수집 및 이용에 동의합니다.
                   </Text>

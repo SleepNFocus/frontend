@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import {
   View,
   StyleSheet,
@@ -30,102 +30,18 @@ const ProfileDetail = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { openToast } = useUiStore();
-  const { resetAuth } = useAuthStore();
+  const { resetAuth, user } = useAuthStore();
   const queryClient = useQueryClient();
 
+
   const { data: profile, isLoading, error, refetch } = useProfile();
+  const [profileImageUri, setProfileImageUri] = useState<string | null>(null);
 
-  // 화면이 포커스될 때마다 프로필 데이터 새로 가져오기
-  useFocusEffect(
-    useCallback(() => {
-      refetch();
-    }, [refetch]),
-  );
-
-  // profile 데이터가 변경될 때마다 로그를 출력하여 리프레시 확인
-  useEffect(() => {}, [profile]);
-
-  // 이미지 URL 처리: ProfileCard와 동일한 로직
-  const processImageUrl = (url: string | null | undefined): any => {
-    if (!url) {
-      return require('@/assets/icon.png');
-    }
-
-    try {
-      const decodedUrl = decodeURIComponent(url);
-
-      // 중첩된 URL 구조 처리: dev.focusz.site/media/http:/k.kakaocdn.net/... 형태
-      if (
-        decodedUrl.includes('/media/http:/') ||
-        decodedUrl.includes('/media/https:/')
-      ) {
-        // /media/ 다음의 URL 부분을 추출
-        const mediaIndex = decodedUrl.indexOf('/media/');
-        if (mediaIndex !== -1) {
-          const afterMedia = decodedUrl.substring(mediaIndex + 7); // '/media/' 제거
-
-          // http:/ 또는 https:/ 다음의 실제 URL 추출
-          const protocolIndex = afterMedia.indexOf('http:/');
-          const secureProtocolIndex = afterMedia.indexOf('https:/');
-
-          let actualUrl = '';
-          if (secureProtocolIndex !== -1) {
-            actualUrl = afterMedia.substring(secureProtocolIndex);
-          } else if (protocolIndex !== -1) {
-            actualUrl = afterMedia.substring(protocolIndex);
-          }
-
-          if (actualUrl) {
-            // http:/ -> http:// 로 수정
-            actualUrl = actualUrl
-              .replace('http:/', 'http://')
-              .replace('https:/', 'https://');
-            // 더 강력한 캐시 방지를 위해 랜덤 값도 추가
-            const randomParam = Math.random().toString(36).substring(7);
-            return { uri: `${actualUrl}?t=${Date.now()}&r=${randomParam}` };
-          }
-        }
-      }
-
-      // 정규식을 사용하여 http 또는 https로 시작하는 전체 URL 추출
-      const urlRegex = /(https?:\/\/[^\s]+)/g;
-      const extractedUrls = decodedUrl.match(urlRegex);
-
-      // 카카오 CDN URL을 우선적으로 찾습니다.
-      let targetUrl = extractedUrls?.find(u => u.includes('k.kakaocdn.net'));
-
-      // 카카오 URL이 없으면 첫 번째 추출된 URL을 사용합니다.
-      if (!targetUrl && extractedUrls && extractedUrls.length > 0) {
-        // dev.focusz.site/media/ 다음의 http URL을 찾습니다.
-        const nestedUrl = extractedUrls.find(
-          u => u.startsWith('http') && decodedUrl.includes(`/media/${u}`),
-        );
-        if (nestedUrl) {
-          targetUrl = nestedUrl;
-        } else {
-          // 가장 마지막 URL을 사용 (가장 안쪽 URL일 가능성이 높음)
-          targetUrl = extractedUrls[extractedUrls.length - 1];
-        }
-      }
-
-      if (targetUrl) {
-        // 캐싱 방지를 위한 타임스탬프와 랜덤 값 추가
-        const randomParam = Math.random().toString(36).substring(7);
-        return { uri: `${targetUrl}?t=${Date.now()}&r=${randomParam}` };
-      }
-
-      // 로컬 파일 URI인지 확인
-      if (url.startsWith('file://')) {
-        return { uri: url };
-      }
-
-      return require('@/assets/icon.png');
-    } catch (error) {
-      return require('@/assets/icon.png');
-    }
-  };
-
-  const processedImageSource = processImageUrl(profile?.profile_img);
+  const imageSource = useMemo(() => {
+        return profile?.profile_img
+          ? { uri: profile.profile_img }
+          : require('@/assets/icon.png');
+      }, [profileImageUri]);
 
   const handleLogout = async () => {
     try {
@@ -173,6 +89,7 @@ const ProfileDetail = () => {
   if (error) {
     return <NotFoundPage onRetry={() => refetch()} />;
   }
+  
 
   return (
     <Layout>
@@ -207,7 +124,7 @@ const ProfileDetail = () => {
               <View style={styles.profileImageWrapper}>
                 <Image
                   key={profile?.profile_img}
-                  source={processedImageSource}
+                  source={user?.image_url ? { uri: user.image_url } : require('@/assets/icon.png')}
                   style={styles.profileImage}
                 />
               </View>

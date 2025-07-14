@@ -27,3 +27,25 @@ export type SendAllResultsPayload = {
   test2: SymbolPayload;
   test3: PatternPayload;
 };
+
+export interface CognitiveDailySummary {
+  date: string;
+  userId: number;
+  average_score: number;
+  raw_scores: {
+    srt: {
+      average_score: number;
+      avg_ms: number;
+    };
+    symbol: {
+      average_score: number;
+      correct: number;
+      avg_ms: number;
+      symbol_accuracy: number;
+    };
+    pattern: {
+      average_score: number;
+      correct: number;
+    };
+  };
+}

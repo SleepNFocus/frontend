@@ -113,9 +113,13 @@ const CustomDropdown: React.FC<DropdownProps> = ({ items, value, onSelect, place
 };
 
 export const SleepRecordForm: React.FC<SleepRecordFormProps> = ({ onSave }) => {
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split('T')[0],
-  );
+  const getTodayLocalDateString = () => {
+  const today = new Date();
+  today.setMinutes(today.getMinutes() - today.getTimezoneOffset()); // 현지 시간 보정
+  return today.toISOString().split('T')[0];
+};
+
+const [selectedDate, setSelectedDate] = useState(getTodayLocalDateString());
 
   const [sleepDuration, setSleepDuration] = useState<string | null>(null);
   const [sleepQuality, setSleepQuality] = useState<string | null>(null);
