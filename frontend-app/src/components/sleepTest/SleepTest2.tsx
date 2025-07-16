@@ -17,7 +17,7 @@ import { GlassCard } from '../common/Card';
 import { Layout } from '../common/Layout';
 
 const MAX_NUM = 9;
-const TIMER_SECOND = 60000;
+const TIMER_SECOND = 20000;
 const RANDOM_SYMBOL = ['♥︎', '✦', '♠︎', '▲', '◉', '★', '▼', '☗', '◆'];
 
 function randomArray(array: string[]) {
