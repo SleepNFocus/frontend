@@ -28,19 +28,38 @@ export const IntroCard: React.FC<{ onStart?: () => void }> = ({ onStart }) => {
         requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
       });
 
-      const { authorizationCode } = appleAuthRequestResponse;
+      const { authorizationCode, fullName } = appleAuthRequestResponse;
 
-      if (authorizationCode) {
-        const result = await loginWithAppleCode(authorizationCode);
-        if (result.success) {
-          navigation.navigate('Dashboard');
-        } else {
-          Alert.alert('로그인 실패', result.message);
-        }
-      } else {
+      if (!authorizationCode) {
         Alert.alert('애플 로그인 실패', '인가 코드가 없습니다.');
+        return;
+      }
+
+      const safeFullName = fullName
+        ? {
+            givenName: fullName.givenName ?? undefined,
+            familyName: fullName.familyName ?? undefined,
+          }
+        : undefined;
+
+      const result = await loginWithAppleCode(authorizationCode, safeFullName);
+
+      if (result.success) {
+        const { user } = result;
+        // 이미 setLogin, setUser는 loginWithAppleCode에서 처리됨
+        const navigationTarget = user.has_completed_onboarding
+          ? 'Dashboard'
+          : 'Onboarding';
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: navigationTarget }],
+        });
+      } else {
+        Alert.alert('로그인 실패', result.message);
       }
     } catch (error) {
+      console.error('Apple 로그인 오류:', error);
       Alert.alert('Apple 로그인 오류', '다시 시도해 주세요.');
     }
   };
