@@ -1,7 +1,7 @@
 import { View, Animated, StyleSheet, useWindowDimensions } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useStartGameSession } from '@/services/testApi';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSleepTestStore } from '@/store/testStore';
 import { Button } from '@/components/common/Button';
 import { Text } from '@/components/common/Text';
@@ -24,8 +24,18 @@ export default function SleepTest1Desc() {
   const containerWidth = Math.min(windowWidth * 0.9, 700);
   const lineWidth = Math.min(windowWidth * 0.8, 600);
 
-  const route = useRoute<RouteProp<RootStackParamList, 'SleepTest1Desc'>>();
-  const formatId = route.params?.formatId ?? 1; // 기본값으로 1 설정
+    useEffect(() => {
+    (async () => {
+      try {
+        if (!sessionId) {
+          const res = await startSession(1);
+          setSessionId(res.session.id);
+        }
+      } catch (error) {
+        console.error('세션 시작 실패:', error);
+      }
+    })();
+  }, []);
 
   function goToSleepTest1() {
     navigation.navigate('SleepTest1');

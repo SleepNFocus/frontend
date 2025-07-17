@@ -40,7 +40,7 @@ export default function SleepTest2() {
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
   const [gameOver, setGameOver] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(20);
   const [start, setStart] = useState(false);
 
   const { height: windowHeight } = useWindowDimensions();
