@@ -1,0 +1,9 @@
+version: 1.0
+identifier: focuz-ios
+actions:
+  - name: Archive
+    action: build
+    platform: iOS
+    scheme: FOCUZ
+    pre-xcodebuild:
+      script: ci_scripts/ci_pre_xcodebuild.sh
