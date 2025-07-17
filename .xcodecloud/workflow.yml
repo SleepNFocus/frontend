@@ -7,5 +7,5 @@ actions:
     analyze: false
     pre-xcodebuild:
       script: |
-        chmod +x .xcodecloud/ci_pre_xcodebuild.sh
-        .xcodecloud/ci_pre_xcodebuild.sh
+        chmod +x ci_scripts/ci_pre_xcodebuild.sh
+        ./ci_scripts/ci_pre_xcodebuild.sh
