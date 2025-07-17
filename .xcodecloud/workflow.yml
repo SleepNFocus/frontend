@@ -6,6 +6,6 @@ actions:
     workspace: frontend-app/ios/FOCUZ.xcworkspace
     analyze: false
     pre-xcodebuild:
-      script: |
-        chmod +x frontend/ci_scripts/ci_pre_xcodebuild.sh
-        ./frontend/ci_scripts/ci_pre_xcodebuild.sh
+    script: |
+      chmod +x $PWD/frontend/ci_scripts/ci_pre_xcodebuild.sh
+      $PWD/frontend/ci_scripts/ci_pre_xcodebuild.sh
