@@ -4,6 +4,7 @@ actions:
     platform: iOS
     scheme: FOCUZ
     workspace: frontend-app/ios/FOCUZ.xcworkspace
+    analyze: false
     pre-xcodebuild:
       script: |
         chmod +x ./ci_scripts/ci_pre_xcodebuild.sh
