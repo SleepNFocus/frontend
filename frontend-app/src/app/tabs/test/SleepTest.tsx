@@ -16,12 +16,14 @@ import { RootStackParamList } from '@/App';
 import { useEffect, useRef } from 'react';
 import WarningText from '@/components/common/WarningText';
 import { useStartGameSession } from '@/services/testApi';
+import { useSleepTestStore } from '@/store/testStore';
 
 export default function SleepTestDesc() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const { mutate: startSession, isPending } = useStartGameSession();
+  const { sessionId, setSessionId } = useSleepTestStore();
 
   const { width: windowWidth } = useWindowDimensions();
   const containerWidth = Math.min(windowWidth * 0.9, 700);
@@ -48,16 +50,8 @@ export default function SleepTestDesc() {
   }, [scaleAnim]);
 
   function goToSleepTest1Desc() {
-    if (isPending) return;
 
-    startSession(formatId, {
-      onSuccess: () => {
-        navigation.navigate('SleepTest1Desc', { formatId: 1 });
-      },
-      onError: error => {
-        console.error('게임 세션 시작 실패:', error);
-      },
-    });
+    navigation.navigate('SleepTest1Desc')
   }
 
   return (
