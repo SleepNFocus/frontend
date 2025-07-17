@@ -7,5 +7,8 @@ actions:
     analyze: false
     pre-xcodebuild:
       script: |
+        cd frontend-app/ios
+        pod install
+        cd ../..
         chmod +x frontend/ci_scripts/ci_pre_xcodebuild.sh
         ./frontend/ci_scripts/ci_pre_xcodebuild.sh
