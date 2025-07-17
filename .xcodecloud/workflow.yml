@@ -6,4 +6,4 @@ actions:
     platform: iOS
     scheme: FOCUZ
     pre-xcodebuild:
-      script: ci_scripts/ci_pre_xcodebuild.sh
+      script: ./ci_scripts/ci_pre_xcodebuild.sh
