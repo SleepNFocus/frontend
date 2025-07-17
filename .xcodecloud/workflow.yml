@@ -1,11 +1,10 @@
-version: 1.0
-identifier: focuz-ios
 actions:
   - name: Archive
     action: build
     platform: iOS
     scheme: FOCUZ
+    workspace: frontend-app/ios/FOCUZ.xcworkspace
     pre-xcodebuild:
-        script: |
-    chmod +x ./ci_scripts/ci_pre_xcodebuild.sh
-    ./ci_scripts/ci_pre_xcodebuild.sh
+      script: |
+        chmod +x ./ci_scripts/ci_pre_xcodebuild.sh
+        ./ci_scripts/ci_pre_xcodebuild.sh
