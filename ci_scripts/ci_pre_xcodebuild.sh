@@ -1,9 +1,13 @@
 #!/bin/bash
 
-echo "🔧 Pre-action: Installing CocoaPods dependencies..."
+echo "🔧 Pre-action: Installing JS dependencies and CocoaPods..."
 
-#iOS 폴더로 이동 (Podfile이 있는 위치)
-cd frontend-app/ios
+# JS 의존성 설치 (frontend-app 루트에서)
+cd frontend-app
+npm install  # 또는 yarn install
+
+# iOS 폴더로 이동 (Podfile이 있는 위치)
+cd ios
 
 # CocoaPods가 설치되어 있지 않으면 brew, gem 순으로 설치 시도
 if ! command -v pod &> /dev/null; then
@@ -21,3 +25,5 @@ fi
 
 pod --version
 pod install --repo-update
+
+echo "✅ JS & CocoaPods install finished!"
