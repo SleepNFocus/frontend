@@ -1,16 +1,19 @@
 #!/bin/bash
+set -e
 
 echo "🔧 Pre-action: Installing CocoaPods dependencies..."
 echo "현재 작업 디렉토리: $(pwd)"
 ls -al
 
-# iOS 폴더로 이동 (Podfile이 있는 위치)
 cd frontend-app/ios
 
-# 최신 CocoaPods 설치 시도 (환경에 따라 이미 설치되어 있으면 무시됨)
-gem install cocoapods --no-document
+echo "CocoaPods 버전:"
+pod --version || (echo "CocoaPods가 설치되어 있지 않습니다!"; exit 1)
 
-# pod repo 업데이트 후 install
+echo "pod install 실행"
 pod install --repo-update
+
+echo "Pods/Target Support Files/Pods-FOCUZ/ 디렉토리 확인"
+ls -al Pods/Target\ Support\ Files/Pods-FOCUZ/ || (echo "Pods-FOCUZ 폴더가 없습니다!"; exit 1)
 
 echo "✅ CocoaPods install finished!"
