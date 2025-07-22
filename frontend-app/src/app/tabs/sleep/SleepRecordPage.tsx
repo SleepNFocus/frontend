@@ -54,10 +54,8 @@ export const SleepRecordPage: React.FC = () => {
         `/sleepRecord/exist/?date=${todayString}`,
       );
       setIsExist(response.data.exists);
-      console.log('존재하는 데이터인지 확인', response.data);
     }
 
-    console.log('fetchIsExistData 호출');
     fetchIsExistData();
   }, []);
 

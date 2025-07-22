@@ -5,9 +5,9 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { colors } from '@/constants/colors';
 
 const NAV_ITEMS = [
+  { icon: 'home-outline', route: 'Dashboard' },
   { icon: 'chart-bar', route: 'History' },
   { icon: 'play-circle-outline', route: 'SleepRecord' },
-  { icon: 'home-outline', route: 'Dashboard' },
   { icon: 'lightbulb-outline', route: 'Insight' },
   { icon: 'dots-horizontal', route: 'More' },
 ];
@@ -31,24 +31,37 @@ export const Navbar: React.FC = () => {
   };
 
   const getIconColor = (routeName: string) => {
-    return currentRoute === routeName ? colors.textColor : colors.mediumGray;
+    const isCenter = routeName === 'SleepRecord'
+    const isActive = routeName === currentRoute
+
+    if ( isCenter && isActive ){
+      return colors.white
+    }
+
+    return isActive ? colors.textColor : colors.mediumGray;
+
   };
 
   return (
     <View style={styles.navbar}>
-      {NAV_ITEMS.map(item => (
+    {NAV_ITEMS.map(item => {
+      const isCenter = item.route === 'SleepRecord';
+
+      return (
         <TouchableOpacity
           key={item.icon}
-          style={styles.menuItem}
+          style={[styles.menuItem, isCenter && styles.centerItem]}
           onPress={() => handleNavigation(item.route)}
         >
           <MaterialCommunityIcons
-            name={item.icon}
-            size={28}
-            color={getIconColor(item.route)}
-          />
+              name={item.icon}
+              size={isCenter ? 40 : 28}
+              color={getIconColor(item.route)}
+              style={isCenter && styles.pointCircle}
+            />
         </TouchableOpacity>
-      ))}
+      );
+    })}
     </View>
   );
 };
@@ -59,7 +72,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: 64,
+    height: 74,
     backgroundColor: colors.white,
     flexDirection: 'row',
     alignItems: 'center',
@@ -77,8 +90,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 8,
+    paddingBottom: 10
   },
+  centerItem: {
+    // marginTop: -20, // 위로 살짝 띄워서 부각
+  },
+  pointCircle: {
+    backgroundColor: colors.midnightBlue,
+    borderRadius: 32,
+    padding: 1,
+    overflow: 'hidden',
+  }
 });
 
 export default Navbar;
