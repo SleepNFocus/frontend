@@ -33,15 +33,13 @@ export const loginWithAppleCode = async (
       {
         provider: 'apple',
         code: authorizationCode,
+        ...(fullName && {
+          name: `${fullName.givenName ?? ''} ${fullName.familyName ?? ''}`.trim() || undefined,
+        }),
       },
       {
         headers: {
           'Content-Type': 'application/json',
-          ...(fullName && {
-            name:
-              `${fullName.familyName ?? ''}${fullName.givenName ?? ''}`.trim() ||
-              undefined,
-          }),
         },
       },
     );
