@@ -28,14 +28,17 @@ export const loginWithAppleCode = async (
   try {
     const client = await getApiClient();
 
+    // 이름 처리: Apple에서 fullName이 없는 경우 빈 문자열로 처리
+    const name = fullName 
+      ? `${fullName.givenName ?? ''} ${fullName.familyName ?? ''}`.trim()
+      : '';
+
     const response = await client.post<AppleLoginResponse>(
       `/users/social-login/`,
       {
         provider: 'apple',
         code: authorizationCode,
-        ...(fullName && {
-          name: `${fullName.givenName ?? ''} ${fullName.familyName ?? ''}`.trim() || undefined,
-        }),
+        name: name,
       },
       {
         headers: {
