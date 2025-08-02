@@ -49,17 +49,12 @@ export const loginWithAppleCode = async (
 
     const { access, refresh, user } = response.data;
 
-    const normalizedUser = {
-      ...user,
-      profile_img: user.image_url || '',
-    };
-
     await AsyncStorage.setItem('accessToken', access);
     await AsyncStorage.setItem('refreshToken', refresh);
 
     const { setLogin, setUser } = useAuthStore.getState();
     setLogin(true);
-    setUser(normalizedUser);
+    setUser(user);
 
     return { success: true, user };
   } catch (err) {

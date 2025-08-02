@@ -174,7 +174,7 @@ const Settings = () => {
   );
 
   // 닉네임 유효성 검사
-  const nicknamevalidity = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]{2,20}$/;
+  const nicknamevalidity = /^(?! )[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9 ]{2,20}(?<! )$/;
   const isNicknameValid = nicknamevalidity.test(nickname);
   const isLengthValid = nickname.length >= 2 && nickname.length <= 20;
   const isCharsetValid = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]*$/.test(nickname);
@@ -565,15 +565,26 @@ const Settings = () => {
   }
 }, [profile]);
   
-        const imageSource = useMemo(() => {
-                                if (profileImageUri) {
-                                  return { uri: profileImageUri };
-                                }
+// const imageSource = useMemo(() => {
+//   if (profileImageUri) {
+//     return { uri: profileImageUri };
+//   }
 
-                                return profile?.profile_img
-                                  ? { uri: profile.profile_img }
-                                  : require('@/assets/icon.png');
-                              }, [profileImageUri]);
+//   return profile?.profile_img
+//     ? { uri: profile.profile_img }
+//     : require('@/assets/icon.png');
+// }, [profileImageUri]);
+
+const imageSource = useMemo(() => {
+  return profileImageUri
+    ? { uri: profileImageUri }
+    : require('@/assets/icon.png');
+}, [profileImageUri]);
+
+useEffect(() => {
+  setProfileImageUri(profile?.profile_img || null);
+}, [profile]);
+
   return (
     <ErrorBoundary>
       <Layout>
