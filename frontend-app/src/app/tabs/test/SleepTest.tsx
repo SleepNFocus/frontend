@@ -49,10 +49,17 @@ export default function SleepTestDesc() {
     ).start();
   }, [scaleAnim]);
 
-  function goToSleepTest1Desc() {
-
-    navigation.navigate('SleepTest1Desc')
-  }
+function goToSleepTest1Desc() {
+  startSession(formatId, {
+    onSuccess: (data) => {
+      setSessionId(data.id);
+      navigation.navigate('SleepTest1Desc');
+    },
+    onError: (error) => {
+      console.warn('세션 시작 실패:', error);
+    },
+  });
+}
 
   return (
     <Layout>
