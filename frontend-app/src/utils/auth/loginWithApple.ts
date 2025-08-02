@@ -39,6 +39,7 @@ export const loginWithAppleCode = async (
         provider: 'apple',
         code: authorizationCode,
         name: name,
+        name: name,
       },
       {
         headers: {
