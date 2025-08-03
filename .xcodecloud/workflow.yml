@@ -1,0 +1,7 @@
+actions:
+  - name: Archive
+    action: build
+    platform: iOS
+    scheme: FOCUZ
+    workspace: frontend-app/ios/FOCUZ.xcworkspace
+    analyze: false
