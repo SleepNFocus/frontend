@@ -11,10 +11,21 @@ interface UserInfo {
   has_completed_onboarding: boolean;
 }
 
+interface RawUser {
+  user_id: number;
+  email: string;
+  social_type: string;
+  social_id: string;
+  nickname: string;
+  profile_img: string | null;
+  status: string;
+  has_completed_onboarding: boolean;
+}
+
 interface AppleLoginResponse {
   access: string;
   refresh: string;
-  user: UserInfo;
+  user: RawUser;
 }
 
 type AppleLoginResult =
@@ -47,10 +58,20 @@ export const loginWithAppleCode = async (
       },
     );
 
-    const { access, refresh, user } = response.data;
+    const { access, refresh, user: rawUser } = response.data;
+
+    const user: UserInfo = {
+      id: rawUser.user_id,
+      email: rawUser.email,
+      given_name: fullName?.givenName ?? '',
+      family_name: fullName?.familyName ?? '',
+      image_url: rawUser.profile_img ?? '', // <-- 여기 수정
+      has_completed_onboarding: rawUser.has_completed_onboarding,
+    };
 
     await AsyncStorage.setItem('accessToken', access);
     await AsyncStorage.setItem('refreshToken', refresh);
+    await AsyncStorage.setItem('userInfo', JSON.stringify(user));
 
     const { setLogin, setUser } = useAuthStore.getState();
     setLogin(true);
