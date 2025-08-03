@@ -18,6 +18,7 @@ import { useAuthStore } from '@/store/authStore';
 import { format } from 'date-fns';
 import { useSleepRecord } from '@/services/sleepApi';
 import { useSleepRecordDetail } from '@/services/recordListApi';
+import { useProfile } from '@/services/mypageApi';
 
 interface ScoreDetail {
   label: string;
@@ -143,6 +144,8 @@ const today = kst.toISOString().slice(0, 10);
   refetch,
 } = useGetDailySummary();
 
+const { data: profile } = useProfile();
+
 
   const [hasCognitiveScore, setHasCognitiveScore] = useState(false);
 
@@ -205,6 +208,8 @@ const today = kst.toISOString().slice(0, 10);
     );
   }
 
+  const displayName = profile?.nickname || user?.nickname || '사용자';
+
   return (
     <ErrorBoundary>
       <Layout>
@@ -214,7 +219,7 @@ const today = kst.toISOString().slice(0, 10);
           showsVerticalScrollIndicator={false}
         >
           <Card style={styles.greetingWrap}>
-            <GreetingCard userName={user?.nickname} />
+            <GreetingCard userName={displayName} />
           </Card>
           {!hasCognitiveScore && (
             <View style={styles.checkinSection}>
