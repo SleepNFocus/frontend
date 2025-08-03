@@ -86,7 +86,8 @@ const today = kst.toISOString().slice(0, 10);
 
       <Image
         // key={profile?.profile_img || user?.image_url}
-        source={user?.image_url ? { uri: user.image_url } : require('@/assets/icon.png')}
+        // source={user?.image_url ? { uri: user.image_url } : require('@/assets/icon.png')}
+        source={imageSource}
         style={styles.profileImage}
         resizeMode="cover"
       />

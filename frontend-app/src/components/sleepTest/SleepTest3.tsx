@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
+import { Alert } from 'react-native';
 import { useSendAllResults } from '@/services/testApi';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { calculateSleepTest3Score } from '@/utils/sleepTestScore';
@@ -77,6 +78,10 @@ export default function SleepTest3() {
     const sessionId = useSleepTestStore.getState().sessionId;
 
     if (!userId || !test1 || !test2 || !test3) {
+      Alert.alert(
+        '전송 실패',
+        `userId: ${userId}\ntest1: ${JSON.stringify(test1)}\ntest2: ${JSON.stringify(test2)}\ntest3: ${JSON.stringify(test3)}`
+      );
       openToast(
         'error',
         '결과 전송 실패',
